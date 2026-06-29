@@ -1,0 +1,164 @@
+"""
+Column generation for the covering-plus-arbitrage EVSP-V2G.
+
+Trucks are priced by the labeling DP (pricing_truck); the stationary battery fleet
+is an aggregate block solved inside the RMP, so CG only needs to price trucks
+(coverage). Dual stabilization (smoothing) with a true-dual fallback controls the
+tail while keeping termination correct.
+"""
+from __future__ import annotations
+import time
+import numpy as np
+from instance import Instance, make_instance
+from master import Column, solve_lp, solve_milp, reduced_cost
+from pricing_truck import price_truck_dp
+
+
+def _col_key(c: Column):
+    return (tuple(np.flatnonzero(c.a > 0.5).tolist()), tuple(np.round(c.e, 2).tolist()))
+
+
+SCENARIOS = {                          # (ice, allow_charge, allow_discharge, battery)
+    "vsp":   dict(ice=True,  allow_charge=False, allow_discharge=False, battery=False),
+    "solar": dict(ice=False, allow_charge=True,  allow_discharge=False, battery=False),
+    "v2g":   dict(ice=False, allow_charge=True,  allow_discharge=True,  battery=True),
+}
+
+
+def single_trip_column(inst: Instance, tr, ice: bool = False) -> Column:
+    """Exactly-feasible cyclic single-trip truck column. For EV scenarios, recharge
+    the traction energy from the grid during idle at-origin blocks (SoC returns to
+    full, no free energy). For ICE (VSP), traction is fuel, so e = 0."""
+    a = np.zeros(inst.n_trips); a[tr.idx] = 1.0
+    e = np.zeros(inst.T)
+    if not ice:
+        o = inst.depot
+        trac = tr.energy + inst.deadhead_energy(o, tr.sloc) + inst.deadhead_energy(tr.eloc, o)
+        need = trac / (1 - inst.eta)
+        dep = tr.start - inst.deadhead_time(o, tr.sloc)
+        ret = tr.end + inst.deadhead_time(tr.eloc, o)
+        idle = list(range(0, max(0, dep))) + list(range(min(inst.T, ret), inst.T))
+        if idle:                                   # spread charging uniformly over idle blocks
+            per = min(inst.rho, need / len(idle))  # so the initial pool respects the charge cap
+            for t in idle:
+                e[t] = per
+    return Column("truck", a, e, inst.c_v, f"single[{tr.idx}]")
+
+
+def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None) -> list[Column]:
+    """Multi-trip covering columns via repeated DP: reward uncovered trips, forbid
+    re-covering already-covered ones, peel off a route each round. With an rng, the
+    per-trip reward is randomized so repeated calls yield distinct full covers."""
+    cols = []
+    remaining = set(range(inst.n_trips))
+    mu = np.full(inst.T, 0.0)
+    for _ in range(rounds):
+        if not remaining:
+            break
+        alpha = np.full(inst.n_trips, -1e6)
+        for i in remaining:
+            alpha[i] = (rng.uniform(2.0, 4.0) if rng is not None else 3.0) * inst.c_v
+        out = price_truck_dp(inst, alpha, mu, allow_charge=caps["allow_charge"],
+                             allow_discharge=caps["allow_discharge"], ice=caps["ice"])
+        if not out:
+            break
+        col = out[0][0]
+        covered = set(np.flatnonzero(col.a > 0.5).tolist()) & remaining
+        if not covered:
+            break
+        cols.append(col)
+        remaining -= covered
+    return cols
+
+
+def initial_columns(inst: Instance, start: str, caps: dict) -> list[Column]:
+    base = [single_trip_column(inst, tr, ice=caps["ice"]) for tr in inst.trips]
+    if start == "cold":
+        return base
+    extra = dp_greedy_columns(inst, caps)
+    seen = set(_col_key(c) for c in base)
+    return base + [c for c in extra if _col_key(c) not in seen]
+
+
+def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm",
+                      tol: float = 1e-6, rc_stop: float = 0.0, beta: float = 0.5,
+                      max_iter: int = 1000, do_milp: bool = True, verbose: bool = False,
+                      enrich: int = 25):
+    caps = SCENARIOS[scenario]
+    batt = caps["battery"]
+    cols = initial_columns(inst, start, caps)
+    keys = set(_col_key(c) for c in cols)
+    t0 = time.time()
+    prev = None
+    lp = solve_lp(inst, cols, battery_allowed=batt)
+    iters = 0
+    stop = max(tol, rc_stop)
+
+    def price(a, m, nv):
+        return price_truck_dp(inst, a, m, allow_charge=caps["allow_charge"],
+                              allow_discharge=caps["allow_discharge"], ice=caps["ice"], nu=nv)
+
+    for it in range(max_iter):
+        iters = it + 1
+        lp = solve_lp(inst, cols, battery_allowed=batt)
+        if lp.status != "optimal":
+            break
+        nu_cur = lp.nu if lp.nu is not None else np.zeros(inst.T)
+        if prev is None:
+            al, mu, nu = lp.alpha, lp.mu, nu_cur
+        else:
+            al = beta * prev[0] + (1 - beta) * lp.alpha
+            mu = beta * prev[1] + (1 - beta) * lp.mu
+            nu = beta * prev[2] + (1 - beta) * nu_cur
+        prev = (lp.alpha.copy(), lp.mu.copy(), nu_cur.copy())
+
+        added, best_true = 0, 0.0
+        for tc, _ in price(al, mu, nu):
+            rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
+            if rc < -stop and _col_key(tc) not in keys:
+                cols.append(tc); keys.add(_col_key(tc)); added += 1
+        if added == 0:
+            for tc, _ in price(lp.alpha, lp.mu, nu_cur):
+                rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
+                if rc < -stop and _col_key(tc) not in keys:
+                    cols.append(tc); keys.add(_col_key(tc)); added += 1
+        if verbose and (iters % 10 == 0 or added == 0):
+            print(f"  it {iters:3d} LP={lp.obj:9.1f} cols={len(cols):4d} best_rc={best_true:8.1f} added={added}")
+        if added == 0:
+            break
+    # pool enrichment: price at perturbed duals to add diverse covering columns,
+    # which shrinks the restricted-master integrality gap (the LP bound is unchanged).
+    if enrich > 0 and lp.status == "optimal":
+        nu0 = lp.nu if lp.nu is not None else np.zeros(inst.T)
+        rng = np.random.default_rng(0)
+        for _ in range(enrich):
+            af = lp.alpha * rng.uniform(0.7, 1.3, size=lp.alpha.shape)
+            mf = lp.mu * rng.uniform(0.7, 1.3, size=lp.mu.shape)
+            nf = nu0 * rng.uniform(0.7, 1.3, size=nu0.shape)
+            for tc, _ in price(af, mf, nf):
+                if _col_key(tc) not in keys:
+                    cols.append(tc); keys.add(_col_key(tc))
+    lp_time = time.time() - t0
+    mip = solve_milp(inst, cols, time_limit=120.0, battery_allowed=batt) if do_milp else None
+    return {"scenario": scenario, "lp_obj": lp.obj, "mip_obj": (mip.obj if mip else None),
+            "iters": iters, "n_cols": len(cols), "time": lp_time, "lp": lp, "mip": mip, "cols": cols}
+
+
+def summarize(inst: Instance, res: dict) -> dict:
+    mip = res["mip"]; cols = res["cols"]; x = mip.x
+    trucks = int(sum(round(x[r]) for r in range(len(cols))))
+    fossil = float(mip.g.sum())
+    # ICE (VSP): traction is fuel, add it; EV scenarios: traction already in g_t via charging
+    traction_fuel = sum(tr.energy for tr in inst.trips) if res["scenario"] == "vsp" else 0.0
+    return {"trucks": trucks, "batteries": int(round(mip.nb)),
+            "fuel_kwh": round(fossil + traction_fuel, 1), "obj": round(mip.obj, 1)}
+
+
+if __name__ == "__main__":
+    inst = make_instance(n_trips=12, n_locations=3, eps=2.0, seed=7)
+    for scen in ("vsp", "solar", "v2g"):
+        t = time.time(); res = column_generation(inst, scenario=scen, start="warm", do_milp=True)
+        dt = time.time() - t
+        gap = (res["mip_obj"] - res["lp_obj"]) / abs(res["mip_obj"]) * 100
+        print(f"{scen:6s}: iters={res['iters']:2d} cols={res['n_cols']:3d} gap={gap:.2f}% "
+              f"time={dt:.1f}s -> {summarize(inst, res)}")

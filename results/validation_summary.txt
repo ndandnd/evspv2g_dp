@@ -1,0 +1,30 @@
+VALIDATION SUMMARY  (covering-plus-arbitrage EVSP-V2G solver, build in progress)
+==============================================================================
+
+[1] Instance (San Nicolas-style)
+    time blocks T            = 24
+    trips                    = 20   locations = 3
+    daily demand             = 20000 kWh
+    daily solar              = 14000 kWh
+    midday surplus blocks    = [9, 10, 11, 12, 13, 14, 15]
+    max surplus / peak deficit = 1205 / 1127 kWh
+    battery G / rate rho / loss eta = 700.0 / 350.0 / 0.1
+    costs  c_g=1.0  c_v=100.0  c_b=40.0
+
+[2] Master RMP + dual calibration  (PASS criteria in parentheses)
+    LP objective             = 13450.24
+    coverage dual alpha_i    = 100.0   (should equal c_v = 100.0)
+    generation price mu_t    in [0.000, 1.000]   (should be within [0, c_g]=[0,1.0])
+    max |reduced cost| of in-basis columns = 0.00e+00   (should be ~0)
+
+[3] Battery pricing: DP validated against exact LP
+    exact LP reduced cost    = -1357.822
+    SoC-discretized DP rc    = -1357.822
+    |LP - DP|                = 2.274e-13   (should be ~0  ->  DP is exact here)
+    column charges at blocks = [13, 14, 15]   (mu there = [0.0, 0.0, 0.0])
+    column discharges at     = [0, 1, 16, 17]   (mu there = [1.0, 1.0, 1.0, 1.0])
+    -> charges where price ~0 (solar surplus), discharges where price ~c_g (peaks): correct arbitrage
+
+STATUS: instance generator, master+duals, and battery pricing DP are built and
+validated. Still to come: truck labeling DP + MILP oracle, full column-generation
+loop with greedy warm start, and the experiment figures/tables.
