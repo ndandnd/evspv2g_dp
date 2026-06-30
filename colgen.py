@@ -83,7 +83,7 @@ def initial_columns(inst: Instance, start: str, caps: dict) -> list[Column]:
 def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm",
                       tol: float = 1e-6, rc_stop: float = 0.0, beta: float = 0.5,
                       max_iter: int = 1000, do_milp: bool = True, verbose: bool = False,
-                      enrich: int = 25):
+                      enrich: int = 25, lp_solver: str = "highs", milp_solver: str = "cbc"):
     caps = SCENARIOS[scenario]
     batt = caps["battery"]
     cols = initial_columns(inst, start, caps)
@@ -100,7 +100,7 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
 
     for it in range(max_iter):
         iters = it + 1
-        lp = solve_lp(inst, cols, battery_allowed=batt)
+        lp = solve_lp(inst, cols, battery_allowed=batt, solver=lp_solver)
         if lp.status != "optimal":
             break
         nu_cur = lp.nu if lp.nu is not None else np.zeros(inst.T)
@@ -139,7 +139,8 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
                 if _col_key(tc) not in keys:
                     cols.append(tc); keys.add(_col_key(tc))
     lp_time = time.time() - t0
-    mip = solve_milp(inst, cols, time_limit=120.0, battery_allowed=batt) if do_milp else None
+    mip = solve_milp(inst, cols, time_limit=120.0, battery_allowed=batt,
+                     solver=milp_solver) if do_milp else None
     return {"scenario": scenario, "lp_obj": lp.obj, "mip_obj": (mip.obj if mip else None),
             "iters": iters, "n_cols": len(cols), "time": lp_time, "lp": lp, "mip": mip, "cols": cols}
 

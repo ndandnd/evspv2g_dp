@@ -122,7 +122,12 @@ def make_instance(
     # Manhattan distances on a small grid; depot at origin. Coordinates are
     # distinct so every deadhead between distinct locations takes >= 1 block
     # (keeps the pricing DP a clean time-forward DAG).
-    grid_pts = [(x, y) for x in range(1, 5) for y in range(1, 5)]
+    # Default 4x4 grid (16 points); grow it only when more locations are requested
+    # so instances with <= 17 locations are byte-for-byte unchanged.
+    side = 4
+    while side * side < n_locations - 1:
+        side += 1
+    grid_pts = [(x, y) for x in range(1, side + 1) for y in range(1, side + 1)]
     rng.shuffle(grid_pts)
     coords = np.zeros((n_locations, 2))
     for k in range(1, n_locations):

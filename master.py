@@ -128,7 +128,11 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True):
     return c, Aub, bub, Aeq, beq, bounds, (oX, oG, oC, oD, oS, oNb), n, T, R, cc_start
 
 
-def solve_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True) -> RMPSolution:
+def solve_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
+             solver: str = "highs") -> RMPSolution:
+    if solver == "gurobi":
+        from gurobi_master import solve_lp_gurobi
+        return solve_lp_gurobi(inst, cols, battery_allowed)
     c, Aub, bub, Aeq, beq, bounds, off, n, T, R, cc_start = _build_lp(inst, cols, battery_allowed)
     oX, oG, oC, oD, oS, oNb = off
     res = linprog(c, A_ub=Aub, b_ub=bub, A_eq=Aeq, b_eq=beq, bounds=bounds, method="highs")
@@ -153,7 +157,10 @@ def reduced_cost(col: Column, sol: RMPSolution, inst: Instance) -> float:
 
 
 def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
-               battery_allowed: bool = True) -> RMPSolution:
+               battery_allowed: bool = True, solver: str = "cbc") -> RMPSolution:
+    if solver == "gurobi":
+        from gurobi_master import solve_milp_gurobi
+        return solve_milp_gurobi(inst, cols, time_limit, battery_allowed)
     import pulp
     n, T, R = inst.n_trips, inst.T, len(cols)
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
