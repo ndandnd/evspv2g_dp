@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=evsp_solver_compare
-#SBATCH --output=logs/solver_compare_%j.out
-#SBATCH --error=logs/solver_compare_%j.err
+#SBATCH --output=solver_compare_%j.out
+#SBATCH --error=solver_compare_%j.err
 #SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
@@ -19,4 +19,3 @@ conda activate /home/nc437/evsp_env
 
 python3 -c "import gurobipy; print('gurobi', gurobipy.gurobi.version())"
 python3 solver_compare.py
-
