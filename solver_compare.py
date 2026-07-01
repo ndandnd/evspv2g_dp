@@ -36,9 +36,14 @@ except Exception:
 # ============================== CONFIG -- EDIT ME ==============================
 # (n_locations, n_tasks). Sizes chosen so CBC starts to choke (>=160 tasks) and
 # the difference becomes meaningful. Add rows to push further.
-LADDER = [(4, 40), (8, 160), (12, 360), (14, 450), (16, 600)]
+LADDER = [(8, 160), (12, 360), (14, 450), (16, 600), (18, 1000)]
 
-MILP_TIME_LIMIT = 120.0  # seconds per integer solve, for BOTH CBC and Gurobi (fair budget)
+MILP_TIME_LIMIT   = 1800.0  # default budget (s) per integer solve for BOTH solvers -- a fair, generous
+                            # 30-min head-to-head. Raise to 3600.0 for a 1-hour budget.
+CBC_TIME_LIMIT    = None    # override CBC's budget only (None -> MILP_TIME_LIMIT). CBC reliably times
+                            # out on large instances, so lowering this (e.g. 300) saves hours without
+                            # changing the conclusion; leave None for a strictly-equal comparison.
+GUROBI_TIME_LIMIT = None    # override Gurobi's budget only (None -> MILP_TIME_LIMIT).
 RELAX_CAPS      = True    # relax gen/charge caps so large instances stay feasible
 SCENARIO        = "v2g"   # "vsp" | "solar" | "v2g"
 EPS             = 2.0     # 1.5 / 2.0 / 2.5 -> 150 / 200 / 250 kWh traction per task
@@ -95,17 +100,21 @@ def run_one(n_locations, n_tasks):
         row["lp_gurobi_obj"] = round(lp_g.obj, 1)
 
     # ---- 3. MILP head-to-head on the same pool ----
-    t0 = time.time(); mip_cbc = solve_milp(inst, pool, time_limit=MILP_TIME_LIMIT,
+    cbc_budget = CBC_TIME_LIMIT or MILP_TIME_LIMIT
+    grb_budget = GUROBI_TIME_LIMIT or MILP_TIME_LIMIT
+    t0 = time.time(); mip_cbc = solve_milp(inst, pool, time_limit=cbc_budget,
                                            battery_allowed=batt, solver="cbc")
     row["milp_cbc_s"] = round(time.time() - t0, 2)
     row["milp_cbc_obj"] = round(mip_cbc.obj, 1) if mip_cbc.obj != float("inf") else None
     row["milp_cbc_gap_pct"] = round(_gap(mip_cbc.obj, lp_highs), 3)
+    row["cbc_converged"] = row["milp_cbc_s"] < 0.95 * cbc_budget      # finished before the cap => proved
     if HAVE_GUROBI:
-        t0 = time.time(); mip_g = solve_milp(inst, pool, time_limit=MILP_TIME_LIMIT,
+        t0 = time.time(); mip_g = solve_milp(inst, pool, time_limit=grb_budget,
                                              battery_allowed=batt, solver="gurobi")
         row["milp_gurobi_s"] = round(time.time() - t0, 2)
         row["milp_gurobi_obj"] = round(mip_g.obj, 1) if mip_g.obj != float("inf") else None
         row["milp_gurobi_gap_pct"] = round(_gap(mip_g.obj, lp_highs), 3)
+        row["gurobi_converged"] = row["milp_gurobi_s"] < 0.95 * grb_budget
         if row["milp_gurobi_s"] and row["milp_gurobi_s"] > 0:
             row["milp_speedup"] = round(row["milp_cbc_s"] / row["milp_gurobi_s"], 1)
 
@@ -126,8 +135,11 @@ def run_one(n_locations, n_tasks):
 
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
+    cbc_b = CBC_TIME_LIMIT or MILP_TIME_LIMIT
+    grb_b = GUROBI_TIME_LIMIT or MILP_TIME_LIMIT
     print(f"Gurobi available: {HAVE_GUROBI}   scenario={SCENARIO}  eps={EPS}  "
-          f"caps={'relaxed' if RELAX_CAPS else 'enforced'}  MILP budget={MILP_TIME_LIMIT}s\n")
+          f"caps={'relaxed' if RELAX_CAPS else 'enforced'}  "
+          f"budgets: CBC={cbc_b}s Gurobi={grb_b}s\n", flush=True)
     rows = []
     for nl, nt in LADDER:
         row = run_one(nl, nt)
@@ -137,22 +149,33 @@ def main():
                               "scenario": SCENARIO, "eps": EPS, "seed": SEED,
                               "have_gurobi": HAVE_GUROBI}, "rows": rows},
                   open(os.path.join(OUT_DIR, "solver_compare.json"), "w"), indent=2)
-        # one-line progress
-        msg = (f"loc={nl:3d} tasks={nt:4d}  CG(HiGHS)={row.get('cg_highs_s'):>6}s "
-               f"LP={row.get('lp_obj')}  CBC-MILP={row.get('milp_cbc_s')}s "
-               f"gap={row.get('milp_cbc_gap_pct')}%")
-        if HAVE_GUROBI:
-            msg += (f"  | Gurobi-MILP={row.get('milp_gurobi_s')}s "
-                    f"gap={row.get('milp_gurobi_gap_pct')}%  speedup={row.get('milp_speedup','-')}x "
-                    f"LPmatch={row.get('lp_match')}")
-        print(msg, flush=True)
+        # progress (LP-solve speed, MILP convergence, and the Gurobi-LP-backed CG)
+        print(f"loc={nl:3d} tasks={nt:4d}  cols={row.get('cols')}  LP={row.get('lp_obj')}  "
+              f"CG(HiGHS)={row.get('cg_highs_s')}s", flush=True)
+        if row.get("lp_obj") in (None, float("inf")):
+            print("    INFEASIBLE -- skipped MILP", flush=True)
+        elif HAVE_GUROBI:
+            print(f"    LP-solve : HiGHS={row.get('lp_highs_solve_s')}s  "
+                  f"Gurobi={row.get('lp_gurobi_solve_s')}s  match={row.get('lp_match')}", flush=True)
+            print(f"    MILP CBC : {row.get('milp_cbc_s')}s  gap={row.get('milp_cbc_gap_pct')}%  "
+                  f"converged={row.get('cbc_converged')}", flush=True)
+            print(f"    MILP GRB : {row.get('milp_gurobi_s')}s  gap={row.get('milp_gurobi_gap_pct')}%  "
+                  f"converged={row.get('gurobi_converged')}  speedup={row.get('milp_speedup','-')}x", flush=True)
+            if 'cg_gurobi_s' in row:
+                print(f"    CG(GurobiLP): {row.get('cg_gurobi_s')}s  iters={row.get('cg_gurobi_iters')}  "
+                      f"lp_match={row.get('cg_lp_match')}", flush=True)
+            elif 'cg_gurobi_error' in row:
+                print(f"    CG(GurobiLP): ERROR {row.get('cg_gurobi_error')}", flush=True)
+        else:
+            print(f"    MILP CBC : {row.get('milp_cbc_s')}s  gap={row.get('milp_cbc_gap_pct')}%  "
+                  f"converged={row.get('cbc_converged')}", flush=True)
 
     # CSV
     keys = ["loc", "tasks", "cg_iters", "cols", "lp_obj",
             "cg_highs_s", "cg_gurobi_s", "cg_gurobi_iters", "cg_lp_match",
             "lp_highs_solve_s", "lp_gurobi_solve_s", "lp_match",
-            "milp_cbc_s", "milp_cbc_gap_pct", "milp_gurobi_s", "milp_gurobi_gap_pct",
-            "milp_speedup"]
+            "milp_cbc_s", "milp_cbc_gap_pct", "cbc_converged",
+            "milp_gurobi_s", "milp_gurobi_gap_pct", "gurobi_converged", "milp_speedup"]
     with open(os.path.join(OUT_DIR, "solver_compare.csv"), "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=keys, extrasaction="ignore")
         w.writeheader(); w.writerows(rows)
