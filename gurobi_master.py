@@ -23,7 +23,7 @@ from master import Column, RMPSolution
 
 
 def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: bool,
-           time_limit: float | None = None):
+           time_limit: float | None = None, mip_gap: float | None = None):
     """Build the restricted master in Gurobi. Returns (model, x, g, chg, dis, s, Nb,
     cover, bal, cc) so callers can read solution values and duals."""
     import gurobipy as gp
@@ -39,6 +39,8 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
     m.Params.OutputFlag = 0
     if time_limit is not None:
         m.Params.TimeLimit = float(time_limit)
+    if integer and mip_gap is not None:
+        m.Params.MIPGap = float(mip_gap)
 
     x  = m.addVars(R, lb=0.0, vtype=vtype, name="x")
     gub = inst.gen_cap if np.isfinite(inst.gen_cap) else GRB.INFINITY
@@ -109,12 +111,13 @@ def solve_lp_gurobi(inst: Instance, cols: list[Column], battery_allowed: bool = 
 
 
 def solve_milp_gurobi(inst: Instance, cols: list[Column], time_limit: float = 120.0,
-                      battery_allowed: bool = True) -> RMPSolution:
+                      battery_allowed: bool = True, mip_gap: float | None = None) -> RMPSolution:
     from gurobipy import GRB
     n, T, R = inst.n_trips, inst.T, len(cols)
     m, x, g, chg, dis, s, Nb, cover, bal, cc = _build(inst, cols, integer=True,
                                                       battery_allowed=battery_allowed,
-                                                      time_limit=time_limit)
+                                                      time_limit=time_limit,
+                                                      mip_gap=mip_gap)
     if m.SolCount == 0:                       # no feasible integer solution found (e.g. time-out)
         return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
                            np.zeros(n), np.zeros(T), True)

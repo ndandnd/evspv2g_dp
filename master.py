@@ -157,10 +157,11 @@ def reduced_cost(col: Column, sol: RMPSolution, inst: Instance) -> float:
 
 
 def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
-               battery_allowed: bool = True, solver: str = "cbc") -> RMPSolution:
+               battery_allowed: bool = True, solver: str = "cbc",
+               mip_gap: float | None = None) -> RMPSolution:
     if solver == "gurobi":
         from gurobi_master import solve_milp_gurobi
-        return solve_milp_gurobi(inst, cols, time_limit, battery_allowed)
+        return solve_milp_gurobi(inst, cols, time_limit, battery_allowed, mip_gap)
     import pulp
     n, T, R = inst.n_trips, inst.T, len(cols)
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
@@ -193,7 +194,10 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
     p += s[T] == s[0]                         # cyclic battery (no free energy)
     for t in range(T + 1):
         p += s[t] <= G * Nb
-    st = p.solve(pulp.PULP_CBC_CMD(msg=0, timeLimit=time_limit))
+    kwargs = {"msg": 0, "timeLimit": time_limit}
+    if mip_gap is not None:
+        kwargs["gapRel"] = mip_gap
+    st = p.solve(pulp.PULP_CBC_CMD(**kwargs))
     if pulp.value(p.objective) is None:
         return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
                            np.zeros(n), np.zeros(T), True)

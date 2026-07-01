@@ -13,6 +13,9 @@ mkdir -p logs results
 
 export GRB_LICENSE_FILE=/share/apps/software/gurobi/gurobi.lic
 unset LM_LICENSE_FILE
+export EVSP_LADDER="${EVSP_LADDER:-16:600,18:1000}"
+export EVSP_MILP_TIME_LIMIT="${EVSP_MILP_TIME_LIMIT:-28800}"
+export EVSP_MIP_GAP="${EVSP_MIP_GAP:-0.01}"
 
 source /share/apps/software/anaconda3/etc/profile.d/conda.sh
 conda activate /home/nc437/evsp_env

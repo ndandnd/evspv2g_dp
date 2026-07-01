@@ -44,6 +44,7 @@ CBC_TIME_LIMIT    = None    # override CBC's budget only (None -> MILP_TIME_LIMI
                             # out on large instances, so lowering this (e.g. 300) saves hours without
                             # changing the conclusion; leave None for a strictly-equal comparison.
 GUROBI_TIME_LIMIT = None    # override Gurobi's budget only (None -> MILP_TIME_LIMIT).
+MIP_GAP          = None    # relative gap stop, e.g. 0.01 accepts 1% and stops early.
 RELAX_CAPS      = True    # relax gen/charge caps so large instances stay feasible
 SCENARIO        = "v2g"   # "vsp" | "solar" | "v2g"
 EPS             = 2.0     # 1.5 / 2.0 / 2.5 -> 150 / 200 / 250 kWh traction per task
@@ -54,6 +55,39 @@ LP_TOL          = 1e-3    # tolerance for declaring the HiGHS/Gurobi LP objectiv
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 # ==============================================================================
+
+
+def _env_float(name, default):
+    value = os.environ.get(name)
+    if value is None or value == "":
+        return default
+    return float(value)
+
+
+def _env_bool(name, default):
+    value = os.environ.get(name)
+    if value is None or value == "":
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _env_ladder(default):
+    value = os.environ.get("EVSP_LADDER")
+    if not value:
+        return default
+    ladder = []
+    for item in value.split(","):
+        loc, tasks = item.split(":")
+        ladder.append((int(loc), int(tasks)))
+    return ladder
+
+
+LADDER = _env_ladder(LADDER)
+MILP_TIME_LIMIT = _env_float("EVSP_MILP_TIME_LIMIT", MILP_TIME_LIMIT)
+CBC_TIME_LIMIT = _env_float("EVSP_CBC_TIME_LIMIT", CBC_TIME_LIMIT)
+GUROBI_TIME_LIMIT = _env_float("EVSP_GUROBI_TIME_LIMIT", GUROBI_TIME_LIMIT)
+MIP_GAP = _env_float("EVSP_MIP_GAP", MIP_GAP)
+RUN_CG_GUROBI = _env_bool("EVSP_RUN_CG_GUROBI", RUN_CG_GUROBI)
 
 
 def _instance(n_locations, n_tasks):
@@ -103,14 +137,16 @@ def run_one(n_locations, n_tasks):
     cbc_budget = CBC_TIME_LIMIT or MILP_TIME_LIMIT
     grb_budget = GUROBI_TIME_LIMIT or MILP_TIME_LIMIT
     t0 = time.time(); mip_cbc = solve_milp(inst, pool, time_limit=cbc_budget,
-                                           battery_allowed=batt, solver="cbc")
+                                           battery_allowed=batt, solver="cbc",
+                                           mip_gap=MIP_GAP)
     row["milp_cbc_s"] = round(time.time() - t0, 2)
     row["milp_cbc_obj"] = round(mip_cbc.obj, 1) if mip_cbc.obj != float("inf") else None
     row["milp_cbc_gap_pct"] = round(_gap(mip_cbc.obj, lp_highs), 3)
     row["cbc_converged"] = row["milp_cbc_s"] < 0.95 * cbc_budget      # finished before the cap => proved
     if HAVE_GUROBI:
         t0 = time.time(); mip_g = solve_milp(inst, pool, time_limit=grb_budget,
-                                             battery_allowed=batt, solver="gurobi")
+                                             battery_allowed=batt, solver="gurobi",
+                                             mip_gap=MIP_GAP)
         row["milp_gurobi_s"] = round(time.time() - t0, 2)
         row["milp_gurobi_obj"] = round(mip_g.obj, 1) if mip_g.obj != float("inf") else None
         row["milp_gurobi_gap_pct"] = round(_gap(mip_g.obj, lp_highs), 3)
@@ -139,13 +175,17 @@ def main():
     grb_b = GUROBI_TIME_LIMIT or MILP_TIME_LIMIT
     print(f"Gurobi available: {HAVE_GUROBI}   scenario={SCENARIO}  eps={EPS}  "
           f"caps={'relaxed' if RELAX_CAPS else 'enforced'}  "
-          f"budgets: CBC={cbc_b}s Gurobi={grb_b}s\n", flush=True)
+          f"budgets: CBC={cbc_b}s Gurobi={grb_b}s  mip_gap={MIP_GAP}\n", flush=True)
     rows = []
     for nl, nt in LADDER:
         row = run_one(nl, nt)
         rows.append(row)
         # incremental save so a long benchmark is never lost
         json.dump({"config": {"relax_caps": RELAX_CAPS, "milp_time_limit": MILP_TIME_LIMIT,
+                              "cbc_time_limit": CBC_TIME_LIMIT,
+                              "gurobi_time_limit": GUROBI_TIME_LIMIT,
+                              "mip_gap": MIP_GAP,
+                              "ladder": LADDER,
                               "scenario": SCENARIO, "eps": EPS, "seed": SEED,
                               "have_gurobi": HAVE_GUROBI}, "rows": rows},
                   open(os.path.join(OUT_DIR, "solver_compare.json"), "w"), indent=2)
