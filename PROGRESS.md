@@ -165,6 +165,33 @@ generation. **The planning rule is scale-free:**
 > fuel prices; below that, V2G coincides with charge-only operation, and below
 > a solar threshold electrification itself does not pay.
 
+**Technology-tier decomposition** (`tech_tiers.py`): all four regimes
+(VSP -> plain EVSP -> EVSP-Solar -> EVSP-V2G; the plain-EV tier is the
+original's mode 1, added to this repo as the `ev` scenario). The three marginal
+values are NEARLY SEPARABLE: electrification value is constant in R (it scales
+with traction and the drivetrain-efficiency x fuel-price product), solar-aware
+charging switches on with the first surplus kWh and saturates near R ~ 1, and
+V2G switches on near R ~ 1 and keeps growing where solar saturates (4.4x the
+solar value at R = 4.2). Break-even drivetrain efficiency for electrification:
+~1.4x at parity truck cost, ~1.7x at a 2x EV premium -- real EV drivetrains are
+2.5-3.5x, so electrification is robust ONCE energy is accounted honestly; under
+the equal-energy assumption it never pays. (The explicit ICE_EFF knob also
+resolves the original paper's internal inconsistency: Table 1 equates at
+10 kWh/gal while its code converts at 33 kWh/gal -- the 3.3x ratio between them
+IS the efficiency advantage.)
+
+**Profile-shape robustness** (`profile_robustness.py`): sum-preserving reshapes
+of the demand/solar profiles (solar +-2h, demand +-2h, flat demand, wide solar
+bell) x pv sweep. The savings-vs-R curve COLLAPSES across shapes: +-2h timing
+shifts change savings by < 0.3 pts at matched R (storage flexibility absorbs
+timing entirely); shape enters almost only through the surplus integral (wide
+solar -> less exceeds demand -> lower R -> the same curve at the new R);
+residual shape effects are ~3-4 pts, traceable to rate limits (thin flat-demand
+deficits need more parallel batteries: 32 vs 24 at R ~ 2.6). Consequence: the
+planning rule needs only TWO SCALARS -- daily surplus and fleet traction -- with
+no hourly profile detail, within the tested family (single daily cycle, depot
+charging, uncapped infrastructure).
+
 ---
 
 ## Artifacts (all on branch `solver-comparison`)
