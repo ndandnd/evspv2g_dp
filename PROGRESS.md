@@ -20,13 +20,14 @@ three toy cases, and 80 / 110 / 140 / **152.8571** / 170 as the instance scales
 (the fractional optimum rules out coincidence). The DP prices the same model the
 MILP formulation defines.
 
-### A2. Solver independence — exact (`solver_compare.py`)
-On shared column pools up to 1000 tasks, HiGHS and Gurobi return **identical LP
-objectives** in every instance (`lp_match=True`), and end-to-end column
-generation with either LP backend converges to the same bound. A commercial
-solver matters only for the final *integer* master: to a ~1% gap Gurobi is
-8–918x faster than CBC (600 tasks: **29.6 s vs 7.5 h**), but it changes no
-conclusions — only speed.
+### A2. Do we need Gurobi? No (a practical question, answered) (`solver_compare.py`)
+This was never a research question — just "can the paper stand on open-source
+solvers?" Answer: **yes for everything scientific.** HiGHS and Gurobi return
+identical LP objectives on shared pools up to 1000 tasks, and column generation
+converges to the same bound with either backend (HiGHS is even faster inside the
+CG loop). Gurobi is an optional convenience for the final *integer* master at
+200+ tasks (600 tasks to ~1% gap: 29.6 s vs CBC's 7.5 h); it changes no numbers
+that matter, only waiting time.
 
 ### A3. Setting reversibility — phenomena reproduced (`arxiv_settings_check.py`)
 One flag (`soc_mode="free"`) restores the original arXiv setting (free full
@@ -44,26 +45,39 @@ fuel (net export), stationary batteries deployed, EV fuel far below ICE** — an
 cyclic mode removes all of them. The free initial energy is thus isolated as the
 single cause of the level differences between the papers.
 
-### A4. Residual differences — enumerated and attributed
-Digit equality between two ~1%-gap integer heuristics was never expected. The
-known, deliberate sources:
+### A4. Residual differences — tested, not just asserted
+Digit equality between two ~1%-gap integer heuristics was never expected. Each
+candidate cause was examined:
 
-1. **Model revision (the point of the paper):** cyclic SoC vs free start. Flips
-   fuel sign, removes batteries at the original's cost levels.
-2. **No L<=4 charging-session cap** in the DP (original pricing MILP had one) —
-   our routes chain more, so fleets run ~60–80% of the original's.
-3. **Anti-cycling:** original 1.01 charge-cost premium -> small activity penalty
-   `eps_pen`. Economically equivalent damping, not identical arithmetic.
-4. **Discharge-credit semantics:** the original credited discharge at flat fuel
-   cost at any hour; the revised master credits only actual fossil displacement
-   (deficit hours). Consequence: the original's "breaks beats uniform"
-   scheduling ordering *reverses* in free mode under honest crediting — and
-   **re-emerges under the revised cyclic model** for the economically right
-   reason (idle-midday trucks charge their paid traction on free solar;
-   Proposition 1's mechanism). The revision puts the original's scheduling
-   conclusion on solid ground.
-5. **Original's solver artifacts:** pool-heuristic pricing, MIPGap 1%, and
-   averaged (fractional) truck counts in its tables.
+1. **Model revision (the point of the paper):** cyclic SoC vs free start.
+   Handled by the `soc_mode` flag — the DP-free column IS the temporarily
+   de-revised model, and it restores the original's phenomena.
+2. **The original's L<=4 charging-session cap: empirically NON-binding.** An
+   audit of every selected route in our free-mode solutions shows at most 2-3
+   station visits (cap was 4) at 20/60/120 tasks. Two consequences: the cap
+   needs no reimplementation, and **our (smaller-fleet) solutions were feasible
+   in the original's own model** — the fleet-size differences are therefore
+   attributable to the original's heuristic optimization, not to model scope.
+3. **Anti-cycling: 1.01 charge premium vs eps_pen.** Both are ~0.5%-scale
+   churn dampers (the premium hit charging only; eps_pen hits charge+discharge
+   throughput). Negligible; ignored by agreement.
+4. **Discharge crediting: closer than first thought.** Reading the original
+   master: discharge was capped by the hourly deficit with a flat fuel-price
+   credit — which is economically the same as the revised model's endogenous
+   price mu_t (= c_g exactly in deficit hours). Not a meaningful difference.
+   (A one-hour shift in the uniform-window definition was also tested and
+   changes nothing.) One small structural difference remains: the original used
+   covering (>= 1) where we use partitioning (= 1).
+5. **The primary residual: the original's numbers are one draw of a heuristic.**
+   Its pricing collected up to 3,400 pool solutions per iteration (feasible, not
+   best-first), its final master stopped at MIPGap 1%, and its Table-2 fleet
+   counts are averages over replications (12.33, 30.67, ...). Crucially, *fuel
+   is a side metric, not the objective*: near-cost-optimal solutions can differ
+   widely in fuel (our knob grid shows 27-vs-1-battery solutions within ~1% of
+   each other's cost), so side-metric orderings between two ~1% heuristics —
+   e.g. breaks-vs-uniform in free mode — are not reproducible in principle.
+   The definitive head-to-head, if wanted, is a fresh run of the original code
+   on the small deterministic cells (Gurobi required, ~minutes).
 
 **Claim to make:** same model => same LP to the digit; same settings => same
 phenomena; every residual difference is enumerated above.
