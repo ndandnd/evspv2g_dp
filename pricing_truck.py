@@ -24,7 +24,7 @@ INF = np.inf
 def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                    step: float = None, tol: float = 1e-6,
                    allow_charge: bool = True, allow_discharge: bool = True,
-                   ice: bool = False, nu: np.ndarray = None):
+                   ice: bool = False, nu: np.ndarray = None, soc_mode: str = "cyclic"):
     """Mode flags:
        ice=True            -> ICE truck: no grid coupling, traction is fuel (energy
                               constraints disabled), pure time-feasible coverage (VSP).
@@ -110,10 +110,14 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                 np.minimum(dp[tr.end, tr.eloc, :nL - sh, 1], srcmin[sh:] - alpha[tr.idx],
                            out=dp[tr.end, tr.eloc, :nL - sh, 1])
 
-    # cyclic truck: must return to full SoC by end of horizon (no free initial energy;
-    # all traction energy is charged from the grid and accounted in the balance).
-    best_si = Gidx
-    best = dp[T, origin, Gidx, 1]
+    # terminal: cyclic = return to full SoC (the revised model, no free energy);
+    # free = end at any SoC (the original arXiv setting: the full initial charge is free).
+    if soc_mode == "free":
+        term = dp[T, origin, :, 1]
+        best_si = int(np.argmin(term)); best = float(term[best_si])
+    else:
+        best_si = Gidx
+        best = dp[T, origin, Gidx, 1]
     rc = inst.c_v + best
     if not np.isfinite(best) or rc >= -tol:
         return []

@@ -23,7 +23,7 @@ from master import Column, RMPSolution
 
 
 def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: bool,
-           time_limit: float | None = None):
+           time_limit: float | None = None, soc_mode: str = "cyclic"):
     """Build the restricted master in Gurobi. Returns (model, x, g, chg, dis, s, Nb,
     cover, bal, cc) so callers can read solution values and duals."""
     import gurobipy as gp
@@ -64,7 +64,10 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
     # SoC dynamics + cyclic boundary (equalities)
     for t in range(T):
         m.addConstr(s[t + 1] == s[t] + (1 - eta) * chg[t] - dis[t], name=f"soc_{t}")
-    m.addConstr(s[T] == s[0], name="cyclic")
+    if soc_mode == "free":
+        m.addConstr(s[0] == G * Nb, name="free_full_start")   # original arXiv setting
+    else:
+        m.addConstr(s[T] == s[0], name="cyclic")
 
     # power balance (<=):  sum_r e_rt x_r - g_t + chg_t - dis_t <= -Delta_t
     bal = [m.addConstr(gp.quicksum(cols[r].e[t] * x[r]
@@ -90,11 +93,13 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
     return m, x, g, chg, dis, s, Nb, cover, bal, cc
 
 
-def solve_lp_gurobi(inst: Instance, cols: list[Column], battery_allowed: bool = True) -> RMPSolution:
+def solve_lp_gurobi(inst: Instance, cols: list[Column], battery_allowed: bool = True,
+                    soc_mode: str = "cyclic") -> RMPSolution:
     from gurobipy import GRB
     n, T, R = inst.n_trips, inst.T, len(cols)
     m, x, g, chg, dis, s, Nb, cover, bal, cc = _build(inst, cols, integer=False,
-                                                      battery_allowed=battery_allowed)
+                                                      battery_allowed=battery_allowed,
+                                                      soc_mode=soc_mode)
     if m.Status != GRB.OPTIMAL:
         return RMPSolution("infeasible", np.inf, np.zeros(R), np.zeros(T),
                            np.zeros(n), np.zeros(T), False, nu=np.zeros(T))
@@ -109,12 +114,12 @@ def solve_lp_gurobi(inst: Instance, cols: list[Column], battery_allowed: bool = 
 
 
 def solve_milp_gurobi(inst: Instance, cols: list[Column], time_limit: float = 120.0,
-                      battery_allowed: bool = True) -> RMPSolution:
+                      battery_allowed: bool = True, soc_mode: str = "cyclic") -> RMPSolution:
     from gurobipy import GRB
     n, T, R = inst.n_trips, inst.T, len(cols)
     m, x, g, chg, dis, s, Nb, cover, bal, cc = _build(inst, cols, integer=True,
                                                       battery_allowed=battery_allowed,
-                                                      time_limit=time_limit)
+                                                      time_limit=time_limit, soc_mode=soc_mode)
     if m.SolCount == 0:                       # no feasible integer solution found (e.g. time-out)
         return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
                            np.zeros(n), np.zeros(T), True)

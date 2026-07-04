@@ -66,6 +66,8 @@ PV_SWEEP        = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]  # exp3b: PV-only scale ('
 SCAL_POINTS_E20 = list(range(2, 11))    # exp5, eps=2.0: 2..10 locations = 10..450 trips
 SCAL_POINTS_E15 = list(range(2, 9))     # exp5, eps=1.5: 2..8  locations = 10..280 trips
 ENRICH          = 25
+SOC_MODE        = "cyclic"     # "cyclic" = revised model; "free" = ORIGINAL arXiv setting
+                               # (free full initial charge for trucks and batteries)
 UNIT_KWH        = 100.0        # 1 model unit = 100 kWh
 GAL_PER_UNIT    = 100.0 / 33.0 # the original code's kWh->gallon equivalence (33 kWh/gal)
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", "arxiv")
@@ -148,7 +150,8 @@ def run_case(inst: Instance, scenario: str) -> dict:
     batt = SCENARIOS[scenario]["battery"]
     t0 = time.time()
     res = column_generation(inst, scenario=scenario, start="warm", do_milp=False,
-                            enrich=ENRICH, max_iter=max(2000, 5 * inst.n_trips))
+                            enrich=ENRICH, max_iter=max(2000, 5 * inst.n_trips),
+                            soc_mode=SOC_MODE)
     cg_s = time.time() - t0
     row = {"trips": inst.n_trips, "scenario": scenario, "cg_iters": res["iters"],
            "cols": res["n_cols"], "cg_s": round(cg_s, 2),
@@ -161,7 +164,7 @@ def run_case(inst: Instance, scenario: str) -> dict:
     row["feasible"] = True
     t1 = time.time()
     mip = solve_milp(inst, res["cols"], time_limit=MILP_TIME_LIMIT,
-                     battery_allowed=batt, solver=MILP_SOLVER)
+                     battery_allowed=batt, solver=MILP_SOLVER, soc_mode=SOC_MODE)
     row["milp_s"] = round(time.time() - t1, 2)
     res["mip"] = mip
     s = summarize(inst, res)

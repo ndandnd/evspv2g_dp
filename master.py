@@ -60,7 +60,8 @@ def _layout(inst: Instance, R: int):
     return T, oX, oG, oC, oD, oS, oNb, nvar
 
 
-def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True):
+def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
+              soc_mode: str = "cyclic"):
     n, T, R = inst.n_trips, inst.T, len(cols)
     T, oX, oG, oC, oD, oS, oNb, nvar = _layout(inst, R)
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
@@ -86,7 +87,10 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True):
         Aeq[row, oS + t] = -1.0
         Aeq[row, oC + t] = -(1 - eta)
         Aeq[row, oD + t] = 1.0
-    Aeq[n + T, oS + T] = 1.0; Aeq[n + T, oS + 0] = -1.0  # cyclic: s_T = s_0 (no free energy)
+    if soc_mode == "free":                               # original arXiv: battery starts FULL, free
+        Aeq[n + T, oS + 0] = 1.0; Aeq[n + T, oNb] = -G
+    else:                                                # cyclic: s_T = s_0 (no free energy)
+        Aeq[n + T, oS + T] = 1.0; Aeq[n + T, oS + 0] = -1.0
 
     # inequalities (<=): balance (T) + SoC upper (T+1) + rate chg (T) + rate dis (T)
     #                    [+ charge-congestion cap (T) if finite]
@@ -129,11 +133,12 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True):
 
 
 def solve_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
-             solver: str = "highs") -> RMPSolution:
+             solver: str = "highs", soc_mode: str = "cyclic") -> RMPSolution:
     if solver == "gurobi":
         from gurobi_master import solve_lp_gurobi
-        return solve_lp_gurobi(inst, cols, battery_allowed)
-    c, Aub, bub, Aeq, beq, bounds, off, n, T, R, cc_start = _build_lp(inst, cols, battery_allowed)
+        return solve_lp_gurobi(inst, cols, battery_allowed, soc_mode=soc_mode)
+    c, Aub, bub, Aeq, beq, bounds, off, n, T, R, cc_start = _build_lp(inst, cols, battery_allowed,
+                                                                      soc_mode=soc_mode)
     oX, oG, oC, oD, oS, oNb = off
     res = linprog(c, A_ub=Aub, b_ub=bub, A_eq=Aeq, b_eq=beq, bounds=bounds, method="highs")
     if not res.success:
@@ -157,10 +162,11 @@ def reduced_cost(col: Column, sol: RMPSolution, inst: Instance) -> float:
 
 
 def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
-               battery_allowed: bool = True, solver: str = "cbc") -> RMPSolution:
+               battery_allowed: bool = True, solver: str = "cbc",
+               soc_mode: str = "cyclic") -> RMPSolution:
     if solver == "gurobi":
         from gurobi_master import solve_milp_gurobi
-        return solve_milp_gurobi(inst, cols, time_limit, battery_allowed)
+        return solve_milp_gurobi(inst, cols, time_limit, battery_allowed, soc_mode=soc_mode)
     import pulp
     n, T, R = inst.n_trips, inst.T, len(cols)
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
@@ -190,7 +196,10 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
         if np.isfinite(inst.charge_cap):                      # charging-congestion cap
             p += (pulp.lpSum((cols[r].e[t] if cols[r].e[t] > 0 else 0.0) * x[r]
                              for r in range(R) if cols[r].e[t] > 1e-9) + chg[t] <= inst.charge_cap)
-    p += s[T] == s[0]                         # cyclic battery (no free energy)
+    if soc_mode == "free":
+        p += s[0] == G * Nb                   # original arXiv: battery starts FULL, free
+    else:
+        p += s[T] == s[0]                     # cyclic battery (no free energy)
     for t in range(T + 1):
         p += s[t] <= G * Nb
     st = p.solve(pulp.PULP_CBC_CMD(msg=0, timeLimit=time_limit))
