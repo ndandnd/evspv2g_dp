@@ -20,9 +20,23 @@ def _col_key(c: Column):
 
 SCENARIOS = {                          # (ice, allow_charge, allow_discharge, battery)
     "vsp":   dict(ice=True,  allow_charge=False, allow_discharge=False, battery=False),
+    "ev":    dict(ice=False, allow_charge=True,  allow_discharge=False, battery=False,
+                  flat_price=True),     # plain EVSP (original mode 1): solar-blind, every
+                                        # charged kWh pays c_g flat; fleet does not touch
+                                        # the power balance (energy folded into route cost)
     "solar": dict(ice=False, allow_charge=True,  allow_discharge=False, battery=False),
     "v2g":   dict(ice=False, allow_charge=True,  allow_discharge=True,  battery=True),
 }
+
+
+def _flatten_col(col: Column, inst: Instance) -> Column:
+    """Flat-price scenario: fold energy cost (c_g per drawn unit) into the fixed
+    cost and zero the profile, so the master's balance neither sees nor credits it."""
+    draw = float(np.maximum(col.e, 0.0).sum())
+    if draw <= 1e-12:
+        return col
+    return Column(col.kind, col.a, np.zeros(inst.T), col.fixed_cost + inst.c_g * draw,
+                  col.label + "|flat")
 
 
 def single_trip_column(inst: Instance, tr, ice: bool = False, free_start: bool = False) -> Column:
@@ -92,7 +106,11 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
                       soc_mode: str = "cyclic"):
     caps = SCENARIOS[scenario]
     batt = caps["battery"]
+    flat = caps.get("flat_price", False)
     cols = initial_columns(inst, start, caps, soc_mode=soc_mode)
+    if flat:
+        cols = [_flatten_col(c, inst) for c in cols]
+        mu_flat = np.full(inst.T, inst.c_g)   # every charged unit pays c_g, always
     keys = set(_col_key(c) for c in cols)
     t0 = time.time()
     pricing_t = 0.0                       # cumulative DP-pricing wall-clock (for pricing-share stats)
@@ -102,9 +120,12 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
     stop = max(tol, rc_stop)
 
     def price(a, m, nv):
-        return price_truck_dp(inst, a, m, allow_charge=caps["allow_charge"],
-                              allow_discharge=caps["allow_discharge"], ice=caps["ice"], nu=nv,
-                              soc_mode=soc_mode)
+        if flat:                               # solar-blind: constant energy price, no nu
+            m, nv = mu_flat, np.zeros(inst.T)
+        out = price_truck_dp(inst, a, m, allow_charge=caps["allow_charge"],
+                             allow_discharge=caps["allow_discharge"], ice=caps["ice"], nu=nv,
+                             soc_mode=soc_mode)
+        return [(_flatten_col(tc, inst), rc) for tc, rc in out] if flat else out
 
     for it in range(max_iter):
         iters = it + 1
