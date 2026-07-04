@@ -42,7 +42,7 @@ BASE = dict(cg=40.0, cb=36.0, rho=1.75, pv=2.0, points=3, eps=2.0)
 
 SLICES = {
     "solar_x_demand":    {"pv": [1.0, 2.0, 3.0], "points": [2, 3, 4]},   # 20/60/120 trips
-    "solar_x_intensity": {"pv": [1.0, 2.0, 3.0], "eps": [1.5, 2.0, 2.5]},
+    "solar_x_intensity": {"pv": [1.0, 2.0, 3.0], "eps": [0.5, 1.0, 1.5, 2.0, 2.5]},  # full duty-cycle range: light shuttle .. heavy off-road/patrol
     "prices":            {"cg": [20.0, 40.0, 100.0], "cb": [26.0, 36.0, 51.0]},
     "charge_rate":       {"rho": [0.5, 1.75]},                            # 100 / 350 kW
 }

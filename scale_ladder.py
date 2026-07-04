@@ -40,9 +40,11 @@ CO_SCALE      = True                     # True: microgrid grows with the fleet 
                                          # = 7 * trips/60). False: fixed microgrid, R ~ 1/trips.
 CG_COST, CB_COST, RHO, EPS = 40.0, 36.0, 1.75, 2.0
 # Trip windows: BREAKS = original (4-9 & 18-23, 10 start hours). FULL_DAY gives
-# 14 start hours -> points 7 = 588 trips, 8 = 784. Realistic-duty suggestion:
-# WINDOWS = FULL_DAY with EPS = 1.0 (100 kWh per 2-h task; heavy duty = 1.5,
-# light = 0.5 -- measured EV-truck consumption, multiples of the 0.5 SoC lattice).
+# 14 start hours -> points 7 = 588 trips, 8 = 784.
+# EPS is a DUTY-CYCLE axis (kWh per 2-h task, in 0.5-lattice multiples):
+#   0.5 = light shuttle, 1.0 = medium on-road, 1.5 = heavy on-road,
+#   2.0-2.5 = heavy off-road / patrol / PTO auxiliary loads (the original's range).
+# Results collapse onto R = surplus/traction, so conclusions are duty-cycle-agnostic.
 FULL_DAY = [(6, 20)]
 WINDOWS  = BREAKS
 SCEN_LIST = ["vsp", "solar", "v2g"]
