@@ -39,6 +39,12 @@ PV_LIST       = [1.0, 2.0, 3.0]         # per-pv R stays ~constant when CO_SCALE
 CO_SCALE      = True                     # True: microgrid grows with the fleet (solar_mult
                                          # = 7 * trips/60). False: fixed microgrid, R ~ 1/trips.
 CG_COST, CB_COST, RHO, EPS = 40.0, 36.0, 1.75, 2.0
+# Trip windows: BREAKS = original (4-9 & 18-23, 10 start hours). FULL_DAY gives
+# 14 start hours -> points 7 = 588 trips, 8 = 784. Realistic-duty suggestion:
+# WINDOWS = FULL_DAY with EPS = 1.0 (100 kWh per 2-h task; heavy duty = 1.5,
+# light = 0.5 -- measured EV-truck consumption, multiples of the 0.5 SoC lattice).
+FULL_DAY = [(6, 20)]
+WINDOWS  = BREAKS
 SCEN_LIST = ["vsp", "solar", "v2g"]
 MILP_TIME_LIMIT = 300.0
 MILP_SOLVER = "gurobi" if HAVE_GUROBI else "cbc"
@@ -47,9 +53,11 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", "arxiv
 
 
 def make_inst(points, pv):
-    n_trips = points * (points - 1) * 10
-    sm = 7.0 * (n_trips / 60.0) if CO_SCALE else 7.0
-    inst = build_instance(points, EPS, BREAKS, solar_mult=sm, pv_scale=pv)
+    n_starts = sum(b - a for a, b in WINDOWS)
+    n_trips = points * (points - 1) * n_starts
+    # co-scale reference: 60 trips at eps=2.0 (12 MWh traction) is the base microgrid
+    sm = 7.0 * (n_trips * EPS / (60.0 * 2.0)) if CO_SCALE else 7.0
+    inst = build_instance(points, EPS, WINDOWS, solar_mult=sm, pv_scale=pv)
     inst.c_g, inst.c_b, inst.rho = CG_COST, CB_COST, RHO
     return inst, sm
 
