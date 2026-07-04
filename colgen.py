@@ -89,8 +89,9 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
     cols = initial_columns(inst, start, caps)
     keys = set(_col_key(c) for c in cols)
     t0 = time.time()
+    pricing_t = 0.0                       # cumulative DP-pricing wall-clock (for pricing-share stats)
     prev = None
-    lp = solve_lp(inst, cols, battery_allowed=batt)
+    lp = solve_lp(inst, cols, battery_allowed=batt, solver=lp_solver)
     iters = 0
     stop = max(tol, rc_stop)
 
@@ -113,12 +114,14 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
         prev = (lp.alpha.copy(), lp.mu.copy(), nu_cur.copy())
 
         added, best_true = 0, 0.0
-        for tc, _ in price(al, mu, nu):
+        tp = time.time(); cand = price(al, mu, nu); pricing_t += time.time() - tp
+        for tc, _ in cand:
             rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
             if rc < -stop and _col_key(tc) not in keys:
                 cols.append(tc); keys.add(_col_key(tc)); added += 1
         if added == 0:
-            for tc, _ in price(lp.alpha, lp.mu, nu_cur):
+            tp = time.time(); cand = price(lp.alpha, lp.mu, nu_cur); pricing_t += time.time() - tp
+            for tc, _ in cand:
                 rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
                 if rc < -stop and _col_key(tc) not in keys:
                     cols.append(tc); keys.add(_col_key(tc)); added += 1
@@ -135,14 +138,16 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
             af = lp.alpha * rng.uniform(0.7, 1.3, size=lp.alpha.shape)
             mf = lp.mu * rng.uniform(0.7, 1.3, size=lp.mu.shape)
             nf = nu0 * rng.uniform(0.7, 1.3, size=nu0.shape)
-            for tc, _ in price(af, mf, nf):
+            tp = time.time(); cand = price(af, mf, nf); pricing_t += time.time() - tp
+            for tc, _ in cand:
                 if _col_key(tc) not in keys:
                     cols.append(tc); keys.add(_col_key(tc))
     lp_time = time.time() - t0
     mip = solve_milp(inst, cols, time_limit=120.0, battery_allowed=batt,
                      solver=milp_solver) if do_milp else None
     return {"scenario": scenario, "lp_obj": lp.obj, "mip_obj": (mip.obj if mip else None),
-            "iters": iters, "n_cols": len(cols), "time": lp_time, "lp": lp, "mip": mip, "cols": cols}
+            "iters": iters, "n_cols": len(cols), "time": lp_time, "pricing_time": pricing_t,
+            "lp": lp, "mip": mip, "cols": cols}
 
 
 def summarize(inst: Instance, res: dict) -> dict:

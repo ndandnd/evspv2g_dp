@@ -22,7 +22,7 @@ INF = np.inf
 
 
 def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
-                   step: float = 5.0, tol: float = 1e-6,
+                   step: float = None, tol: float = 1e-6,
                    allow_charge: bool = True, allow_discharge: bool = True,
                    ice: bool = False, nu: np.ndarray = None):
     """Mode flags:
@@ -30,6 +30,8 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                               constraints disabled), pure time-feasible coverage (VSP).
        allow_discharge=False -> EV with charge-only (no V2G), as in EVSP-Solar.
     """
+    if step is None:                                 # per-instance SoC lattice (default 5 kWh)
+        step = getattr(inst, "soc_step", 5.0)
     T = inst.T
     eta, rho, G = inst.eta, inst.rho, inst.G
     eps = inst.eps_pen

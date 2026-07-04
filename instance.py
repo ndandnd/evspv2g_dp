@@ -45,6 +45,7 @@ class Instance:
     depot: int = 0                  # depot/station location index (origin)
     gen_cap: float = float("inf")   # max fossil generation per block (kWh); inf = uncapped
     charge_cap: float = float("inf")# max total charging power per block (kWh); inf = uncapped
+    soc_step: float = 5.0           # SoC lattice step for the pricing DP (same units as G)
 
     @property
     def Delta(self) -> np.ndarray:
