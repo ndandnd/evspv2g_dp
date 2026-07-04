@@ -117,8 +117,10 @@ def gen_trips(n_locs: int, windows) -> list[tuple[int, int, int]]:
 
 
 def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_MULT,
-                   pv_scale: float = 1.0) -> Instance:
-    """The original instance on a half-block grid (exact 0.5-block deadheads)."""
+                   pv_scale: float = 1.0, delta_hourly=None) -> Instance:
+    """The original instance on a half-block grid (exact 0.5-block deadheads).
+    delta_hourly: optional 24-vector of hourly Delta (units) overriding the
+    delta.csv transform -- used by the profile-robustness study."""
     assert points <= len(_COORDS), f"at most {len(_COORDS)} locations supported"
     T = 48                                                 # 24 h x 2 half-blocks
     coords = [(0.0, 0.0)] + list(_COORDS[:points])         # 0 = depot O
@@ -133,7 +135,8 @@ def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_M
     trips.sort(key=lambda tr: (tr.start, tr.idx))
     for k, tr in enumerate(trips):
         tr.idx = k
-    delta_h = load_delta_units(solar_mult, pv_scale)       # units per hour
+    delta_h = (np.asarray(delta_hourly, dtype=float) if delta_hourly is not None
+               else load_delta_units(solar_mult, pv_scale))   # units per hour
     delta = np.repeat(delta_h / 2.0, 2)                    # units per half-block
     return Instance(
         T=T, D=np.maximum(delta, 0.0), P=np.maximum(-delta, 0.0), trips=trips, dist=dist,
