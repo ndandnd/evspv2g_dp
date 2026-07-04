@@ -52,6 +52,13 @@ class RMPSolution:
     nu: np.ndarray = None            # charge-congestion-cap dual (>=0)
 
 
+# Coverage sense: False = set partitioning (== 1, the revised model); True = set
+# covering (>= 1), matching the ORIGINAL master's trip_coverage constraints.
+# Module-level on purpose: it is a temporary alignment switch for head-to-head
+# tests (set `master.COVERING = True`), not a modeling knob of the revision.
+COVERING = False
+
+
 def _layout(inst: Instance, R: int):
     T = inst.T
     oX, oG, oC, oD = 0, R, R + T, R + 2 * T
@@ -60,9 +67,12 @@ def _layout(inst: Instance, R: int):
     return T, oX, oG, oC, oD, oS, oNb, nvar
 
 
-def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True):
+def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
+              soc_mode: str = "cyclic"):
     n, T, R = inst.n_trips, inst.T, len(cols)
     T, oX, oG, oC, oD, oS, oNb, nvar = _layout(inst, R)
+    n_slack = n if COVERING else 0   # covering: zero-cost surplus slack per trip (>= 1)
+    nvar += n_slack
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
     if not battery_allowed:
         rho = 0.0; G = 0.0          # forces N_b-scaled bounds to 0 -> no stationary battery
@@ -80,13 +90,18 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True):
     for r, col in enumerate(cols):
         Aeq[:n, oX + r] = col.a
     beq[:n] = 1.0
+    for i in range(n_slack):                            # covering: sum a x - s_i = 1, s_i >= 0
+        Aeq[i, nvar - n_slack + i] = -1.0
     for t in range(T):                                  # SoC dynamics
         row = n + t
         Aeq[row, oS + t + 1] = 1.0
         Aeq[row, oS + t] = -1.0
         Aeq[row, oC + t] = -(1 - eta)
         Aeq[row, oD + t] = 1.0
-    Aeq[n + T, oS + T] = 1.0; Aeq[n + T, oS + 0] = -1.0  # cyclic: s_T = s_0 (no free energy)
+    if soc_mode == "free":                               # original arXiv: battery starts FULL, free
+        Aeq[n + T, oS + 0] = 1.0; Aeq[n + T, oNb] = -G
+    else:                                                # cyclic: s_T = s_0 (no free energy)
+        Aeq[n + T, oS + T] = 1.0; Aeq[n + T, oS + 0] = -1.0
 
     # inequalities (<=): balance (T) + SoC upper (T+1) + rate chg (T) + rate dis (T)
     #                    [+ charge-congestion cap (T) if finite]
@@ -129,11 +144,12 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True):
 
 
 def solve_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
-             solver: str = "highs") -> RMPSolution:
+             solver: str = "highs", soc_mode: str = "cyclic") -> RMPSolution:
     if solver == "gurobi":
         from gurobi_master import solve_lp_gurobi
-        return solve_lp_gurobi(inst, cols, battery_allowed)
-    c, Aub, bub, Aeq, beq, bounds, off, n, T, R, cc_start = _build_lp(inst, cols, battery_allowed)
+        return solve_lp_gurobi(inst, cols, battery_allowed, soc_mode=soc_mode)
+    c, Aub, bub, Aeq, beq, bounds, off, n, T, R, cc_start = _build_lp(inst, cols, battery_allowed,
+                                                                      soc_mode=soc_mode)
     oX, oG, oC, oD, oS, oNb = off
     res = linprog(c, A_ub=Aub, b_ub=bub, A_eq=Aeq, b_eq=beq, bounds=bounds, method="highs")
     if not res.success:
@@ -158,10 +174,11 @@ def reduced_cost(col: Column, sol: RMPSolution, inst: Instance) -> float:
 
 def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
                battery_allowed: bool = True, solver: str = "cbc",
-               mip_gap: float | None = None) -> RMPSolution:
+               soc_mode: str = "cyclic", mip_gap: float | None = None) -> RMPSolution:
     if solver == "gurobi":
         from gurobi_master import solve_milp_gurobi
-        return solve_milp_gurobi(inst, cols, time_limit, battery_allowed, mip_gap)
+        return solve_milp_gurobi(inst, cols, time_limit, battery_allowed,
+                                 soc_mode=soc_mode, mip_gap=mip_gap)
     import pulp
     n, T, R = inst.n_trips, inst.T, len(cols)
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
@@ -179,7 +196,8 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
           + inst.c_b * Nb
           + eps * pulp.lpSum(chg[t] + dis[t] for t in range(T)))
     for i in range(n):
-        p += pulp.lpSum(cols[r].a[i] * x[r] for r in range(R) if cols[r].a[i] > 0.5) == 1
+        cov = pulp.lpSum(cols[r].a[i] * x[r] for r in range(R) if cols[r].a[i] > 0.5)
+        p += (cov >= 1) if COVERING else (cov == 1)
     for t in range(T):
         p += (g[t] - pulp.lpSum(cols[r].e[t] * x[r] for r in range(R) if abs(cols[r].e[t]) > 1e-9)
               - chg[t] + dis[t] >= inst.Delta[t])
@@ -191,7 +209,10 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
         if np.isfinite(inst.charge_cap):                      # charging-congestion cap
             p += (pulp.lpSum((cols[r].e[t] if cols[r].e[t] > 0 else 0.0) * x[r]
                              for r in range(R) if cols[r].e[t] > 1e-9) + chg[t] <= inst.charge_cap)
-    p += s[T] == s[0]                         # cyclic battery (no free energy)
+    if soc_mode == "free":
+        p += s[0] == G * Nb                   # original arXiv: battery starts FULL, free
+    else:
+        p += s[T] == s[0]                     # cyclic battery (no free energy)
     for t in range(T + 1):
         p += s[t] <= G * Nb
     kwargs = {"msg": 0, "timeLimit": time_limit}

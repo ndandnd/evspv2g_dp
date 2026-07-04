@@ -25,13 +25,14 @@ SCENARIOS = {                          # (ice, allow_charge, allow_discharge, ba
 }
 
 
-def single_trip_column(inst: Instance, tr, ice: bool = False) -> Column:
-    """Exactly-feasible cyclic single-trip truck column. For EV scenarios, recharge
-    the traction energy from the grid during idle at-origin blocks (SoC returns to
-    full, no free energy). For ICE (VSP), traction is fuel, so e = 0."""
+def single_trip_column(inst: Instance, tr, ice: bool = False, free_start: bool = False) -> Column:
+    """Exactly-feasible single-trip truck column. Cyclic: recharge the traction
+    energy from the grid during idle at-origin blocks (SoC returns to full, no free
+    energy). Free-start (original arXiv setting): the initial full charge is free,
+    so no recharge is needed (e = 0). ICE (VSP): traction is fuel, e = 0."""
     a = np.zeros(inst.n_trips); a[tr.idx] = 1.0
     e = np.zeros(inst.T)
-    if not ice:
+    if not ice and not free_start:
         o = inst.depot
         trac = tr.energy + inst.deadhead_energy(o, tr.sloc) + inst.deadhead_energy(tr.eloc, o)
         need = trac / (1 - inst.eta)
@@ -45,7 +46,8 @@ def single_trip_column(inst: Instance, tr, ice: bool = False) -> Column:
     return Column("truck", a, e, inst.c_v, f"single[{tr.idx}]")
 
 
-def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None) -> list[Column]:
+def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None,
+                      soc_mode: str = "cyclic") -> list[Column]:
     """Multi-trip covering columns via repeated DP: reward uncovered trips, forbid
     re-covering already-covered ones, peel off a route each round. With an rng, the
     per-trip reward is randomized so repeated calls yield distinct full covers."""
@@ -59,7 +61,8 @@ def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None) ->
         for i in remaining:
             alpha[i] = (rng.uniform(2.0, 4.0) if rng is not None else 3.0) * inst.c_v
         out = price_truck_dp(inst, alpha, mu, allow_charge=caps["allow_charge"],
-                             allow_discharge=caps["allow_discharge"], ice=caps["ice"])
+                             allow_discharge=caps["allow_discharge"], ice=caps["ice"],
+                             soc_mode=soc_mode)
         if not out:
             break
         col = out[0][0]
@@ -71,11 +74,13 @@ def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None) ->
     return cols
 
 
-def initial_columns(inst: Instance, start: str, caps: dict) -> list[Column]:
-    base = [single_trip_column(inst, tr, ice=caps["ice"]) for tr in inst.trips]
+def initial_columns(inst: Instance, start: str, caps: dict,
+                    soc_mode: str = "cyclic") -> list[Column]:
+    base = [single_trip_column(inst, tr, ice=caps["ice"], free_start=(soc_mode == "free"))
+            for tr in inst.trips]
     if start == "cold":
         return base
-    extra = dp_greedy_columns(inst, caps)
+    extra = dp_greedy_columns(inst, caps, soc_mode=soc_mode)
     seen = set(_col_key(c) for c in base)
     return base + [c for c in extra if _col_key(c) not in seen]
 
@@ -83,24 +88,27 @@ def initial_columns(inst: Instance, start: str, caps: dict) -> list[Column]:
 def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm",
                       tol: float = 1e-6, rc_stop: float = 0.0, beta: float = 0.5,
                       max_iter: int = 1000, do_milp: bool = True, verbose: bool = False,
-                      enrich: int = 25, lp_solver: str = "highs", milp_solver: str = "cbc"):
+                      enrich: int = 25, lp_solver: str = "highs", milp_solver: str = "cbc",
+                      soc_mode: str = "cyclic"):
     caps = SCENARIOS[scenario]
     batt = caps["battery"]
-    cols = initial_columns(inst, start, caps)
+    cols = initial_columns(inst, start, caps, soc_mode=soc_mode)
     keys = set(_col_key(c) for c in cols)
     t0 = time.time()
+    pricing_t = 0.0                       # cumulative DP-pricing wall-clock (for pricing-share stats)
     prev = None
-    lp = solve_lp(inst, cols, battery_allowed=batt)
+    lp = solve_lp(inst, cols, battery_allowed=batt, solver=lp_solver, soc_mode=soc_mode)
     iters = 0
     stop = max(tol, rc_stop)
 
     def price(a, m, nv):
         return price_truck_dp(inst, a, m, allow_charge=caps["allow_charge"],
-                              allow_discharge=caps["allow_discharge"], ice=caps["ice"], nu=nv)
+                              allow_discharge=caps["allow_discharge"], ice=caps["ice"], nu=nv,
+                              soc_mode=soc_mode)
 
     for it in range(max_iter):
         iters = it + 1
-        lp = solve_lp(inst, cols, battery_allowed=batt, solver=lp_solver)
+        lp = solve_lp(inst, cols, battery_allowed=batt, solver=lp_solver, soc_mode=soc_mode)
         if lp.status != "optimal":
             break
         nu_cur = lp.nu if lp.nu is not None else np.zeros(inst.T)
@@ -113,12 +121,14 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
         prev = (lp.alpha.copy(), lp.mu.copy(), nu_cur.copy())
 
         added, best_true = 0, 0.0
-        for tc, _ in price(al, mu, nu):
+        tp = time.time(); cand = price(al, mu, nu); pricing_t += time.time() - tp
+        for tc, _ in cand:
             rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
             if rc < -stop and _col_key(tc) not in keys:
                 cols.append(tc); keys.add(_col_key(tc)); added += 1
         if added == 0:
-            for tc, _ in price(lp.alpha, lp.mu, nu_cur):
+            tp = time.time(); cand = price(lp.alpha, lp.mu, nu_cur); pricing_t += time.time() - tp
+            for tc, _ in cand:
                 rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
                 if rc < -stop and _col_key(tc) not in keys:
                     cols.append(tc); keys.add(_col_key(tc)); added += 1
@@ -135,14 +145,16 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
             af = lp.alpha * rng.uniform(0.7, 1.3, size=lp.alpha.shape)
             mf = lp.mu * rng.uniform(0.7, 1.3, size=lp.mu.shape)
             nf = nu0 * rng.uniform(0.7, 1.3, size=nu0.shape)
-            for tc, _ in price(af, mf, nf):
+            tp = time.time(); cand = price(af, mf, nf); pricing_t += time.time() - tp
+            for tc, _ in cand:
                 if _col_key(tc) not in keys:
                     cols.append(tc); keys.add(_col_key(tc))
     lp_time = time.time() - t0
     mip = solve_milp(inst, cols, time_limit=120.0, battery_allowed=batt,
-                     solver=milp_solver) if do_milp else None
+                     solver=milp_solver, soc_mode=soc_mode) if do_milp else None
     return {"scenario": scenario, "lp_obj": lp.obj, "mip_obj": (mip.obj if mip else None),
-            "iters": iters, "n_cols": len(cols), "time": lp_time, "lp": lp, "mip": mip, "cols": cols}
+            "iters": iters, "n_cols": len(cols), "time": lp_time, "pricing_time": pricing_t,
+            "lp": lp, "mip": mip, "cols": cols}
 
 
 def summarize(inst: Instance, res: dict) -> dict:
