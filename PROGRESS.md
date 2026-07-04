@@ -11,6 +11,9 @@ has a runnable artifact in this repo; all numbers below are from those runs.
 
 ## A. Does the new DP match the old MILP? (validation chain)
 
+*(Self-contained version of this section, focused on the LP-equivalence
+evidence: `DP_MIP_EQUIVALENCE.md`.)*
+
 ### A1. Implementation equivalence — exact
 Three independently written codebases (this repo; a from-scratch PuLP/CBC
 implementation; a third independent implementation) were run on
