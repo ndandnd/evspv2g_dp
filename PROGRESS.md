@@ -79,8 +79,28 @@ candidate cause was examined:
    The definitive head-to-head, if wanted, is a fresh run of the original code
    on the small deterministic cells (Gurobi required, ~minutes).
 
+### A5. Head-to-head vs the original code — resolved to 0.5% (`original_headtohead.py`)
+A fresh Gurobi run of the original repo on its own default cell (20 tasks,
+eps=2.5, mode 3) printed objective **295.00**. Our DP, fully aligned (free
+start, covering, base-load constant removed), gave **237.10** — a 19.6% gap that
+led to a finding: the original `build_master` (which produces its FINAL LP/MIP)
+prices battery routes with `bus_cost` (45) instead of `batt_cost` (36); the
+`batt_cost` argument is never used. Replicating that slip on our side
+(`c_b = 45`) gives **296.50 vs their 295.00 — a 0.5% match**, and reproduces the
+original's truck-heavy/battery-light solution structure (9 trucks + 1 battery
+instead of 7 + 9). Two corollaries: (i) the original's published solutions had
+battery deployment suppressed by ~25% overpricing in the final solve, which
+also explains the remaining fleet-size differences; (ii) the original's final
+"MIP" is built with `binary=False` in the code version at hand (its LP and MIP
+print identical to 13 decimals), i.e. the published MIP values are LP values.
+Independent verification: change `bus_cost` -> `batt_cost` on the two
+`route_costs_batt` lines of the old repo's `build_master` and rerun — it should
+then print ~237, our intended-model number.
+
 **Claim to make:** same model => same LP to the digit; same settings => same
-phenomena; every residual difference is enumerated above.
+phenomena — including a 0.5% objective match against a fresh run of the
+original code once its own final-master battery-cost slip is accounted for;
+every residual difference is enumerated above.
 
 ---
 

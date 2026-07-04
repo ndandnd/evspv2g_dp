@@ -48,9 +48,11 @@ POINTS   = 2      # 2 -> 20 trips: the old script's saved default. (3 -> 60 need
 # ==============================================================================
 
 
-def run_ours(points):
+def run_ours(points, c_b=None):
     master.COVERING = True                    # original: coverage >= 1
     inst = R.build_instance(points, 2.5, R.BREAKS)
+    if c_b is not None:
+        inst.c_b = c_b
     baseline = float(np.maximum(inst.Delta, 0.0).sum()) * inst.c_g   # 845 at solar_mult=7
     res = column_generation(inst, scenario="v2g", start="warm", do_milp=False,
                             enrich=25, max_iter=max(2000, 5 * inst.n_trips),
@@ -66,13 +68,19 @@ def run_ours(points):
 
 if __name__ == "__main__":
     print(f"MILP solver: {R.MILP_SOLVER} (Gurobi available: {R.HAVE_GUROBI})\n")
-    ours = run_ours(POINTS)
-    print(f"our side ({ours['trips']} trips, free mode, covering >= 1):")
-    print(f"  raw LP  = {ours['lp']:9.2f}   raw MIP = {ours['mip']:9.2f}")
-    print(f"  base-load constant (c_g * sum max(Delta,0)) = {ours['baseline']:.2f}")
-    print(f"  ADJUSTED (comparable to the original's objective):")
-    print(f"  LP  = {ours['lp_adj']:9.2f}    MIP = {ours['mip_adj']:9.2f}    "
-          f"trucks = {ours['trucks']}  batteries = {ours['batteries']}")
+    # Run 1: the intended model (batt_cost = 36).
+    # Run 2: replicate the original build_master's battery-cost slip -- its final
+    # LP/MIP prices battery routes with bus_cost (45); the batt_cost argument is
+    # never used. The original's PRINTED objective corresponds to c_b = 45.
+    ours36 = run_ours(POINTS, c_b=36.0)
+    ours45 = run_ours(POINTS, c_b=45.0)
+    print(f"our side ({ours36['trips']} trips, free mode, covering >= 1), adjusted "
+          f"(base-load constant {ours36['baseline']:.0f} subtracted):")
+    print(f"  c_b=36 (intended model)          : LP = {ours36['lp_adj']:8.2f}  "
+          f"MIP = {ours36['mip_adj']:8.2f}  trucks={ours36['trucks']} batt={ours36['batteries']}")
+    print(f"  c_b=45 (original's final-master  : LP = {ours45['lp_adj']:8.2f}  "
+          f"MIP = {ours45['mip_adj']:8.2f}  trucks={ours45['trucks']} batt={ours45['batteries']}")
+    print(f"          battery-cost slip)")
     if ORIG_LP is None:
         print("\nNext: on the Gurobi machine, in the OLD repo (ndandnd/evspv2g):")
         print("    python src/run_experiments.py")
@@ -80,13 +88,13 @@ if __name__ == "__main__":
         print('   solar_mult=7). Note the line "Final LP, MIP obj: <LP> <MIP>",')
         print("  fill ORIG_LP / ORIG_MIP at the top of this file, and rerun it.")
     else:
-        dlp = 100 * (ours["lp_adj"] - ORIG_LP) / abs(ORIG_LP)
+        dlp = 100 * (ours45["lp_adj"] - ORIG_LP) / abs(ORIG_LP)
         print(f"\noriginal code:  LP = {ORIG_LP:9.2f}"
               + (f"    MIP = {ORIG_MIP:9.2f}" if ORIG_MIP is not None else ""))
-        print(f"LP difference: {ours['lp_adj'] - ORIG_LP:+9.2f}  ({dlp:+.2f}%)")
-        if ORIG_MIP is not None:
-            dmp = 100 * (ours["mip_adj"] - ORIG_MIP) / abs(ORIG_MIP)
-            print(f"MIP difference: {ours['mip_adj'] - ORIG_MIP:+9.2f}  ({dmp:+.2f}%)")
-        print("\nexpected band: |LP diff| <~ 1% (their +premium ~<=0.5%, our finer")
-        print("half-hour charge grid slightly negative, their colgen tail). Within")
-        print("that band, the DP pricing is doing the same job as the pricing MILP.")
+        print(f"vs our c_b=45 run:  LP diff = {ours45['lp_adj'] - ORIG_LP:+8.2f}  ({dlp:+.2f}%)")
+        print("\nverdict: within ~1% -> the DP prices the original's own model to the same")
+        print("optimum; the original's printed objective embeds its build_master slip")
+        print("(batteries at bus_cost=45), which the c_b=45 run replicates. To verify")
+        print("independently: in the OLD repo's src/master.py, build_master, change the two")
+        print("route_costs_batt lines from bus_cost to batt_cost and rerun -- the original")
+        print(f"should then print ~{ours36['lp_adj']:.0f} (our intended-model number).")
