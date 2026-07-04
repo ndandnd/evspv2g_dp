@@ -52,6 +52,13 @@ class RMPSolution:
     nu: np.ndarray = None            # charge-congestion-cap dual (>=0)
 
 
+# Coverage sense: False = set partitioning (== 1, the revised model); True = set
+# covering (>= 1), matching the ORIGINAL master's trip_coverage constraints.
+# Module-level on purpose: it is a temporary alignment switch for head-to-head
+# tests (set `master.COVERING = True`), not a modeling knob of the revision.
+COVERING = False
+
+
 def _layout(inst: Instance, R: int):
     T = inst.T
     oX, oG, oC, oD = 0, R, R + T, R + 2 * T
@@ -64,6 +71,8 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
               soc_mode: str = "cyclic"):
     n, T, R = inst.n_trips, inst.T, len(cols)
     T, oX, oG, oC, oD, oS, oNb, nvar = _layout(inst, R)
+    n_slack = n if COVERING else 0   # covering: zero-cost surplus slack per trip (>= 1)
+    nvar += n_slack
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
     if not battery_allowed:
         rho = 0.0; G = 0.0          # forces N_b-scaled bounds to 0 -> no stationary battery
@@ -81,6 +90,8 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
     for r, col in enumerate(cols):
         Aeq[:n, oX + r] = col.a
     beq[:n] = 1.0
+    for i in range(n_slack):                            # covering: sum a x - s_i = 1, s_i >= 0
+        Aeq[i, nvar - n_slack + i] = -1.0
     for t in range(T):                                  # SoC dynamics
         row = n + t
         Aeq[row, oS + t + 1] = 1.0
@@ -184,7 +195,8 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
           + inst.c_b * Nb
           + eps * pulp.lpSum(chg[t] + dis[t] for t in range(T)))
     for i in range(n):
-        p += pulp.lpSum(cols[r].a[i] * x[r] for r in range(R) if cols[r].a[i] > 0.5) == 1
+        cov = pulp.lpSum(cols[r].a[i] * x[r] for r in range(R) if cols[r].a[i] > 0.5)
+        p += (cov >= 1) if COVERING else (cov == 1)
     for t in range(T):
         p += (g[t] - pulp.lpSum(cols[r].e[t] * x[r] for r in range(R) if abs(cols[r].e[t]) > 1e-9)
               - chg[t] + dis[t] >= inst.Delta[t])

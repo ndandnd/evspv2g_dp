@@ -19,6 +19,7 @@ rest of the repo runs fine on machines without gurobipy installed.
 from __future__ import annotations
 import numpy as np
 from instance import Instance
+import master as _master
 from master import Column, RMPSolution
 
 
@@ -57,9 +58,10 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
     )
 
     # coverage (set partitioning) -- equalities
-    cover = [m.addConstr(gp.quicksum(cols[r].a[i] * x[r]
-                                     for r in range(R) if cols[r].a[i] > 0.5) == 1.0,
-                         name=f"cov_{i}") for i in range(n)]
+    def _cov(i):
+        expr = gp.quicksum(cols[r].a[i] * x[r] for r in range(R) if cols[r].a[i] > 0.5)
+        return m.addConstr(expr >= 1.0 if _master.COVERING else expr == 1.0, name=f"cov_{i}")
+    cover = [_cov(i) for i in range(n)]
 
     # SoC dynamics + cyclic boundary (equalities)
     for t in range(T):
