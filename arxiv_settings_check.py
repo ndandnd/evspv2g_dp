@@ -75,9 +75,14 @@ def table2():
             print(f"{trips:6d} {sched:>8} | {og:10.2f} {ot:7.2f} | "
                   f"{free['gal']:11.2f} {free['trucks']:7d} {free['batt']:5d} | "
                   f"{cyc['gal']:13.2f} {cyc['trucks']:7d} {cyc['batt']:5d}", flush=True)
-    print("\nReading: DP-free reproduces the original's signs and phenomena (negative")
-    print("fuel = export, batteries deployed, breaks < uniform fuel); DP-cyclic flips")
-    print("fuel positive and removes the batteries -- the free-energy artifact isolated.")
+    print("\nReading: DP-free reproduces the original's core phenomena -- negative fuel")
+    print("(net export), stationary batteries deployed, EV fuel far below ICE -- and")
+    print("DP-cyclic flips fuel positive and removes the batteries: the free-energy")
+    print("artifact isolated by one flag. One ordering is semantics-sensitive: with")
+    print("free energy and deficit-only discharge credit, UNIFORM (work midday, export")
+    print("on the deficit shoulders) beats breaks; under the revised cyclic model the")
+    print("original's breaks-first ordering re-emerges -- idle-midday trucks charge")
+    print("their (now paid) traction on free solar, which is Proposition 1's mechanism.")
 
 
 if __name__ == "__main__":
