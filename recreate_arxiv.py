@@ -117,7 +117,7 @@ def gen_trips(n_locs: int, windows) -> list[tuple[int, int, int]]:
 
 
 def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_MULT,
-                   pv_scale: float = 1.0, delta_hourly=None) -> Instance:
+                   pv_scale: float = 1.0, delta_hourly=None, trip_list=None) -> Instance:
     """The original instance on a half-block grid (exact 0.5-block deadheads).
     delta_hourly: optional 24-vector of hourly Delta (units) overriding the
     delta.csv transform -- used by the profile-robustness study."""
@@ -131,7 +131,8 @@ def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_M
             man = abs(coords[a][0] - coords[b][0]) + abs(coords[a][1] - coords[b][1])
             dist[a, b] = 2.0 * man                         # half-blocks (0.5 h -> 1 block); energy = dist * epd
     trips = [Trip(idx=k, start=2 * st, end=2 * (st + 2), sloc=sl, eloc=el, energy=eps)
-             for k, (sl, el, st) in enumerate(gen_trips(points, windows))]
+             for k, (sl, el, st) in enumerate(trip_list if trip_list is not None
+                                              else gen_trips(points, windows))]
     trips.sort(key=lambda tr: (tr.start, tr.idx))
     for k, tr in enumerate(trips):
         tr.idx = k
