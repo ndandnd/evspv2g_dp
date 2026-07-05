@@ -333,58 +333,72 @@ if tt:
             "equal-energy convention (1x) it never does. Solar plays no role in this "
             "figure: the electrification value is independent of R (separability).")
 
-# %% Figure 8.5 -- THE money figure: same solar, different fleets -> one curve
+# %% Figure 8.5 -- THE money figure: one curve, no special treatment (option b)
 pg = load(ARX, "planning_grid.json") or []
 sl = load(ARX, "scale_ladder.json") or []
 pr = load(ARX, "profile_robustness.json") or []
+cs = load(ARX, "collapse_sweep.json") or []
+se = load(ARX, "solar_ensemble.json") or []
 def _basep(r):
     return (r.get("cg"), r.get("cb"), r.get("rho")) == (40.0, 36.0, 1.75)
-pts = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in pg if _basep(r) and "v2g_vs_solar_pct" in r]
-pts += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in sl if "v2g_vs_solar_pct" in r]
-pts += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in pr if "v2g_vs_solar_pct" in r]
-FLEETS = {2: ("small fleet (20 tasks)", "#2E75B6"), 3: ("medium fleet (60 tasks)", "#e08020"),
-          4: ("large fleet (120 tasks)", "#c0392b")}
-grp = {k: [] for k in FLEETS}
-for r in pg:
-    if _basep(r) and r.get("eps") == 2.0 and r.get("points") in FLEETS and "v2g_vs_solar_pct" in r:
-        grp[r["points"]].append((r["surplus_mwh"], r["ratio"], r["v2g_vs_solar_pct"]))
-if len(pts) >= 5 and any(grp.values()):
-    fig, ax = plt.subplots(1, 2, figsize=(11.5, 4.8), sharey=True, constrained_layout=True)
-    for k, (lab, c) in FLEETS.items():
-        sub = sorted(grp[k])
-        if sub:
-            ax[0].plot([p[0] for p in sub], [p[2] for p in sub], "-o", color=c, label=lab)
-            ax[1].scatter([p[1] for p in sub], [p[2] for p in sub], color=c, s=45, zorder=3)
-    ax[0].set_xlabel("solar surplus available (MWh/day)")
-    ax[0].set_ylabel("% of total daily cost saved by enabling V2G")
-    ax[0].set_title("same solar farm, three fleets: no single answer")
-    ax[0].legend()
-    allp = sorted(pts)
-    xs_a = np.array([p[0] for p in allp]); ys_a = np.array([p[1] for p in allp])
-    ax[1].scatter(xs_a, ys_a, color="#bbbbbb", s=16, alpha=0.85,
-                  label=f"all {len(allp)} design studies (sizes, duties, PV, profile shapes)")
-    kw = max(3, len(allp) // 8)
-    xt = [np.median(xs_a[max(0, i2 - kw):i2 + kw]) for i2 in range(len(allp))]
-    yt = [np.median(ys_a[max(0, i2 - kw):i2 + kw]) for i2 in range(len(allp))]
-    ax[1].plot(xt, yt, "-", color="#444", lw=2, alpha=0.8)
-    ax[1].axvline(1.0, ls=":", color="#888")
-    ax[1].text(1.02, 0.95, "R = 1", transform=ax[1].get_xaxis_transform(), fontsize=9, color="#666")
-    ax[1].set_xlabel("R = solar surplus / fleet driving energy (per day)")
-    ax[1].set_title("divide by fleet energy: every study lands on one curve")
-    ax[1].legend(loc="lower right", fontsize=8.5)
+design = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in pg if _basep(r) and "v2g_vs_solar_pct" in r]
+design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in sl if "v2g_vs_solar_pct" in r]
+design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in pr if "v2g_vs_solar_pct" in r]
+design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in cs if "v2g_vs_solar_pct" in r]
+weather = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in se if "v2g_vs_solar_pct" in r]
+if len(design) >= 10:
+    fig, ax = plt.subplots(figsize=(9, 5.2), constrained_layout=True)
+    ax.axhspan(-3, 2, color="#fdf2e3", zorder=0)
+    ax.text(0.985, 1.0, "below typical V2G-enablement costs (illustrative)", ha="right",
+            fontsize=8, color="#a07020", transform=ax.get_yaxis_transform())
+    xs_a = np.array([p[0] for p in sorted(design)]); ys_a = np.array([p[1] for p in sorted(design)])
+    ax.scatter(xs_a, ys_a, color="#9aa7b5", s=16, alpha=0.8,
+               label=f"{len(design)} hypothetical bases (20-560 tasks, 50-250 kWh duties, PV sizes, profile shapes)")
+    if weather:
+        ax.scatter([p[0] for p in weather], [p[1] for p in weather], marker="^", s=34,
+                   color="#2E75B6", label=f"one base under {len(weather)} real 2023 weather days")
+    kw = max(3, len(design) // 10)
+    med = [np.median(ys_a[max(0, i2 - kw):i2 + kw]) for i2 in range(len(design))]
+    ax.plot(xs_a, med, "-", color="#444", lw=2, alpha=0.85, label="rolling median (guide, not a fit)")
+    ax.axvline(1.0, ls=":", color="#888")
+    ax.text(1.02, 0.03, "R = 1: surplus equals fleet appetite", transform=ax.get_xaxis_transform(),
+            fontsize=8.5, color="#666")
+    # twin-pair annotation: very different bases, same R, same value
+    twin_a = next((r for r in pg if _basep(r) and r.get("points") == 2 and r.get("pv") == 1.0
+                   and r.get("eps") == 2.0 and "v2g_vs_solar_pct" in r), None)
+    twin_b = next((r for r in pg if _basep(r) and r.get("points") == 4 and r.get("pv") == 2.0
+                   and r.get("eps") == 2.0 and "v2g_vs_solar_pct" in r), None)
+    if twin_a and twin_b:
+        for t in (twin_a, twin_b):
+            ax.scatter([t["ratio"]], [t["v2g_vs_solar_pct"]], s=130, facecolors="none",
+                       edgecolors="#c0392b", lw=1.6, zorder=4)
+        ax.annotate("6x different fleet sizes,\nsame R, same value\n"
+                    f"(20 tasks: {twin_a['v2g_vs_solar_pct']:.1f}%, 120 tasks: {twin_b['v2g_vs_solar_pct']:.1f}%)",
+                    xy=(twin_a["ratio"], twin_a["v2g_vs_solar_pct"]),
+                    xytext=(1.7, 12), fontsize=8.5, color="#c0392b",
+                    arrowprops=dict(arrowstyle="->", color="#c0392b", lw=1.0))
+    ax.set_xlabel("R = daily leftover solar / daily fleet driving energy  ('solar per unit of fleet appetite')")
+    ax.set_ylabel("% of total daily cost saved by enabling V2G (gross)")
+    ax.set_title("what is V2G worth? one number answers: compute R, read the curve")
+    ax.legend(loc="upper left", fontsize=8.5)
     finish(fig, "fig_8_5_collapse.png")
     GALLERY.append("\n![fig 8.5](fig_8_5_collapse.png)\n")
     caption("Figure 8.5",
-        "How much does enabling V2G save? Left: for a FIXED solar surplus the answer "
-        "depends entirely on the fleet -- the same 16.8 MWh/day is transformative for a "
-        "small 20-task fleet (65%), moderate for 60 tasks (30%), and nearly worthless for "
-        "120 tasks (5%), because a bigger fleet's own charging absorbs the surplus before "
-        "any is left to arbitrage. Right: dividing the surplus by the fleet's driving "
-        "energy (R) removes that dependence -- the three colored fleets and every other "
-        "design study in this paper (gray: 20-560 tasks, light-to-heavy duties, PV sizes, "
-        "reshaped demand/solar profiles) land on one curve. Planning recipe: estimate two "
-        "energies from audits, form R, read the curve -- below R ~ 0.3 V2G adds nothing, "
-        "near R ~ 1 it switches on, beyond R ~ 2.5 it approaches full fossil displacement.")
+        "Each dot is one hypothetical base -- a specific fleet size (20-560 daily tasks), "
+        "task energy (50-250 kWh), PV size, network, and schedule -- solved to optimality "
+        "TWICE, with V2G allowed and charge-only; its height is the total-daily-cost "
+        "saving V2G delivered. The x-coordinate is R = daily leftover solar divided by "
+        "the fleet's daily driving energy: 'solar per unit of fleet appetite'. The same "
+        "16.8 MWh surplus is a feast for a fleet that drives on 4 MWh and irrelevant to "
+        "one that needs 24, so raw MWh predicts nothing while R predicts everything: "
+        "bases of wildly different size and duty land on one curve (circled: a 20-task "
+        "and a 6x-larger 120-task base at similar R save the same 4.8%/4.9%). Triangles "
+        "are a single base re-solved under real 2023 weather days -- weather moves a "
+        "site along the curve, not off it. The line is a rolling median through the "
+        "dots, a guide rather than a fit. Reading for a planner: compute R from two "
+        "energy audits and read off the gross saving; the buy decision then subtracts "
+        "site-specific V2G-enablement costs (chargers, degradation -- not modeled here), "
+        "for which the shaded band marks a typical range.")
 else:
     print("  [skip] not enough data for the collapse figure")
 
