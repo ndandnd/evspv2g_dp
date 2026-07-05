@@ -49,7 +49,8 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
     if nu is None:
         nu = np.zeros(T)
     slope_c = (mu + nu + eps) * step / (1 - eta)     # charging also pays the charger-capacity price nu
-    slope_d = (eps - mu) * step                      # cost per -level when discharging, per block
+    deg = getattr(inst, "deg_cost", 0.0)             # cycling degradation on discharge
+    slope_d = (eps + deg - mu) * step                # cost per -level when discharging, per block
 
     # deadhead level shifts and time
     dd_time = np.zeros((nLoc, nLoc), dtype=int)
@@ -172,7 +173,9 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                 t, loc, si = pt, fl, pi; found = True; break
         if not found:
             break
-    col = Column("truck", a, e_prof, inst.c_v, f"truck[{int(a.sum())}trips]")
+    dis_total = float(np.maximum(-e_prof, 0.0).sum())
+    col = Column("truck", a, e_prof, inst.c_v + deg * dis_total,   # degradation folded into
+                 f"truck[{int(a.sum())}trips]")                    # the column fixed cost
     return [(col, rc)]
 
 

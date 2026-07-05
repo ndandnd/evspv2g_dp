@@ -55,7 +55,8 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
     m.setObjective(
         gp.quicksum(cols[r].cost(eps) * x[r] for r in range(R))
         + gp.quicksum(inst.c_g * g[t] for t in range(T))
-        + gp.quicksum(eps * (chg[t] + dis[t]) for t in range(T))
+        + gp.quicksum(eps * chg[t] + (eps + getattr(inst, "deg_cost", 0.0)) * dis[t]
+                      for t in range(T))
         + inst.c_b * Nb,
         GRB.MINIMIZE,
     )

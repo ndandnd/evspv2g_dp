@@ -82,7 +82,7 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
         c[oX + r] = col.cost(eps)
     c[oG:oG + T] = inst.c_g
     c[oC:oC + T] = eps
-    c[oD:oD + T] = eps
+    c[oD:oD + T] = eps + getattr(inst, "deg_cost", 0.0)   # cycling degradation on discharge
     c[oNb] = inst.c_b
 
     # equalities: coverage (n) + SoC dynamics (T) + s0 (1)
@@ -191,10 +191,11 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
     chg = [pulp.LpVariable(f"c_{t}", lowBound=0) for t in range(T)]
     dis = [pulp.LpVariable(f"d_{t}", lowBound=0) for t in range(T)]
     s = [pulp.LpVariable(f"s_{t}", lowBound=0) for t in range(T + 1)]
+    deg = getattr(inst, "deg_cost", 0.0)
     p += (pulp.lpSum(inst.c_g * g[t] for t in range(T))
           + pulp.lpSum(cols[r].cost(eps) * x[r] for r in range(R))
           + inst.c_b * Nb
-          + eps * pulp.lpSum(chg[t] + dis[t] for t in range(T)))
+          + pulp.lpSum(eps * chg[t] + (eps + deg) * dis[t] for t in range(T)))
     for i in range(n):
         cov = pulp.lpSum(cols[r].a[i] * x[r] for r in range(R) if cols[r].a[i] > 0.5)
         p += (cov >= 1) if COVERING else (cov == 1)
