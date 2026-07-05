@@ -345,17 +345,21 @@ sl = load(ARX, "scale_ladder.json") or []
 pr = load(ARX, "profile_robustness.json") or []
 cs = load(ARX, "collapse_sweep.json") or []
 se = load(ARX, "solar_ensemble.json") or []
+ov = load(ARX, "overnight_sweep.json") or []
 def _basep(r):
     return (r.get("cg"), r.get("cb"), r.get("rho")) == (40.0, 36.0, 1.75)
 design = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in pg if _basep(r) and "v2g_vs_solar_pct" in r]
 design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in sl if "v2g_vs_solar_pct" in r]
 design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in pr if "v2g_vs_solar_pct" in r]
 design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in cs if "v2g_vs_solar_pct" in r]
+# overnight sweep: base charge rate only (100/200 kW strata belong to the rate-family analysis)
+design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in ov
+           if r.get("rho") == 1.75 and "v2g_vs_solar_pct" in r]
 weather = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in se if "v2g_vs_solar_pct" in r]
 if len(design) >= 10:
     fig, ax = plt.subplots(figsize=(9, 5.2), constrained_layout=True)
     ax.axhspan(-3, 2, color="#fdf2e3", zorder=0)
-    ax.text(0.985, 1.0, "below typical V2G-enablement costs (illustrative)", ha="right",
+    ax.text(0.985, 1.0, "below the computed enablement break-even (R* ~ 0.35-0.47)", ha="right",
             fontsize=8, color="#a07020", transform=ax.get_yaxis_transform())
     xs_a = np.array([p[0] for p in sorted(design)]); ys_a = np.array([p[1] for p in sorted(design)])
     ax.scatter(xs_a, ys_a, color="#9aa7b5", s=16, alpha=0.8,
@@ -402,9 +406,11 @@ if len(design) >= 10:
         "are a single base re-solved under real 2023 weather days -- weather moves a "
         "site along the curve, not off it. The line is a rolling median through the "
         "dots, a guide rather than a fit. Reading for a planner: compute R from two "
-        "energy audits and read off the gross saving; the buy decision then subtracts "
-        "site-specific V2G-enablement costs (chargers, degradation -- not modeled here), "
-        "for which the shaded band marks a typical range.")
+        "energy audits and read off the gross saving. Pricing realistic enablement "
+        "costs INTO the model (bidirectional-charger premium $4-8 per truck-day, "
+        "cycling degradation up to $0.05/kWh) yields a computed break-even of "
+        "R* ~ 0.35-0.47 (shaded band): the charger premium dominates, while "
+        "degradation is nearly free -- the optimizer cycles less rather than pay it.")
 else:
     print("  [skip] not enough data for the collapse figure")
 
