@@ -203,40 +203,56 @@ caption("Table 8.3",
     "columns is attributable to this single modeling choice (plus the original's "
     "documented final-master battery-cost slip).")
 
-# %% Figure 8.2 -- the artifact isolated (free vs cyclic bars)
-e1c = load(ARX, "exp1_regimes.json")
-e1f = load(FREE, "exp1_regimes.json")
-if e1c and e1f:
-    def _pick(data, eps):
-        return {(r["scenario"], r["trips"]): r for r in data if r.get("eps") == eps and r.get("feasible")}
-    eps_show = 2.5
-    c, f = _pick(e1c, eps_show), _pick(e1f, eps_show)
-    trips_list = sorted({t for (_, t) in c} & {t for (_, t) in f})
-    if trips_list:
-        fig, ax = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True, constrained_layout=True)
-        W = 0.25
-        for k, (data, ttl) in enumerate(((f, "original setting (free start)"),
-                                         (c, "revised model (cyclic)"))):
-            for i, scen in enumerate(("vsp", "solar", "v2g")):
-                xs = np.arange(len(trips_list)) + (i - 1) * W
-                vals = [(data[(scen, t)]["fuel_kwh"] - BASELINE_KWH) / 1000 if (scen, t) in data else np.nan
-                        for t in trips_list]
-                ax[k].bar(xs, vals, W, label={"vsp": "VSP (ICE)", "solar": "EVSP-Solar", "v2g": "EVSP-V2G"}[scen],
-                          color={"vsp": "#888888", "solar": "#e08020", "v2g": "#2E75B6"}[scen])
-            ax[k].axhline(0, color="k", lw=0.7)
-            ax[k].set_xticks(range(len(trips_list))); ax[k].set_xticklabels(trips_list)
-            ax[k].set_xlabel("tasks"); ax[k].set_title(ttl)
-        ax[0].set_ylabel("fleet-incremental fossil energy (MWh)")
-        ax[0].legend()
-        finish(fig, "fig_8_2_artifact.png")
-        GALLERY.append("\n![fig 8.2](fig_8_2_artifact.png)\n")
-        caption("Figure 8.2",
-            "Fleet-incremental fossil energy (relative to the no-fleet base load) by regime, "
-            "eps=2.5. Left: the original's free-start setting -- V2G fleets export energy they "
-            "never paid for (negative bars), the source of the conference version's dramatic "
-            "results. Right: the revised cyclic model -- every stored kWh is drawn from the "
-            "grid, fuel is positive, and V2G's advantage must come from genuine arbitrage of "
-            "the solar surplus. One flag switches between the two; nothing else changes.")
+# %% Figure 8.2 -- fossil energy by regime as solar grows (cyclic, honest accounting)
+rf = load(ARX, "regime_fuel.json")
+if rf:
+    ICE_EFF_SHOW = 3.3          # drivetrain convention for the VSP bars (1.0 = equal-energy)
+    pvs = sorted({r["pv"] for r in rf})
+    def _incr(r):
+        if r["regime"] == "vsp":
+            return ICE_EFF_SHOW * r["traction_units"] / 10.0
+        if r["regime"] == "ev":
+            return r["fleet_paid_units"] / 10.0
+        return (r["g_units"] - r["baseline_units"]) / 10.0
+    fig, ax = plt.subplots(figsize=(8.5, 4.6), constrained_layout=True)
+    W = 0.2
+    NAMES = {"vsp": "VSP (ICE)", "ev": "EVSP (solar-blind)", "solar": "EVSP-Solar", "v2g": "EVSP-V2G"}
+    COLS = {"vsp": "#888888", "ev": "#7d3c98", "solar": "#e08020", "v2g": "#2E75B6"}
+    tbl_rows = []
+    for i2, reg in enumerate(("vsp", "ev", "solar", "v2g")):
+        xs, ys = [], []
+        for k2, pv in enumerate(pvs):
+            r = next((x for x in rf if x["pv"] == pv and x["regime"] == reg), None)
+            if r:
+                xs.append(k2 + (i2 - 1.5) * W); ys.append(_incr(r))
+        ax.bar(xs, ys, W * 0.95, label=NAMES[reg], color=COLS[reg])
+        for k2, pv in enumerate(pvs):
+            r = next((x for x in rf if x["pv"] == pv and x["regime"] == reg), None)
+            if r:
+                tbl_rows.append([f"{r['surplus_mwh']} MWh surplus", NAMES[reg], f"{_incr(r):+.1f}",
+                                 r["trucks"], r["batteries"]])
+    ax.axhline(0, color="k", lw=0.9)
+    labels = []
+    for pv in pvs:
+        r0 = next(x for x in rf if x["pv"] == pv)
+        labels.append(f"{r0['surplus_mwh']} MWh/day\nsurplus")
+    ax.set_xticks(range(len(pvs))); ax.set_xticklabels(labels)
+    ax.set_ylabel("fleet-attributable fossil energy (MWh/day)\n(negative = fleet REDUCES base fossil)")
+    ax.set_title("fossil energy by regime as solar grows (cyclic model, ICE at 3.3x thermal)")
+    ax.legend()
+    finish(fig, "fig_8_2_regime_fuel.png")
+    GALLERY.append("\n![fig 8.2](fig_8_2_regime_fuel.png)\n")
+    table(md_table(["solar surplus", "regime", "incremental fossil (MWh)", "trucks", "batteries"], tbl_rows))
+    caption("Figure 8.2 (and table)",
+        "Fossil energy attributable to the fleet -- total generation minus the no-fleet "
+        "baseline -- by regime and solar level, under the honest cyclic model with the "
+        "measured 3.3x ICE drivetrain convention. At scarce solar the four regimes are "
+        "ordered by efficiency alone; as the surplus grows, solar-aware charging first "
+        "erases the EV fleet's own fossil draw, and V2G then turns the fleet NEGATIVE: "
+        "the vehicles displace base-load fossil they never consumed, an honest, "
+        "fully-paid-for analogue of the original paper's net export. The solar-blind "
+        "EVSP column isolates how much of the electric fleet's advantage is drivetrain "
+        "efficiency versus microgrid coupling.")
 
 # %% [markdown]
 # ## 8.3 Deployment conditions
@@ -291,20 +307,37 @@ if tt:
                     xs.append(i + (j - (len(prems) - 1) / 2) * W); ys.append(r["electrify_value"])
             ax.bar(xs, ys, W * 0.95, label=f"EV premium {prem}x")
         ax.axhline(0, color="k", lw=0.8)
+        # break-even efficiency per premium (linear in eff; slope = c_g x traction)
+        be_txt = []
+        for prem in prems:
+            pr = sorted([(r["ice_eff"], r["electrify_value"]) for r in sens if r["ev_premium"] == prem])
+            if len(pr) >= 2:
+                (x1, y1), (x2, y2) = pr[0], pr[-1]
+                slope = (y2 - y1) / (x2 - x1)
+                if slope > 0:
+                    be_txt.append(f"premium {prem}x: break-even at {x1 - y1 / slope:.2f}x")
+        if be_txt:
+            ax.text(0.02, 0.97, "\n".join(be_txt), transform=ax.transAxes, va="top",
+                    fontsize=9, bbox=dict(boxstyle="round", fc="#f7f7f7", ec="#999"))
         ax.set_xticks(range(len(effs))); ax.set_xticklabels([f"{e}x" for e in effs])
-        ax.set_xlabel("EV drivetrain-efficiency advantage"); ax.set_ylabel("electrification value ($/day)")
-        ax.set_title("when does electrification pay?  (R=1.4; solar/V2G values unchanged across all bars)")
+        ax.set_xlabel("drivetrain efficiency: kWh of diesel an ICE burns per kWh an EV uses\n"
+                      "(1x = equal-energy bookkeeping; measured trucks ~2.5-3.5x)")
+        ax.set_ylabel("$ saved per day by electrifying (VSP cost - plain-EV cost)")
+        ax.set_title("when does electrification pay?  (negative = EVs cost more; solar plays no role here)")
         ax.legend()
         finish(fig, "fig_8_4_electrify.png")
         GALLERY.append("\n![fig 8.4](fig_8_4_electrify.png)\n")
         caption("Figure 8.4",
-            "The electrification decision isolated: value of replacing ICE with plain EVs as a "
-            "function of the drivetrain-efficiency advantage and the EV truck-cost premium. "
-            "Under the equal-energy convention (1x) electrification never pays -- the "
-            "assumption implicit in parts of the conference version; at the measured 2.5-3.5x "
-            "advantage it pays robustly even at a 2x truck premium (break-even at 1.4-1.7x). "
-            "The solar-awareness and V2G values (Fig. 8.3) are unchanged across every bar: the "
-            "three deployment decisions are independent.")
+            "The electrification decision isolated. X-axis: how many kWh of diesel an ICE "
+            "truck burns to do the work an EV does on one kWh (an engine-physics ratio, "
+            "nothing to do with solar); 1x is the equal-energy bookkeeping convention, "
+            "measured heavy trucks are ~2.5-3.5x. Y-axis: dollars per day saved by "
+            "replacing the ICE fleet with a plain-EV fleet; negative bars mean the EV "
+            "fleet costs MORE (bigger fleet + truck premium, no efficiency edge). "
+            "Break-even is at 1.40x / 1.53x / 1.68x for truck premiums of 1.0x / 1.5x / "
+            "2.0x -- comfortably below reality, so electrification pays robustly once "
+            "energy is accounted honestly. Solar-awareness and V2G values are unchanged "
+            "across every bar: the three deployment decisions are independent.")
 
 # %% Figure 8.5 -- THE money figure: the R-collapse across everything
 pg = load(ARX, "planning_grid.json") or []
@@ -321,9 +354,17 @@ for r in pr:
     if "v2g_vs_solar_pct" in r:
         pts.append((r["ratio"], r["v2g_vs_solar_pct"], "reshaped profiles (5 shapes)"))
 if len(pts) >= 5:
-    fig, ax = plt.subplots(figsize=(8, 4.8), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(8.5, 5), constrained_layout=True)
     ax.axvspan(0, 1.0, color="#f2f2f2")
-    ax.text(0.45, 0.93, "V2G ~ charge-only", transform=ax.get_xaxis_transform(), ha="center", fontsize=9, color="#666")
+    for x0, lab in ((0.45, "V2G adds ~nothing"), (1.6, "transition"), (3.0, "V2G transformative")):
+        ax.text(x0, 0.94, lab, transform=ax.get_xaxis_transform(), ha="center", fontsize=9, color="#666")
+    # rolling-median trend of all points
+    allp = sorted(pts)
+    xs_a = np.array([p[0] for p in allp]); ys_a = np.array([p[1] for p in allp])
+    k = max(3, len(allp) // 8)
+    xt = [np.median(xs_a[max(0, i - k):i + k]) for i in range(len(allp))]
+    yt = [np.median(ys_a[max(0, i - k):i + k]) for i in range(len(allp))]
+    ax.plot(xt, yt, "-", color="#c0392b", lw=2, alpha=0.7, zorder=1, label="trend (rolling median)")
     marks = {"planning grid (demand/intensity/solar knobs)": ("o", "#2E75B6"),
              "scale ladder (20-560 tasks, co-scaled)": ("s", "#888888"),
              "reshaped profiles (5 shapes)": ("^", "#2e9e3f")}
@@ -338,14 +379,16 @@ if len(pts) >= 5:
     finish(fig, "fig_8_5_collapse.png")
     GALLERY.append("\n![fig 8.5](fig_8_5_collapse.png)\n")
     caption("Figure 8.5",
-        "The central planning result. Every base-price experiment in this study -- varying "
-        "task counts (20-560), task energy intensities, PV capacity, and even the shape of "
-        "the demand and solar profiles -- collapses onto a single curve of V2G value "
-        "against R = daily solar surplus / fleet traction energy. V2G is worthless below "
-        "R ~ 0.3, switches on near R ~ 1, and approaches full fossil displacement above "
-        "R ~ 2.5. Timing shifts of +-2 h move points ALONG the curve (through the surplus "
-        "integral), not off it: the jointly optimized fleet-plus-storage supplies the "
-        "temporal flexibility, so the deployment decision needs only two scalars.")
+        "The central planning result, one dot at a time: each marker is one complete "
+        "microgrid design study -- a specific number of tasks (20 to 560), task energy, "
+        "PV size, and demand/solar shape -- solved to optimality TWICE, with and without "
+        "V2G; its height is the cost V2G saved. Dozens of very different microgrids all "
+        "land on one curve when plotted against a single number, R = (daily solar energy "
+        "left over after serving the base load) / (energy the fleet's driving needs). "
+        "Consequence: to estimate what V2G is worth for a candidate site, compute R from "
+        "two energy audits -- no schedule details needed. V2G adds nothing below R ~ 0.3 "
+        "(any surplus is eaten by charging), switches on near R ~ 1 (surplus exceeds what "
+        "driving absorbs), and approaches full fossil displacement above R ~ 2.5.")
 else:
     print("  [skip] not enough data for the collapse figure")
 
