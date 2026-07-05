@@ -57,13 +57,13 @@ SH_I, SH_K = (int(x) for x in SHARD.split("/"))
 # ==============================================================================
 
 
-def solve(inst, scen, cv=CV):
+def solve(inst, scen, cv=CV, enrich=25, tl=None):
     inst.c_g, inst.c_b, inst.rho, inst.c_v = CG_COST, CB_COST, RHO, cv
     res = column_generation(inst, scenario=scen, start="warm", do_milp=False,
-                            enrich=25, max_iter=max(2000, 5 * inst.n_trips))
+                            enrich=enrich, max_iter=max(2000, 5 * inst.n_trips))
     if res["lp_obj"] == float("inf"):
         return None
-    mip = solve_milp(inst, res["cols"], time_limit=MILP_TIME_LIMIT,
+    mip = solve_milp(inst, res["cols"], time_limit=tl or MILP_TIME_LIMIT,
                      battery_allowed=SCENARIOS[scen]["battery"], solver=MILP_SOLVER)
     return {"total": mip.obj, "trucks": int(sum(round(x) for x in mip.x)),
             "batteries": int(round(mip.nb)), "mip": mip, "cols": res["cols"],
@@ -162,7 +162,7 @@ def s7_timeline():
     for cv in (45.0, 150.0):
         inst = build_instance(POINTS_DEF, 1.0, FULL_DAY, pv_scale=PV_DEF,
                               trip_list=fleet, duration=1.0)
-        r = solve(inst, "v2g", cv=cv)
+        r = solve(inst, "v2g", cv=cv, enrich=200, tl=300.0)   # publication-grade pool
         lanes = []
         for i in np.flatnonzero(r["mip"].x > 0.5):
             reps = int(round(r["mip"].x[i]))
@@ -184,6 +184,7 @@ def s7_timeline():
 def s8_exp5_e15():
     print("S8: eps=1.5 scalability ladder extended to 10 locations", flush=True)
     R.MILP_TIME_LIMIT = 300.0
+    R.ENRICH = 100                     # thicker pool -> tighter restricted-master gap
     rows = []
     for pts in range(2, 11):
         inst = R.build_instance(pts, 1.5, R.SCAL)
