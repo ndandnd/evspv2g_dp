@@ -117,10 +117,13 @@ def gen_trips(n_locs: int, windows) -> list[tuple[int, int, int]]:
 
 
 def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_MULT,
-                   pv_scale: float = 1.0, delta_hourly=None, trip_list=None) -> Instance:
+                   pv_scale: float = 1.0, delta_hourly=None, trip_list=None,
+                   duration: float = 2.0) -> Instance:
     """The original instance on a half-block grid (exact 0.5-block deadheads).
     delta_hourly: optional 24-vector of hourly Delta (units) overriding the
-    delta.csv transform -- used by the profile-robustness study."""
+    delta.csv transform. trip_list: optional list of (sloc, eloc, start_hour)
+    or (sloc, eloc, start_hour, energy) tuples -- 4-tuples give heterogeneous
+    per-task energies. duration: task length in hours (default 2, the original)."""
     assert points <= len(_COORDS), f"at most {len(_COORDS)} locations supported"
     T = 48                                                 # 24 h x 2 half-blocks
     coords = [(0.0, 0.0)] + list(_COORDS[:points])         # 0 = depot O
@@ -130,9 +133,11 @@ def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_M
         for b in range(n):
             man = abs(coords[a][0] - coords[b][0]) + abs(coords[a][1] - coords[b][1])
             dist[a, b] = 2.0 * man                         # half-blocks (0.5 h -> 1 block); energy = dist * epd
-    trips = [Trip(idx=k, start=2 * st, end=2 * (st + 2), sloc=sl, eloc=el, energy=eps)
-             for k, (sl, el, st) in enumerate(trip_list if trip_list is not None
-                                              else gen_trips(points, windows))]
+    dur_hb = int(round(2 * duration))                      # task duration in half-blocks
+    raw = trip_list if trip_list is not None else gen_trips(points, windows)
+    trips = [Trip(idx=k, start=2 * t[2], end=2 * t[2] + dur_hb, sloc=t[0], eloc=t[1],
+                  energy=(t[3] if len(t) > 3 else eps))
+             for k, t in enumerate(raw)]
     trips.sort(key=lambda tr: (tr.start, tr.idx))
     for k, tr in enumerate(trips):
         tr.idx = k

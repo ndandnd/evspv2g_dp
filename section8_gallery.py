@@ -194,6 +194,16 @@ for (trips, sched), (og, ot) in sorted(ORIG_T2.items()):
     c_gal = f"{(rc['fuel_kwh'] - BASELINE_KWH) / 100 * GAL:8.1f} / {rc['trucks']}t+{rc['batteries']}b" if rc else "--"
     rows.append([trips, sched, f"{og} / {ot}t", f_gal, c_gal])
 table(md_table(["tasks", "schedule", "original (published)", "DP, free start", "DP, cyclic (revised)"], rows))
+rf3 = load(ARX, "regime_fuel.json")
+if rf3:
+    rows2 = []
+    for r in rf3:
+        if r["regime"] == "v2g":
+            gal = (r["g_units"] - r["baseline_units"]) * GAL
+            rows2.append([f"{r['surplus_mwh']} MWh/day", f"{gal:+8.1f}", r["trucks"], r["batteries"]])
+    table("**...and the cyclic model exports honestly once solar grows** "
+          "(V2G, 60 tasks, same gallons metric):\n\n"
+          + md_table(["solar surplus", "fuel (gal)", "trucks", "batteries"], rows2))
 caption("Table 8.3",
     "The original's Table 2 (fuel in gallons; negative = net energy export) next to this "
     "implementation run in the original's free-start setting and in the revised cyclic "
@@ -201,7 +211,11 @@ caption("Table 8.3",
     "batteries -- because each vehicle's initial charge is free energy; the cyclic model "
     "prices that energy and the export vanishes. Every level difference between the "
     "columns is attributable to this single modeling choice (plus the original's "
-    "documented final-master battery-cost slip).")
+    "documented final-master battery-cost slip). The companion table shows the "
+    "honest counterpart of the original's net export: keep the cyclic constraint "
+    "and grow the solar instead -- at 2x the fleet already exports (-36 gal/day) "
+    "and at 3x it displaces the ENTIRE base fossil generation (-446 gal/day), "
+    "every kWh of it paid for through the power balance.")
 
 # %% Figure 8.2 -- fossil energy by regime as solar grows (cyclic, honest accounting)
 rf = load(ARX, "regime_fuel.json")
