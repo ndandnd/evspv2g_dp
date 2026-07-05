@@ -327,8 +327,8 @@ if tt:
             "on the line through the other two to the dollar. Break-even is therefore "
             "closed-form, eff* = 1 + (EV-fleet cost premium at 1x)/(c_g x fleet traction): "
             "1.40x / 1.53x / 1.68x for truck premiums of 1.0x / 1.5x / 2.0x (diamonds); "
-            "over 20 randomly sampled trip sets: 1.38 [1.36, 1.40], 1.53 [1.50, 1.55], "
-            "1.68 [1.65, 1.71], worst single draw 1.87 -- the entire distribution stays "
+            "over 200 randomly sampled trip sets: 1.376 [1.370, 1.381], 1.523 [1.516, "
+            "1.531], 1.671 [1.661, 1.681]; the most extreme of 600 draws is 1.90, still "
             "below the measured band. The solar profile provably cannot move this "
             "figure (both regimes are solar-blind, so base generation cancels in the "
             "difference; verified numerically: identical values on the cloudiest and "
@@ -410,7 +410,10 @@ if len(design) >= 10:
         "costs INTO the model (bidirectional-charger premium $4-8 per truck-day, "
         "cycling degradation up to $0.05/kWh) yields a computed break-even of "
         "R* ~ 0.35-0.47 (shaded band): the charger premium dominates, while "
-        "degradation is nearly free -- the optimizer cycles less rather than pay it.")
+        "degradation is nearly free -- the optimizer cycles less rather than pay it. "
+        "Charge rate is a second-order correction confined to the transition region "
+        "(at 100 kW the mid-range value drops by a third to a half; 200 and 350 kW are "
+        "indistinguishable; both tails are rate-independent -- 500-base overnight sweep).")
 else:
     print("  [skip] not enough data for the collapse figure")
 
