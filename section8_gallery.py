@@ -450,6 +450,37 @@ if os.path.exists(tl):
 else:
     print("  [skip] missing results/arxiv/exp4_timeline.png")
 
+# %% Figure 8.8 -- PV sizing under a real year of weather (overnight S2)
+wx = load(ARX, "overnight_weather.json")
+if wx:
+    pvs = sorted({r["pv"] for r in wx if "v2g_vs_solar_pct" in r})
+    mean_, p10_, p90_ = [], [], []
+    for pv in pvs:
+        v = np.array([r["v2g_vs_solar_pct"] for r in wx if r["pv"] == pv and "v2g_vs_solar_pct" in r])
+        mean_.append(v.mean()); p10_.append(np.percentile(v, 10)); p90_.append(np.percentile(v, 90))
+    fig, ax = plt.subplots(figsize=(7.5, 4.4), constrained_layout=True)
+    ax.fill_between(pvs, p10_, p90_, color="#2E75B6", alpha=0.18, label="p10-p90 across 365 real days")
+    ax.plot(pvs, mean_, "-o", color="#2E75B6", label="annual mean")
+    ax.axhline(0, color="k", lw=0.7)
+    ax.set_xlabel("PV sizing (multiple of the original installation; 1.0 = 14.7 MWh/day annual mean)")
+    ax.set_ylabel("V2G savings vs charge-only (% of daily cost)")
+    ax.set_title("how much PV makes V2G worth it -- a real year of weather (2023)")
+    ax.legend()
+    finish(fig, "fig_8_8_pv_sizing.png")
+    GALLERY.append("\n![fig 8.8](fig_8_8_pv_sizing.png)\n")
+    caption("Figure 8.8",
+        "Annual V2G value as a function of PV build-out, evaluated on all 365 real days "
+        "of 2023 irradiance at the site's coordinates (each day solved to optimality with "
+        "and without V2G). At the original installation's sizing (1.0x) V2G is worthless "
+        "every day of the year -- the site sits in the R < 0.4 dead zone even in June -- "
+        "so V2G is only sensible as a JOINT decision with PV expansion. The payoff rises "
+        "steeply over 1.5-2.5x, but note the risk profile: at 2.0x the mean is 31% while "
+        "the 10th percentile is just 2% (cloudy-season days earn nothing); the value only "
+        "becomes FIRM at ~3x, where even the 10th-percentile day saves 19%. The annual "
+        "mean closely matches the mean-day design value at every sizing, so expected "
+        "value can be estimated from a single average day -- but the day-to-day "
+        "distribution cannot.")
+
 # %% write GALLERY.md + caption index
 out = os.path.join(FIG, "GALLERY.md")
 open(out, "w").write("\n".join(GALLERY) + "\n")
