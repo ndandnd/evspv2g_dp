@@ -118,15 +118,22 @@ def gen_trips(n_locs: int, windows) -> list[tuple[int, int, int]]:
 
 def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_MULT,
                    pv_scale: float = 1.0, delta_hourly=None, trip_list=None,
-                   duration: float = 2.0) -> Instance:
+                   duration: float = 2.0, stations=None,
+                   coords_override=None) -> Instance:
     """The original instance on a half-block grid (exact 0.5-block deadheads).
     delta_hourly: optional 24-vector of hourly Delta (units) overriding the
     delta.csv transform. trip_list: optional list of (sloc, eloc, start_hour)
     or (sloc, eloc, start_hour, energy) tuples -- 4-tuples give heterogeneous
-    per-task energies. duration: task length in hours (default 2, the original)."""
-    assert points <= len(_COORDS), f"at most {len(_COORDS)} locations supported"
+    per-task energies. duration: task length in hours (default 2, the original).
+    stations: charging-location set H0 -- None = depot only (every prior
+    experiment), "all" = a charger at every location, or an explicit index
+    list. coords_override: replace _COORDS[:points] with a custom map (list of
+    (x, y); depot stays at the origin)."""
+    if coords_override is None:
+        assert points <= len(_COORDS), f"at most {len(_COORDS)} locations supported"
     T = 48                                                 # 24 h x 2 half-blocks
-    coords = [(0.0, 0.0)] + list(_COORDS[:points])         # 0 = depot O
+    coords = [(0.0, 0.0)] + list(coords_override if coords_override is not None
+                                 else _COORDS[:points])    # 0 = depot O
     n = len(coords)
     dist = np.zeros((n, n))
     for a in range(n):
@@ -152,6 +159,7 @@ def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_M
         eps_pen=0.025,                                     # ~ the original 1.01 charge premium
         depot=0, gen_cap=float("inf"), charge_cap=float("inf"),
         soc_step=0.5,                                      # exact lattice for eps/G/deadheads
+        stations=(list(range(n)) if stations == "all" else stations),
     )
 
 

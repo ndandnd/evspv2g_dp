@@ -878,17 +878,19 @@ if vs12:
         _shl = "standard day" if sh == "std" else "summer day (longer, brighter)"
         ax[i, 0].set_ylabel(f"daily fossil (MWh)\n{_shl}")
     ax[0, 0].legend(fontsize=8)
-    # headline: the technology beats the panel field
-    _nmid, _pvmax = NS12[len(NS12) // 2], max(PV12)
-    _fv1 = _m12(_nmid, "std", 1.0, "v2g")
-    _fsX = _m12(_nmid, "std", _pvmax, "solar")
-    if np.isfinite(_fv1) and np.isfinite(_fsX) and _fv1 <= _fsX:
-        _a = ax[0, list(NS12).index(_nmid)]
-        _a.annotate(f"V2G at 1x panels ({_fv1:.1f} MWh)\nbeats charge-only at "
-                    f"{_pvmax:g}x panels ({_fsX:.1f} MWh)",
-                    xy=(1.0, _fv1), xytext=(1.55, _fv1 * 0.35), fontsize=8.5,
-                    color="#2E75B6",
-                    arrowprops=dict(arrowstyle="->", color="#2E75B6", lw=1.0))
+    # headline: the technology beats the panel field (first size where it holds)
+    _pvmax = max(PV12)
+    for _nn in NS12:
+        _fv1 = _m12(_nn, "std", 1.0, "v2g")
+        _fsX = _m12(_nn, "std", _pvmax, "solar")
+        if np.isfinite(_fv1) and np.isfinite(_fsX) and _fv1 <= _fsX:
+            _a = ax[0, list(NS12).index(_nn)]
+            _a.annotate(f"V2G at 1x panels ({_fv1:.1f} MWh)\nbeats charge-only at "
+                        f"{_pvmax:g}x panels ({_fsX:.1f} MWh)",
+                        xy=(1.0, _fv1), xytext=(1.55, _fv1 * 0.35), fontsize=8.5,
+                        color="#2E75B6",
+                        arrowprops=dict(arrowstyle="->", color="#2E75B6", lw=1.0))
+            break
     finish(fig, "fig_8_12_shine.png")
     GALLERY.append("\n![fig 8.12](fig_8_12_shine.png)\n")
     _rmin = min(r["ratio"] for r in vs12); _rmax = max(r["ratio"] for r in vs12)

@@ -8,10 +8,12 @@ relaxations; backward reconstruction without stored parents.
 
 Arcs out of (t, loc, s), t < T:
   wait      : (t+1, loc, s)                    cost 0
-  charge/dis: (t+1, origin, s')  [origin]      cost mu_t e + eps|e|,  s' = s + (1-eta)charge - discharge
+  charge/dis: (t+1, h, s')  [h in H0]          cost mu_t e + eps|e|,  s' = s + (1-eta)charge - discharge
   travel    : (t+dist, loc2, s - dist*epd)     cost 0
   trip j    : (te_j, eloc_j, s - eps_j)        cost -alpha_j   (only at (ts_j, sloc_j))
 Terminal: t == T, loc == origin.  Route reduced cost = c_v + accumulated cost.
+H0 = inst.charge_locs (default: the depot alone -- the single-station special
+case; the copper-plate bus keeps the energy profile e_prof global either way).
 """
 from __future__ import annotations
 import numpy as np
@@ -71,20 +73,23 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
     dp = np.full((T + 1, nLoc, nL, 2), INF)
     dp[0, origin, Gidx, 0] = 0.0
 
+    stations = list(getattr(inst, "charge_locs", None) or [origin])
+
     for t in range(T):
         cur = dp[t]                                  # (nLoc, nL, 2)
         np.minimum(dp[t + 1], cur, out=dp[t + 1])    # wait (preserves loc, s, k)
-        # charge / discharge at origin (preserves k)
-        o = cur[origin]                              # (nL, 2)
-        if (allow_charge or allow_discharge) and np.isfinite(o).any():
-            cand = np.full((nL, 2), INF)
-            if allow_charge:
-                for d in range(1, up + 1):
-                    np.minimum(cand[d:], o[:nL - d] + slope_c[t] * d, out=cand[d:])
-            if allow_discharge:
-                for d in range(1, dn + 1):
-                    np.minimum(cand[:nL - d], o[d:] + slope_d[t] * d, out=cand[:nL - d])
-            np.minimum(dp[t + 1, origin], cand, out=dp[t + 1, origin])
+        # charge / discharge at any station h in H0 (preserves k)
+        for h in stations:
+            o = cur[h]                               # (nL, 2)
+            if (allow_charge or allow_discharge) and np.isfinite(o).any():
+                cand = np.full((nL, 2), INF)
+                if allow_charge:
+                    for d in range(1, up + 1):
+                        np.minimum(cand[d:], o[:nL - d] + slope_c[t] * d, out=cand[d:])
+                if allow_discharge:
+                    for d in range(1, dn + 1):
+                        np.minimum(cand[:nL - d], o[d:] + slope_d[t] * d, out=cand[:nL - d])
+                np.minimum(dp[t + 1, h], cand, out=dp[t + 1, h])
         # travel (deadhead, preserves k)
         for a_ in range(nLoc):
             src = cur[a_]
@@ -136,17 +141,17 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
         # wait (preserves k)
         if t >= 1 and abs(dp[t - 1, loc, si, k] - v) < 1e-5:
             t = t - 1; found = True; continue
-        # charge / discharge (origin, preserves k)
-        if loc == origin and t >= 1:
+        # charge / discharge (any station in H0, preserves k and loc)
+        if loc in stations and t >= 1:
             if allow_charge:
                 for d in range(1, up + 1):
                     pi = si - d
-                    if pi >= 0 and abs(dp[t - 1, origin, pi, k] + slope_c[t - 1] * d - v) < 1e-5:
+                    if pi >= 0 and abs(dp[t - 1, loc, pi, k] + slope_c[t - 1] * d - v) < 1e-5:
                         e_prof[t - 1] += (d * step) / (1 - eta); t, si = t - 1, pi; found = True; break
             if not found and allow_discharge:
                 for d in range(1, dn + 1):
                     pi = si + d
-                    if pi < nL and abs(dp[t - 1, origin, pi, k] + slope_d[t - 1] * d - v) < 1e-5:
+                    if pi < nL and abs(dp[t - 1, loc, pi, k] + slope_d[t - 1] * d - v) < 1e-5:
                         e_prof[t - 1] += -(d * step); t, si = t - 1, pi; found = True; break
             if found:
                 continue
@@ -191,34 +196,38 @@ def _dp_cost_via_networkx(inst, alpha, mu, step=5.0):
     trips_at = {}
     for tr in inst.trips:
         trips_at.setdefault((tr.start, tr.sloc), []).append(tr)
+    stations = list(getattr(inst, "charge_locs", None) or [origin])
+    # node = (t, loc, si, k); k = 1 once >= 1 trip is covered (mirrors the DP's
+    # requirement that a deployed truck covers at least one task)
     Gr = nx.DiGraph(); SRC = ("S",); SNK = ("K",)
-    Gr.add_edge(SRC, (0, origin, Gidx), weight=0.0)
+    Gr.add_edge(SRC, (0, origin, Gidx, 0), weight=0.0)
     for t in range(T):
         for loc in range(nLoc):
             for si in range(nL):
-                u = (t, loc, si); s = si * step
-                Gr.add_edge(u, (t + 1, loc, si), weight=0.0)
-                if loc == origin:
-                    for dl in range(-dn, up + 1):
-                        sj = si + dl
-                        if sj < 0 or sj >= nL: continue
-                        ds = dl * step
-                        e = ds / (1 - eta) if ds >= 0 else ds
-                        Gr.add_edge(u, (t + 1, origin, sj), weight=mu[t] * e + eps * abs(e))
-                for loc2 in range(nLoc):
-                    if loc2 == loc: continue
-                    dd = int(round(inst.dist[loc, loc2]))
-                    if dd <= 0 or t + dd > T: continue
-                    s2 = s - inst.dist[loc, loc2] * epd
-                    if s2 < -1e-9: continue
-                    Gr.add_edge(u, (t + dd, loc2, sidx(s2)), weight=0.0)
-                for tr in trips_at.get((t, loc), []):
-                    s2 = s - tr.energy
-                    if s2 < -1e-9 or tr.end > T: continue
-                    Gr.add_edge(u, (tr.end, tr.eloc, sidx(s2)), weight=-alpha[tr.idx])
+                for k in (0, 1):
+                    u = (t, loc, si, k); s = si * step
+                    Gr.add_edge(u, (t + 1, loc, si, k), weight=0.0)
+                    if loc in stations:
+                        for dl in range(-dn, up + 1):
+                            sj = si + dl
+                            if sj < 0 or sj >= nL: continue
+                            ds = dl * step
+                            e = ds / (1 - eta) if ds >= 0 else ds
+                            Gr.add_edge(u, (t + 1, loc, sj, k), weight=mu[t] * e + eps * abs(e))
+                    for loc2 in range(nLoc):
+                        if loc2 == loc: continue
+                        dd = int(round(inst.dist[loc, loc2]))
+                        if dd <= 0 or t + dd > T: continue
+                        s2 = s - inst.dist[loc, loc2] * epd
+                        if s2 < -1e-9: continue
+                        Gr.add_edge(u, (t + dd, loc2, sidx(s2), k), weight=0.0)
+                    for tr in trips_at.get((t, loc), []):
+                        s2 = s - tr.energy
+                        if s2 < -1e-9 or tr.end > T: continue
+                        Gr.add_edge(u, (tr.end, tr.eloc, sidx(s2), 1), weight=-alpha[tr.idx])
     for si in range(nL):
-        if (T, origin, si) in Gr:
-            Gr.add_edge((T, origin, si), SNK, weight=0.0)
+        if (T, origin, si, 1) in Gr:
+            Gr.add_edge((T, origin, si, 1), SNK, weight=0.0)
     return inst.c_v + nx.bellman_ford_path_length(Gr, SRC, SNK)
 
 

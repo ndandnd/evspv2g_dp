@@ -47,6 +47,14 @@ class Instance:
     charge_cap: float = float("inf")# max total charging power per block (kWh); inf = uncapped
     soc_step: float = 5.0           # SoC lattice step for the pricing DP (same units as G)
     deg_cost: float = 0.0           # $ per unit of DISCHARGE throughput (cycling degradation)
+    stations: list = None           # charging locations H0 (paper Sec. 3); None -> depot only
+
+    @property
+    def charge_locs(self) -> list:
+        """The station set H0: locations where a parked truck may charge/discharge.
+        Defaults to [depot] -- the single-station special case every prior
+        experiment uses (copper-plate bus: energy balance stays global)."""
+        return self.stations if self.stations else [self.depot]
 
     @property
     def Delta(self) -> np.ndarray:
