@@ -160,6 +160,14 @@ if e20:
             xs = [r["trips"] for r in data]
             ax[0].plot(xs, [r["cg_s"] for r in data], "-o", color=c, label=lab)
             ax[1].plot(xs, [r["pricing_pct"] for r in data], "-o", color=c, label=lab)
+    wc1 = load(ARX, "overnight2_warmcold.json")
+    if wc1:
+        ns1 = sorted({r["n_tasks"] for r in wc1})
+        tm1 = [float(np.mean([r["time_s"] for r in wc1
+                              if r["n_tasks"] == n and r["start"] == "warm"])) for n in ns1]
+        ax[0].plot(ns1, tm1, "-s", color="#16a085", ms=4, lw=1.5,
+                   label="random fleets to 1000 tasks\n(cluster, pure CG, V2G at 2x solar)")
+        ax[0].set_yscale("log")
     ax[0].set_xlabel("tasks"); ax[0].set_ylabel("column-generation time (s)")
     ax[0].legend(); ax[0].set_title("solve time (DP pricing, open-source)")
     ax[1].set_xlabel("tasks"); ax[1].set_ylabel("pricing share of CG time (%)")
@@ -172,7 +180,12 @@ if e20:
         "exceeds half the (seconds-scale) runtime; in the original MILP-pricing "
         "implementation it exceeded 95% of an hours-scale runtime. The method's bottleneck "
         "becomes the restricted master LP -- exactly the component that Proposition 2's "
-        "continuous-energy result keeps small.")
+        "continuous-energy result keeps small. The teal series extends the picture to "
+        "1000 tasks with no additional runs, reusing the warm-start ladder of Fig 8.10 "
+        "(random-fleet family, V2G at 2x solar, pure CG without enrichment, cluster "
+        "hardware -- hence the separate label): even at 1000 tasks the full column "
+        "generation completes in under ten minutes, and a log-log fit across the ladder "
+        "puts the empirical growth near n^2.")
 
 # %% [markdown]
 # ## 8.2 Reproduction and the free-energy artifact
