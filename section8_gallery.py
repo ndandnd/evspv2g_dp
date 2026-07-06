@@ -570,11 +570,17 @@ if os.path.exists(tlp):
     for a_, v in zip(axes, tl):
         delta = v["delta"]
         tcounts = v.get("lane_tasks", [None] * len(v["lanes"]))
+        ltrips = v.get("lane_trips", [[] for _ in v["lanes"]])
         order = sorted(range(len(v["lanes"])),
                        key=lambda i: -(tcounts[i] if tcounts[i] is not None else 0))
         truck_lanes = [v["lanes"][i] for i in order]
+        ltrips = [ltrips[i] for i in order]
         tcounts = [tcounts[i] for i in order]
         lanes = truck_lanes + ([v["battery_net"]] if v.get("battery_net") else [])
+        for i in range(len(truck_lanes)):                 # driving bars first (slate)
+            for iv in (ltrips[i] if i < len(ltrips) else []):
+                a_.add_patch(plt.Rectangle((iv[0], i - 0.42), iv[1] - iv[0], 0.84,
+                                           color="#9fb3c8"))
         for i, e in enumerate(lanes):
             for t, val in enumerate(e):
                 if val > 1e-6:
@@ -595,7 +601,8 @@ if os.path.exists(tlp):
                      f"{v['trucks']} trucks ({v['tasks_per_truck']} tasks/truck), "
                      f"{v['batteries']} batteries" + (f" -- {v['tag']}" if v.get("tag") else ""),
                      fontsize=9)
-    axes[-1].set_xlabel("hour of day   (green = free solar charge, black = paid charge, red = discharge)")
+    axes[-1].set_xlabel("hour of day   (slate = driving, green = free solar charge, "
+                        "black = paid charge, red = discharge)")
     finish(fig, "fig_8_7_timeline.png")
     GALLERY.append("\n![fig 8.7](fig_8_7_timeline.png)\n")
     caption("Figure 8.7",
@@ -670,19 +677,25 @@ def _fossil9(r):
         return (r["g_units"] + r["fleet_paid_units"]) / 10.0
     return r["g_units"] / 10.0
 if md9:
-    pvs9 = sorted({r["pv"] for r in md9})
-    fig, ax = plt.subplots(2, len(pvs9), figsize=(5.6 * len(pvs9) + 0.8, 7.6),
+    for r in md9:
+        r["sol"] = r.get("sol", f"{int(r['pv'])}x")
+    sols9 = [x for x in ("1x", "2x", "summer") if any(r["sol"] == x for r in md9)]
+    TIT9 = {"1x": "1x solar", "2x": "2x solar",
+            "summer": "summer day (1x panels, longer daylight)"}
+    fig, ax = plt.subplots(2, len(sols9), figsize=(5.6 * len(sols9) + 0.8, 7.6),
                            sharex=True, constrained_layout=True, squeeze=False)
-    for j, pv in enumerate(pvs9):
+    for j, sol in enumerate(sols9):
         for scen, (lab, c, ls) in NM9.items():
-            rr = sorted([r for r in md9 if r["pv"] == pv and r["scenario"] == scen],
+            rr = sorted([r for r in md9 if r["sol"] == sol and r["scenario"] == scen],
                         key=lambda r: r["n_tasks"])
             if rr:
+                zo = 4 if scen == "solar" else 2
+                lw = 2.2 if scen == "solar" else 1.7
                 ax[0, j].plot([r["n_tasks"] for r in rr], [_fossil9(r) for r in rr],
-                              ls, color=c, lw=1.7, label=lab)
+                              ls, color=c, lw=lw, label=lab, zorder=zo, dashes=(5, 2.5) if ls == "--" else (None, None))
                 ax[1, j].plot([r["n_tasks"] for r in rr], [r["trucks"] for r in rr],
-                              ls, color=c, lw=1.7, label=lab)
-        ax[0, j].set_title(f"{pv:.0f}x solar")
+                              ls, color=c, lw=lw, label=lab, zorder=zo, dashes=(5, 2.5) if ls == "--" else (None, None))
+        ax[0, j].set_title(TIT9.get(sol, sol))
         ax[1, j].set_xlabel("number of tasks")
     ax[0, 0].set_ylabel("daily fossil energy (MWh, ICE at 3.3x)")
     ax[1, 0].set_ylabel("trucks deployed")
@@ -773,6 +786,10 @@ if cp and "v2g" in cp:
                label=f"conventional charging, no storage ({cp['solar']['fossil_mwh']:.1f} MWh)")
     ax[0].step(hrs, cp["v2g"]["gen"], where="mid", color="#2E75B6", lw=1.9,
                label=f"full V2G technology ({cp['v2g']['fossil_mwh']:.1f} MWh)")
+    _gs = np.array(cp["solar"]["gen"]); _gv = np.array(cp["v2g"]["gen"])
+    ax[0].fill_between(hrs, _gv, _gs, where=_gs >= _gv, step="mid", color="#2E75B6",
+                       alpha=0.10, label=f"saved energy = "
+                       f"{cp['solar']['fossil_mwh'] - cp['v2g']['fossil_mwh']:.1f} MWh/day")
     ax[0].axhline(cp["gen_cap"], ls="--", color="#c0392b", lw=1.2,
                   label=f"generation cap {cp['gen_cap']:.0f}")
     ax[0].set_xlabel("hour of day"); ax[0].set_ylabel("dispatched fossil generation (kWh/block)")
@@ -801,7 +818,12 @@ if cp and "v2g" in cp:
         "no-fleet base load for reference. Right: total charging draw (fleet plus "
         "batteries) -- the V2G solution pulls a large midday hump of free solar and "
         "stays under the station capacity cap, whose congestion price nu_t is "
-        "exactly the term the pricing DP of Section 7 charges for charging.")
+        "exactly the term the pricing DP of Section 7 charges for charging. The "
+        "shaded area between the curves is the saved energy, sum_t g_t taken over "
+        "the day; charging is a continuous (linear) decision per block, so as the "
+        "block length shrinks this sum converges to the integral of g(t) -- and the "
+        "DP's complexity is linear in the number of blocks, making refinement "
+        "computationally cheap.")
 # %% Parameter provenance -- a source for every empirical anchor
 PROV = [
     ("fossil generation cost", "$0.20-1.00/kWh",

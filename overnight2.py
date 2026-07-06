@@ -172,19 +172,22 @@ def s7_timeline():
         # near-proven optimum: cosmetic charge/discharge churn costs eps_pen > 0, so a
         # tight gap eliminates the pathological always-charging lanes
         r = solve(inst, scen, cv=cv, cb=cb, enrich=200, tl=600.0, mip_gap=1e-4)
-        lanes, lane_tasks = [], []
+        lanes, lane_tasks, lane_trips = [], [], []
         for i in np.flatnonzero(r["mip"].x > 0.5):
             reps = int(round(r["mip"].x[i]))
+            ids = set(np.flatnonzero(r["cols"][i].a > 0.5).tolist())
+            ivs = sorted([tr.start / 2.0, tr.end / 2.0] for tr in inst.trips if tr.idx in ids)
             for _ in range(reps):
                 lanes.append([round(float(x), 3) for x in r["cols"][i].e])
                 lane_tasks.append(int(round(float(r["cols"][i].a.sum()))))
+                lane_trips.append(ivs)
         mip = r["mip"]
         out.append({"cv": cv, "cb": cb, "tag": tag, "seed": sd,
                     "trucks": r["trucks"], "batteries": r["batteries"],
                     "gap_pct": round(r["gap"], 3), "total": round(r["total"], 1),
                     "tasks_per_truck": round(60.0 / max(r["trucks"], 1), 1),
                     "delta": [round(float(d), 3) for d in inst.Delta],
-                    "lanes": lanes, "lane_tasks": lane_tasks,
+                    "lanes": lanes, "lane_tasks": lane_tasks, "lane_trips": lane_trips,
                     "battery_net": ([round(float(c - d), 3) for c, d in
                                      zip(mip.charge, mip.discharge)]
                                     if (mip.charge is not None and r["batteries"] > 0) else None)})
@@ -317,15 +320,25 @@ def s12_modes_dense():
     """Dense regimes-vs-tasks for Fig 8.9: tasks 20..400 x {1x, 2x} solar x four
     regimes, SAME fleet per task count across regimes/solar (deterministic seed)."""
     rows, path = ckpt(f"overnight2_modes_s{SH_I}of{SH_K}.json")
-    done = {(r["n_tasks"], r["pv"], r["scenario"]) for r in rows}
-    cells = [(n, pv, scen) for n in range(20, 401, 20) for pv in (1.0, 2.0)
+    done = {(r["n_tasks"], r.get("sol", f"{int(r['pv'])}x"), r["scenario"]) for r in rows}
+    from profile_robustness import base_curves
+    Dh, Sh = base_curves()
+    hh = np.arange(24)
+    bell = np.exp(-0.5 * ((hh - 13.0) / 4.2) ** 2); bell[(hh < 4.5) | (hh > 21.5)] = 0.0
+    SUMMER_DH = np.round(Dh - bell * (Sh.sum() * 1.6 / bell.sum())).astype(int)
+    SOLS = [("1x", 1.0), ("2x", 2.0), ("summer", None)]   # summer: longer day, 1x panels, 1.6x energy
+    cells = [(n, sol, scen) for n in range(20, 401, 20) for sol, _ in SOLS
              for scen in ("vsp", "ev", "solar", "v2g")]
     print(f"S12 dense modes: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(done)} done)", flush=True)
-    for idx, (n, pv, scen) in enumerate(cells):
-        if idx % SH_K != SH_I or (n, pv, scen) in done:
+    for idx, (n, sol, scen) in enumerate(cells):
+        if idx % SH_K != SH_I or (n, sol, scen) in done:
             continue
         fleet = sample_fleet(np.random.default_rng(500 + n), POINTS_DEF, n, BREAKS)
-        inst = build_instance(POINTS_DEF, 2.0, BREAKS, pv_scale=pv, trip_list=fleet)
+        pv = dict(SOLS)[sol]
+        if sol == "summer":
+            inst = build_instance(POINTS_DEF, 2.0, BREAKS, delta_hourly=SUMMER_DH, trip_list=fleet)
+        else:
+            inst = build_instance(POINTS_DEF, 2.0, BREAKS, pv_scale=pv, trip_list=fleet)
         traction = float(sum(tr.energy for tr in inst.trips))
         r = solve(inst, scen)
         if r is None:
@@ -334,7 +347,7 @@ def s12_modes_dense():
         if scen == "ev":
             fleet_paid = sum((c.fixed_cost - inst.c_v) / inst.c_g * round(x)
                              for c, x in zip(r["cols"], r["mip"].x) if x > 0.5)
-        rows.append({"n_tasks": n, "pv": pv, "scenario": scen,
+        rows.append({"n_tasks": n, "pv": (pv if pv is not None else 1.0), "sol": sol, "scenario": scen,
                      "g_units": round(float(r["mip"].g.sum()), 2),
                      "traction_units": round(traction, 2),
                      "fleet_paid_units": round(fleet_paid, 2),
@@ -350,7 +363,9 @@ def s13_warmcold():
     rows, path = ckpt("overnight2_warmcold.json")
     done = {(r["n_tasks"], r["seed"], r["start"]) for r in rows}
     print("S13 warm vs cold ladder", flush=True)
-    for n in (60, 100, 150, 200, 280, 360, 450):
+    sizes = [int(x) for x in os.environ.get(
+        "OVERNIGHT2_S13_SIZES", "60,100,150,200,280,360,450").split(",")]
+    for n in sizes:
         for seed in range(3):
             fleet = sample_fleet(np.random.default_rng(700 + 1000 * seed + n),
                                  POINTS_DEF, n, BREAKS)

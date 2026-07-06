@@ -55,7 +55,15 @@ def single_trip_column(inst: Instance, tr, ice: bool = False, free_start: bool =
         need = trac / (1 - inst.eta)
         dep = tr.start - inst.deadhead_time(o, tr.sloc)
         ret = tr.end + inst.deadhead_time(tr.eloc, o)
-        idle = list(range(0, max(0, dep))) + list(range(min(inst.T, ret), inst.T))
+        # AFTER-return blocks only: the vehicle starts FULL, so charging before
+        # departure would overfill the battery -- the seed's SoC trajectory must be
+        # feasible (full -> trip -> recharge to full). If the post-return window is
+        # too short for the full need (rare late+heavy trips), the remainder falls
+        # back to pre-departure blocks; DP columns replace such seeds immediately.
+        idle = list(range(min(inst.T, ret), inst.T))
+        cap = len(idle) * inst.rho
+        if cap < need - 1e-9:
+            idle = idle + list(range(0, max(0, dep)))
         if idle:
             if np.isfinite(inst.charge_cap):       # spread uniformly so the initial pool
                 per = min(inst.rho, need / len(idle))   # respects the charging cap
