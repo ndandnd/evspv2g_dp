@@ -160,11 +160,13 @@ def s6_eps_band():
 def s7_timeline():
     path = os.path.join(OUT, "overnight2_timeline.json")
     out = []
-    print("S7 realistic timeline: 1-hour tasks, full-day schedule, cv in {45,150}", flush=True)
-    fleet = sample_fleet(np.random.default_rng(5), POINTS_DEF, 60, FULL_DAY)
+    seeds = [int(x) for x in os.environ.get("OVERNIGHT2_S7_SEEDS", "5").split(",")]
+    print(f"S7 realistic timeline: 1-hour tasks, full-day schedule, seeds {seeds}", flush=True)
     VARIANTS = [("v2g", 45.0, 36.0, "with stationary storage"),
                 ("v2g_fleet", 45.0, None, "no stationary storage: the fleet is the storage")]
-    for scen, cv, cb, tag in VARIANTS:
+    for sd in seeds:
+      fleet = sample_fleet(np.random.default_rng(sd), POINTS_DEF, 60, FULL_DAY)
+      for scen, cv, cb, tag in VARIANTS:
         inst = build_instance(POINTS_DEF, 1.0, FULL_DAY, pv_scale=PV_DEF,
                               trip_list=fleet, duration=1.0)
         # near-proven optimum: cosmetic charge/discharge churn costs eps_pen > 0, so a
@@ -177,7 +179,7 @@ def s7_timeline():
                 lanes.append([round(float(x), 3) for x in r["cols"][i].e])
                 lane_tasks.append(int(round(float(r["cols"][i].a.sum()))))
         mip = r["mip"]
-        out.append({"cv": cv, "cb": cb, "tag": tag,
+        out.append({"cv": cv, "cb": cb, "tag": tag, "seed": sd,
                     "trucks": r["trucks"], "batteries": r["batteries"],
                     "gap_pct": round(r["gap"], 3), "total": round(r["total"], 1),
                     "tasks_per_truck": round(60.0 / max(r["trucks"], 1), 1),

@@ -56,10 +56,18 @@ def single_trip_column(inst: Instance, tr, ice: bool = False, free_start: bool =
         dep = tr.start - inst.deadhead_time(o, tr.sloc)
         ret = tr.end + inst.deadhead_time(tr.eloc, o)
         idle = list(range(0, max(0, dep))) + list(range(min(inst.T, ret), inst.T))
-        if idle:                                   # spread charging uniformly over idle blocks
-            per = min(inst.rho, need / len(idle))  # so the initial pool respects the charge cap
-            for t in idle:
-                e[t] = per
+        if idle:
+            if np.isfinite(inst.charge_cap):       # spread uniformly so the initial pool
+                per = min(inst.rho, need / len(idle))   # respects the charging cap
+                for t in idle:
+                    e[t] = per
+            else:                                  # no cap: charge at full rate, fewest blocks
+                left = need
+                for t in idle:
+                    if left <= 1e-9:
+                        break
+                    e[t] = min(inst.rho, left)
+                    left -= e[t]
     return Column("truck", a, e, inst.c_v, f"single[{tr.idx}]")
 
 
