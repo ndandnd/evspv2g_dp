@@ -627,11 +627,12 @@ PROV = [
     ("bidirectional charger premium", "$0-8/truck-day",
      "V2G hardware $3-8k over unidirectional (industry guides, 2025-26); fleet DC units ~$15k "
      "(e.g. Fermata FE-20); DOE FEMP bidirectional-charging program; amortized 5-10 y"),
-    ("cycling degradation", "$0-0.05/kWh discharged",
-     "Peterson, Apt & Whitacre (2010), J. Power Sources 195(8): V2G cell-degradation "
-     "measurements; Applied Energy (2024): bidirectional operation adds only ~1.25-1.27% "
-     "degradation under smart control; Uddin et al. (2017), Energy: smart V2G can extend life "
-     "-- consistent with our finding that the optimizer makes degradation nearly free"),
+    ("cycling degradation", "$0-0.13/kWh discharged",
+     "Peterson, Apt & Whitacre (2010), J. Power Sources 195(8): classic V2G cell-degradation "
+     "measurements; Sagaria, van der Kam & Bostrom (2025), Applied Energy 377: V2G adds 9-14% "
+     "degradation over 10 years, fair compensation EUR 70-132/MWh (~$0.07-0.13/kWh) -- our sweep "
+     "extends to $0.13; Uddin et al. (2017), Energy: smart control can reduce net degradation, "
+     "consistent with our finding that the optimizer cycles less rather than pay"),
     ("solar irradiance", "365 real days (2023)",
      "Open-Meteo ERA5 archive, 33.25N 119.5W (CC-BY 4.0), hourly GHI"),
     ("charge rate", "100-350 kW",

@@ -43,7 +43,7 @@ N_SWEEP   = int(os.environ.get("OVERNIGHT_N_SWEEP", "500"))
 RHO_STRATA = [0.5, 1.0, 1.75]            # 100 / 200 / 350 kW
 SWEEP_TASKS, SWEEP_PV = (20, 400), (0.5, 4.0)
 WEATHER_PV = [1.0, 1.5, 2.0, 2.5, 3.0]
-BE_DEG     = [0.0, 2.0, 5.0]             # $/unit (100 kWh) of discharge: $0 / 0.02 / 0.05 per kWh
+BE_DEG     = [0.0, 2.0, 5.0, 13.0]       # $/unit of discharge: $0/0.02/0.05/0.13 per kWh -- 13 = top of Sagaria et al. (2025) EUR 132/MWh
 BE_PREM    = [0.0, 4.0, 8.0]             # $/day bidirectional-charger premium per v2g truck
 BE_PV      = [1.0, 1.5, 2.0, 2.5, 3.0]
 N_TRIPSETS = 200
