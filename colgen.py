@@ -26,6 +26,9 @@ SCENARIOS = {                          # (ice, allow_charge, allow_discharge, ba
                                         # the power balance (energy folded into route cost)
     "solar": dict(ice=False, allow_charge=True,  allow_discharge=False, battery=False),
     "v2g":   dict(ice=False, allow_charge=True,  allow_discharge=True,  battery=True),
+    "v2g_fleet": dict(ice=False, allow_charge=True, allow_discharge=True, battery=False),
+                                        # V2G-capable fleet at a depot WITHOUT stationary
+                                        # storage -- isolates what the fleet alone can do
 }
 
 

@@ -159,12 +159,12 @@ def s7_timeline():
     out = []
     print("S7 realistic timeline: 1-hour tasks, full-day schedule, cv in {45,150}", flush=True)
     fleet = sample_fleet(np.random.default_rng(5), POINTS_DEF, 60, FULL_DAY)
-    VARIANTS = [(45.0, 36.0, "base: cheap stationary batteries"),
-                (45.0, 500.0, "batteries uneconomical: the fleet is the storage")]
-    for cv, cb, tag in VARIANTS:
+    VARIANTS = [("v2g", 45.0, 36.0, "with stationary storage"),
+                ("v2g_fleet", 45.0, None, "no stationary storage: the fleet is the storage")]
+    for scen, cv, cb, tag in VARIANTS:
         inst = build_instance(POINTS_DEF, 1.0, FULL_DAY, pv_scale=PV_DEF,
                               trip_list=fleet, duration=1.0)
-        r = solve(inst, "v2g", cv=cv, cb=cb, enrich=200, tl=300.0)   # publication-grade pool
+        r = solve(inst, scen, cv=cv, cb=cb, enrich=200, tl=300.0)   # publication-grade pool
         lanes = []
         for i in np.flatnonzero(r["mip"].x > 0.5):
             reps = int(round(r["mip"].x[i]))
@@ -177,9 +177,10 @@ def s7_timeline():
                     "tasks_per_truck": round(60.0 / max(r["trucks"], 1), 1),
                     "delta": [round(float(d), 3) for d in inst.Delta],
                     "lanes": lanes,
-                    "battery_net": [round(float(c - d), 3) for c, d in
-                                    zip(mip.charge, mip.discharge)] if mip.charge is not None else None})
-        print(f"  cv=${cv:.0f} cb=${cb:.0f}: trucks={r['trucks']} "
+                    "battery_net": ([round(float(c - d), 3) for c, d in
+                                     zip(mip.charge, mip.discharge)]
+                                    if (mip.charge is not None and r["batteries"] > 0) else None)})
+        print(f"  cv=${cv:.0f} {tag}: trucks={r['trucks']} "
               f"({60.0/max(r['trucks'],1):.1f} tasks/truck) batteries={r['batteries']} "
               f"gap={r['gap']:.2f}%", flush=True)
         json.dump(out, open(path, "w"), indent=1)
@@ -209,7 +210,7 @@ def s9_export_grid():
     print("S9 cyclic export grid: tasks 20..200 x pv 1..3", flush=True)
     for n in range(20, 201, 20):
         fleet = sample_fleet(np.random.default_rng(40 + n), POINTS_DEF, n, BREAKS)
-        for pv in (1.0, 1.5, 2.0, 2.5, 3.0):
+        for pv in (1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0):
             if (n, pv) in done:
                 continue
             inst = build_instance(POINTS_DEF, 2.0, BREAKS, pv_scale=pv, trip_list=fleet)
@@ -218,6 +219,7 @@ def s9_export_grid():
             r = solve(inst, "v2g")
             incr = float(r["mip"].g.sum()) - baseline
             rows.append({"n_tasks": n, "pv": pv, "surplus_mwh": round(surplus / 10, 1),
+                         "baseline_mwh": round(baseline / 10, 1),
                          "incr_mwh": round(incr / 10, 2), "gal": round(incr * 100 / 33, 1),
                          "trucks": r["trucks"], "batteries": r["batteries"],
                          "gap_pct": round(r["gap"], 3)})
@@ -236,7 +238,8 @@ def s10_highR():
         points = int(rng.choice([2, 3, 4]))
         n_tasks = int(rng.integers(20, 121))
         eps = float(rng.choice([0.5, 1.0, 1.5, 2.0, 2.5]))
-        pv = float(np.round(rng.uniform(1.5, 4.5), 2))
+        pvmax = float(os.environ.get("OVERNIGHT2_HIGHR_PVMAX", "4.5"))
+        pv = float(np.round(rng.uniform(1.5, pvmax), 2))
         fleet = sample_fleet(rng, points, n_tasks, BREAKS)
         if k % SH_K != SH_I or k in done:
             continue

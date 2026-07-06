@@ -228,7 +228,12 @@ if eg:
         row = [n]
         for pv in pvs:
             rr = next((x for x in eg if x["n_tasks"] == n and x["pv"] == pv), None)
-            row.append(f"{rr['gal']:+.0f}" if rr else "--")
+            if rr is None:
+                row.append("--")
+            else:
+                star = "*" if (rr.get("baseline_mwh") and
+                               rr["incr_mwh"] <= -0.98 * rr["baseline_mwh"]) else ""
+                row.append(f"{rr['gal']:+.0f}{star}")
         rows4.append(row)
     table("**Fleet-attributable fossil fuel (gallons/day; negative = net export). "
           "Revised cyclic model, planning prices, V2G:**\n\n" + md_table(hdr, rows4))
@@ -239,7 +244,9 @@ if eg:
         "surplus levels, all under the cyclic model at planning prices. The sign "
         "boundary traces the R-rule diagonally through the grid: a small fleet exports "
         "at modest solar while a large fleet needs abundant solar, because export "
-        "begins where the surplus outruns the fleet's own charging appetite.")
+        "begins where the surplus outruns the fleet's own charging appetite. Starred "
+        "entries: fossil generation driven literally to zero (full displacement -- the "
+        "zero-touching curves of Fig. 8.6).")
 # %% Figure 8.2 -- fossil energy by regime as solar grows (cyclic, honest accounting)
 rf = load(ARX, "regime_fuel.json")
 if rf:
@@ -426,9 +433,14 @@ if len(design) >= 10:
     if weather:
         ax.scatter([p[0] for p in weather], [p[1] for p in weather], marker="^", s=34,
                    color="#2E75B6", label=f"one base under {len(weather)} real 2023 weather days")
-    kw = max(3, len(design) // 10)
+    kw = max(5, len(design) // 10)
     med = [np.median(ys_a[max(0, i2 - kw):i2 + kw]) for i2 in range(len(design))]
-    ax.plot(xs_a, med, "-", color="#444", lw=2, alpha=0.85, label="rolling median (guide, not a fit)")
+    lo_b = [np.percentile(ys_a[max(0, i2 - kw):i2 + kw], 10) for i2 in range(len(design))]
+    hi_b = [np.percentile(ys_a[max(0, i2 - kw):i2 + kw], 90) for i2 in range(len(design))]
+    ax.fill_between(xs_a, lo_b, hi_b, color="#444444", alpha=0.12,
+                    label="80% prediction band (central 80% of studies)")
+    ax.plot(xs_a, med, "-", color="#444444", lw=2, alpha=0.85, label="rolling median")
+
     ax.axvline(1.0, ls=":", color="#888")
     ax.text(1.02, 0.03, "R = 1: surplus equals fleet appetite", transform=ax.get_xaxis_transform(),
             fontsize=8.5, color="#666")
@@ -464,7 +476,10 @@ if len(design) >= 10:
         "and a 6x-larger 120-task base at similar R save the same 4.8%/4.9%). Triangles "
         "are a single base re-solved under real 2023 weather days -- weather moves a "
         "site along the curve, not off it. The line is a rolling median through the "
-        "dots, a guide rather than a fit. Reading for a planner: compute R from two "
+        "dots; the shaded band holds the central 80% of studies -- a PREDICTION band "
+        "(where a new site should fall), which unlike a confidence interval on the "
+        "mean does not shrink to zero as more simulations are run. Reading for a "
+        "planner: compute R from two "
         "energy audits and read off the gross saving. Pricing realistic enablement "
         "costs INTO the model (bidirectional-charger premium $0-8 per truck-day and "
         "cycling degradation $0-0.05/kWh -- ranges anchored to published hardware "
@@ -497,7 +512,7 @@ if eb:
         ax.fill_between(xs, lo, hi, color=col, alpha=0.15)
         ax.plot(xs, med, "-", color=col, lw=1.8, label=f"{int(eps_v * 100)} kWh")
     ax.set_xlabel("available daily solar (MWh)")
-    ax.set_ylabel("fossil fuel (MWh-equivalent)")
+    ax.set_ylabel("TOTAL daily fossil generation, base load + fleet (MWh)")
     ax.set_title("diminishing returns to solar, across the full duty-cycle range (EVSP-V2G)")
     ax.legend(title="energy per task", fontsize=8, title_fontsize=8)
     finish(fig, "fig_8_6_diminishing.png")
@@ -511,7 +526,10 @@ if eb:
         "fuel than the last, because the displaceable quantity (the fossil burned in "
         "deficit hours) is finite; heavier duties shift the curve up and delay the "
         "floor. This monotone shrinking of marginal value across the whole duty range "
-        "is the empirical signature of the fixed-profile submodularity of Theorem 1.")
+        "is the empirical signature of the fixed-profile submodularity of Theorem 1. "
+        "A curve touching zero means the ENTIRE microgrid -- base load and fleet -- runs "
+        "on solar that day, generation literally zero; those are the same cells that "
+        "appear as full-displacement entries (starred, ~-446 gal/day) in Table 8.4.")
 else:
     e3b = load(ARX, "exp3b_solar_pv.json")
     if e3b:
@@ -555,7 +573,8 @@ if os.path.exists(tlp):
             labels.append(f"Battery (x{v['batteries']})")
         a_.set_yticks(range(len(labels))); a_.set_yticklabels(labels, fontsize=6.5)
         a_.set_xlim(0, 24); a_.set_ylim(-0.7, len(labels) - 0.3)
-        a_.set_title(f"truck ${v['cv']:.0f}/day, battery ${v.get('cb', 36):.0f}/day: "
+        bat_txt = (f"battery ${v['cb']:.0f}/day" if v.get("cb") else "no stationary storage")
+        a_.set_title(f"truck ${v['cv']:.0f}/day, " + bat_txt + ": "
                      f"{v['trucks']} trucks ({v['tasks_per_truck']} tasks/truck), "
                      f"{v['batteries']} batteries" + (f" -- {v['tag']}" if v.get("tag") else ""),
                      fontsize=9)
@@ -565,10 +584,11 @@ if os.path.exists(tlp):
     caption("Figure 8.7",
         "A realistic solution timeline: 60 one-hour tasks on a full-day schedule "
         "(6h-20h), so vehicles chain tasks the way real fleets do, instead of the "
-        "breaks-schedule ceiling of ~4-5 two-hour tasks. Top: at $45/day trucks, the "
-        "optimum uses more, lightly-worked vehicles; bottom: tripling the truck cost "
-        "shrinks the fleet (each truck works harder) and substitutes stationary "
-        "batteries -- the fleet-vs-storage trade visible in one picture. Green cells "
+        "breaks-schedule ceiling of ~4-5 two-hour tasks. Top: a depot WITH stationary "
+        "storage -- the batteries carry the arbitrage and trucks mostly just recharge "
+        "their own traction. Bottom: the same depot with NO stationary storage "
+        "installed (a common real situation): the V2G-capable fleet takes over the "
+        "arbitrage itself, and the truck lanes fill with discharge. Green cells "
         "are charging on free midday surplus, black is paid charging, red is V2G "
         "discharge into the morning/evening deficits.")
 else:
