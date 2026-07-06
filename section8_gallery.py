@@ -305,54 +305,67 @@ if tt:
             "growing where solar-awareness saturates: bidirectionality is what monetizes "
             "surplus beyond the fleet's own needs.")
 
-# %% Figure 8.4 -- when does electrification pay? (linear in efficiency; break-even exact)
+# %% Figure 8.4 -- when does electrification pay? (mechanism + fleet distribution)
+import glob as _glob
+fleets84 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight2_fig84_s*.json")):
+    fleets84 += json.load(open(_p))
 if tt:
     sens = [r for r in tt if r.get("pv") == 2.0 and r.get("points") == 3 and "electrify_value" in r]
     prems = sorted({r["ev_premium"] for r in sens})
     effs = sorted({r["ice_eff"] for r in sens})
     if len(prems) >= 2 and len(effs) >= 2:
-        fig, ax = plt.subplots(figsize=(8.2, 4.6), constrained_layout=True)
-        ax.axvspan(2.5, 3.5, color="#eaf4ea")
-        ax.text(3.0, 0.04, "measured heavy-duty EVs (~2.5-3.5x)", ha="center",
-                transform=ax.get_xaxis_transform(), fontsize=8.5, color="#2e7d32")
+        fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.6), constrained_layout=True)
+        for a_ in ax:
+            a_.axvspan(2.5, 3.5, color="#eaf4ea")
+        ax[0].text(3.0, 0.04, "measured heavy-duty EVs", ha="center",
+                   transform=ax[0].get_xaxis_transform(), fontsize=8.5, color="#2e7d32")
         eff_grid = np.linspace(1.0, 3.6, 50)
-        for prem, c in zip(prems, ("#2E75B6", "#e08020", "#c0392b")):
+        CPRE = {1.0: "#2E75B6", 1.5: "#e08020", 2.0: "#c0392b"}
+        for prem in prems:
+            c = CPRE.get(prem, "#555555")
             prpts = sorted([(r["ice_eff"], r["electrify_value"]) for r in sens if r["ev_premium"] == prem])
             (x1, y1), (x2, y2) = prpts[0], prpts[-1]
             slope = (y2 - y1) / (x2 - x1); a0 = y1 - slope * x1
-            ax.plot(eff_grid, a0 + slope * eff_grid, color=c, lw=1.8, label=f"EV truck premium {prem}x")
-            ax.scatter([p[0] for p in prpts], [p[1] for p in prpts], color=c, zorder=3, s=30)
-            be = -a0 / slope
-            ax.scatter([be], [0], marker="D", color=c, zorder=4, s=45)
-            ax.annotate(f"{be:.2f}x", (be, 0), textcoords="offset points", xytext=(2, -16),
-                        fontsize=9, color=c)
-        ax.axhline(0, color="k", lw=0.9)
-        ax.set_xlabel("drivetrain efficiency: kWh of diesel an ICE burns per kWh an EV uses for the same work\n"
-                      "(1x = equal-energy bookkeeping)")
-        ax.set_ylabel("$ saved per day by electrifying\n(VSP cost - plain-EV cost; negative = EVs cost more)")
-        ax.set_title("electrification value is exactly linear in the efficiency ratio; break-evens marked")
-        ax.legend(loc="upper left")
+            ax[0].plot(eff_grid, a0 + slope * eff_grid, color=c, lw=1.8,
+                       label=f"EV truck +${(prem-1)*45:.0f}/day over ICE")
+            ax[0].scatter([p[0] for p in prpts], [p[1] for p in prpts], color=c, zorder=3, s=28)
+            ax[0].scatter([-a0 / slope], [0], marker="D", color=c, zorder=4, s=42)
+        ax[0].axhline(0, color="k", lw=0.9)
+        ax[0].set_xlabel("kWh of diesel an ICE burns per kWh an EV uses\n(1x = equal-energy bookkeeping)")
+        ax[0].set_ylabel("$ saved per day by electrifying")
+        ax[0].set_title("one fleet: value is an exact line; diamonds = break-even")
+        ax[0].legend(loc="upper left", fontsize=8.5)
+        if fleets84:
+            CUSD = {0.0: "#2E75B6", 22.5: "#e08020", 45.0: "#c0392b"}
+            for pu, c in CUSD.items():
+                v = [r[f"breakeven_prem{pu}"] for r in fleets84 if f"breakeven_prem{pu}" in r]
+                if v:
+                    ax[1].hist(v, bins=24, color=c, alpha=0.45,
+                               label=f"+${pu:.0f}/day: mean {np.mean(v):.2f}, p95 {np.percentile(v, 95):.2f}")
+            ax[1].text(3.0, 0.92, "measured band", ha="center",
+                       transform=ax[1].get_xaxis_transform(), fontsize=8.5, color="#2e7d32")
+            ax[1].set_xlim(1.0, 3.6)
+            ax[1].set_xlabel(f"break-even efficiency across {len(fleets84)} randomized fleets")
+            ax[1].set_ylabel("number of fleets")
+            ax[1].set_title("all fleets: the whole distribution stays left of reality")
+            ax[1].legend(fontsize=8.5, loc="upper right")
         finish(fig, "fig_8_4_electrify.png")
         GALLERY.append("\n![fig 8.4](fig_8_4_electrify.png)\n")
         caption("Figure 8.4",
-            "The electrification decision isolated. Fuel enters the objective linearly, so "
-            "the value of electrifying is an exact straight line in the efficiency ratio -- "
-            "the simulated points (dots) confirm it: the third point of each premium falls "
-            "on the line through the other two to the dollar. Break-even is therefore "
-            "closed-form, eff* = 1 + (EV-fleet cost premium at 1x)/(c_g x fleet traction): "
-            "1.40x / 1.53x / 1.68x for truck premiums of 1.0x / 1.5x / 2.0x (diamonds); "
-            "over 200 randomly sampled trip sets: 1.376 [1.370, 1.381], 1.523 [1.516, "
-            "1.531], 1.671 [1.661, 1.681]; the most extreme of 600 draws is 1.90, still "
-            "below the measured band. The solar profile provably cannot move this "
-            "figure (both regimes are solar-blind, so base generation cancels in the "
-            "difference; verified numerically: identical values on the cloudiest and "
-            "clearest days of 2023). "
-            "Measured heavy-duty ratios (green band) are ~2.5-3.5x -- e.g., ~1.7-2.1 kWh/mi "
-            "for Class-8 BEVs in fleet telemetry vs ~6-7 mpg diesel at 37.7 kWh/gal -- so "
-            "electrification pays robustly once energy is accounted honestly; at the "
-            "equal-energy convention (1x) it never does. Solar plays no role in this "
-            "figure: the electrification value is independent of R (separability).")
-
+            "The electrification decision. Left (mechanism, one fleet): fuel enters the "
+            "objective linearly, so the value of replacing ICE trucks with plain EVs is an "
+            "exact straight line in the drivetrain-efficiency ratio -- how many kWh of "
+            "diesel an ICE burns to do the work an EV does on one kWh (an engine-physics "
+            "number; nothing to do with solar). Diamonds mark break-even. Right "
+            "(robustness): the break-even distribution across 240 randomized fleets -- "
+            "30-120 tasks, heterogeneous 50-250 kWh duties, breaks or full-day schedules "
+            "-- at EV cost premiums of +$0/+$22.5/+$45 per truck-day. Means 1.33/1.47/1.60, "
+            "95th percentiles 1.48/1.67/1.88, single worst fleet 1.97: the ENTIRE "
+            "distribution lies below the measured 2.5-3.5x band (green), so electrification "
+            "pays for every sampled fleet under honest energy accounting -- and never pays "
+            "under the equal-energy convention (1x). The solar profile contributes zero "
+            "width by construction (both regimes are solar-blind; verified to the cent).")
 # %% Figure 8.5 -- THE money figure: one curve, no special treatment (option b)
 pg = load(ARX, "planning_grid.json") or []
 sl = load(ARX, "scale_ladder.json") or []
@@ -431,42 +444,108 @@ if len(design) >= 10:
 else:
     print("  [skip] not enough data for the collapse figure")
 
-# %% Figure 8.6 -- diminishing returns (Theorem 1's signature)
-e3b = load(ARX, "exp3b_solar_pv.json")
-if e3b:
-    fig, ax = plt.subplots(figsize=(7, 4.2), constrained_layout=True)
-    for eps_v, c in ((2.0, "#2E75B6"), (2.5, "#c0392b")):
-        sub = sorted([r for r in e3b if r.get("eps") == eps_v and r.get("feasible")], key=lambda r: r["solar_mwh"])
-        if sub:
-            ax.plot([r["solar_mwh"] for r in sub], [r["fuel_kwh"] / 1000 for r in sub], "-o", color=c, label=f"eps={eps_v}")
-    ax.set_xlabel("available daily solar (MWh)"); ax.set_ylabel("fossil fuel (MWh-equivalent)")
-    ax.set_title("diminishing returns to solar (EVSP-V2G)")
-    ax.legend()
+# %% Figure 8.6 -- diminishing returns across the full duty-cycle range
+import glob as _glob
+eb = []
+for _p in _glob.glob(os.path.join(ARX, "overnight2_epsband_s*.json")):
+    eb += json.load(open(_p))
+if eb:
+    from matplotlib import cm as _cm
+    fig, ax = plt.subplots(figsize=(8.2, 4.8), constrained_layout=True)
+    eps_all = sorted({r["eps"] for r in eb})
+    for eps_v in eps_all:
+        col = _cm.viridis(0.05 + 0.85 * (eps_v - eps_all[0]) / (eps_all[-1] - eps_all[0]))
+        xs, med, lo, hi = [], [], [], []
+        for pv in sorted({r["pv"] for r in eb}):
+            v = [r["fuel_kwh"] / 1000 for r in eb if r["eps"] == eps_v and r["pv"] == pv]
+            if v:
+                xs.append(pv * 14.7); med.append(np.median(v)); lo.append(min(v)); hi.append(max(v))
+        ax.fill_between(xs, lo, hi, color=col, alpha=0.15)
+        ax.plot(xs, med, "-", color=col, lw=1.8, label=f"{int(eps_v * 100)} kWh")
+    ax.set_xlabel("available daily solar (MWh)")
+    ax.set_ylabel("fossil fuel (MWh-equivalent)")
+    ax.set_title("diminishing returns to solar, across the full duty-cycle range (EVSP-V2G)")
+    ax.legend(title="energy per task", fontsize=8, title_fontsize=8)
     finish(fig, "fig_8_6_diminishing.png")
     GALLERY.append("\n![fig 8.6](fig_8_6_diminishing.png)\n")
     caption("Figure 8.6",
-        "Fossil fuel versus available daily solar under EVSP-V2G. The marginal fuel "
-        "displaced by each additional MWh of solar shrinks monotonically -- the empirical "
-        "signature of the fixed-profile submodularity of Theorem 1: each additional unit "
-        "of solar (and the storage that shifts it) captures less of the remaining "
-        "displaceable fuel.")
-
-# %% Figure 8.7 -- representative solution timeline (pre-rendered by recreate_arxiv)
-tl = os.path.join(ARX, "exp4_timeline.png")
-if os.path.exists(tl):
-    if INTERACTIVE:
-        from IPython.display import Image
-        display(Image(filename=tl))
-    GALLERY.append("\n![fig 8.7](../arxiv/exp4_timeline.png)\n")
-    caption("Figure 8.7",
-        "A representative EVSP-V2G solution on the original instance (60 tasks). Top: "
-        "net microgrid demand (gold = solar surplus). Bottom: per-vehicle activity -- "
-        "trucks charge on the free midday surplus (green), pay for residual charging "
-        "in deficit hours (black), and discharge into the morning and evening peaks "
-        "(red); the aggregate battery performs the same temporal arbitrage at scale.")
+        "Fossil fuel versus available solar under EVSP-V2G, for six task-energy levels "
+        "(eps = energy one 2-hour task consumes: 50 kWh ~ a light shuttle run, up to "
+        "300 kWh ~ heavy off-road/patrol duty with auxiliary loads). Lines are medians "
+        "over three random trip sets; shading is the min-max spread. Every duty level "
+        "shows the same concave shape -- each additional MWh of solar displaces less "
+        "fuel than the last, because the displaceable quantity (the fossil burned in "
+        "deficit hours) is finite; heavier duties shift the curve up and delay the "
+        "floor. This monotone shrinking of marginal value across the whole duty range "
+        "is the empirical signature of the fixed-profile submodularity of Theorem 1.")
 else:
-    print("  [skip] missing results/arxiv/exp4_timeline.png")
-
+    e3b = load(ARX, "exp3b_solar_pv.json")
+    if e3b:
+        fig, ax = plt.subplots(figsize=(7, 4.2), constrained_layout=True)
+        for eps_v, c in ((2.0, "#2E75B6"), (2.5, "#c0392b")):
+            sub = sorted([r for r in e3b if r.get("eps") == eps_v and r.get("feasible")],
+                         key=lambda r: r["solar_mwh"])
+            if sub:
+                ax.plot([r["solar_mwh"] for r in sub], [r["fuel_kwh"] / 1000 for r in sub],
+                        "-o", color=c, label=f"eps={eps_v}")
+        ax.set_xlabel("available daily solar (MWh)"); ax.set_ylabel("fossil fuel (MWh-equivalent)")
+        ax.set_title("diminishing returns to solar (EVSP-V2G)"); ax.legend()
+        finish(fig, "fig_8_6_diminishing.png")
+        GALLERY.append("\n![fig 8.6](fig_8_6_diminishing.png)\n")
+        caption("Figure 8.6",
+            "Fossil fuel versus available daily solar under EVSP-V2G (2-eps fallback; run "
+            "overnight2 S6 for the full duty-cycle band).")
+# %% Figure 8.7 -- realistic solution timeline: 1-hour tasks, full-day schedule
+tlp = os.path.join(ARX, "overnight2_timeline.json")
+if os.path.exists(tlp):
+    tl = json.load(open(tlp))
+    nlanes = [len(v["lanes"]) + (1 if v.get("battery_net") else 0) for v in tl]
+    fig, axes = plt.subplots(len(tl), 1, figsize=(11, 1.6 + 0.26 * sum(nlanes)),
+                             gridspec_kw={"height_ratios": [n + 2 for n in nlanes]},
+                             constrained_layout=True, sharex=True)
+    axes = np.atleast_1d(axes)
+    for a_, v in zip(axes, tl):
+        delta = v["delta"]
+        lanes = list(v["lanes"]) + ([v["battery_net"]] if v.get("battery_net") else [])
+        for i, e in enumerate(lanes):
+            for t, val in enumerate(e):
+                if val > 1e-6:
+                    c = "#2e9e3f" if delta[t] < 0 else "#333333"
+                elif val < -1e-6:
+                    c = "#c0392b"
+                else:
+                    continue
+                a_.add_patch(plt.Rectangle((t / 2.0, i - 0.42), 0.5, 0.84, color=c))
+        labels = [f"Truck {i + 1}" for i in range(len(v["lanes"]))]
+        if v.get("battery_net"):
+            labels.append(f"Battery (x{v['batteries']})")
+        a_.set_yticks(range(len(labels))); a_.set_yticklabels(labels, fontsize=6.5)
+        a_.set_xlim(0, 24); a_.set_ylim(-0.7, len(labels) - 0.3)
+        a_.set_title(f"truck cost ${v['cv']:.0f}/day: {v['trucks']} trucks "
+                     f"({v['tasks_per_truck']} tasks/truck), {v['batteries']} batteries",
+                     fontsize=9)
+    axes[-1].set_xlabel("hour of day   (green = free solar charge, black = paid charge, red = discharge)")
+    finish(fig, "fig_8_7_timeline.png")
+    GALLERY.append("\n![fig 8.7](fig_8_7_timeline.png)\n")
+    caption("Figure 8.7",
+        "A realistic solution timeline: 60 one-hour tasks on a full-day schedule "
+        "(6h-20h), so vehicles chain tasks the way real fleets do, instead of the "
+        "breaks-schedule ceiling of ~4-5 two-hour tasks. Top: at $45/day trucks, the "
+        "optimum uses more, lightly-worked vehicles; bottom: tripling the truck cost "
+        "shrinks the fleet (each truck works harder) and substitutes stationary "
+        "batteries -- the fleet-vs-storage trade visible in one picture. Green cells "
+        "are charging on free midday surplus, black is paid charging, red is V2G "
+        "discharge into the morning/evening deficits.")
+else:
+    tlpng = os.path.join(ARX, "exp4_timeline.png")
+    if os.path.exists(tlpng):
+        if INTERACTIVE:
+            from IPython.display import Image
+            display(Image(filename=tlpng))
+        GALLERY.append("\n![fig 8.7](../arxiv/exp4_timeline.png)\n")
+        caption("Figure 8.7",
+            "Representative EVSP-V2G solution (2-hour-task fallback; run overnight2 S7 "
+            "for the realistic 1-hour/full-day version).")
 # %% Figure 8.8 -- PV sizing under a real year of weather (overnight S2)
 wx = load(ARX, "overnight_weather.json")
 if wx:
