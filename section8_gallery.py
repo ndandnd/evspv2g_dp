@@ -788,8 +788,9 @@ if cp and "v2g" in cp:
                label=f"full V2G technology ({cp['v2g']['fossil_mwh']:.1f} MWh)")
     _gs = np.array(cp["solar"]["gen"]); _gv = np.array(cp["v2g"]["gen"])
     ax[0].fill_between(hrs, _gv, _gs, where=_gs >= _gv, step="mid", color="#2E75B6",
-                       alpha=0.10, label=f"saved energy = "
-                       f"{cp['solar']['fossil_mwh'] - cp['v2g']['fossil_mwh']:.1f} MWh/day")
+                       alpha=0.10,
+                       label=r"$\int (g_{\mathrm{conv}} - g_{\mathrm{V2G}})\,dt$ = "
+                             f"{cp['solar']['fossil_mwh'] - cp['v2g']['fossil_mwh']:.1f} MWh/day")
     ax[0].axhline(cp["gen_cap"], ls="--", color="#c0392b", lw=1.2,
                   label=f"generation cap {cp['gen_cap']:.0f}")
     ax[0].set_xlabel("hour of day"); ax[0].set_ylabel("dispatched fossil generation (kWh/block)")
