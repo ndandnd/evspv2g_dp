@@ -512,6 +512,12 @@ if eb:
             ax.fill_between(xs, lo, hi, color=col, alpha=0.15)
             ax.plot(xs, med, "-", color=col, lw=1.8, label=f"{int(eps_v * 100)} kWh")
         ax.axhline(0, color="k", lw=0.6)
+        ax2 = ax.twinx()
+        pvs6 = sorted({r["pv"] for r in data})
+        bmed = [np.median([r["batteries"] for r in data if r["pv"] == pv]) for pv in pvs6]
+        ax2.plot([pv * 14.7 for pv in pvs6], bmed, ":s", color="#666666", ms=4, lw=1.1)
+        ax2.set_ylabel("batteries deployed (median, dotted)", fontsize=8, color="#666666")
+        ax2.tick_params(labelsize=7, colors="#666666")
         ax.set_xlabel("available daily solar (MWh)")
         ax.set_title(title, fontsize=10)
 
@@ -537,7 +543,10 @@ if eb:
         "surplus-vs-fleet-appetite balance: at 60 tasks (a) every duty level "
         "eventually zeroes out, while at 150 tasks (b) the heavier duties consume "
         "the surplus themselves and generation plateaus above zero -- the same "
-        "boundary that the starred cells trace through Table 8.4.")
+        "boundary that the starred cells trace through Table 8.4. The dotted line "
+        "(right axis) shows deployed storage growing as fuel falls: more solar is "
+        "captured by more batteries, but each captures less -- the two halves of "
+        "the diminishing-returns mechanism.")
 # %% Figure 8.7 -- realistic solution timeline: 1-hour tasks, full-day schedule
 tlp = os.path.join(ARX, "overnight2_timeline.json")
 if os.path.exists(tlp):
@@ -630,6 +639,87 @@ if wx:
         "mean closely matches the mean-day design value at every sizing, so expected "
         "value can be estimated from a single average day -- but the day-to-day "
         "distribution cannot.")
+
+
+# %% Figure 8.9 -- fuel and fleet size vs task count, by regime (the exp_modes idea)
+e1c9 = load(ARX, "exp1_regimes.json")
+if e1c9:
+    sub9 = [r for r in e1c9 if r.get("eps") == 2.0 and r.get("feasible")]
+    if len(sub9) >= 6:
+        fig, ax = plt.subplots(1, 2, figsize=(11, 4.2), constrained_layout=True)
+        NM = {"vsp": ("VSP (ICE)", "#888888"), "solar": ("EVSP-V1G", "#e08020"),
+              "v2g": ("EVSP-V2G", "#2E75B6")}
+        for scen, (lab, c) in NM.items():
+            rr = sorted([r for r in sub9 if r["scenario"] == scen], key=lambda r: r["trips"])
+            if rr:
+                ax[0].plot([r["trips"] for r in rr], [r["fuel_kwh"] / 1000 for r in rr], "-o", color=c, label=lab)
+                ax[1].plot([r["trips"] for r in rr], [r["trucks"] for r in rr], "-o", color=c, label=lab)
+        ax[0].set_xlabel("number of tasks"); ax[0].set_ylabel("daily fossil fuel (MWh-equivalent)")
+        ax[0].set_title("fuel by regime"); ax[0].legend()
+        ax[1].set_xlabel("number of tasks"); ax[1].set_ylabel("trucks deployed")
+        ax[1].set_title("fleet size by regime"); ax[1].legend()
+        finish(fig, "fig_8_9_modes.png")
+        GALLERY.append("\n![fig 8.9](fig_8_9_modes.png)\n")
+        caption("Figure 8.9",
+            "Daily fuel and fleet size versus the number of tasks (eps = 200 kWh/task, "
+            "original solar level, cyclic model). The fleet panel carries the "
+            "operational story: charge-only V1G fleets grow fastest with workload "
+            "(recharge time and range cut tasks per vehicle), while V2G's storage "
+            "flexibility keeps the fleet closer to the ICE baseline -- flexibility "
+            "substituting for raw vehicle count.")
+
+# %% Figure 8.10 -- column generation: greedy warm start vs cold start
+cg10 = load(os.path.join(ROOT, "results"), "colgen.json")
+if cg10:
+    fig, ax = plt.subplots(1, 2, figsize=(11, 4), constrained_layout=True)
+    xs10 = [r["trips"] for r in cg10]
+    ax[0].plot(xs10, [r["cold_iters"] for r in cg10], "-o", color="#888888", label="cold start")
+    ax[0].plot(xs10, [r["warm_iters"] for r in cg10], "-o", color="#2E75B6", label="greedy warm start")
+    ax[0].set_xlabel("number of tasks"); ax[0].set_ylabel("CG iterations to convergence")
+    ax[0].set_title("warm vs cold start"); ax[0].legend()
+    ax[1].plot(xs10, [r["cold_time"] for r in cg10], "-o", color="#888888", label="cold start")
+    ax[1].plot(xs10, [r["warm_time"] for r in cg10], "-o", color="#2E75B6", label="greedy warm start")
+    ax[1].set_xlabel("number of tasks"); ax[1].set_ylabel("LP/CG solve time (s)")
+    ax[1].set_title("solve time"); ax[1].legend()
+    finish(fig, "fig_8_10_warmstart.png")
+    GALLERY.append("\n![fig 8.10](fig_8_10_warmstart.png)\n")
+    caption("Figure 8.10",
+        "Column generation with the greedy warm start (repeatedly pricing against "
+        "uncovered-task rewards -- the constructive counterpart of the submodular "
+        "layer of Section 6) versus a cold start from single-task columns. The warm "
+        "start is competitive to favorable in iterations and time; either way the "
+        "LP converges in seconds on open-source solvers, and no monolithic "
+        "time-indexed MILP is ever solved -- the only integer choices are the truck "
+        "columns and the battery count.")
+
+# %% Figure 8.11 -- infrastructure caps in action (peak shaving under enforced limits)
+cp = load(ARX, "caps_profile.json")
+if cp:
+    hrs = np.arange(cp["T"])
+    fig, ax = plt.subplots(1, 2, figsize=(11.5, 4.2), constrained_layout=True)
+    ax[0].step(hrs, cp["baseline_gen"], where="mid", color="#aaaaaa", label="no-fleet baseline")
+    ax[0].step(hrs, cp["gen"], where="mid", color="#2E75B6", lw=1.8, label="with V2G fleet")
+    ax[0].axhline(cp["gen_cap"], ls="--", color="#c0392b", lw=1.2, label=f"generation cap {cp['gen_cap']:.0f}")
+    ax[0].set_xlabel("hour of day"); ax[0].set_ylabel("dispatched fossil generation (kWh/block)")
+    ax[0].set_title(f"generation: peak {cp['peak_gen']:.0f} of {cp['gen_cap']:.0f} -- cap active, respected")
+    ax[0].legend(fontsize=8.5)
+    ax[1].step(hrs, cp["total_charge"], where="mid", color="#2e9e3f", lw=1.8, label="total charging draw")
+    ax[1].axhline(cp["charge_cap"], ls="--", color="#c0392b", lw=1.2, label=f"charging cap {cp['charge_cap']:.0f}")
+    ax[1].set_xlabel("hour of day"); ax[1].set_ylabel("charging draw (kWh/block)")
+    ax[1].set_title("charging spread across the surplus window by the congestion cap")
+    ax[1].legend(fontsize=8.5)
+    finish(fig, "fig_8_11_caps.png")
+    GALLERY.append("\n![fig 8.11](fig_8_11_caps.png)\n")
+    caption("Figure 8.11",
+        "The infrastructure limits of Section 3, enforced and visibly at work "
+        "(realistic capped instance, 20 tasks, EVSP-V2G). Left: hourly fossil "
+        "dispatch with and without the fleet -- the V2G fleet shaves the morning and "
+        "evening peaks, and the dispatched peak approaches but respects the "
+        "generation cap, so the reported solutions do not rely on the absence of "
+        "limits. Right: total charging draw stays under the station capacity cap, "
+        "which spreads charging across the midday surplus window instead of "
+        "concentrating it -- the congestion mechanism whose price (the dual nu_t) "
+        "enters the pricing DP of Section 7.")
 
 # %% Parameter provenance -- a source for every empirical anchor
 PROV = [
