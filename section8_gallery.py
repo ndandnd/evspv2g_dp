@@ -284,10 +284,10 @@ if rf:
         "Fossil energy attributable to the fleet -- total generation minus the no-fleet "
         "baseline -- by regime and solar level, under the honest cyclic model with the "
         "measured 3.3x ICE drivetrain convention. At scarce solar the four regimes are "
-        "ordered by efficiency alone; as the surplus grows, solar-aware charging first "
+        "ordered by efficiency alone; as the surplus grows, smart charging (V1G) first "
         "erases the EV fleet's own fossil draw, and V2G then turns the fleet NEGATIVE: "
         "the vehicles displace base-load fossil they never consumed, an honest, "
-        "fully-paid-for analogue of the original paper's net export. The solar-blind "
+        "fully-paid-for analogue of the original paper's net export. The flat-tariff "
         "EVSP column isolates how much of the electric fleet's advantage is drivetrain "
         "efficiency versus microgrid coupling.")
 
