@@ -217,6 +217,29 @@ caption("Table 8.3",
     "and at 3x it displaces the ENTIRE base fossil generation (-446 gal/day), "
     "every kWh of it paid for through the power balance.")
 
+# %% Table 8.4 -- cyclic export grid in OUR settings (tasks x solar)
+eg = load(ARX, "overnight2_export.json")
+if eg:
+    pvs = sorted({r["pv"] for r in eg})
+    sur = {pv: next(r["surplus_mwh"] for r in eg if r["pv"] == pv) for pv in pvs}
+    hdr = ["tasks \\ surplus"] + [f"{sur[pv]:.1f} MWh/d" for pv in pvs]
+    rows4 = []
+    for n in sorted({r["n_tasks"] for r in eg}):
+        row = [n]
+        for pv in pvs:
+            rr = next((x for x in eg if x["n_tasks"] == n and x["pv"] == pv), None)
+            row.append(f"{rr['gal']:+.0f}" if rr else "--")
+        rows4.append(row)
+    table("**Fleet-attributable fossil fuel (gallons/day; negative = net export). "
+          "Revised cyclic model, planning prices, V2G:**\n\n" + md_table(hdr, rows4))
+    caption("Table 8.4",
+        "The revised paper's own export table -- no free energy, no anchoring to the "
+        "original's instances: fleet-attributable fossil (total generation minus the "
+        "no-fleet baseline, in the gallons metric) for task counts 20-200 against solar "
+        "surplus levels, all under the cyclic model at planning prices. The sign "
+        "boundary traces the R-rule diagonally through the grid: a small fleet exports "
+        "at modest solar while a large fleet needs abundant solar, because export "
+        "begins where the surplus outruns the fleet's own charging appetite.")
 # %% Figure 8.2 -- fossil energy by regime as solar grows (cyclic, honest accounting)
 rf = load(ARX, "regime_fuel.json")
 if rf:
@@ -230,7 +253,7 @@ if rf:
         return (r["g_units"] - r["baseline_units"]) / 10.0
     fig, ax = plt.subplots(figsize=(8.5, 4.6), constrained_layout=True)
     W = 0.2
-    NAMES = {"vsp": "VSP (ICE)", "ev": "EVSP (solar-blind)", "solar": "EVSP-Solar", "v2g": "EVSP-V2G"}
+    NAMES = {"vsp": "VSP (ICE)", "ev": "EVSP (flat tariff)", "solar": "EVSP-V1G (smart charging)", "v2g": "EVSP-V2G"}
     COLS = {"vsp": "#888888", "ev": "#7d3c98", "solar": "#e08020", "v2g": "#2E75B6"}
     tbl_rows = []
     for i2, reg in enumerate(("vsp", "ev", "solar", "v2g")):
@@ -281,13 +304,13 @@ if tt:
     if sweep:
         xs = [r["ratio"] for r in sweep]
         fig, ax = plt.subplots(1, 2, figsize=(11.5, 4.4), constrained_layout=True)
-        for tier, c, lab in (("vsp", "#888888", "VSP (ICE)"), ("ev", "#7d3c98", "EVSP (plain EV)"),
-                             ("solar", "#e08020", "EVSP-Solar"), ("v2g", "#2E75B6", "EVSP-V2G")):
+        for tier, c, lab in (("vsp", "#888888", "VSP (ICE)"), ("ev", "#7d3c98", "EVSP (flat tariff)"),
+                             ("solar", "#e08020", "EVSP-V1G (smart charging)"), ("v2g", "#2E75B6", "EVSP-V2G")):
             ax[0].plot(xs, [r[f"{tier}_total"] for r in sweep], "-o", color=c, label=lab)
         ax[0].set_xlabel("R = daily solar surplus / fleet traction"); ax[0].set_ylabel("total daily cost ($)")
         ax[0].legend(); ax[0].set_title("total cost by technology tier")
         for key, c, lab in (("electrify_value", "#7d3c98", "electrify (VSP->EV)"),
-                            ("solar_value", "#e08020", "+ solar-aware charging"),
+                            ("solar_value", "#e08020", "+ smart charging (V1G)"),
                             ("v2g_value", "#2E75B6", "+ V2G")):
             ax[1].plot(xs, [r[key] for r in sweep], "-o", color=c, label=lab)
         ax[1].axhline(0, color="k", lw=0.7)
@@ -296,13 +319,15 @@ if tt:
         finish(fig, "fig_8_3_tiers.png")
         GALLERY.append("\n![fig 8.3](fig_8_3_tiers.png)\n")
         caption("Figure 8.3",
-            "The technology ladder VSP -> EVSP -> EVSP-Solar -> EVSP-V2G (60 tasks, EV truck "
+            "The technology ladder VSP -> EVSP (flat tariff) -> EVSP-V1G (smart charging) -> "
+            "EVSP-V2G (60 tasks, EV truck "
             "premium 1.5x, drivetrain efficiency 3.3x, fuel $0.40/kWh). Left: total daily cost "
             "by tier as the solar surplus grows. Right: the three marginal values are nearly "
             "separable -- electrification's value is flat in R (it scales with fuel burned), "
-            "solar-aware charging is worth money from the first surplus kWh and saturates once "
+            "smart charging (V1G, timing the charging into the surplus) is worth money from "
+            "the first surplus kWh and saturates once "
             "the fleet's traction is covered (R ~ 1), and V2G switches on near R ~ 1 and keeps "
-            "growing where solar-awareness saturates: bidirectionality is what monetizes "
+            "growing where V1G saturates: bidirectionality is what monetizes "
             "surplus beyond the fleet's own needs.")
 
 # %% Figure 8.4 -- when does electrification pay? (mechanism + fleet distribution)
@@ -382,6 +407,10 @@ design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in cs if "v2g_vs_solar_pct"
 # overnight sweep: base charge rate only (100/200 kW strata belong to the rate-family analysis)
 design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in ov
            if r.get("rho") == 1.75 and "v2g_vs_solar_pct" in r]
+import glob as _glob5
+for _p in _glob5.glob(os.path.join(ARX, "overnight2_highR_s*.json")):
+    design += [(r["ratio"], r["v2g_vs_solar_pct"]) for r in json.load(open(_p))
+               if "v2g_vs_solar_pct" in r]
 weather = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in se if "v2g_vs_solar_pct" in r]
 if len(design) >= 10:
     fig, ax = plt.subplots(figsize=(9, 5.2), constrained_layout=True)
@@ -521,8 +550,9 @@ if os.path.exists(tlp):
             labels.append(f"Battery (x{v['batteries']})")
         a_.set_yticks(range(len(labels))); a_.set_yticklabels(labels, fontsize=6.5)
         a_.set_xlim(0, 24); a_.set_ylim(-0.7, len(labels) - 0.3)
-        a_.set_title(f"truck cost ${v['cv']:.0f}/day: {v['trucks']} trucks "
-                     f"({v['tasks_per_truck']} tasks/truck), {v['batteries']} batteries",
+        a_.set_title(f"truck ${v['cv']:.0f}/day, battery ${v.get('cb', 36):.0f}/day: "
+                     f"{v['trucks']} trucks ({v['tasks_per_truck']} tasks/truck), "
+                     f"{v['batteries']} batteries" + (f" -- {v['tag']}" if v.get("tag") else ""),
                      fontsize=9)
     axes[-1].set_xlabel("hour of day   (green = free solar charge, black = paid charge, red = discharge)")
     finish(fig, "fig_8_7_timeline.png")
