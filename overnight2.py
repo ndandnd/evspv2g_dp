@@ -311,12 +311,69 @@ def s11_shape_noise():
             print(f"  eps={eps} pv={pv_t} done", flush=True)
 
 
+def s12_modes_dense():
+    """Dense regimes-vs-tasks for Fig 8.9: tasks 20..400 x {1x, 2x} solar x four
+    regimes, SAME fleet per task count across regimes/solar (deterministic seed)."""
+    rows, path = ckpt(f"overnight2_modes_s{SH_I}of{SH_K}.json")
+    done = {(r["n_tasks"], r["pv"], r["scenario"]) for r in rows}
+    cells = [(n, pv, scen) for n in range(20, 401, 20) for pv in (1.0, 2.0)
+             for scen in ("vsp", "ev", "solar", "v2g")]
+    print(f"S12 dense modes: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(done)} done)", flush=True)
+    for idx, (n, pv, scen) in enumerate(cells):
+        if idx % SH_K != SH_I or (n, pv, scen) in done:
+            continue
+        fleet = sample_fleet(np.random.default_rng(500 + n), POINTS_DEF, n, BREAKS)
+        inst = build_instance(POINTS_DEF, 2.0, BREAKS, pv_scale=pv, trip_list=fleet)
+        traction = float(sum(tr.energy for tr in inst.trips))
+        r = solve(inst, scen)
+        if r is None:
+            continue
+        fleet_paid = 0.0
+        if scen == "ev":
+            fleet_paid = sum((c.fixed_cost - inst.c_v) / inst.c_g * round(x)
+                             for c, x in zip(r["cols"], r["mip"].x) if x > 0.5)
+        rows.append({"n_tasks": n, "pv": pv, "scenario": scen,
+                     "g_units": round(float(r["mip"].g.sum()), 2),
+                     "traction_units": round(traction, 2),
+                     "fleet_paid_units": round(fleet_paid, 2),
+                     "trucks": r["trucks"], "batteries": r["batteries"],
+                     "gap_pct": round(r["gap"], 3)})
+        json.dump(rows, open(path, "w"))
+        if len(rows) % 15 == 0:
+            print(f"  [{len(rows)} cells done]", flush=True)
+
+
+def s13_warmcold():
+    """Warm vs cold start at scale for Fig 8.10 (pure CG, no enrichment/MILP)."""
+    rows, path = ckpt("overnight2_warmcold.json")
+    done = {(r["n_tasks"], r["seed"], r["start"]) for r in rows}
+    print("S13 warm vs cold ladder", flush=True)
+    for n in (60, 100, 150, 200, 280, 360, 450):
+        for seed in range(3):
+            fleet = sample_fleet(np.random.default_rng(700 + 1000 * seed + n),
+                                 POINTS_DEF, n, BREAKS)
+            for start in ("warm", "cold"):
+                if (n, seed, start) in done:
+                    continue
+                inst = build_instance(POINTS_DEF, 2.0, BREAKS, pv_scale=2.0, trip_list=fleet)
+                inst.c_g, inst.c_b, inst.rho, inst.c_v = CG_COST, CB_COST, RHO, CV
+                t0 = time.time()
+                res = column_generation(inst, scenario="v2g", start=start, do_milp=False,
+                                        enrich=0, max_iter=max(3000, 6 * n))
+                rows.append({"n_tasks": n, "seed": seed, "start": start,
+                             "iters": res["iters"], "time_s": round(time.time() - t0, 2),
+                             "lp_obj": round(res["lp_obj"], 2)})
+                json.dump(rows, open(path, "w"))
+        print(f"  n={n} done", flush=True)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
     print(f"overnight2: studies {STUDIES} shard {SHARD}  MILP={MILP_SOLVER}\n", flush=True)
     fns = {"S5": s5_fig84_bands, "S6": s6_eps_band, "S7": s7_timeline, "S8": s8_exp5_e15,
-           "S9": s9_export_grid, "S10": s10_highR, "S11": s11_shape_noise}
+           "S9": s9_export_grid, "S10": s10_highR, "S11": s11_shape_noise,
+           "S12": s12_modes_dense, "S13": s13_warmcold}
     for st in STUDIES:
         st = st.strip()
         if st in fns:
