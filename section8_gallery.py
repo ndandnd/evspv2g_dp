@@ -161,12 +161,7 @@ if e20:
             ax[0].plot(xs, [r["cg_s"] for r in data], "-o", color=c, label=lab)
             ax[1].plot(xs, [r["pricing_pct"] for r in data], "-o", color=c, label=lab)
     ax[0].set_xlabel("tasks"); ax[0].set_ylabel("column-generation time (s)")
-    ax[0].annotate("original MILP pricing:\n8.3 h at 450 tasks", xy=(450, max(r["cg_s"] for r in e20)),
-                   xytext=(0.45, 0.75), textcoords="axes fraction", fontsize=9,
-                   arrowprops=dict(arrowstyle="->", lw=0.8))
     ax[0].legend(); ax[0].set_title("solve time (DP pricing, open-source)")
-    ax[1].axhline(95, ls=":", color="#c0392b")
-    ax[1].text(0.03, 0.9, "original: pricing >95% of runtime", transform=ax[1].transAxes, fontsize=9, color="#c0392b")
     ax[1].set_xlabel("tasks"); ax[1].set_ylabel("pricing share of CG time (%)")
     ax[1].set_ylim(0, 100); ax[1].legend(); ax[1].set_title("where the time goes")
     finish(fig, "fig_8_1_scalability.png")
@@ -316,10 +311,10 @@ if tt:
             ax[0].plot(xs, [r[f"{tier}_total"] for r in sweep], "-o", color=c, label=lab)
         ax[0].set_xlabel("R = daily solar surplus / fleet traction"); ax[0].set_ylabel("total daily cost ($)")
         ax[0].legend(); ax[0].set_title("total cost by technology tier")
-        for key, c, lab in (("electrify_value", "#7d3c98", "electrify (VSP->EV)"),
-                            ("solar_value", "#e08020", "+ smart charging (V1G)"),
-                            ("v2g_value", "#2E75B6", "+ V2G")):
-            ax[1].plot(xs, [r[key] for r in sweep], "-o", color=c, label=lab)
+        for key, c, lab in (("electrify_value", "#6d6d6d", "electrify (VSP->EV)"),
+                            ("solar_value", "#0e9594", "+ smart charging (V1G)"),
+                            ("v2g_value", "#b5179e", "+ V2G")):
+            ax[1].plot(xs, [r[key] for r in sweep], "--s", color=c, label=lab, ms=5)
         ax[1].axhline(0, color="k", lw=0.7)
         ax[1].set_xlabel("R = daily solar surplus / fleet traction"); ax[1].set_ylabel("marginal value ($/day)")
         ax[1].legend(); ax[1].set_title("marginal value of each step")
@@ -349,9 +344,10 @@ if tt:
     if len(prems) >= 2 and len(effs) >= 2:
         fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.6), constrained_layout=True)
         for a_ in ax:
-            a_.axvspan(2.5, 3.5, color="#eaf4ea")
-        ax[0].text(3.0, 0.04, "measured heavy-duty EVs", ha="center",
-                   transform=ax[0].get_xaxis_transform(), fontsize=8.5, color="#2e7d32")
+            for xg in (2.5, 3.5):
+                a_.axvline(xg, ls=":", lw=0.9, color="#5f8f5f")
+        ax[0].text(3.0, 1.01, "measured heavy-duty EVs", ha="center",
+                   transform=ax[0].get_xaxis_transform(), fontsize=8, color="#4d774d")
         eff_grid = np.linspace(1.0, 3.6, 50)
         CPRE = {1.0: "#2E75B6", 1.5: "#e08020", 2.0: "#c0392b"}
         for prem in prems:
@@ -376,8 +372,8 @@ if tt:
                     ax[1].hist(v, bins=24, color=c, alpha=0.45,
                                label=f"{1 + pu / 45:.1f}x ICE: mean {np.mean(v):.2f}, "
                                      f"p95 {np.percentile(v, 95):.2f}")
-            ax[1].text(3.0, 0.92, "measured band", ha="center",
-                       transform=ax[1].get_xaxis_transform(), fontsize=8.5, color="#2e7d32")
+            ax[1].text(3.0, 1.01, "measured heavy-duty EVs", ha="center",
+                       transform=ax[1].get_xaxis_transform(), fontsize=8, color="#4d774d")
             ax[1].set_xlim(1.0, 3.6)
             ax[1].set_xlabel(f"break-even efficiency across {len(fleets84)} randomized fleets")
             ax[1].set_ylabel("number of fleets")
@@ -498,55 +494,50 @@ import glob as _glob
 eb = []
 for _p in _glob.glob(os.path.join(ARX, "overnight2_epsband_s*.json")):
     eb += json.load(open(_p))
+eb2 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight2_epsband150_s*.json")):
+    eb2 += json.load(open(_p))
 if eb:
     from matplotlib import cm as _cm
-    fig, ax = plt.subplots(figsize=(8.2, 4.8), constrained_layout=True)
-    eps_all = sorted({r["eps"] for r in eb})
-    for eps_v in eps_all:
-        col = _cm.viridis(0.05 + 0.85 * (eps_v - eps_all[0]) / (eps_all[-1] - eps_all[0]))
-        xs, med, lo, hi = [], [], [], []
-        for pv in sorted({r["pv"] for r in eb}):
-            v = [r["fuel_kwh"] / 1000 for r in eb if r["eps"] == eps_v and r["pv"] == pv]
-            if v:
-                xs.append(pv * 14.7); med.append(np.median(v)); lo.append(min(v)); hi.append(max(v))
-        ax.fill_between(xs, lo, hi, color=col, alpha=0.15)
-        ax.plot(xs, med, "-", color=col, lw=1.8, label=f"{int(eps_v * 100)} kWh")
-    ax.set_xlabel("available daily solar (MWh)")
-    ax.set_ylabel("TOTAL daily fossil generation, base load + fleet (MWh)")
-    ax.set_title("diminishing returns to solar, across the full duty-cycle range (EVSP-V2G)")
-    ax.legend(title="energy per task", fontsize=8, title_fontsize=8)
+
+    def _panel(ax, data, title):
+        eps_all = sorted({r["eps"] for r in data})
+        for eps_v in eps_all:
+            col = _cm.viridis(0.05 + 0.85 * (eps_v - eps_all[0]) / max(eps_all[-1] - eps_all[0], 1e-9))
+            xs, med, lo, hi = [], [], [], []
+            for pv in sorted({r["pv"] for r in data}):
+                v = [r["fuel_kwh"] / 1000 for r in data if r["eps"] == eps_v and r["pv"] == pv]
+                if v:
+                    xs.append(pv * 14.7); med.append(np.median(v)); lo.append(min(v)); hi.append(max(v))
+            ax.fill_between(xs, lo, hi, color=col, alpha=0.15)
+            ax.plot(xs, med, "-", color=col, lw=1.8, label=f"{int(eps_v * 100)} kWh")
+        ax.axhline(0, color="k", lw=0.6)
+        ax.set_xlabel("available daily solar (MWh)")
+        ax.set_title(title, fontsize=10)
+
+    ncols = 2 if eb2 else 1
+    fig, axs = plt.subplots(1, ncols, figsize=(6.4 * ncols + 1.2, 4.6),
+                            sharex=True, constrained_layout=True, squeeze=False)
+    _panel(axs[0, 0], eb, "(a) 60 tasks: enough solar zeroes out ALL generation")
+    axs[0, 0].set_ylabel("TOTAL daily fossil generation, base load + fleet (MWh)")
+    axs[0, 0].legend(title="energy per task", fontsize=8, title_fontsize=8)
+    if eb2:
+        _panel(axs[0, 1], eb2, "(b) 150 tasks: heavy duties never reach zero")
     finish(fig, "fig_8_6_diminishing.png")
     GALLERY.append("\n![fig 8.6](fig_8_6_diminishing.png)\n")
     caption("Figure 8.6",
-        "Fossil fuel versus available solar under EVSP-V2G, for six task-energy levels "
-        "(eps = energy one 2-hour task consumes: 50 kWh ~ a light shuttle run, up to "
-        "300 kWh ~ heavy off-road/patrol duty with auxiliary loads). Lines are medians "
-        "over three random trip sets; shading is the min-max spread. Every duty level "
-        "shows the same concave shape -- each additional MWh of solar displaces less "
-        "fuel than the last, because the displaceable quantity (the fossil burned in "
-        "deficit hours) is finite; heavier duties shift the curve up and delay the "
-        "floor. This monotone shrinking of marginal value across the whole duty range "
-        "is the empirical signature of the fixed-profile submodularity of Theorem 1. "
-        "A curve touching zero means the ENTIRE microgrid -- base load and fleet -- runs "
-        "on solar that day, generation literally zero; those are the same cells that "
-        "appear as full-displacement entries (starred, ~-446 gal/day) in Table 8.4.")
-else:
-    e3b = load(ARX, "exp3b_solar_pv.json")
-    if e3b:
-        fig, ax = plt.subplots(figsize=(7, 4.2), constrained_layout=True)
-        for eps_v, c in ((2.0, "#2E75B6"), (2.5, "#c0392b")):
-            sub = sorted([r for r in e3b if r.get("eps") == eps_v and r.get("feasible")],
-                         key=lambda r: r["solar_mwh"])
-            if sub:
-                ax.plot([r["solar_mwh"] for r in sub], [r["fuel_kwh"] / 1000 for r in sub],
-                        "-o", color=c, label=f"eps={eps_v}")
-        ax.set_xlabel("available daily solar (MWh)"); ax.set_ylabel("fossil fuel (MWh-equivalent)")
-        ax.set_title("diminishing returns to solar (EVSP-V2G)"); ax.legend()
-        finish(fig, "fig_8_6_diminishing.png")
-        GALLERY.append("\n![fig 8.6](fig_8_6_diminishing.png)\n")
-        caption("Figure 8.6",
-            "Fossil fuel versus available daily solar under EVSP-V2G (2-eps fallback; run "
-            "overnight2 S6 for the full duty-cycle band).")
+        "Total daily fossil generation (base load + fleet) versus available solar, for "
+        "six task-energy levels (eps = energy one 2-hour task consumes: 50 kWh ~ a "
+        "light shuttle run, up to 300 kWh ~ heavy off-road/patrol duty). Lines are "
+        "medians over random trip sets and cloud-shape perturbations; shading is the "
+        "spread. Every duty level shows the same concavity -- each additional MWh of "
+        "solar displaces less fuel than the last (the empirical signature of "
+        "Theorem 1's fixed-profile submodularity). Whether a curve REACHES zero "
+        "(the whole microgrid running on time-shifted solar) depends on the "
+        "surplus-vs-fleet-appetite balance: at 60 tasks (a) every duty level "
+        "eventually zeroes out, while at 150 tasks (b) the heavier duties consume "
+        "the surplus themselves and generation plateaus above zero -- the same "
+        "boundary that the starred cells trace through Table 8.4.")
 # %% Figure 8.7 -- realistic solution timeline: 1-hour tasks, full-day schedule
 tlp = os.path.join(ARX, "overnight2_timeline.json")
 if os.path.exists(tlp):
@@ -558,7 +549,12 @@ if os.path.exists(tlp):
     axes = np.atleast_1d(axes)
     for a_, v in zip(axes, tl):
         delta = v["delta"]
-        lanes = list(v["lanes"]) + ([v["battery_net"]] if v.get("battery_net") else [])
+        tcounts = v.get("lane_tasks", [None] * len(v["lanes"]))
+        order = sorted(range(len(v["lanes"])),
+                       key=lambda i: -(tcounts[i] if tcounts[i] is not None else 0))
+        truck_lanes = [v["lanes"][i] for i in order]
+        tcounts = [tcounts[i] for i in order]
+        lanes = truck_lanes + ([v["battery_net"]] if v.get("battery_net") else [])
         for i, e in enumerate(lanes):
             for t, val in enumerate(e):
                 if val > 1e-6:
@@ -568,7 +564,8 @@ if os.path.exists(tlp):
                 else:
                     continue
                 a_.add_patch(plt.Rectangle((t / 2.0, i - 0.42), 0.5, 0.84, color=c))
-        labels = [f"Truck {i + 1}" for i in range(len(v["lanes"]))]
+        labels = [f"Truck {i + 1}" + (f" ({tcounts[i]} tasks)" if tcounts[i] is not None else "")
+                  for i in range(len(truck_lanes))]
         if v.get("battery_net"):
             labels.append(f"Battery (x{v['batteries']})")
         a_.set_yticks(range(len(labels))); a_.set_yticklabels(labels, fontsize=6.5)
@@ -605,12 +602,14 @@ else:
 wx = load(ARX, "overnight_weather.json")
 if wx:
     pvs = sorted({r["pv"] for r in wx if "v2g_vs_solar_pct" in r})
-    mean_, p10_, p90_ = [], [], []
+    mean_, p10_, p90_, p25_, p75_ = [], [], [], [], []
     for pv in pvs:
         v = np.array([r["v2g_vs_solar_pct"] for r in wx if r["pv"] == pv and "v2g_vs_solar_pct" in r])
         mean_.append(v.mean()); p10_.append(np.percentile(v, 10)); p90_.append(np.percentile(v, 90))
+        p25_.append(np.percentile(v, 25)); p75_.append(np.percentile(v, 75))
     fig, ax = plt.subplots(figsize=(7.5, 4.4), constrained_layout=True)
-    ax.fill_between(pvs, p10_, p90_, color="#2E75B6", alpha=0.18, label="p10-p90 across 365 real days")
+    ax.fill_between(pvs, p10_, p90_, color="#2E75B6", alpha=0.14, label="p10-p90 (80% of days)")
+    ax.fill_between(pvs, p25_, p75_, color="#2E75B6", alpha=0.28, label="p25-p75 (half of days)")
     ax.plot(pvs, mean_, "-o", color="#2E75B6", label="annual mean")
     ax.axhline(0, color="k", lw=0.7)
     ax.set_xlabel("PV sizing (multiple of the original installation; 1.0 = 14.7 MWh/day annual mean)")

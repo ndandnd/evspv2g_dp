@@ -57,14 +57,15 @@ SH_I, SH_K = (int(x) for x in SHARD.split("/"))
 # ==============================================================================
 
 
-def solve(inst, scen, cv=CV, cb=None, enrich=25, tl=None):
+def solve(inst, scen, cv=CV, cb=None, enrich=25, tl=None, mip_gap=None):
     inst.c_g, inst.c_b, inst.rho, inst.c_v = CG_COST, (cb if cb is not None else CB_COST), RHO, cv
     res = column_generation(inst, scenario=scen, start="warm", do_milp=False,
                             enrich=enrich, max_iter=max(2000, 5 * inst.n_trips))
     if res["lp_obj"] == float("inf"):
         return None
     mip = solve_milp(inst, res["cols"], time_limit=tl or MILP_TIME_LIMIT,
-                     battery_allowed=SCENARIOS[scen]["battery"], solver=MILP_SOLVER)
+                     battery_allowed=SCENARIOS[scen]["battery"], solver=MILP_SOLVER,
+                     mip_gap=mip_gap)
     return {"total": mip.obj, "trucks": int(sum(round(x) for x in mip.x)),
             "batteries": int(round(mip.nb)), "mip": mip, "cols": res["cols"],
             "gap": (mip.obj - res["lp_obj"]) / abs(mip.obj) * 100}
@@ -128,7 +129,9 @@ def s5_fig84_bands():
 
 
 def s6_eps_band():
-    rows, path = ckpt(f"overnight2_epsband_s{SH_I}of{SH_K}.json")
+    n6 = int(os.environ.get("OVERNIGHT2_S6_TASKS", "60"))
+    sfx = "" if n6 == 60 else str(n6)
+    rows, path = ckpt(f"overnight2_epsband{sfx}_s{SH_I}of{SH_K}.json")
     done = {(r["eps"], r["pv"], r["seed"]) for r in rows}
     print(f"S6 eps band: {len(EPS_GRID)}x{len(PVGRID)}x{N_SEEDS_S6}, "
           f"shard {SH_I}/{SH_K} ({len(done)} done)", flush=True)
@@ -137,7 +140,7 @@ def s6_eps_band():
     for idx, (eps, pv, seed) in enumerate(cells):
         if idx % SH_K != SH_I or (eps, pv, seed) in done:
             continue
-        fleet = sample_fleet(np.random.default_rng(300 + seed), POINTS_DEF, 60, BREAKS)
+        fleet = sample_fleet(np.random.default_rng(300 + seed), POINTS_DEF, n6, BREAKS)
         inst = build_instance(POINTS_DEF, eps, BREAKS, pv_scale=pv, trip_list=fleet)
         surplus = float(np.maximum(-inst.Delta, 0.0).sum())
         traction = float(sum(tr.energy for tr in inst.trips))
@@ -164,19 +167,22 @@ def s7_timeline():
     for scen, cv, cb, tag in VARIANTS:
         inst = build_instance(POINTS_DEF, 1.0, FULL_DAY, pv_scale=PV_DEF,
                               trip_list=fleet, duration=1.0)
-        r = solve(inst, scen, cv=cv, cb=cb, enrich=200, tl=300.0)   # publication-grade pool
-        lanes = []
+        # near-proven optimum: cosmetic charge/discharge churn costs eps_pen > 0, so a
+        # tight gap eliminates the pathological always-charging lanes
+        r = solve(inst, scen, cv=cv, cb=cb, enrich=200, tl=600.0, mip_gap=1e-4)
+        lanes, lane_tasks = [], []
         for i in np.flatnonzero(r["mip"].x > 0.5):
             reps = int(round(r["mip"].x[i]))
             for _ in range(reps):
                 lanes.append([round(float(x), 3) for x in r["cols"][i].e])
+                lane_tasks.append(int(round(float(r["cols"][i].a.sum()))))
         mip = r["mip"]
         out.append({"cv": cv, "cb": cb, "tag": tag,
                     "trucks": r["trucks"], "batteries": r["batteries"],
                     "gap_pct": round(r["gap"], 3), "total": round(r["total"], 1),
                     "tasks_per_truck": round(60.0 / max(r["trucks"], 1), 1),
                     "delta": [round(float(d), 3) for d in inst.Delta],
-                    "lanes": lanes,
+                    "lanes": lanes, "lane_tasks": lane_tasks,
                     "battery_net": ([round(float(c - d), 3) for c, d in
                                      zip(mip.charge, mip.discharge)]
                                     if (mip.charge is not None and r["batteries"] > 0) else None)})
