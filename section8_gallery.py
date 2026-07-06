@@ -825,6 +825,78 @@ if cp and "v2g" in cp:
         "block length shrinks this sum converges to the integral of g(t) -- and the "
         "DP's complexity is linear in the number of blocks, making refinement "
         "computationally cheap.")
+# %% Figure 8.12 -- where V2G shines: small fleets under generous sun
+vs12 = []
+for _p in _glob.glob(os.path.join(ARX, "v2g_shine*.json")):
+    vs12 += json.load(open(_p))
+if vs12:
+    _ns = sorted({r["n_tasks"] for r in vs12})
+    NS12 = sorted({_ns[0], _ns[len(_ns) // 2], _ns[-1]})
+    SH12 = [s for s in ("std", "summer") if any(r["shape"] == s for r in vs12)]
+    PV12 = sorted({r["pv"] for r in vs12})
+    SC12 = [("solar", "EVSP-Solar (charge-only)", "#e08020", "--"),
+            ("v2g_fleet", "V2G trucks only (no stationary)", "#16a085", "-"),
+            ("v2g", "EVSP-V2G (trucks + batteries)", "#2E75B6", "-")]
+
+    def _m12(n, sh, pv, scen, key="fossil_mwh"):
+        v = [r[key] for r in vs12 if r["n_tasks"] == n and r["shape"] == sh
+             and r["pv"] == pv and r["scenario"] == scen]
+        return float(np.mean(v)) if v else np.nan
+
+    fig, ax = plt.subplots(len(SH12), len(NS12),
+                           figsize=(4.6 * len(NS12) + 0.6, 3.5 * len(SH12) + 0.6),
+                           sharex=True, constrained_layout=True, squeeze=False)
+    for i, sh in enumerate(SH12):
+        for j, n in enumerate(NS12):
+            a = ax[i, j]
+            bl = [float(np.mean([r["baseline_mwh"] for r in vs12
+                                 if r["n_tasks"] == n and r["shape"] == sh and r["pv"] == pv]))
+                  for pv in PV12]
+            a.plot(PV12, bl, ":", color="#999999", lw=1.4, label="no fleet (base load only)")
+            for scen, lab, c, ls in SC12:
+                a.plot(PV12, [_m12(n, sh, pv, scen) for pv in PV12], ls, color=c,
+                       lw=1.5 if scen == "v2g_fleet" else 2.1, label=lab,
+                       dashes=(5, 2.5) if ls == "--" else (None, None))
+            a.axhline(0, color="#444444", lw=0.6)
+            if i == 0:
+                a.set_title(f"{n} tasks/day")
+            if i == len(SH12) - 1:
+                a.set_xlabel("PV build-out (x design size)")
+        _shl = "standard day" if sh == "std" else "summer day (longer, brighter)"
+        ax[i, 0].set_ylabel(f"daily fossil (MWh)\n{_shl}")
+    ax[0, 0].legend(fontsize=8)
+    # headline: the technology beats the panel field
+    _nmid, _pvmax = NS12[len(NS12) // 2], max(PV12)
+    _fv1 = _m12(_nmid, "std", 1.0, "v2g")
+    _fsX = _m12(_nmid, "std", _pvmax, "solar")
+    if np.isfinite(_fv1) and np.isfinite(_fsX) and _fv1 <= _fsX:
+        _a = ax[0, list(NS12).index(_nmid)]
+        _a.annotate(f"V2G at 1x panels ({_fv1:.1f} MWh)\nbeats charge-only at "
+                    f"{_pvmax:g}x panels ({_fsX:.1f} MWh)",
+                    xy=(1.0, _fv1), xytext=(1.55, _fv1 * 0.35), fontsize=8.5,
+                    color="#2E75B6",
+                    arrowprops=dict(arrowstyle="->", color="#2E75B6", lw=1.0))
+    finish(fig, "fig_8_12_shine.png")
+    GALLERY.append("\n![fig 8.12](fig_8_12_shine.png)\n")
+    _rmin = min(r["ratio"] for r in vs12); _rmax = max(r["ratio"] for r in vs12)
+    _nzero = len({(r["n_tasks"], r["shape"], r["pv"], r["seed"]) for r in vs12
+                  if r["scenario"] == "v2g" and r["fossil_mwh"] == 0.0})
+    caption("Figure 8.12",
+        "The corner of the design space where V2G shines: small fleets (4-20 daily "
+        f"tasks) under generous sun -- R runs {_rmin:.0f} to {_rmax:.0f}, far beyond "
+        "the saturation knee of Figure 8.5, in both panel build-out (0.75x-4x) and "
+        "day length (bottom row: a summer day carrying 1.6x the solar energy over "
+        "longer daylight). Mean of 3 random trip sets; same trips across every curve "
+        "in a panel. The charge-only fleet (dashed orange) barely benefits from "
+        "extra panels -- with no storage, midday surplus cannot reach the morning "
+        "and evening base load, so its curve flattens toward a fossil floor. "
+        "Bidirectional trucks alone (teal) shave a roughly constant slice limited "
+        "by their pack capacity. The full V2G stack (blue) keeps converting every "
+        f"added panel into displaced fossil generation and reaches ZERO fossil in "
+        f"{_nzero} of the sampled cells: the technology substitutes for panels "
+        "(annotation), and past the point where charge-only saturates it is the "
+        "only regime still buying anything with additional PV.")
+
 # %% Parameter provenance -- a source for every empirical anchor
 PROV = [
     ("fossil generation cost", "$0.20-1.00/kWh",
