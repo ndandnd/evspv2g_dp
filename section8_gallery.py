@@ -682,6 +682,9 @@ for _p in _glob.glob(os.path.join(ARX, "overnight2_modes_s*.json")):
     md9 += json.load(open(_p))
 NM9 = {"vsp": ("VSP (ICE, 3.3x thermal)", "#888888", "-"), "ev": ("EVSP (flat tariff)", "#7d3c98", "-"),
        "solar": ("EVSP-Solar", "#e08020", "--"), "v2g": ("EVSP-V2G", "#2E75B6", "-")}
+TIT9 = {"1x": "1x solar", "2x": "2x solar", "3x": "3x solar", "4x": "4x solar",
+        "summer": "summer day (1x panels, longer daylight)",
+        "sum2x": "summer day, 2x panels"}
 ICE9 = 3.3
 def _fossil9(r):
     if r["scenario"] == "vsp":
@@ -689,25 +692,29 @@ def _fossil9(r):
     if r["scenario"] == "ev":
         return (r["g_units"] + r["fleet_paid_units"]) / 10.0
     return r["g_units"] / 10.0
+for _p in _glob.glob(os.path.join(ARX, "overnight3_modes_s*.json")):
+    md9 += json.load(open(_p))
 if md9:
     for r in md9:
         r["sol"] = r.get("sol", f"{int(r['pv'])}x")
-    sols9 = [x for x in ("1x", "2x", "summer") if any(r["sol"] == x for r in md9)]
-    TIT9 = {"1x": "1x solar", "2x": "2x solar",
-            "summer": "summer day (1x panels, longer daylight)"}
-    fig, ax = plt.subplots(2, len(sols9), figsize=(5.6 * len(sols9) + 0.8, 7.6),
+        r["seed"] = r.get("seed", 0)
+    sols9 = [x for x in ("1x", "2x", "3x", "4x", "summer", "sum2x")
+             if any(r["sol"] == x for r in md9)]
+    fig, ax = plt.subplots(2, len(sols9), figsize=(4.6 * len(sols9) + 0.8, 7.6),
                            sharex=True, constrained_layout=True, squeeze=False)
     for j, sol in enumerate(sols9):
         for scen, (lab, c, ls) in NM9.items():
-            rr = sorted([r for r in md9 if r["sol"] == sol and r["scenario"] == scen],
-                        key=lambda r: r["n_tasks"])
+            rr = [r for r in md9 if r["sol"] == sol and r["scenario"] == scen]
+            ns = sorted({r["n_tasks"] for r in rr})
             if rr:
+                fo = [float(np.mean([_fossil9(r) for r in rr if r["n_tasks"] == n])) for n in ns]
+                tk = [float(np.mean([r["trucks"] for r in rr if r["n_tasks"] == n])) for n in ns]
                 zo = 4 if scen == "solar" else 2
                 lw = 2.2 if scen == "solar" else 1.7
-                ax[0, j].plot([r["n_tasks"] for r in rr], [_fossil9(r) for r in rr],
-                              ls, color=c, lw=lw, label=lab, zorder=zo, dashes=(5, 2.5) if ls == "--" else (None, None))
-                ax[1, j].plot([r["n_tasks"] for r in rr], [r["trucks"] for r in rr],
-                              ls, color=c, lw=lw, label=lab, zorder=zo, dashes=(5, 2.5) if ls == "--" else (None, None))
+                ax[0, j].plot(ns, fo, ls, color=c, lw=lw, label=lab, zorder=zo,
+                              dashes=(5, 2.5) if ls == "--" else (None, None))
+                ax[1, j].plot(ns, tk, ls, color=c, lw=lw, label=lab, zorder=zo,
+                              dashes=(5, 2.5) if ls == "--" else (None, None))
         ax[0, j].set_title(TIT9.get(sol, sol))
         ax[1, j].set_xlabel("number of tasks")
     ax[0, 0].set_ylabel("daily fossil energy (MWh, ICE at 3.3x)")
@@ -804,6 +811,9 @@ if cp and "v2g" in cp:
                        alpha=0.10,
                        label=r"$\int (g_{\mathrm{conv}} - g_{\mathrm{V2G}})\,dt$ = "
                              f"{cp['solar']['fossil_mwh'] - cp['v2g']['fossil_mwh']:.1f} MWh/day")
+    if bool((_gv > _gs).any()):
+        ax[0].fill_between(hrs, _gs, _gv, where=_gv > _gs, step="mid", color="#e74c3c",
+                           alpha=0.15, label="hours V2G dispatches more (charging storage)")
     ax[0].axhline(cp["gen_cap"], ls="--", color="#c0392b", lw=1.2,
                   label=f"generation cap {cp['gen_cap']:.0f}")
     ax[0].set_xlabel("hour of day"); ax[0].set_ylabel("dispatched fossil generation (kWh/block)")
@@ -911,6 +921,78 @@ if vs12:
         f"{_nzero} of the sampled cells: the technology substitutes for panels "
         "(annotation), and past the point where charge-only saturates it is the "
         "only regime still buying anything with additional PV.")
+
+# %% Figure 8.13 -- the multi-station frontier: what chargers-everywhere buys
+sa13 = []
+for _p in _glob.glob(os.path.join(ARX, "stations_sa_s*.json")):
+    sa13 += json.load(open(_p))
+if sa13:
+    _idx13 = {(r["L"], r["sol"], r["n_tasks"], r["seed"], r["stations"], r["scenario"]): r
+              for r in sa13}
+    LS13 = sorted({r["L"] for r in sa13})
+
+    def _pairs13(L, sol, scen, key="total", gapmax=1.5):
+        """(depot, all) value pairs across n x seed, both arms near-proven."""
+        out = []
+        for (l, s, n, sd, st, sc), r in _idx13.items():
+            if (l, s, sc, st) != (L, sol, scen, "depot"):
+                continue
+            r2 = _idx13.get((l, s, n, sd, "all", sc))
+            if r2 and abs(r["gap_pct"]) <= gapmax and abs(r2["gap_pct"]) <= gapmax:
+                out.append((r[key], r2[key]))
+        return out
+
+    fig, ax = plt.subplots(1, 3, figsize=(15, 4.3), constrained_layout=True)
+    for sol, mk in (("2x", "-o"), ("sum2x", "--s")):
+        for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
+            g = []
+            for L in LS13:
+                pp = _pairs13(L, sol, scen)
+                g.append(100 * float(np.mean([(a - b) / a for a, b in pp])) if pp else np.nan)
+            ax[0].plot(LS13, g, mk, color=c, ms=4,
+                       label=f"{'EVSP-Solar' if scen == 'solar' else 'EVSP-V2G'}, {TIT9.get(sol, sol)}")
+    ax[0].axhline(0, color="#888", lw=0.7)
+    ax[0].set_xlabel("number of task locations L"); ax[0].set_ylabel("total-cost saving from chargers everywhere (%)")
+    ax[0].set_title("value of distributed charging grows with the map"); ax[0].legend(fontsize=8)
+    for st, c, lab in (("depot", "#888888", "charger at depot only"),
+                       ("all", "#16a085", "charger at every location")):
+        b = []
+        for L in LS13:
+            v = [r["batteries"] for r in sa13 if r["L"] == L and r["sol"] == "2x"
+                 and r["stations"] == st and r["scenario"] == "v2g"]
+            b.append(float(np.mean(v)) if v else np.nan)
+        ax[1].plot(LS13, b, "-o", color=c, ms=4, label=lab)
+    ax[1].set_xlabel("number of task locations L"); ax[1].set_ylabel("stationary batteries bought (mean, 2x solar)")
+    ax[1].set_title("distributed charging substitutes for stationary storage"); ax[1].legend(fontsize=8)
+    for sol, mk in (("1x", "-o"), ("2x", "-s"), ("summer", "--^"), ("sum2x", "--v")):
+        vs = []
+        for L in LS13:
+            pp = []
+            for (l, s, n, sd, st, sc), r in _idx13.items():
+                if (l, s, st, sc) == (L, sol, "depot", "solar"):
+                    r2 = _idx13.get((l, s, n, sd, "depot", "v2g"))
+                    if r2:
+                        pp.append(100 * (r["total"] - r2["total"]) / r["total"])
+            vs.append(float(np.mean(pp)) if pp else np.nan)
+        ax[2].plot(LS13, vs, mk, ms=4, label=TIT9.get(sol, sol))
+    ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
+    ax[2].set_title("V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=8)
+    finish(fig, "fig_8_13_stations.png")
+    GALLERY.append("\n![fig 8.13](fig_8_13_stations.png)\n")
+    caption("Figure 8.13",
+        "The multi-station model (Section 3's H0, exercised for the first time): "
+        "1,152 solves over L = 4-15 task locations on nested maps, four solar "
+        "regimes, 40-160 one-hour tasks, 3 seeds. Left: moving from a single "
+        "depot charger to a charger at every task location saves total cost, and "
+        "the saving GROWS with the size of the map (pairs filtered to near-proven "
+        "solutions, MILP gap <= 1.5%); charge-only fleets gain as much as V2G "
+        "fleets -- distributed charging is about reaching energy in time, not "
+        "about bidirectionality. Middle: with chargers everywhere the optimizer "
+        "buys roughly HALF the stationary batteries at 2x solar -- opportunistic "
+        "fleet charging substitutes for dedicated storage capex. Right: V2G's "
+        "saving over charge-only by regime -- the 1x dead zone and the sum2x "
+        "bonanza are flat in L: network richness changes how the microgrid is "
+        "served, not whether V2G pays.")
 
 # %% Parameter provenance -- a source for every empirical anchor
 PROV = [

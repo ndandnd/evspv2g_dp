@@ -128,7 +128,9 @@ def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_M
     stations: charging-location set H0 -- None = depot only (every prior
     experiment), "all" = a charger at every location, or an explicit index
     list. coords_override: replace _COORDS[:points] with a custom map (list of
-    (x, y); depot stays at the origin)."""
+    (x, y); depot stays at the origin). trip_list 5-tuples
+    (sloc, eloc, start_hour, energy, duration_hours) give per-task durations;
+    start_hour may be a half-hour float (e.g. 7.5) for sub-hourly schedules."""
     if coords_override is None:
         assert points <= len(_COORDS), f"at most {len(_COORDS)} locations supported"
     T = 48                                                 # 24 h x 2 half-blocks
@@ -142,8 +144,9 @@ def build_instance(points: int, eps: float, windows, solar_mult: float = SOLAR_M
             dist[a, b] = 2.0 * man                         # half-blocks (0.5 h -> 1 block); energy = dist * epd
     dur_hb = int(round(2 * duration))                      # task duration in half-blocks
     raw = trip_list if trip_list is not None else gen_trips(points, windows)
-    trips = [Trip(idx=k, start=2 * t[2], end=2 * t[2] + dur_hb, sloc=t[0], eloc=t[1],
-                  energy=(t[3] if len(t) > 3 else eps))
+    trips = [Trip(idx=k, start=int(round(2 * t[2])),
+                  end=int(round(2 * t[2])) + (int(round(2 * t[4])) if len(t) > 4 else dur_hb),
+                  sloc=t[0], eloc=t[1], energy=(t[3] if len(t) > 3 else eps))
              for k, t in enumerate(raw)]
     trips.sort(key=lambda tr: (tr.start, tr.idx))
     for k, tr in enumerate(trips):
