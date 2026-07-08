@@ -1,0 +1,22 @@
+gurobi (12, 0, 3)
+overnight driver: studies ['S3']  MILP=gurobi  N_SWEEP=500
+
+S3 enablement break-even: deg x charger-premium x pv
+Set parameter LicenseID to value 2674428
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "en-cc-unicorn-data-dirs.coecis.cornell.edu"
+  deg=$0.0/unit prem=$0.0/truck-day: net savings at lowest R = 0.3% (positive everywhere tested)
+  deg=$0.0/unit prem=$4.0/truck-day: net savings at lowest R = -0.7%, break-even R* ~ 0.35
+  deg=$0.0/unit prem=$8.0/truck-day: net savings at lowest R = -1.8%, break-even R* ~ 0.42
+  deg=$2.0/unit prem=$0.0/truck-day: net savings at lowest R = 0.2% (positive everywhere tested)
+  deg=$2.0/unit prem=$4.0/truck-day: net savings at lowest R = -0.8%, break-even R* ~ 0.36
+  deg=$2.0/unit prem=$8.0/truck-day: net savings at lowest R = -1.9%, break-even R* ~ 0.44
+  deg=$5.0/unit prem=$0.0/truck-day: net savings at lowest R = 0.3% (positive everywhere tested)
+  deg=$5.0/unit prem=$4.0/truck-day: net savings at lowest R = -0.8%, break-even R* ~ 0.37
+  deg=$5.0/unit prem=$8.0/truck-day: net savings at lowest R = -1.9%, break-even R* ~ 0.47
+  deg=$13.0/unit prem=$0.0/truck-day: net savings at lowest R = -0.2%, break-even R* ~ 0.33
+  deg=$13.0/unit prem=$4.0/truck-day: net savings at lowest R = -0.8%, break-even R* ~ 0.42
+  deg=$13.0/unit prem=$8.0/truck-day: net savings at lowest R = -1.8%, break-even R* ~ 0.59
+-- S3 done in 0.4 min --
+
+all done in 0.01 h

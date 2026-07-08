@@ -1,0 +1,24 @@
+gurobi (12, 0, 3)
+overnight2: studies ['S7', 'S8'] shard 0/1  MILP=gurobi
+
+S7 realistic timeline: 1-hour tasks, full-day schedule, cv in {45,150}
+Set parameter LicenseID to value 2674428
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "en-cc-unicorn-data-dirs.coecis.cornell.edu"
+  cv=$45: trucks=14 (4.3 tasks/truck) batteries=16 gap=8.07%
+  cv=$150: trucks=10 (6.0 tasks/truck) batteries=19 gap=9.63%
+-- S7 done in 0.3 min --
+
+S8: eps=1.5 scalability ladder extended to 10 locations
+  locs=2 trips=10 cg_s=0.19 gap=-0.0%
+  locs=3 trips=30 cg_s=0.34 gap=0.0%
+  locs=4 trips=60 cg_s=0.56 gap=0.0%
+  locs=5 trips=100 cg_s=1.21 gap=0.0%
+  locs=6 trips=150 cg_s=3.39 gap=0.0%
+  locs=7 trips=210 cg_s=6.55 gap=1.488%
+  locs=8 trips=280 cg_s=13.11 gap=1.143%
+  locs=9 trips=360 cg_s=25.0 gap=2.271%
+  locs=10 trips=450 cg_s=47.37 gap=1.879%
+-- S8 done in 1.9 min --
+
+all done in 0.04 h

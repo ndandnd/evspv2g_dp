@@ -1,0 +1,33 @@
+gurobi (12, 0, 3)
+SA stations frontier: 288 bases x 4 arms, shard 0/6 (4 rows done)  MILP: gurobi
+  [1/288 bases, 4 rows]
+Set parameter LicenseID to value 2674428
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "en-cc-unicorn-data-dirs.coecis.cornell.edu"
+  [31/288 bases, 24 rows]
+  [61/288 bases, 44 rows]
+  [91/288 bases, 64 rows]
+  [121/288 bases, 84 rows]
+  [151/288 bases, 104 rows]
+  [181/288 bases, 124 rows]
+  [211/288 bases, 144 rows]
+  [241/288 bases, 164 rows]
+  [271/288 bases, 184 rows]
+-- SA done in 190.3 min --
+
+SB warm-vs-cold on the multi-station model: 72 runs, shard 0/6 (0 done)
+  L=4 n=100 seed=0 warm: 12.02s (345 iters)
+  L=4 n=200 seed=0 warm: 39.04s (509 iters)
+  L=4 n=400 seed=0 warm: 106.47s (664 iters)
+  L=4 n=600 seed=0 warm: 840.73s (1236 iters)
+  L=8 n=100 seed=0 warm: 24.08s (442 iters)
+  L=8 n=200 seed=0 warm: 52.85s (542 iters)
+  L=8 n=400 seed=0 warm: 130.41s (713 iters)
+  L=8 n=600 seed=0 warm: 643.13s (1138 iters)
+  L=15 n=100 seed=0 warm: 40.93s (530 iters)
+  L=15 n=200 seed=0 warm: 51.67s (552 iters)
+  L=15 n=400 seed=0 warm: 235.56s (978 iters)
+  L=15 n=600 seed=0 warm: 693.13s (1233 iters)
+-- SB done in 47.8 min --
+
+all done in 3.97 h

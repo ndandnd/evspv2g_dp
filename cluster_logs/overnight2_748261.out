@@ -1,0 +1,25 @@
+gurobi (12, 0, 3)
+overnight2: studies ['S7', 'S9'] shard 0/1  MILP=gurobi
+
+S7 realistic timeline: 1-hour tasks, full-day schedule, cv in {45,150}
+Set parameter LicenseID to value 2674428
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "en-cc-unicorn-data-dirs.coecis.cornell.edu"
+  cv=$45 with stationary storage: trucks=15 (4.0 tasks/truck) batteries=13 gap=7.59%
+  cv=$45 no stationary storage: the fleet is the storage: trucks=19 (3.2 tasks/truck) batteries=0 gap=7.50%
+-- S7 done in 5.3 min --
+
+S9 cyclic export grid: tasks 20..200 x pv 1..3
+  tasks=20 done
+  tasks=40 done
+  tasks=60 done
+  tasks=80 done
+  tasks=100 done
+  tasks=120 done
+  tasks=140 done
+  tasks=160 done
+  tasks=180 done
+  tasks=200 done
+-- S9 done in 6.0 min --
+
+all done in 0.19 h

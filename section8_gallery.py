@@ -695,8 +695,17 @@ def _fossil9(r):
 for _p in _glob.glob(os.path.join(ARX, "overnight3_modes_s*.json")):
     md9 += json.load(open(_p))
 if md9:
+    def _sol9(r):
+        if r.get("sol") is not None:
+            return str(r["sol"])
+        if r.get("pv") is not None:
+            pv = float(r["pv"])
+            return f"{int(pv)}x" if pv.is_integer() else f"{pv:g}x"
+        return None
+
+    md9 = [r for r in md9 if _sol9(r) is not None and "scenario" in r and "n_tasks" in r]
     for r in md9:
-        r["sol"] = r.get("sol", f"{int(r['pv'])}x")
+        r["sol"] = _sol9(r)
         r["seed"] = r.get("seed", 0)
     sols9 = [x for x in ("1x", "2x", "3x", "4x", "summer", "sum2x")
              if any(r["sol"] == x for r in md9)]

@@ -1,0 +1,12 @@
+gurobi (12, 0, 3)
+overnight2: studies ['S7'] shard 0/1  MILP=gurobi
+
+S7 realistic timeline: 1-hour tasks, full-day schedule, cv in {45,150}
+Set parameter LicenseID to value 2674428
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "en-cc-unicorn-data-dirs.coecis.cornell.edu"
+  cv=$45 with stationary storage: trucks=15 (4.0 tasks/truck) batteries=13 gap=7.59%
+  cv=$45 no stationary storage: the fleet is the storage: trucks=19 (3.2 tasks/truck) batteries=0 gap=7.50%
+-- S7 done in 10.4 min --
+
+all done in 0.17 h

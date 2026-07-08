@@ -1,0 +1,44 @@
+gurobi (12, 0, 3)
+overnight2: studies ['S7', 'S8', 'S9', 'S11'] shard 0/1  MILP=gurobi
+
+S7 realistic timeline: 1-hour tasks, full-day schedule, cv in {45,150}
+Set parameter LicenseID to value 2674428
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "en-cc-unicorn-data-dirs.coecis.cornell.edu"
+  cv=$45 cb=$36: trucks=15 (4.0 tasks/truck) batteries=13 gap=7.59%
+  cv=$45 cb=$500: trucks=20 (3.0 tasks/truck) batteries=1 gap=5.32%
+-- S7 done in 5.4 min --
+
+S8: eps=1.5 scalability ladder extended to 10 locations
+  locs=2 trips=10 cg_s=0.32 gap=-0.0%
+  locs=3 trips=30 cg_s=0.52 gap=0.0%
+  locs=4 trips=60 cg_s=0.82 gap=0.0%
+  locs=5 trips=100 cg_s=1.55 gap=0.0%
+  locs=6 trips=150 cg_s=3.84 gap=0.0%
+  locs=7 trips=210 cg_s=7.12 gap=0.004%
+  locs=8 trips=280 cg_s=13.44 gap=0.579%
+  locs=9 trips=360 cg_s=24.74 gap=1.795%
+  locs=10 trips=450 cg_s=45.47 gap=1.879%
+-- S8 done in 2.1 min --
+
+S9 cyclic export grid: tasks 20..200 x pv 1..3
+  tasks=20 done
+  tasks=40 done
+  tasks=60 done
+  tasks=80 done
+  tasks=100 done
+  tasks=120 done
+  tasks=140 done
+  tasks=160 done
+  tasks=180 done
+  tasks=200 done
+-- S9 done in 13.7 min --
+
+S11 shape noise at fixed surplus
+  eps=1.0 pv=1.5 done
+  eps=1.0 pv=2.5 done
+  eps=2.0 pv=1.5 done
+  eps=2.0 pv=2.5 done
+-- S11 done in 0.9 min --
+
+all done in 0.37 h

@@ -1,0 +1,70 @@
+gurobi (12, 0, 3)
+U1 shine densify: 1440 cells x 3, shard 2/6 (95 rows done)
+  [81/1440 cells, 95 rows]
+Set parameter LicenseID to value 2674428
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "en-cc-unicorn-data-dirs.coecis.cornell.edu"
+  [201/1440 cells, 102 rows]
+  [321/1440 cells, 162 rows]
+  [441/1440 cells, 222 rows]
+  [561/1440 cells, 282 rows]
+  [681/1440 cells, 342 rows]
+  [801/1440 cells, 402 rows]
+  [921/1440 cells, 462 rows]
+  [1041/1440 cells, 522 rows]
+  [1161/1440 cells, 582 rows]
+  [1281/1440 cells, 642 rows]
+  [1401/1440 cells, 702 rows]
+-- U1 done in 61.0 min --
+
+U2 modes hi-solar: 1872 cells, shard 2/6 (0 done)
+  [30 rows]
+  [60 rows]
+  [90 rows]
+  [120 rows]
+  [150 rows]
+  [180 rows]
+  [210 rows]
+  [240 rows]
+  [270 rows]
+  [300 rows]
+-- U2 done in 116.6 min --
+
+U3 stations densify: 288 bases x 8 arms, shard 2/6 (0 rows done)
+  [21/288 bases, 32 rows]
+  [51/288 bases, 72 rows]
+  [81/288 bases, 112 rows]
+  [111/288 bases, 152 rows]
+  [141/288 bases, 192 rows]
+  [171/288 bases, 232 rows]
+  [201/288 bases, 272 rows]
+  [231/288 bases, 312 rows]
+  [261/288 bases, 352 rows]
+-- U3 done in 766.1 min --
+
+U4 durations: 144 bases x 4 arms, shard 2/6 (0 rows done)
+  [21/144 bases, 16 rows]
+  [51/144 bases, 36 rows]
+  [81/144 bases, 56 rows]
+  [111/144 bases, 76 rows]
+  [141/144 bases, 96 rows]
+-- U4 done in 107.0 min --
+
+U5 random maps: 96 bases x 4 arms, shard 2/6 (0 rows done)
+  [21/96 bases, 16 rows]
+  [51/96 bases, 36 rows]
+  [81/96 bases, 56 rows]
+-- U5 done in 100.8 min --
+
+U6 scale on rich maps: 48 runs, shard 2/6 (0 done)
+  L=4 n=100 seed=1 warm: 10.9s
+  L=4 n=400 seed=0 warm: 153.54s
+  L=4 n=600 seed=1 warm: 680.63s
+  L=4 n=1000 seed=0 warm: 3679.4s
+  L=15 n=100 seed=1 warm: 28.75s
+  L=15 n=400 seed=0 warm: 288.22s
+  L=15 n=600 seed=1 warm: 678.69s
+  L=15 n=1000 seed=0 warm: 3241.07s
+-- U6 done in 146.0 min --
+
+all done in 21.62 h
