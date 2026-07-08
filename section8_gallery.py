@@ -154,24 +154,24 @@ caption("Table 8.2",
 
 # %% Figure 8.1 -- scalability + where the time goes
 if e20:
-    fig, ax = plt.subplots(1, 2, figsize=(11, 4.2), constrained_layout=True)
-    for data, c, lab in ((e20, "#2E75B6", "eps=2.0"), (e15 or [], "#e08020", "eps=1.5")):
+    fig, ax = plt.subplots(1, 3, figsize=(15.5, 4.2), constrained_layout=True)
+    for data, c, lab in ((e20, "#2E75B6", "200 kWh/task"), (e15 or [], "#e08020", "150 kWh/task")):
         if data:
             xs = [r["trips"] for r in data]
             ax[0].plot(xs, [r["cg_s"] for r in data], "-o", color=c, label=lab)
-            ax[1].plot(xs, [r["pricing_pct"] for r in data], "-o", color=c, label=lab)
+            ax[2].plot(xs, [r["pricing_pct"] for r in data], "-o", color=c, label=lab)
+    ax[0].set_xlabel("tasks"); ax[0].set_ylabel("column-generation time (s)")
+    ax[0].legend(); ax[0].set_title("benchmark family (laptop)")
     wc1 = load(ARX, "overnight2_warmcold.json")
     if wc1:
         ns1 = sorted({r["n_tasks"] for r in wc1})
         tm1 = [float(np.mean([r["time_s"] for r in wc1
                               if r["n_tasks"] == n and r["start"] == "warm"])) for n in ns1]
-        ax[0].plot(ns1, tm1, "-s", color="#16a085", ms=4, lw=1.5,
-                   label="random fleets to 1000 tasks\n(cluster, pure CG, V2G at 2x solar)")
-        ax[0].set_yscale("log")
-    ax[0].set_xlabel("tasks"); ax[0].set_ylabel("column-generation time (s)")
-    ax[0].legend(); ax[0].set_title("solve time (DP pricing, open-source)")
-    ax[1].set_xlabel("tasks"); ax[1].set_ylabel("pricing share of CG time (%)")
-    ax[1].set_ylim(0, 100); ax[1].legend(); ax[1].set_title("where the time goes")
+        ax[1].plot(ns1, tm1, "-s", color="#16a085", ms=4, lw=1.7)
+        ax[1].set_xlabel("tasks"); ax[1].set_ylabel("column-generation time (s)")
+        ax[1].set_title("random fleets, multi-station model (cluster)")
+    ax[2].set_xlabel("tasks"); ax[2].set_ylabel("pricing share of CG time (%)")
+    ax[2].set_ylim(0, 100); ax[2].legend(); ax[2].set_title("where the time goes")
     finish(fig, "fig_8_1_scalability.png")
     GALLERY.append("\n![fig 8.1](fig_8_1_scalability.png)\n")
     caption("Figure 8.1",
@@ -284,6 +284,11 @@ if rf:
                 tbl_rows.append([f"{r['surplus_mwh']} MWh surplus", NAMES[reg], f"{_incr(r):+.1f}",
                                  r["trucks"], r["batteries"]])
     ax.axhline(0, color="k", lw=0.9)
+    for k2, pv in enumerate(pvs):                     # full-displacement floor: -(no-fleet fossil)
+        r0 = next(x for x in rf if x["pv"] == pv)
+        floor = -r0["baseline_units"] / 10.0
+        ax.hlines(floor, k2 - 0.45, k2 + 0.45, colors="#c0392b", ls="--", lw=1.2,
+                  label=("full displacement of base fossil (floor)" if k2 == 0 else None))
     labels = []
     for pv in pvs:
         r0 = next(x for x in rf if x["pv"] == pv)
@@ -291,7 +296,7 @@ if rf:
     ax.set_xticks(range(len(pvs))); ax.set_xticklabels(labels)
     ax.set_ylabel("fleet-attributable fossil energy (MWh/day)\n(negative = fleet REDUCES base fossil)")
     ax.set_title("fossil energy by regime as solar grows (cyclic model, ICE at 3.3x thermal)")
-    ax.legend()
+    ax.legend(loc="upper right")
     finish(fig, "fig_8_2_regime_fuel.png")
     GALLERY.append("\n![fig 8.2](fig_8_2_regime_fuel.png)\n")
     table(md_table(["solar surplus", "regime", "incremental fossil (MWh)", "trucks", "batteries"], tbl_rows))
@@ -434,7 +439,7 @@ weather = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in se if "v2g_vs_solar_pct"
 if len(design) >= 10:
     fig, ax = plt.subplots(figsize=(9, 5.2), constrained_layout=True)
     ax.axhspan(-3, 2, color="#fdf2e3", zorder=0)
-    ax.text(0.985, 1.0, "below the computed enablement break-even (R* ~ 0.35-0.47)", ha="right",
+    ax.text(0.985, 1.0, "below the computed enablement break-even (gamma* ~ 0.31-0.35; see text)", ha="right",
             fontsize=8, color="#a07020", transform=ax.get_yaxis_transform())
     xs_a = np.array([p[0] for p in sorted(design)]); ys_a = np.array([p[1] for p in sorted(design)])
     ax.set_xscale("log")                       # the action spans R ~ 0.05 to ~70
@@ -443,16 +448,19 @@ if len(design) >= 10:
     if weather:
         ax.scatter([p[0] for p in weather], [p[1] for p in weather], marker="^", s=34,
                    color="#2E75B6", label=f"one base under {len(weather)} sampled real 2023 weather days")
-    kw = max(5, len(design) // 10)
-    med = [np.median(ys_a[max(0, i2 - kw):i2 + kw]) for i2 in range(len(design))]
-    lo_b = [np.percentile(ys_a[max(0, i2 - kw):i2 + kw], 10) for i2 in range(len(design))]
-    hi_b = [np.percentile(ys_a[max(0, i2 - kw):i2 + kw], 90) for i2 in range(len(design))]
-    ax.fill_between(xs_a, lo_b, hi_b, color="#444444", alpha=0.12,
-                    label="80% prediction band (central 80% of studies)")
-    ax.plot(xs_a, med, "-", color="#444444", lw=2, alpha=0.85, label="rolling median")
+    edges = np.geomspace(max(xs_a.min(), 0.02), xs_a.max(), 19)   # bins in log space
+    ctr, med, lo_b, hi_b = [], [], [], []
+    for a2, b2 in zip(edges, edges[1:]):
+        m2 = (xs_a >= a2) & (xs_a <= b2)
+        if m2.sum() >= 4:
+            ctr.append(np.sqrt(a2 * b2)); med.append(np.median(ys_a[m2]))
+            lo_b.append(np.percentile(ys_a[m2], 10)); hi_b.append(np.percentile(ys_a[m2], 90))
+    ax.fill_between(ctr, lo_b, hi_b, color="#444444", alpha=0.12,
+                    label="80% band (10th-90th percentile per bin)")
+    ax.plot(ctr, med, "-", color="#444444", lw=2, alpha=0.85, label="binned median")
 
     ax.axvline(1.0, ls=":", color="#888")
-    ax.text(1.02, 0.03, "R = 1: surplus equals fleet appetite", transform=ax.get_xaxis_transform(),
+    ax.text(1.02, 0.03, "gamma = 1: surplus equals fleet appetite", transform=ax.get_xaxis_transform(),
             fontsize=8.5, color="#666")
     # twin-pair annotation: very different bases, same R, same value
     twin_a = next((r for r in pg if _basep(r) and r.get("points") == 2 and r.get("pv") == 1.0
@@ -463,14 +471,14 @@ if len(design) >= 10:
         for t in (twin_a, twin_b):
             ax.scatter([t["ratio"]], [t["v2g_vs_solar_pct"]], s=130, facecolors="none",
                        edgecolors="#c0392b", lw=1.6, zorder=4)
-        ax.annotate("6x different fleet sizes,\nsame R, same value\n"
+        ax.annotate("6x different fleet sizes,\nsame gamma, same value\n"
                     f"(20 tasks: {twin_a['v2g_vs_solar_pct']:.1f}%, 120 tasks: {twin_b['v2g_vs_solar_pct']:.1f}%)",
                     xy=(twin_a["ratio"], twin_a["v2g_vs_solar_pct"]),
                     xytext=(1.7, 12), fontsize=8.5, color="#c0392b",
                     arrowprops=dict(arrowstyle="->", color="#c0392b", lw=1.0))
-    ax.set_xlabel("R = daily leftover solar / daily fleet driving energy  ('solar per unit of fleet appetite')")
+    ax.set_xlabel("gamma = daily leftover solar / daily fleet driving energy  ('solar per unit of fleet appetite')")
     ax.set_ylabel("% of total daily cost saved by enabling V2G (gross)")
-    ax.set_title("what is V2G worth? one number answers: compute R, read the curve")
+    ax.set_title("what is V2G worth, holding operations fixed? compute gamma, read the curve")
     ax.legend(loc="upper left", fontsize=8.5)
     finish(fig, "fig_8_5_collapse.png")
     GALLERY.append("\n![fig 8.5](fig_8_5_collapse.png)\n")
@@ -494,10 +502,10 @@ if len(design) >= 10:
         "planner: compute R from two "
         "energy audits and read off the gross saving. Pricing realistic enablement "
         "costs INTO the model (bidirectional-charger premium $0-8 per truck-day and "
-        "cycling degradation $0-0.05/kWh -- ranges anchored to published hardware "
+        "cycling degradation $0-0.13/kWh -- ranges anchored to published hardware "
         "premiums and V2G-degradation studies; see the provenance table) yields a "
         "computed break-even of "
-        "R* ~ 0.35-0.47 (shaded band): the charger premium dominates, while "
+        "R* ~ 0.31-0.45 (shaded band): the charger premium dominates, while "
         "degradation is nearly free -- the optimizer cycles less rather than pay it. "
         "Charge rate is a second-order correction confined to the transition region "
         "(at 100 kW the mid-range value drops by a third to a half; 200 and 350 kW are "
@@ -964,7 +972,8 @@ if sa13:
                 out.append((_lp13(r), _lp13(r2)))
         return out
 
-    fig, ax = plt.subplots(1, 4, figsize=(18.5, 4.3), constrained_layout=True)
+    fig, ax = plt.subplots(2, 2, figsize=(12.8, 8.6), constrained_layout=True)
+    ax = ax.ravel()
     for sol, mk in (("2x", "-o"), ("sum2x", "--s")):
         for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
             g = []
@@ -1081,7 +1090,7 @@ if md14:
         ax[0].plot(pts, med, "-", lw=1.9, color=col, label=sol)
     ax[0].axhline(0, color="k", lw=0.7)
     ax[0].set_xlabel("number of daily tasks (fleet size)")
-    ax[0].set_ylabel("extra fossil displaced by V2G vs charge-only (MWh/day)")
+    ax[0].set_ylabel("extra fossil displaced by enabling V2G\nvs the charge-only fleet (MWh/day)")
     ax[0].set_title("the V2G advantage: grows with sun, fades with fleet size")
     ax[0].legend(fontsize=8, title="solar level", ncol=2)
     xs14 = [sur / max(tr, 1e-9) for (_, sur, _, _, _, tr) in gap_pts if np.isfinite(sur)]
@@ -1089,16 +1098,22 @@ if md14:
     order14 = np.argsort(xs14)
     xs14 = np.array(xs14)[order14]; ys14 = np.array(ys14)[order14]
     ax[1].scatter(xs14, ys14, s=14, color="#9aa7b5", alpha=0.75, label="all (solar, fleet) cells")
-    kw14 = max(6, len(xs14) // 18)
-    med14 = [float(np.median(ys14[max(0, i - kw14):i + kw14])) for i in range(len(xs14))]
-    ax[1].plot(xs14, med14, "-", color="#444444", lw=2, label="rolling median")
-    ax[1].axvspan(0.35, 0.47, color="#fdf2e3", zorder=0)
+    e14 = np.geomspace(max(xs14.min(), 0.05), xs14.max(), 15)
+    c14, m14, l14, h14 = [], [], [], []
+    for a2, b2 in zip(e14, e14[1:]):
+        mm = (xs14 >= a2) & (xs14 <= b2)
+        if mm.sum() >= 4:
+            c14.append(np.sqrt(a2 * b2)); m14.append(np.median(ys14[mm]))
+            l14.append(np.percentile(ys14[mm], 10)); h14.append(np.percentile(ys14[mm], 90))
+    ax[1].fill_between(c14, l14, h14, color="#444444", alpha=0.12, label="80% band per bin")
+    ax[1].plot(c14, m14, "-", color="#444444", lw=2, label="binned median")
+    ax[1].axvspan(0.31, 0.35, color="#fdf2e3", zorder=0)
     ax[1].axvline(1.0, ls=":", color="#888")
     ax[1].set_xscale("log")
     ax[1].axhline(0, color="k", lw=0.7)
-    ax[1].set_xlabel("R = daily solar surplus / fleet traction (log)")
-    ax[1].set_ylabel("extra fossil displaced by V2G (MWh/day)")
-    ax[1].set_title("the fade-out boundary is a level set of R")
+    ax[1].set_xlabel("gamma = daily solar surplus / fleet traction (log)")
+    ax[1].set_ylabel("extra fossil displaced by enabling V2G\nvs the charge-only fleet (MWh/day)")
+    ax[1].set_title("the fade-out boundary is a level set of gamma")
     ax[1].legend(fontsize=8)
     finish(fig, "fig_8_14_boundary.png")
     GALLERY.append("\n![fig 8.14](fig_8_14_boundary.png)\n")
@@ -1112,7 +1127,7 @@ if md14:
         "the advantage is never material; at 2x it fades past ~100-140 tasks; at 3x "
         "past ~300; at 4x it is still large at 200 tasks). Right: the same cells "
         "replotted against R = surplus/traction collapse onto one curve whose "
-        "fade-out sits at the shaded band -- the SAME R* ~ 0.35-0.47 as the computed "
+        "fade-out sits at the shaded band -- the SAME R* ~ 0.31-0.45 as the computed "
         "enablement break-even of Fig. 8.5. The (tasks x solar) boundary is a level "
         "set of R: a planner needs two energy audits, not a simulation, to know "
         "which side of it a base sits on.")
