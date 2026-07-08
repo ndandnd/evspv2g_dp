@@ -40,7 +40,7 @@ import numpy as np
 from recreate_arxiv import build_instance, BREAKS
 from colgen import column_generation, SCENARIOS
 from master import solve_milp
-from overnight3 import (ckpt, solve, rand_trips, sol_kwargs,
+from overnight3 import (ckpt, save, solve, rand_trips, sol_kwargs,
                         CG_COST, CB_COST, RHO, CV, MILP_SOLVER)
 
 # ============================== CONFIG -- EDIT ME ==============================
@@ -85,7 +85,7 @@ def eta_sweep():
             rows.append({**base, "scenario": scen, "total": round(r["total"], 1),
                          "g_units": round(r["g_units"], 2), "trucks": r["trucks"],
                          "batteries": r["batteries"], "gap_pct": round(r["gap"], 3)})
-            json.dump(rows, open(path, "w"))
+            save(rows, path)
         if idx % 20 == 0:
             print(f"  [{idx + 1}/{len(cells)} cells, {len(rows)} rows]", flush=True)
 
@@ -121,7 +121,7 @@ def caps_sweep():
             r = solve(inst, scen, tl=120.0)
             if r is None:                     # infeasible under these caps IS data
                 rows.append({**base, "scenario": scen, "feasible": False})
-                json.dump(rows, open(path, "w"))
+                save(rows, path)
                 continue
             mip = r["mip"]
             chg = np.zeros(inst.T)
@@ -141,7 +141,7 @@ def caps_sweep():
             if np.isfinite(c):
                 row["chg_util"] = round(float(chg.max()) / (c * peak_sur), 3)
             rows.append(row)
-            json.dump(rows, open(path, "w"))
+            save(rows, path)
         if idx % 20 == 0:
             print(f"  [{idx + 1}/{len(cells)} cells, {len(rows)} rows]", flush=True)
 
@@ -194,7 +194,7 @@ def pack_sweep():
             rows.append({**base, "scenario": scen, "total": round(r["total"], 1),
                          "g_units": round(r["g_units"], 2), "trucks": r["trucks"],
                          "batteries": r["batteries"], "gap_pct": round(r["gap"], 3)})
-            json.dump(rows, open(path, "w"))
+            save(rows, path)
         if idx % 20 == 0:
             print(f"  [{idx + 1}/{len(cells)} cells, {len(rows)} rows]", flush=True)
 
@@ -227,7 +227,7 @@ def modes_extension():
                      "fleet_paid_units": round(fleet_paid, 2),
                      "trucks": r["trucks"], "batteries": r["batteries"],
                      "gap_pct": round(r["gap"], 3)})
-        json.dump(rows, open(path, "w"))
+        save(rows, path)
         print(f"  n={n} {sol} seed={sd} {scen}: {time.time() - t0:.0f}s "
               f"({len(rows)} rows)", flush=True)
 
@@ -255,7 +255,7 @@ def scale_seeds():
                      "iters": res["iters"], "time_s": round(time.time() - t0, 2),
                      "pricing_s": round(res["pricing_time"], 2),
                      "lp_obj": round(res["lp_obj"], 2)})
-        json.dump(rows, open(path, "w"))
+        save(rows, path)
         print(f"  L={L} n={n} seed={sd} {st}: {rows[-1]['time_s']}s", flush=True)
 
 
@@ -283,7 +283,7 @@ def lattice_ladder():
                      "lp_obj": round(res["lp_obj"], 3), "iters": res["iters"],
                      "time_s": round(time.time() - t0, 2),
                      "pricing_s": round(res["pricing_time"], 2)})
-        json.dump(rows, open(path, "w"))
+        save(rows, path)
         print(f"  step={step} n={n} seed={sd}: lp={rows[-1]['lp_obj']} "
               f"{rows[-1]['time_s']}s", flush=True)
 

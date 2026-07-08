@@ -437,11 +437,12 @@ if len(design) >= 10:
     ax.text(0.985, 1.0, "below the computed enablement break-even (R* ~ 0.35-0.47)", ha="right",
             fontsize=8, color="#a07020", transform=ax.get_yaxis_transform())
     xs_a = np.array([p[0] for p in sorted(design)]); ys_a = np.array([p[1] for p in sorted(design)])
+    ax.set_xscale("log")                       # the action spans R ~ 0.05 to ~70
     ax.scatter(xs_a, ys_a, color="#9aa7b5", s=16, alpha=0.8,
                label=f"{len(design)} hypothetical bases (20-560 tasks, 50-250 kWh duties, PV sizes, profile shapes)")
     if weather:
         ax.scatter([p[0] for p in weather], [p[1] for p in weather], marker="^", s=34,
-                   color="#2E75B6", label=f"one base under {len(weather)} real 2023 weather days")
+                   color="#2E75B6", label=f"one base under {len(weather)} sampled real 2023 weather days")
     kw = max(5, len(design) // 10)
     med = [np.median(ys_a[max(0, i2 - kw):i2 + kw]) for i2 in range(len(design))]
     lo_b = [np.percentile(ys_a[max(0, i2 - kw):i2 + kw], 10) for i2 in range(len(design))]
@@ -473,6 +474,9 @@ if len(design) >= 10:
     ax.legend(loc="upper left", fontsize=8.5)
     finish(fig, "fig_8_5_collapse.png")
     GALLERY.append("\n![fig 8.5](fig_8_5_collapse.png)\n")
+    _twin_txt = (f"(circled: a {20}-task and a 6x-larger {120}-task base at similar R save "
+                 f"{twin_a['v2g_vs_solar_pct']:.1f}% and {twin_b['v2g_vs_solar_pct']:.1f}%)"
+                 if (twin_a and twin_b) else "")
     caption("Figure 8.5",
         "Each dot is one hypothetical base -- a specific fleet size (20-560 daily tasks), "
         "task energy (50-250 kWh), PV size, network, and schedule -- solved to optimality "
@@ -481,8 +485,7 @@ if len(design) >= 10:
         "the fleet's daily driving energy: 'solar per unit of fleet appetite'. The same "
         "16.8 MWh surplus is a feast for a fleet that drives on 4 MWh and irrelevant to "
         "one that needs 24, so raw MWh predicts nothing while R predicts everything: "
-        "bases of wildly different size and duty land on one curve (circled: a 20-task "
-        "and a 6x-larger 120-task base at similar R save the same 4.8%/4.9%). Triangles "
+        f"bases of wildly different size and duty land on one curve {_twin_txt}. Triangles "
         "are a single base re-solved under real 2023 weather days -- weather moves a "
         "site along the curve, not off it. The line is a rolling median through the "
         "dots; the shaded band holds the central 80% of studies -- a PREDICTION band "
@@ -609,8 +612,8 @@ if os.path.exists(tlp):
             labels.append(f"Battery (x{v['batteries']})")
         a_.set_yticks(range(len(labels))); a_.set_yticklabels(labels, fontsize=6.5)
         a_.set_xlim(0, 24); a_.set_ylim(-0.7, len(labels) - 0.3)
-        bat_txt = (f"battery ${v['cb']:.0f}/day" if v.get("cb") else "no stationary storage")
-        a_.set_title(f"truck ${v['cv']:.0f}/day, " + bat_txt + ": "
+        bat_txt = (f"battery \\${v['cb']:.0f}/day" if v.get("cb") else "no stationary storage")
+        a_.set_title(f"truck \\${v['cv']:.0f}/day, " + bat_txt + ": "
                      f"{v['trucks']} trucks ({v['tasks_per_truck']} tasks/truck), "
                      f"{v['batteries']} batteries" + (f" -- {v['tag']}" if v.get("tag") else ""),
                      fontsize=9)
@@ -716,8 +719,8 @@ if md9:
             rr = [r for r in md9 if r["sol"] == sol and r["scenario"] == scen]
             ns = sorted({r["n_tasks"] for r in rr})
             if rr:
-                fo = [float(np.mean([_fossil9(r) for r in rr if r["n_tasks"] == n])) for n in ns]
-                tk = [float(np.mean([r["trucks"] for r in rr if r["n_tasks"] == n])) for n in ns]
+                fo = [float(np.median([_fossil9(r) for r in rr if r["n_tasks"] == n])) for n in ns]
+                tk = [float(np.median([r["trucks"] for r in rr if r["n_tasks"] == n])) for n in ns]
                 zo = 4 if scen == "solar" else 2
                 lw = 2.2 if scen == "solar" else 1.7
                 ax[0, j].plot(ns, fo, ls, color=c, lw=lw, label=lab, zorder=zo,
@@ -935,23 +938,33 @@ if vs12:
 sa13 = []
 for _p in _glob.glob(os.path.join(ARX, "stations_sa_s*.json")):
     sa13 += json.load(open(_p))
+for _p in _glob.glob(os.path.join(ARX, "stations_sa2_s*.json")):
+    sa13 += json.load(open(_p))                      # U3 densify + sub2/sub5 arms
 if sa13:
+    def _lp13(r):
+        """Exact CG LP bound recovered from the stored MILP value and gap.
+        The LP is solved to optimality in every run, so LP-based comparisons
+        use ALL rows; the raw MILP values carry time-limit gaps on the harder
+        multi-station instances and would silently bias any gap-filtered subset
+        toward easy cells."""
+        return r["total"] * (1 - r["gap_pct"] / 100.0)
+
     _idx13 = {(r["L"], r["sol"], r["n_tasks"], r["seed"], r["stations"], r["scenario"]): r
               for r in sa13}
     LS13 = sorted({r["L"] for r in sa13})
 
-    def _pairs13(L, sol, scen, key="total", gapmax=1.5):
-        """(depot, all) value pairs across n x seed, both arms near-proven."""
+    def _pairs13(L, sol, scen, st2="all"):
+        """(depot, st2) LP-bound pairs across n x seed."""
         out = []
         for (l, s, n, sd, st, sc), r in _idx13.items():
             if (l, s, sc, st) != (L, sol, scen, "depot"):
                 continue
-            r2 = _idx13.get((l, s, n, sd, "all", sc))
-            if r2 and abs(r["gap_pct"]) <= gapmax and abs(r2["gap_pct"]) <= gapmax:
-                out.append((r[key], r2[key]))
+            r2 = _idx13.get((l, s, n, sd, st2, sc))
+            if r2:
+                out.append((_lp13(r), _lp13(r2)))
         return out
 
-    fig, ax = plt.subplots(1, 3, figsize=(15, 4.3), constrained_layout=True)
+    fig, ax = plt.subplots(1, 4, figsize=(18.5, 4.3), constrained_layout=True)
     for sol, mk in (("2x", "-o"), ("sum2x", "--s")):
         for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
             g = []
@@ -962,13 +975,14 @@ if sa13:
                        label=f"{'EVSP-Solar' if scen == 'solar' else 'EVSP-V2G'}, {TIT9.get(sol, sol)}")
     ax[0].axhline(0, color="#888", lw=0.7)
     ax[0].set_xlabel("number of task locations L"); ax[0].set_ylabel("total-cost saving from chargers everywhere (%)")
-    ax[0].set_title("value of distributed charging grows with the map"); ax[0].legend(fontsize=8)
+    ax[0].set_title("value of distributed charging grows with the map")
+    ax[0].legend(fontsize=8, loc="lower right")
     for st, c, lab in (("depot", "#888888", "charger at depot only"),
                        ("all", "#16a085", "charger at every location")):
         b = []
         for L in LS13:
             v = [r["batteries"] for r in sa13 if r["L"] == L and r["sol"] == "2x"
-                 and r["stations"] == st and r["scenario"] == "v2g"]
+                 and r["stations"] == st and r["scenario"] == "v2g" and "batteries" in r]
             b.append(float(np.mean(v)) if v else np.nan)
         ax[1].plot(LS13, b, "-o", color=c, ms=4, label=lab)
     ax[1].set_xlabel("number of task locations L"); ax[1].set_ylabel("stationary batteries bought (mean, 2x solar)")
@@ -981,27 +995,279 @@ if sa13:
                 if (l, s, st, sc) == (L, sol, "depot", "solar"):
                     r2 = _idx13.get((l, s, n, sd, "depot", "v2g"))
                     if r2:
-                        pp.append(100 * (r["total"] - r2["total"]) / r["total"])
+                        pp.append(100 * (_lp13(r) - _lp13(r2)) / _lp13(r))
             vs.append(float(np.mean(pp)) if pp else np.nan)
         ax[2].plot(LS13, vs, mk, ms=4, label=TIT9.get(sol, sol))
     ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
     ax[2].set_title("V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=8)
+    # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
+    NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", None)]
+    for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
+        xs_f, ys_f = [], []
+        for st, nch in NARMS:
+            pp = []
+            for L in (8, 10, 12, 15):
+                pp += [100 * (a - b) / a for a, b in _pairs13(L, "2x", scen, st2=st)]
+            if pp:
+                xs_f.append(nch if nch is not None else 12.25)   # 'all' ~ mean(L)+1
+                ys_f.append(float(np.mean(pp)))
+        ax[3].plot(xs_f, ys_f, "-o", color=c, ms=5,
+                   label="EVSP-Solar" if scen == "solar" else "EVSP-V2G")
+    ax[3].axhline(0, color="#888", lw=0.7)
+    ax[3].set_xlabel("number of charging locations (depot + k)")
+    ax[3].set_ylabel("total-cost saving vs depot-only (%)")
+    ax[3].set_title("charger build-out: diminishing returns"); ax[3].legend(fontsize=8)
     finish(fig, "fig_8_13_stations.png")
     GALLERY.append("\n![fig 8.13](fig_8_13_stations.png)\n")
     caption("Figure 8.13",
-        "The multi-station model (Section 3's H0, exercised for the first time): "
-        "1,152 solves over L = 4-15 task locations on nested maps, four solar "
-        "regimes, 40-160 one-hour tasks, 3 seeds. Left: moving from a single "
-        "depot charger to a charger at every task location saves total cost, and "
-        "the saving GROWS with the size of the map (pairs filtered to near-proven "
-        "solutions, MILP gap <= 1.5%); charge-only fleets gain as much as V2G "
-        "fleets -- distributed charging is about reaching energy in time, not "
-        "about bidirectionality. Middle: with chargers everywhere the optimizer "
-        "buys roughly HALF the stationary batteries at 2x solar -- opportunistic "
-        "fleet charging substitutes for dedicated storage capex. Right: V2G's "
-        "saving over charge-only by regime -- the 1x dead zone and the sum2x "
-        "bonanza are flat in L: network richness changes how the microgrid is "
-        "served, not whether V2G pays.")
+        "The multi-station model (Section 3's H0): 3,456 solves over L = 4-15 task "
+        "locations on nested maps, four solar regimes, 40-160 one-hour tasks, 9 seeds, "
+        "four charger-placement arms. All cost comparisons use the exact column-"
+        "generation LP bound recovered from each stored run (the harder multi-station "
+        "MILPs carry time-limit gaps, and filtering on gap would bias toward easy "
+        "cells); battery counts are integer-solution values. Left: moving from a "
+        "single depot charger to a charger at every task location saves total cost, "
+        "and the saving grows with the size of the map; charge-only fleets gain as "
+        "much as V2G fleets -- distributed charging is about reaching energy in time, "
+        "not about bidirectionality. Second: with chargers everywhere the optimizer "
+        "buys roughly half the stationary batteries at 2x solar -- opportunistic "
+        "fleet charging substitutes for dedicated storage capex. Third: V2G's saving "
+        "over charge-only by regime is flat in L -- the 1x dead zone and the sum2x "
+        "bonanza are properties of the energy balance, not the network. Right: the "
+        "charger build-out frontier on the large maps (L >= 8): the first two extra "
+        "chargers capture most of the chargers-everywhere value, a concrete "
+        "infrastructure-planning readout of the same diminishing-returns mechanism.")
+
+# %% Figure 8.14 -- the V2G advantage region in the (tasks x solar) plane
+# Daily solar surplus per sol level (MWh/day), computed once from build_instance
+# over the standard profiles (see overnight5.py); traction ~ 0.2 MWh/task + deadheads.
+SUR14 = {"1x": 3.70, "2x": 16.80, "3x": 30.90, "4x": 45.10, "summer": 6.00, "sum2x": 25.60}
+md14 = list(md9)                                     # all modes rows (U2 + extensions)
+bd14 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight5_boundary_s*.json")):
+    bd14 += json.load(open(_p))
+if md14:
+    gap_pts = []                                     # (sol_label, surplus, n, seed, gap MWh)
+    g14 = {}
+    for r in md14:
+        if r["scenario"] in ("solar", "v2g"):
+            g14.setdefault((r["sol"], r["n_tasks"], r["seed"], r["scenario"]), []).append(r["g_units"] / 10)
+    for (sol, n, sd, sc) in list(g14):
+        if sc != "solar" or (sol, n, sd, "v2g") not in g14:
+            continue
+        gap = float(np.mean(g14[(sol, n, sd, "solar")])) - float(np.mean(g14[(sol, n, sd, "v2g")]))
+        tr14 = 0.2 * n                                # MWh/day (eps=2.0 units/task)
+        gap_pts.append((sol, SUR14.get(sol, np.nan), n, sd, gap, tr14))
+    b14 = {}
+    for r in bd14:
+        b14.setdefault((r["pv"], r["n_tasks"], r["seed"], r["scenario"]), r)
+    for (pv, n, sd, sc), r in list(b14.items()):
+        if sc != "solar" or (pv, n, sd, "v2g") not in b14:
+            continue
+        v = b14[(pv, n, sd, "v2g")]
+        gap_pts.append((f"{pv:g}x", r["surplus_mwh"], n, sd,
+                        r["g_units"] / 10 - v["g_units"] / 10, r["traction_mwh"]))
+    fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.6), constrained_layout=True)
+    SOLS14 = ["1x", "1.5x", "2x", "2.5x", "3x", "3.5x", "4x", "sum2x"]
+    from matplotlib import cm as _cm14
+    for k14, sol in enumerate(SOLS14):
+        pts = sorted({(n) for (s, _, n, _, _, _) in gap_pts if s == sol})
+        if not pts:
+            continue
+        med = [float(np.median([g for (s, _, n2, _, g, _) in gap_pts
+                                if s == sol and n2 == n])) for n in pts]
+        col = ("#9b59b6" if sol == "sum2x"
+               else _cm14.viridis(0.05 + 0.9 * k14 / max(len(SOLS14) - 2, 1)))
+        ax[0].plot(pts, med, "-", lw=1.9, color=col, label=sol)
+    ax[0].axhline(0, color="k", lw=0.7)
+    ax[0].set_xlabel("number of daily tasks (fleet size)")
+    ax[0].set_ylabel("extra fossil displaced by V2G vs charge-only (MWh/day)")
+    ax[0].set_title("the V2G advantage: grows with sun, fades with fleet size")
+    ax[0].legend(fontsize=8, title="solar level", ncol=2)
+    xs14 = [sur / max(tr, 1e-9) for (_, sur, _, _, _, tr) in gap_pts if np.isfinite(sur)]
+    ys14 = [g for (_, sur, _, _, g, _) in gap_pts if np.isfinite(sur)]
+    order14 = np.argsort(xs14)
+    xs14 = np.array(xs14)[order14]; ys14 = np.array(ys14)[order14]
+    ax[1].scatter(xs14, ys14, s=14, color="#9aa7b5", alpha=0.75, label="all (solar, fleet) cells")
+    kw14 = max(6, len(xs14) // 18)
+    med14 = [float(np.median(ys14[max(0, i - kw14):i + kw14])) for i in range(len(xs14))]
+    ax[1].plot(xs14, med14, "-", color="#444444", lw=2, label="rolling median")
+    ax[1].axvspan(0.35, 0.47, color="#fdf2e3", zorder=0)
+    ax[1].axvline(1.0, ls=":", color="#888")
+    ax[1].set_xscale("log")
+    ax[1].axhline(0, color="k", lw=0.7)
+    ax[1].set_xlabel("R = daily solar surplus / fleet traction (log)")
+    ax[1].set_ylabel("extra fossil displaced by V2G (MWh/day)")
+    ax[1].set_title("the fade-out boundary is a level set of R")
+    ax[1].legend(fontsize=8)
+    finish(fig, "fig_8_14_boundary.png")
+    GALLERY.append("\n![fig 8.14](fig_8_14_boundary.png)\n")
+    caption("Figure 8.14",
+        "Where V2G beats charge-only, in the planner's coordinates. Left: the extra "
+        "fossil energy V2G displaces beyond the charge-only fleet (median over seeds) "
+        "against fleet size, one curve per solar level. Every curve has the same "
+        "anatomy: the advantage rises while idle battery capacity can still reach "
+        "unserved deficit, peaks, then fades as the fleet's own traction consumes the "
+        "surplus -- and more sun moves the fade-out boundary to larger fleets (at 1x "
+        "the advantage is never material; at 2x it fades past ~100-140 tasks; at 3x "
+        "past ~300; at 4x it is still large at 200 tasks). Right: the same cells "
+        "replotted against R = surplus/traction collapse onto one curve whose "
+        "fade-out sits at the shaded band -- the SAME R* ~ 0.35-0.47 as the computed "
+        "enablement break-even of Fig. 8.5. The (tasks x solar) boundary is a level "
+        "set of R: a planner needs two energy audits, not a simulation, to know "
+        "which side of it a base sits on.")
+
+# %% Figure 8.15 -- round-trip loss: eta rescales the value, not the boundary
+et15 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight4_eta_s*.json")):
+    et15 += json.load(open(_p))
+if et15:
+    eidx = {(r["eta"], r["pv"], r["n_tasks"], r["seed"], r["scenario"]): r for r in et15}
+    fig, ax = plt.subplots(figsize=(7.6, 4.4), constrained_layout=True)
+    PVC15 = {1.0: "#888888", 1.5: "#e08020", 2.5: "#2E75B6", 3.5: "#16a085"}
+    for pv in sorted({r["pv"] for r in et15}):
+        xs, ys = [], []
+        for eta in sorted({r["eta"] for r in et15}):
+            v = []
+            for (e, p, n, sd, sc), r in eidx.items():
+                if (e, p, sc) == (eta, pv, "solar") and (e, p, n, sd, "v2g") in eidx:
+                    w = eidx[(e, p, n, sd, "v2g")]
+                    v.append(100 * (r["total"] - w["total"]) / r["total"])
+            if v:
+                xs.append(eta); ys.append(float(np.mean(v)))
+        ax.plot(xs, ys, "-o", ms=4, color=PVC15.get(pv, "#555"), label=f"{pv}x solar")
+    ax.axvspan(0.05, 0.15, color="#eef4ea", zorder=0)
+    ax.text(0.10, 0.97, "typical round-trip loss", ha="center", va="top", fontsize=8,
+            color="#4d774d", transform=ax.get_xaxis_transform())
+    ax.set_xlabel("round-trip loss eta"); ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
+    ax.set_title("losses rescale V2G's value; they do not move the dead zone")
+    ax.legend(fontsize=8)
+    finish(fig, "fig_8_15_eta.png")
+    GALLERY.append("\n![fig 8.15](fig_8_15_eta.png)\n")
+    caption("Figure 8.15",
+        "Sensitivity of the V2G value to the battery round-trip loss eta (mean over "
+        "20-120-task fleets, 2 seeds; every other experiment in this study uses the "
+        "lossless base case, so this isolates the knob). In the dead zone (1x solar) "
+        "the value is ~0 at every eta -- losses cannot kill what the energy balance "
+        "already forbids -- while at mid and high solar each point of loss shaves "
+        "value roughly linearly (at 2.5x: 54% lossless, 51% at the 5% loss of a "
+        "modern LFP pack, 44% at 15%). Even at a punishing eta = 0.3, more than half "
+        "the high-solar value survives. The R-rule's boundary is therefore "
+        "loss-robust; only the height of the curve moves.")
+
+# %% Figure 8.16 -- infrastructure caps: value under binding limits + the feasibility cliff
+cp16 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight4_caps*_s*.json")):
+    cp16 += json.load(open(_p))
+if cp16:
+    cidx16 = {(r["gen_m"], r["chg_c"], r["n_tasks"], r["seed"], r["scenario"]): r
+              for r in cp16}
+    gms = sorted({r["gen_m"] for r in cp16}, key=lambda x: (x == float("inf"), x))
+    ccs = sorted({r["chg_c"] for r in cp16}, key=lambda x: (x == float("inf"), x))
+    fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.4), constrained_layout=True)
+    CC16 = {0.35: "#c0392b", 0.5: "#e08020", 0.7: "#2E75B6", 1.0: "#16a085",
+            1.4: "#7d3c98", float("inf"): "#888888"}
+    xlab16 = [("uncapped" if not np.isfinite(m) else f"{m:g}") for m in gms]
+    for c in ccs:
+        ys = []
+        for m in gms:
+            v = []
+            for (m_, c_, n, sd, sc), r in cidx16.items():
+                if (m_, c_, sc) == (m, c, "solar") and r.get("feasible", True):
+                    w = cidx16.get((m_, c_, n, sd, "v2g"))
+                    if w and w.get("feasible", True):
+                        v.append(100 * (r["total"] - w["total"]) / r["total"])
+            ys.append(float(np.mean(v)) if v else np.nan)
+        ax[0].plot(range(len(gms)), ys, "-o", ms=4, color=CC16.get(c, "#555"),
+                   label=("charging uncapped" if not np.isfinite(c) else f"charging cap {c:g}x peak surplus"))
+    ax[0].set_xticks(range(len(gms))); ax[0].set_xticklabels(xlab16)
+    ax[0].set_xlabel("generation cap (x no-fleet peak deficit)")
+    ax[0].set_ylabel("V2G saving vs charge-only (%)")
+    ax[0].set_title("tight generation capacity RAISES the value of V2G")
+    ax[0].legend(fontsize=8)
+    for scen, c, lab in (("solar", "#e08020", "charge-only fleet"),
+                         ("v2g", "#2E75B6", "V2G fleet")):
+        ys = []
+        for m in gms:
+            tot, bad = 0, 0
+            for (m_, c_, n, sd, sc), r in cidx16.items():
+                if (m_, sc) == (m, scen):
+                    tot += 1; bad += (not r.get("feasible", True))
+            ys.append(100 * bad / tot if tot else np.nan)
+        ax[1].plot(range(len(gms)), ys, "-o", ms=4, color=c, label=lab)
+    ax[1].set_xticks(range(len(gms))); ax[1].set_xticklabels(xlab16)
+    ax[1].set_xlabel("generation cap (x no-fleet peak deficit)")
+    ax[1].set_ylabel("% of instances INFEASIBLE")
+    ax[1].set_title("the feasibility cliff: sometimes V2G is the only way to electrify")
+    ax[1].legend(fontsize=8)
+    finish(fig, "fig_8_16_caps.png")
+    GALLERY.append("\n![fig 8.16](fig_8_16_caps.png)\n")
+    caption("Figure 8.16",
+        "Infrastructure limits as a frontier rather than a single instance (pv = 2.5x, "
+        "20-200 tasks, 3 seeds; caps anchored to each instance's no-fleet peak deficit "
+        "and peak solar surplus). Left: V2G's saving over charge-only by cap "
+        "tightness, over instances where BOTH fleets are feasible. An uncapped "
+        "generator prices V2G at ~55%; capping generation near the no-fleet peak "
+        "raises it to ~85%, because peak shaving stops being optional -- the cap "
+        "converts V2G from an arbitrage play into capacity. Very tight charging caps "
+        "(0.35x peak surplus) clip the value instead, by limiting how much surplus "
+        "the fleet can absorb (the charging cap binds, chg_util ~ 1, in most V2G "
+        "solves). Right: the feasibility cliff. At a generation cap equal to the "
+        "no-fleet peak, the charge-only fleet is INFEASIBLE in every instance -- any "
+        "charging schedule pushes some block over the cap -- while the V2G fleet "
+        "remains feasible by discharging into its own charging peaks. Under tight "
+        "generation capacity, bidirectionality is not a saving but a prerequisite "
+        "for electrification.")
+
+# %% Figure 8.17 -- pack size and charge rate: the fleet-as-storage capacity knob
+pk17 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight4_pack_s*.json")):
+    pk17 += json.load(open(_p))
+if pk17:
+    pidx17 = {(r["G"], r["rho"], r["pv"], r["n_tasks"], r["seed"], r["scenario"]): r
+              for r in pk17}
+    fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.4), constrained_layout=True)
+    GS17 = [3.5, 7.0, 10.5, 14.0]
+    for pv, c in ((2.0, "#2E75B6"), (4.0, "#16a085")):
+        vs, bs = [], []
+        for G in GS17:
+            v, b = [], []
+            for (g_, rh, p, n, sd, sc), r in pidx17.items():
+                if (g_, rh, p) != (G, 1.75, pv):
+                    continue
+                if sc == "solar":
+                    w = pidx17.get((g_, rh, p, n, sd, "v2g_fleet"))
+                    if w:
+                        v.append(100 * (r["total"] - w["total"]) / r["total"])
+                if sc == "v2g":
+                    b.append(r["batteries"])
+            vs.append(float(np.mean(v)) if v else np.nan)
+            bs.append(float(np.mean(b)) if b else np.nan)
+        ax[0].plot([g * 100 for g in GS17], vs, "-o", ms=5, color=c,
+                   label=f"{pv:g}x solar")
+        ax[1].plot([g * 100 for g in GS17], bs, "-o", ms=5, color=c,
+                   label=f"{pv:g}x solar")
+    ax[0].axvline(700, ls=":", color="#888", lw=1)
+    ax[0].set_xlabel("truck pack size (kWh)"); ax[0].set_ylabel("fleet-only V2G saving vs charge-only (%)")
+    ax[0].set_title("bigger packs raise fleet-as-storage value, with saturation")
+    ax[0].legend(fontsize=8)
+    ax[1].axvline(700, ls=":", color="#888", lw=1)
+    ax[1].set_xlabel("truck pack size (kWh)"); ax[1].set_ylabel("stationary batteries bought (V2G, mean)")
+    ax[1].set_title("bigger packs substitute for stationary storage")
+    ax[1].legend(fontsize=8)
+    finish(fig, "fig_8_17_pack.png")
+    GALLERY.append("\n![fig 8.17](fig_8_17_pack.png)\n")
+    caption("Figure 8.17",
+        "The truck pack as the fleet-as-storage capacity knob (8-120 tasks, 2 seeds, "
+        "350 kW charging; stationary-battery cost held fixed per kWh as pack size "
+        "varies). Left: the value of fleet-only V2G (no stationary storage installed) "
+        "over charge-only rises steeply from a 350 kWh pack to the 700 kWh baseline "
+        "(dotted) and saturates by ~1 MWh -- consistent with Fig. 8.12's reading that "
+        "bidirectional trucks alone shave a slice limited by pack capacity. Right: in "
+        "the full V2G stack the optimizer's stationary-battery purchases fall by a "
+        "factor of 4-5 as packs grow from 350 to 1400 kWh: pack capacity and "
+        "stationary storage are direct substitutes, so the trend toward larger EV "
+        "packs mechanically shrinks the dedicated-storage capex a microgrid needs.")
 
 # %% Parameter provenance -- a source for every empirical anchor
 PROV = [

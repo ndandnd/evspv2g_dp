@@ -56,8 +56,28 @@ BIGPOOL = [(x, y) for x in (-1.25, -0.75, -0.25, 0.25, 0.75, 1.25)
 
 
 def ckpt(name):
+    """Load a checkpoint, tolerating a file truncated by a mid-write kill: the
+    corrupt file is set aside (not deleted) and the study restarts from the rows
+    that survive in it -- never crashes the whole chain."""
     p = os.path.join(OUT, name)
-    return (json.load(open(p)) if os.path.exists(p) else []), p
+    if not os.path.exists(p):
+        return [], p
+    try:
+        return json.load(open(p)), p
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        bad = p + ".corrupt"
+        os.replace(p, bad)
+        print(f"  [ckpt] {name} unreadable (truncated write?) -- moved to "
+              f"{os.path.basename(bad)}, restarting shard from scratch", flush=True)
+        return [], p
+
+
+def save(rows, path):
+    """Atomic checkpoint write: dump to a temp file, then rename over the target,
+    so a kill mid-write can never leave a truncated checkpoint."""
+    tmp = path + ".tmp"
+    json.dump(rows, open(tmp, "w"))
+    os.replace(tmp, path)
 
 
 def sol_kwargs(sol):
@@ -131,7 +151,7 @@ def u1_shine():
                          "trucks": r["trucks"], "batteries": r["batteries"],
                          "fossil_mwh": round(r["g_units"] / 10, 2),
                          "gap_pct": round(r["gap"], 3)})
-            json.dump(rows, open(path, "w"))
+            save(rows, path)
         if idx % 40 == 0:
             print(f"  [{idx + 1}/{len(cells)} cells, {len(rows)} rows]", flush=True)
 
@@ -165,7 +185,7 @@ def u2_modes_hisolar():
                      "fleet_paid_units": round(fleet_paid, 2),
                      "trucks": r["trucks"], "batteries": r["batteries"],
                      "gap_pct": round(r["gap"], 3)})
-        json.dump(rows, open(path, "w"))
+        save(rows, path)
         if len(rows) % 30 == 0:
             print(f"  [{len(rows)} rows]", flush=True)
 
@@ -217,7 +237,7 @@ def u3_stations2():
                              "batteries": r["batteries"],
                              "gap_pct": round(r["gap"], 3),
                              "time_s": round(time.time() - t0, 1)})
-                json.dump(rows, open(path, "w"))
+                save(rows, path)
         if idx % 10 == 0:
             print(f"  [{idx + 1}/{len(cells)} bases, {len(rows)} rows]", flush=True)
 
@@ -260,7 +280,7 @@ def u4_durations():
                              "total": round(r["total"], 1),
                              "g_units": round(r["g_units"], 2), "trucks": r["trucks"],
                              "batteries": r["batteries"], "gap_pct": round(r["gap"], 3)})
-                json.dump(rows, open(path, "w"))
+                save(rows, path)
         if idx % 10 == 0:
             print(f"  [{idx + 1}/{len(cells)} bases, {len(rows)} rows]", flush=True)
 
@@ -295,7 +315,7 @@ def u5_maps():
                              "total": round(r["total"], 1),
                              "g_units": round(r["g_units"], 2), "trucks": r["trucks"],
                              "batteries": r["batteries"], "gap_pct": round(r["gap"], 3)})
-                json.dump(rows, open(path, "w"))
+                save(rows, path)
         if idx % 10 == 0:
             print(f"  [{idx + 1}/{len(cells)} bases, {len(rows)} rows]", flush=True)
 
@@ -322,7 +342,7 @@ def u6_scale_rich():
                      "iters": res["iters"], "time_s": round(time.time() - t0, 2),
                      "pricing_s": round(res["pricing_time"], 2),
                      "lp_obj": round(res["lp_obj"], 2)})
-        json.dump(rows, open(path, "w"))
+        save(rows, path)
         print(f"  L={L} n={n} seed={sd} {st}: {rows[-1]['time_s']}s", flush=True)
 
 
