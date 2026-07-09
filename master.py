@@ -137,9 +137,10 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
             bub[base + t] = inst.charge_cap
 
     bounds = [(0, None)] * nvar
-    if np.isfinite(inst.gen_cap):                        # generation capacity per block
-        for t in range(T):
-            bounds[oG + t] = (0, inst.gen_cap)
+    caps_t = np.broadcast_to(np.asarray(inst.gen_cap, dtype=float), (T,))
+    for t in range(T):                                   # generation capacity per block
+        if np.isfinite(caps_t[t]):
+            bounds[oG + t] = (0, float(caps_t[t]))
     return c, Aub, bub, Aeq, beq, bounds, (oX, oG, oC, oD, oS, oNb), n, T, R, cc_start
 
 
@@ -205,11 +206,15 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
         p += s[t + 1] == s[t] + (1 - eta) * chg[t] - dis[t]
         p += chg[t] <= rho * Nb
         p += dis[t] <= rho * Nb
-        if np.isfinite(inst.gen_cap):
-            p += g[t] <= inst.gen_cap                         # generation capacity
+        _cap_t = np.broadcast_to(np.asarray(inst.gen_cap, dtype=float), (T,))[t]
+        if np.isfinite(_cap_t):
+            p += g[t] <= float(_cap_t)                        # generation capacity (per block)
         if np.isfinite(inst.charge_cap):                      # charging-congestion cap
             p += (pulp.lpSum((cols[r].e[t] if cols[r].e[t] > 0 else 0.0) * x[r]
                              for r in range(R) if cols[r].e[t] > 1e-9) + chg[t] <= inst.charge_cap)
+    _fb = getattr(inst, "fuel_budget", float("inf"))
+    if np.isfinite(_fb):                      # daily fossil-fuel stock (endurance studies)
+        p += pulp.lpSum(g[t] for t in range(T)) <= float(_fb)
     if soc_mode == "free":
         p += s[0] == G * Nb                   # original arXiv: battery starts FULL, free
     else:

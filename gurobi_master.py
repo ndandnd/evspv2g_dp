@@ -45,8 +45,14 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
         m.Params.MIPGap = float(mip_gap)
 
     x  = m.addVars(R, lb=0.0, vtype=vtype, name="x")
-    gub = inst.gen_cap if np.isfinite(inst.gen_cap) else GRB.INFINITY
-    g  = m.addVars(T, lb=0.0, ub=gub, name="g")
+    caps_t = np.broadcast_to(np.asarray(inst.gen_cap, dtype=float), (T,))
+    g  = m.addVars(T, lb=0.0, name="g")
+    for t in range(T):
+        if np.isfinite(caps_t[t]):
+            g[t].UB = float(caps_t[t])
+    _fb = getattr(inst, "fuel_budget", float("inf"))
+    if np.isfinite(_fb):                      # daily fossil-fuel stock (endurance studies)
+        m.addConstr(gp.quicksum(g[t] for t in range(T)) <= float(_fb), name="fuel_budget")
     chg = m.addVars(T, lb=0.0, name="chg")
     dis = m.addVars(T, lb=0.0, name="dis")
     s  = m.addVars(T + 1, lb=0.0, name="s")
