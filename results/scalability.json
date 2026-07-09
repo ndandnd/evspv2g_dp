@@ -1,0 +1,90 @@
+{
+  "config": {
+    "relax_caps": true,
+    "milp_time_limit": 120.0,
+    "scenario": "v2g",
+    "eps": 2.0,
+    "seed": 7
+  },
+  "ceiling": [
+    {
+      "tasks": 60,
+      "feasible": true,
+      "lp_obj": 23516.7
+    },
+    {
+      "tasks": 70,
+      "feasible": true,
+      "lp_obj": 26359.1
+    },
+    {
+      "tasks": 80,
+      "feasible": true,
+      "lp_obj": 29468.5
+    },
+    {
+      "tasks": 90,
+      "feasible": true,
+      "lp_obj": 32838.7
+    },
+    {
+      "tasks": 100,
+      "feasible": true,
+      "lp_obj": 35673.9
+    },
+    {
+      "tasks": 110,
+      "feasible": false,
+      "lp_obj": null
+    },
+    {
+      "tasks": 120,
+      "feasible": false,
+      "lp_obj": null
+    }
+  ],
+  "ladder": [
+    {
+      "loc": 16,
+      "tasks": 600,
+      "feasible": true,
+      "cg_iters": 869,
+      "cols": 1533,
+      "cg_time_s": 30.7,
+      "lp_obj": 186701.6,
+      "mip_time_s": 120.16,
+      "trucks": 324,
+      "batteries": 0,
+      "mip_obj": 189017.1,
+      "gap_pct": 1.225
+    },
+    {
+      "loc": 18,
+      "tasks": 800,
+      "feasible": true,
+      "cg_iters": 955,
+      "cols": 1819,
+      "cg_time_s": 39.89,
+      "lp_obj": 260596.1,
+      "mip_time_s": 120.18,
+      "trucks": 490,
+      "batteries": 0,
+      "mip_obj": 263608.4,
+      "gap_pct": 1.143
+    },
+    {
+      "loc": 20,
+      "tasks": 1000,
+      "feasible": true,
+      "cg_iters": 1304,
+      "cols": 2368,
+      "cg_time_s": 81.39,
+      "lp_obj": 324481.2,
+      "mip_time_s": 120.31,
+      "trucks": 616,
+      "batteries": 0,
+      "mip_obj": 328310.5,
+      "gap_pct": 1.166
+    }
+  ]
+}

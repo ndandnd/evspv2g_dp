@@ -1,0 +1,38 @@
+{
+  "config": {
+    "relax_caps": true,
+    "milp_time_limit": 15.0,
+    "scenario": "v2g",
+    "eps": 2.0,
+    "seed": 7,
+    "have_gurobi": false
+  },
+  "rows": [
+    {
+      "loc": 4,
+      "tasks": 40,
+      "cg_highs_s": 0.47,
+      "cg_iters": 70,
+      "cols": 151,
+      "lp_obj": 17693.4,
+      "lp_highs_solve_s": 0.002,
+      "milp_cbc_s": 0.3,
+      "milp_cbc_obj": 17703.4,
+      "milp_cbc_gap_pct": 0.057,
+      "cbc_converged": true
+    },
+    {
+      "loc": 8,
+      "tasks": 160,
+      "cg_highs_s": 2.62,
+      "cg_iters": 251,
+      "cols": 475,
+      "lp_obj": 50888.2,
+      "lp_highs_solve_s": 0.01,
+      "milp_cbc_s": 14.98,
+      "milp_cbc_obj": 51127.2,
+      "milp_cbc_gap_pct": 0.467,
+      "cbc_converged": false
+    }
+  ]
+}

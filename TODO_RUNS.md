@@ -43,3 +43,15 @@ Added 2026-07-09 (post-send):
 - Consider delta=25 kWh for the final experiment rerun: LATTICE shows the
   50 kWh lattice overestimates the LP by ~0.7% (converged at 25; 12.5
   identical) at negligible extra time. Cheap accuracy if we rerun anyway.
+
+Status 2026-07-09 (second batch):
+- INVALID DATA: overnight7_endurance_s*.json (fuel budget was absent from the
+  CG LP path; charge-only recorded feasible at 5% fuel). Superseded by
+  overnight9 ENDUR2. overnight7 OUTAGE is valid but measures the greenfield
+  (re-sizable) design question; overnight9 OUTAGE2 is the fixed-asset stress
+  test.
+- STILL MISSING on git: overnight3_modes_sX2* (MODESX2), overnight4_caps2_s*,
+  overnight4_caps3_s* -- check cluster .out logs / uncommitted files, then
+  relaunch (commands in the handoff message).
+- SATFIX (overnight6) is valid but linear-to-the-floor by design (endogenous
+  assets); SATFIX2 (two-stage, fixed assets) is the Theorem-1 concavity view.

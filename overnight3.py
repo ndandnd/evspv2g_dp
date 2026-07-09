@@ -99,6 +99,8 @@ def solve(inst, scen, enrich=25, tl=None):
         return None
     mip = solve_milp(inst, res["cols"], time_limit=tl or MILP_TIME_LIMIT,
                      battery_allowed=SCENARIOS[scen]["battery"], solver=MILP_SOLVER)
+    if getattr(mip, "status", "optimal") != "optimal" or not np.isfinite(mip.obj):
+        return None                            # integer master infeasible/failed
     return {"total": mip.obj, "g_units": float(mip.g.sum()),
             "trucks": int(sum(round(x) for x in mip.x)),
             "batteries": int(round(mip.nb)), "cols": res["cols"], "mip": mip,

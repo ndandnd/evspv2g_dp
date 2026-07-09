@@ -46,6 +46,8 @@ class Instance:
     gen_cap: float = float("inf")   # max fossil generation per block (kWh); inf = uncapped
     charge_cap: float = float("inf")# max total charging power per block (kWh); inf = uncapped
     fuel_budget: float = float("inf") # max total fossil generation over the day (units); inf = none
+    nb_fixed: float = -1.0          # if >=0, fix the stationary-battery count (two-stage studies)
+    max_trucks: float = float("inf")# cap on total truck columns selected (two-stage studies)
     soc_step: float = 5.0           # SoC lattice step for the pricing DP (same units as G)
     deg_cost: float = 0.0           # $ per unit of DISCHARGE throughput (cycling degradation)
     stations: list = None           # charging locations H0 (paper Sec. 3); None -> depot only

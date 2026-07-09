@@ -125,6 +125,20 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
     for t in range(T):                                  # dis_t <= rho Nb
         Aub[base + t, oD + t] = 1.0; Aub[base + t, oNb] = -rho
     base += T
+    _fb = getattr(inst, "fuel_budget", float("inf"))
+    _mt = getattr(inst, "max_trucks", float("inf"))
+    extra = int(np.isfinite(_fb)) + int(np.isfinite(_mt))
+    if extra:
+        Aub = np.vstack([Aub, np.zeros((extra, nvar))]); bub = np.append(bub, np.zeros(extra))
+        k = -extra
+        if np.isfinite(_fb):                            # daily fossil-fuel stock
+            Aub[k, oG:oG + T] = 1.0; bub[k] = float(_fb); k += 1
+        if np.isfinite(_mt):                            # truck-count cap (two-stage)
+            Aub[k, oX:oX + R] = 1.0; bub[k] = float(_mt)
+    _nbf = getattr(inst, "nb_fixed", -1.0)
+    if _nbf is not None and _nbf >= 0:                  # fix battery count (two-stage)
+        Aeq = np.vstack([Aeq, np.zeros((1, nvar))]); beq = np.append(beq, float(_nbf))
+        Aeq[-1, oNb] = 1.0
     cc_start = None
     if cc_active:                                       # total charging power per block <= charge_cap
         cc_start = base
@@ -215,6 +229,12 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
     _fb = getattr(inst, "fuel_budget", float("inf"))
     if np.isfinite(_fb):                      # daily fossil-fuel stock (endurance studies)
         p += pulp.lpSum(g[t] for t in range(T)) <= float(_fb)
+    _mt = getattr(inst, "max_trucks", float("inf"))
+    if np.isfinite(_mt):                      # truck-count cap (two-stage studies)
+        p += pulp.lpSum(x[r] for r in range(R)) <= float(_mt)
+    _nbf = getattr(inst, "nb_fixed", -1.0)
+    if _nbf is not None and _nbf >= 0:        # fixed battery count (two-stage studies)
+        p += Nb == float(_nbf)
     if soc_mode == "free":
         p += s[0] == G * Nb                   # original arXiv: battery starts FULL, free
     else:
