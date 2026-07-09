@@ -984,7 +984,7 @@ if sa13:
                        label=f"{'EVSP-Solar' if scen == 'solar' else 'EVSP-V2G'}, {TIT9.get(sol, sol)}")
     ax[0].axhline(0, color="#888", lw=0.7)
     ax[0].set_xlabel("number of task locations L"); ax[0].set_ylabel("total-cost saving from chargers everywhere (%)")
-    ax[0].set_title("value of distributed charging grows with the map")
+    ax[0].set_title("(a) value of distributed charging grows with the map")
     ax[0].legend(fontsize=8, loc="lower right")
     for st, c, lab in (("depot", "#888888", "charger at depot only"),
                        ("all", "#16a085", "charger at every location")):
@@ -995,7 +995,7 @@ if sa13:
             b.append(float(np.mean(v)) if v else np.nan)
         ax[1].plot(LS13, b, "-o", color=c, ms=4, label=lab)
     ax[1].set_xlabel("number of task locations L"); ax[1].set_ylabel("stationary batteries bought (mean, 2x solar)")
-    ax[1].set_title("distributed charging substitutes for stationary storage"); ax[1].legend(fontsize=8)
+    ax[1].set_title("(b) distributed charging substitutes for stationary storage"); ax[1].legend(fontsize=8)
     for sol, mk in (("1x", "-o"), ("2x", "-s"), ("summer", "--^"), ("sum2x", "--v")):
         vs = []
         for L in LS13:
@@ -1008,7 +1008,7 @@ if sa13:
             vs.append(float(np.mean(pp)) if pp else np.nan)
         ax[2].plot(LS13, vs, mk, ms=4, label=TIT9.get(sol, sol))
     ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
-    ax[2].set_title("V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=8)
+    ax[2].set_title("(c) V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=8)
     # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
     NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", None)]
     for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
@@ -1025,7 +1025,7 @@ if sa13:
     ax[3].axhline(0, color="#888", lw=0.7)
     ax[3].set_xlabel("number of charging locations (depot + k)")
     ax[3].set_ylabel("total-cost saving vs depot-only (%)")
-    ax[3].set_title("charger build-out: diminishing returns"); ax[3].legend(fontsize=8)
+    ax[3].set_title("(d) charger build-out: diminishing returns"); ax[3].legend(fontsize=8)
     finish(fig, "fig_8_13_stations.png")
     GALLERY.append("\n![fig 8.13](fig_8_13_stations.png)\n")
     caption("Figure 8.13",
@@ -1170,69 +1170,67 @@ if et15:
         "the high-solar value survives. The R-rule's boundary is therefore "
         "loss-robust; only the height of the curve moves.")
 
-# %% Figure 8.16 -- infrastructure caps: value under binding limits + the feasibility cliff
+# %% Figure 8.16 -- infrastructure caps: the feasibility cliff + matched charging-cap effect
 cp16 = []
 for _p in _glob.glob(os.path.join(ARX, "overnight4_caps*_s*.json")):
     cp16 += json.load(open(_p))
 if cp16:
     cidx16 = {(r["gen_m"], r["chg_c"], r["n_tasks"], r["seed"], r["scenario"]): r
               for r in cp16}
-    gms = sorted({r["gen_m"] for r in cp16}, key=lambda x: (x == float("inf"), x))
-    ccs = sorted({r["chg_c"] for r in cp16}, key=lambda x: (x == float("inf"), x))
     fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.4), constrained_layout=True)
-    CC16 = {0.35: "#c0392b", 0.5: "#e08020", 0.7: "#2E75B6", 1.0: "#16a085",
-            1.4: "#7d3c98", float("inf"): "#888888"}
+    # (a) the cliff at a moderate charging cap: infeasible share vs generation cap
+    gms = sorted({r["gen_m"] for r in cp16 if r["chg_c"] == 0.7},
+                 key=lambda x: (x == float("inf"), x))
     xlab16 = [("uncapped" if not np.isfinite(m) else f"{m:g}") for m in gms]
-    for c in ccs:
-        ys = []
-        for m in gms:
-            v = []
-            for (m_, c_, n, sd, sc), r in cidx16.items():
-                if (m_, c_, sc) == (m, c, "solar") and r.get("feasible", True):
-                    w = cidx16.get((m_, c_, n, sd, "v2g"))
-                    if w and w.get("feasible", True):
-                        v.append(100 * (r["total"] - w["total"]) / r["total"])
-            ys.append(float(np.mean(v)) if v else np.nan)
-        ax[0].plot(range(len(gms)), ys, "-o", ms=4, color=CC16.get(c, "#555"),
-                   label=("charging uncapped" if not np.isfinite(c) else f"charging cap {c:g}x peak surplus"))
-    ax[0].set_xticks(range(len(gms))); ax[0].set_xticklabels(xlab16)
-    ax[0].set_xlabel("generation cap (x no-fleet peak deficit)")
-    ax[0].set_ylabel("V2G saving vs charge-only (%)")
-    ax[0].set_title("tight generation capacity RAISES the value of V2G")
-    ax[0].legend(fontsize=8)
     for scen, c, lab in (("solar", "#e08020", "charge-only fleet"),
                          ("v2g", "#2E75B6", "V2G fleet")):
         ys = []
         for m in gms:
-            tot, bad = 0, 0
-            for (m_, c_, n, sd, sc), r in cidx16.items():
-                if (m_, sc) == (m, scen):
-                    tot += 1; bad += (not r.get("feasible", True))
-            ys.append(100 * bad / tot if tot else np.nan)
-        ax[1].plot(range(len(gms)), ys, "-o", ms=4, color=c, label=lab)
-    ax[1].set_xticks(range(len(gms))); ax[1].set_xticklabels(xlab16)
-    ax[1].set_xlabel("generation cap (x no-fleet peak deficit)")
-    ax[1].set_ylabel("% of instances INFEASIBLE")
-    ax[1].set_title("the feasibility cliff: sometimes V2G is the only way to electrify")
-    ax[1].legend(fontsize=8)
+            rows = [r for r in cp16 if r["gen_m"] == m and r["chg_c"] == 0.7
+                    and r["scenario"] == scen]
+            ys.append(100 * sum(1 for r in rows if not r.get("feasible", True))
+                      / max(len(rows), 1))
+        ax[0].plot(range(len(gms)), ys, "-o", ms=5, color=c, label=lab)
+    ax[0].set_xticks(range(len(gms))); ax[0].set_xticklabels(xlab16)
+    ax[0].set_xlabel("generation cap (x no-fleet peak deficit); charging cap fixed at 0.7x peak surplus")
+    ax[0].set_ylabel("% of instances INFEASIBLE")
+    ax[0].set_title("(a) the feasibility cliff: charge-only fails where V2G operates")
+    ax[0].legend(fontsize=8)
+    # (b) charging-cap effect at uncapped generation, matched per fleet size
+    ccs = sorted({r["chg_c"] for r in cp16 if not np.isfinite(r["gen_m"])},
+                 key=lambda x: (x == float("inf"), x))
+    xl = [("uncapped" if not np.isfinite(c) else f"{c:g}") for c in ccs]
+    NCOL = {20: "#2E75B6", 60: "#16a085", 120: "#7d3c98", 200: "#c0392b"}
+    for n in sorted({r["n_tasks"] for r in cp16}):
+        ys = []
+        for c in ccs:
+            v = []
+            for sd in range(6):
+                s = cidx16.get((float("inf"), c, n, sd, "solar"))
+                w = cidx16.get((float("inf"), c, n, sd, "v2g"))
+                if s and w and s.get("feasible", True) and w.get("feasible", True):
+                    v.append(100 * (s["total"] - w["total"]) / s["total"])
+            ys.append(float(np.mean(v)) if v else np.nan)
+        ax[1].plot(range(len(ccs)), ys, "-o", ms=5, color=NCOL.get(n, "#555"),
+                   label=f"{n} tasks")
+    ax[1].set_xticks(range(len(ccs))); ax[1].set_xticklabels(xl)
+    ax[1].set_xlabel("charging cap (x peak solar surplus); generation uncapped")
+    ax[1].set_ylabel("V2G saving vs charge-only (%), matched instances")
+    ax[1].set_title("(b) tight charging caps clip V2G's value")
+    ax[1].legend(fontsize=8, title="fleet size")
     finish(fig, "fig_8_16_caps.png")
     GALLERY.append("\n![fig 8.16](fig_8_16_caps.png)\n")
     caption("Figure 8.16",
-        "Infrastructure limits as a frontier rather than a single instance (pv = 2.5x, "
-        "20-200 tasks, 3 seeds; caps anchored to each instance's no-fleet peak deficit "
-        "and peak solar surplus). Left: V2G's saving over charge-only by cap "
-        "tightness, over instances where BOTH fleets are feasible. An uncapped "
-        "generator prices V2G at ~55%; capping generation near the no-fleet peak "
-        "raises it to ~85%, because peak shaving stops being optional -- the cap "
-        "converts V2G from an arbitrage play into capacity. Very tight charging caps "
-        "(0.35x peak surplus) clip the value instead, by limiting how much surplus "
-        "the fleet can absorb (the charging cap binds, chg_util ~ 1, in most V2G "
-        "solves). Right: the feasibility cliff. At a generation cap equal to the "
-        "no-fleet peak, the charge-only fleet is INFEASIBLE in every instance -- any "
-        "charging schedule pushes some block over the cap -- while the V2G fleet "
-        "remains feasible by discharging into its own charging peaks. Under tight "
-        "generation capacity, bidirectionality is not a saving but a prerequisite "
-        "for electrification.")
+        "Infrastructure limits at pv = 2.5x, caps anchored to each instance's "
+        "no-fleet peak deficit and peak solar surplus. (a) With a moderate "
+        "charging cap, tightening the generation cap toward the no-fleet peak "
+        "makes the charge-only fleet infeasible in every instance (any charging "
+        "schedule pushes some block over the cap) while the V2G fleet keeps "
+        "operating by discharging into its own charging peaks. (b) On matched "
+        "feasible instances at uncapped generation, tighter charging caps "
+        "monotonically clip V2G's saving by limiting how much surplus the fleet "
+        "can absorb; gaps in a line mean the tighter cap left no feasible "
+        "charge-only counterpart at that fleet size.")
 
 # %% Figure 8.17 -- pack size and charge rate: the fleet-as-storage capacity knob
 pk17 = []
