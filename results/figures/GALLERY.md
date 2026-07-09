@@ -163,7 +163,32 @@ Read top to bottom: this is the narrative order of the computational study.
 
 ![fig 8.18](fig_8_18_sched.png)
 
-**Figure 8.18.** Retiming at fixed gamma: for each cell, one task set (locations and energies fixed) is timetabled four ways -- uniformly over the working day, concentrated outside the surplus window (siesta), at night, or INSIDE the surplus window (midday) -- so demand, solar, traction, and hence gamma are identical across families by construction. (a) Fuel still spreads by 5-15% at mid solar: scheduling is a real lever that gamma cannot see. Direction: under the cyclic model with storage available, the folk prescription of freeing the midday for charging INVERTS -- uniform beats siesta at every solar level, because storage already captures the surplus while window-crowding roughly doubles the fleet (b) and pushes recharging against the demand peaks.
+**Figure 8.18.** The retiming verdict with the width confound removed. (a) Five timetable families, including a 14-start-hour siesta matching uniform's width, at uncapped charging: the siesta never has the lowest fuel in any regime, and for storage-poor fleets (charge-only, trucks-only) the winner is the midday-concentrated family, the opposite of the folk rule. (b) The mechanism, isolated: zeroing deadhead energy and truck cost collapses the spread across all five families to numerically zero, so with storage available the energy layer is timetable-invariant and every scheduling effect flows through fleet size and its deadhead overhead.
+
+
+![fig 8.19](fig_8_19_outage2.png)
+
+**Figure 8.19.** Fixed-asset contingency ladder: fleets are sized on the normal day (cap 1.5x the no-fleet peak), then assets are frozen and an evening generator outage window (4 or 8 hours) derates capacity. (a) Charge-only and trucks-only fleets fail in every instance at any derate; the full V2G stack keeps 92% of instances running with one of three generators lost, two thirds with two lost, and half through TOTAL loss of generation in the window. (b) Where it survives, the re-dispatched day costs at most a few percent more. A handful of no-outage cells read infeasible due to integer time limits, not the model.
+
+
+![fig 8.20](fig_8_20_endurance.png)
+
+**Figure 8.20.** Fuel endurance under a hard daily budget. Bars show the smallest budget, as a fraction of the no-fleet baseline burn, at which any feasible schedule exists. Charge-only fleets exceed 1.0 everywhere sampled: they can only ADD load, so electrifying without bidirectionality strictly shortens a fuel stock's endurance. Full V2G fleets run the entire base on 80% of baseline at modest solar and on as little as 5% at 2.5x solar with a small fleet: on a fixed stock, that is 20x the days of autonomy. (At 1.5x solar with 60 tasks the fleet's own traction exceeds what the surplus can cover, so V2G too needs more than baseline; endurance is an endowment story, like everything else in this study.)
+
+
+![fig 8.21](fig_8_21_wcities.png)
+
+**Figure 8.21.** The 365-day study replayed on four real 2023 climates with the identical array (each city's hourly ERA5 irradiance drives the same panels).  Mean daily V2G value with 10th-90th percentile day bars: a Gulf desert base earns firm value (45% mean, 15% on the 10th-percentile day at 2x; 75%/53% at 3x), Seoul earns substantial but seasonal value, London roughly halves it, and a Tromso-latitude base earns little and nothing for much of the year. Climate enters exactly as the endowment gamma predicts, day by day.
+
+
+![fig 8.22](fig_8_22_satfix2.png)
+
+**Figure 8.22.** The diminishing-returns signature of Theorem 1, made visible by fixing the residual network: fleets and batteries are sized once at 2.0x solar and then held fixed while PV grows. Fuel falls at slope ~1 while the fixed storage can still reach unserved deficit, then bends and plateaus as the network's deliverability caps bind, exactly the concave fixed-profile mechanism (with endogenous assets the optimizer keeps buying batteries and the curve stays linear to the floor).
+
+
+![fig 8.23](fig_8_23_stoch.png)
+
+**Figure 8.23.** Committing schedules under uncertain weather: the truck routes, their charging plans, and the battery count are fixed on a candidate design day; on each of the 365 real days only the stationary battery dispatch and fossil generation re-optimize. Bars are expected daily cost per design-day candidate (teal = best; purple = the annual-mean day); the dashed line is the wait-and-see bound (full foresight, re-optimized daily). The best committed schedule lands within 5.6% (2x) and 9.7% (3x) of clairvoyance, so the deterministic backbone plus trivial recourse is nearly optimal; but the CHOICE of design day carries real risk: the annual-mean day gives +19%/+12%, and a winter design day up to +48%/+98%. Summer-designed schedules commit generous storage and charging plans that winter days simply scale back.
 
 **Parameter provenance** -- every empirical anchor used in this study:
 

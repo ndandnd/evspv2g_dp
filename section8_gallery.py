@@ -1265,46 +1265,255 @@ if pk17:
         "stationary storage are direct substitutes, so the trend toward larger EV "
         "packs mechanically shrinks the dedicated-storage capex a microgrid needs.")
 
-# %% Figure 8.18 -- SCHED: retiming at fixed gamma (the controlled counterexample)
-sc18 = []
-for _p in _glob.glob(os.path.join(ARX, "overnight8_sched_s*.json")):
-    sc18 += json.load(open(_p))
-if sc18:
-    FAMS18 = ["uniform", "midday", "siesta", "night"]
-    FC18 = {"uniform": "#2E75B6", "midday": "#16a085", "siesta": "#e08020", "night": "#7d3c98"}
-    fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.4), constrained_layout=True)
-    pvs18 = sorted({r["pv"] for r in sc18})
-    for f in FAMS18:
-        fu, tk = [], []
-        for pv in pvs18:
-            v = [r for r in sc18 if r["sched"] == f and r["pv"] == pv and r["n_tasks"] == 60
-                 and r["scenario"] == "v2g" and "total" in r]
-            fu.append(float(np.mean([r["g_units"] / 10 for r in v])) if v else np.nan)
-            tk.append(float(np.mean([r["trucks"] for r in v])) if v else np.nan)
-        ax[0].plot(pvs18, fu, "-o", ms=5, color=FC18[f], label=f)
-        ax[1].plot(pvs18, tk, "-o", ms=5, color=FC18[f], label=f)
-    ax[0].set_xlabel("PV build-out (x design size); gamma identical across families at each x")
-    ax[0].set_ylabel("daily fossil generation (MWh, V2G, 60 tasks)")
-    ax[0].set_title("(a) same tasks, same gamma: the timetable still moves fuel")
-    ax[0].legend(fontsize=8, title="timetable family")
-    ax[1].set_xlabel("PV build-out (x design size)")
-    ax[1].set_ylabel("trucks deployed (mean)")
-    ax[1].set_title("(b) the mechanism: crowded windows force parallel fleets")
-    ax[1].legend(fontsize=8, title="timetable family")
+# %% Figure 8.18 -- SCHED3 + THEORY: the retiming verdict, confound-free
+s318 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight10_sched3_s*.json")):
+    s318 += json.load(open(_p))
+th18 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight10_theory_s*.json")):
+    th18 += json.load(open(_p))
+if s318:
+    FAMS18 = ["uniform14", "uniform10", "siesta14", "siesta10", "midday6"]
+    FLAB18 = {"uniform14": "uniform\n(14h)", "uniform10": "uniform\n(10h)",
+              "siesta14": "siesta\n(14h)", "siesta10": "siesta\n(10h)",
+              "midday6": "midday\n(6h)"}
+    SC18 = [("solar", "#e08020", "charge-only"), ("v2g_fleet", "#16a085", "V2G trucks only"),
+            ("v2g", "#2E75B6", "full V2G")]
+    fig, ax = plt.subplots(1, 2, figsize=(12.8, 4.4), constrained_layout=True)
+    W = 0.25
+    for k, (scen, c, lab) in enumerate(SC18):
+        ys = []
+        for f in FAMS18:
+            v = [r["g_units"] / 10 for r in s318 if r["fam"] == f and not np.isfinite(r["kcap"])
+                 and r["scenario"] == scen and r.get("feasible")]
+            ys.append(float(np.mean(v)) if v else np.nan)
+        ax[0].bar([i + (k - 1) * W for i in range(len(FAMS18))], ys, W * 0.92, color=c, label=lab)
+    ax[0].set_xticks(range(len(FAMS18))); ax[0].set_xticklabels([FLAB18[f] for f in FAMS18])
+    ax[0].set_ylabel("daily fossil generation (MWh, mean over grid)")
+    ax[0].set_title("(a) equal-width windows included: the siesta still never wins")
+    ax[0].legend(fontsize=8)
+    if th18:
+        ys = [float(np.mean([r["g_units"] / 10 for r in th18 if r["fam"] == f and r["n_tasks"] == 80]))
+              for f in FAMS18]
+        ax[1].bar(range(len(FAMS18)), ys, 0.6, color="#9aa7b5")
+        ax[1].set_xticks(range(len(FAMS18))); ax[1].set_xticklabels([FLAB18[f] for f in FAMS18])
+        ax[1].set_ylabel("daily fossil generation (MWh, 80 tasks)")
+        sp = max(ys) - min(ys)
+        ax[1].set_title(f"(b) ablation: no deadheads, free trucks -- spread {sp:.3f} MWh")
+        ax[1].text(0.5, 0.9, "with the fleet-size channel removed,\nall five timetables burn identical fuel",
+                   ha="center", transform=ax[1].transAxes, fontsize=9, color="#444")
     finish(fig, "fig_8_18_sched.png")
     GALLERY.append("\n![fig 8.18](fig_8_18_sched.png)\n")
     caption("Figure 8.18",
-        "Retiming at fixed gamma: for each cell, one task set (locations and "
-        "energies fixed) is timetabled four ways -- uniformly over the working "
-        "day, concentrated outside the surplus window (siesta), at night, or "
-        "INSIDE the surplus window (midday) -- so demand, solar, traction, and "
-        "hence gamma are identical across families by construction. (a) Fuel "
-        "still spreads by 5-15% at mid solar: scheduling is a real lever that "
-        "gamma cannot see. Direction: under the cyclic model with storage "
-        "available, the folk prescription of freeing the midday for charging "
-        "INVERTS -- uniform beats siesta at every solar level, because storage "
-        "already captures the surplus while window-crowding roughly doubles the "
-        "fleet (b) and pushes recharging against the demand peaks.")
+        "The retiming verdict with the width confound removed. (a) Five timetable "
+        "families, including a 14-start-hour siesta matching uniform's width, at "
+        "uncapped charging: the siesta never has the lowest fuel in any regime, and "
+        "for storage-poor fleets (charge-only, trucks-only) the winner is the "
+        "midday-concentrated family, the opposite of the folk rule. (b) The "
+        "mechanism, isolated: zeroing deadhead energy and truck cost collapses the "
+        "spread across all five families to numerically zero, so with storage "
+        "available the energy layer is timetable-invariant and every scheduling "
+        "effect flows through fleet size and its deadhead overhead.")
+
+# %% Figure 8.19 -- OUTAGE2: fixed-asset contingency ladder
+o19 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight9_outage2_s*.json")):
+    o19 += json.load(open(_p))
+if o19:
+    DER19 = [1.0, 0.667, 0.333, 0.0]
+    fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.3), constrained_layout=True)
+    for scen, c, lab in (("solar", "#e08020", "charge-only"),
+                         ("v2g_fleet", "#16a085", "V2G trucks only"),
+                         ("v2g", "#2E75B6", "full V2G")):
+        ys = []
+        for d in DER19:
+            rows = [r for r in o19 if abs(r["derate"] - d) < .01 and r["scenario"] == scen]
+            ys.append(100 * sum(1 for r in rows if r.get("feasible")) / max(len(rows), 1))
+        ax[0].plot(range(len(DER19)), ys, "-o", ms=6, color=c, label=lab)
+    ax[0].set_xticks(range(len(DER19)))
+    ax[0].set_xticklabels(["no outage", "1 of 3 lost", "2 of 3 lost", "total loss"])
+    ax[0].set_ylabel("% of instances with a feasible schedule")
+    ax[0].set_title("(a) evening generator outage, assets fixed at normal-day sizing")
+    ax[0].legend(fontsize=8)
+    xs, med, lo, hi = [], [], [], []
+    for d in DER19:
+        v = [100 * (r["total"] - r["stage1_total"]) / r["stage1_total"] for r in o19
+             if abs(r["derate"] - d) < .01 and r["scenario"] == "v2g"
+             and r.get("feasible") and r.get("stage1_total")]
+        if v:
+            xs.append(d); med.append(float(np.median(v)))
+            lo.append(float(np.percentile(v, 10))); hi.append(float(np.percentile(v, 90)))
+    ax[1].fill_between(range(len(xs)), lo, hi, color="#2E75B6", alpha=0.15)
+    ax[1].plot(range(len(xs)), med, "-o", ms=6, color="#2E75B6")
+    ax[1].set_xticks(range(len(xs)))
+    ax[1].set_xticklabels(["no outage", "1 of 3 lost", "2 of 3 lost", "total loss"][:len(xs)])
+    ax[1].set_ylabel("cost increase vs normal day (%, V2G, feasible instances)")
+    ax[1].set_title("(b) the surviving fleet pays almost nothing to ride it out")
+    finish(fig, "fig_8_19_outage2.png")
+    GALLERY.append("\n![fig 8.19](fig_8_19_outage2.png)\n")
+    caption("Figure 8.19",
+        "Fixed-asset contingency ladder: fleets are sized on the normal day (cap "
+        "1.5x the no-fleet peak), then assets are frozen and an evening generator "
+        "outage window (4 or 8 hours) derates capacity. (a) Charge-only and "
+        "trucks-only fleets fail in every instance at any derate; the full V2G "
+        "stack keeps 92% of instances running with one of three generators lost, "
+        "two thirds with two lost, and half through TOTAL loss of generation in "
+        "the window. (b) Where it survives, the re-dispatched day costs at most a "
+        "few percent more. A handful of no-outage cells read infeasible due to "
+        "integer time limits, not the model.")
+
+# %% Figure 8.20 -- ENDUR2: the fuel floor (fixed daily budget)
+e20d = []
+for _p in _glob.glob(os.path.join(ARX, "overnight9_endur_s*.json")):
+    e20d += json.load(open(_p))
+if e20d:
+    import collections as _cl20
+    idx20 = _cl20.defaultdict(list)
+    for r in e20d:
+        idx20[(r["scenario"], r["pv"], r["n_tasks"], r["seed"])].append(r)
+    fig, ax = plt.subplots(figsize=(8.2, 4.4), constrained_layout=True)
+    cells20 = [(1.5, 20), (1.5, 60), (2.5, 20), (2.5, 60)]
+    xt = [f"{pv}x solar\n{n} tasks" for pv, n in cells20]
+    for k, (pv, n) in enumerate(cells20):
+        fmins = [min([r["frac"] for r in idx20[("v2g", pv, n, sd)] if r.get("feasible")], default=np.nan)
+                 for sd in (0, 1, 2)]
+        v = float(np.nanmean(fmins))
+        if np.isfinite(v):
+            ax.bar(k - 0.17, v, 0.32, color="#2E75B6", label="full V2G" if k == 0 else None)
+        else:
+            ax.annotate("V2G > 1.0 too", (k - 0.17, 1.02), ha="center", fontsize=8, color="#2E75B6")
+        ax.bar(k + 0.17, 1.0, 0.32, color="#e08020", alpha=0.55,
+               label="charge-only (censored)" if k == 0 else None)
+        ax.annotate("> 1.0", (k + 0.17, 1.02), ha="center", fontsize=9, color="#b06010")
+    ax.axhline(1.0, ls=":", color="#888", lw=1)
+    ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=8, color="#666",
+            transform=ax.get_yaxis_transform())
+    ax.set_xticks(range(len(cells20))); ax.set_xticklabels(xt)
+    ax.set_ylabel("minimum feasible daily fuel (fraction of no-fleet baseline)")
+    ax.set_title("the fuel floor: V2G fleets run the base on less fuel than no fleet at all")
+    ax.legend(fontsize=8)
+    finish(fig, "fig_8_20_endurance.png")
+    GALLERY.append("\n![fig 8.20](fig_8_20_endurance.png)\n")
+    caption("Figure 8.20",
+        "Fuel endurance under a hard daily budget. Bars show the smallest budget, "
+        "as a fraction of the no-fleet baseline burn, at which any feasible "
+        "schedule exists. Charge-only fleets exceed 1.0 everywhere sampled: they "
+        "can only ADD load, so electrifying without bidirectionality strictly "
+        "shortens a fuel stock's endurance. Full V2G fleets run the entire base "
+        "on 80% of baseline at modest solar and on as little as 5% at 2.5x solar "
+        "with a small fleet: on a fixed stock, that is 20x the days of autonomy. "
+        "(At 1.5x solar with 60 tasks the fleet's own traction exceeds what the "
+        "surplus can cover, so V2G too needs more than baseline; endurance is an "
+        "endowment story, like everything else in this study.)")
+
+# %% Figure 8.21 -- WCITIES: same array, four skies
+w21 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight9_wcities_s*.json")):
+    w21 += json.load(open(_p))
+if w21:
+    widx21 = {(r["city"], r["date"], r["pv"], r["scenario"]): r for r in w21 if r.get("feasible")}
+    CITIES21 = [("gulf_desert", "Gulf desert"), ("seoul", "Seoul"),
+                ("london", "London"), ("tromso", "Tromso")]
+    fig, ax = plt.subplots(figsize=(8.6, 4.5), constrained_layout=True)
+    for j, (pv, c) in enumerate(((2.0, "#2E75B6"), (3.0, "#16a085"))):
+        xs, mu, p10, p90 = [], [], [], []
+        for i, (key, lab) in enumerate(CITIES21):
+            days = {k[1] for k in widx21 if k[0] == key and k[2] == pv}
+            v = [100 * (widx21[(key, d, pv, "solar")]["total"] - widx21[(key, d, pv, "v2g")]["total"])
+                 / widx21[(key, d, pv, "solar")]["total"]
+                 for d in days if (key, d, pv, "solar") in widx21 and (key, d, pv, "v2g") in widx21]
+            xs.append(i + (j - 0.5) * 0.22); mu.append(np.mean(v))
+            p10.append(np.percentile(v, 10)); p90.append(np.percentile(v, 90))
+        ax.errorbar(xs, mu, yerr=[np.array(mu) - np.array(p10), np.array(p90) - np.array(mu)],
+                    fmt="o", ms=7, capsize=5, color=c, label=f"{pv:g}x panels")
+    ax.set_xticks(range(len(CITIES21))); ax.set_xticklabels([lab for _, lab in CITIES21])
+    ax.axhline(0, color="#888", lw=0.7)
+    ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
+    ax.set_title("same array, four skies: annual mean and 10th-90th percentile days (2023)")
+    ax.legend(fontsize=8)
+    finish(fig, "fig_8_21_wcities.png")
+    GALLERY.append("\n![fig 8.21](fig_8_21_wcities.png)\n")
+    caption("Figure 8.21",
+        "The 365-day study replayed on four real 2023 climates with the identical "
+        "array (each city's hourly ERA5 irradiance drives the same panels).  "
+        "Mean daily V2G value with 10th-90th percentile day bars: a Gulf desert "
+        "base earns firm value (45% mean, 15% on the 10th-percentile day at 2x; "
+        "75%/53% at 3x), Seoul earns substantial but seasonal value, London "
+        "roughly halves it, and a Tromso-latitude base earns little and nothing "
+        "for much of the year. Climate enters exactly as the endowment gamma "
+        "predicts, day by day.")
+
+# %% Figure 8.22 -- SATFIX2: Theorem 1's concavity under fixed assets
+sf22 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight9_satfix2_s*.json")):
+    sf22 += json.load(open(_p))
+if sf22:
+    fig, ax = plt.subplots(figsize=(7.6, 4.4), constrained_layout=True)
+    for n, c in ((20, "#2E75B6"), (60, "#16a085")):
+        pvs = sorted({r["pv"] for r in sf22})
+        med = [float(np.median([r["g_units"] / 10 for r in sf22 if r["pv"] == pv
+                                and r["n_tasks"] == n and r["scenario"] == "v2g"
+                                and r.get("feasible")]) or np.nan) for pv in pvs]
+        ax.plot(pvs, med, "-o", ms=5, color=c, label=f"{n} tasks (assets fixed at 2.0x sizing)")
+    ax.set_xlabel("PV build-out (x design size)")
+    ax.set_ylabel("daily fossil generation (MWh, V2G)")
+    ax.set_title("fixed fleet and storage: absorption saturates, fuel bends")
+    ax.legend(fontsize=8)
+    finish(fig, "fig_8_22_satfix2.png")
+    GALLERY.append("\n![fig 8.22](fig_8_22_satfix2.png)\n")
+    caption("Figure 8.22",
+        "The diminishing-returns signature of Theorem 1, made visible by fixing "
+        "the residual network: fleets and batteries are sized once at 2.0x solar "
+        "and then held fixed while PV grows. Fuel falls at slope ~1 while the "
+        "fixed storage can still reach unserved deficit, then bends and "
+        "plateaus as the network's deliverability caps bind, exactly the "
+        "concave fixed-profile mechanism (with endogenous assets the optimizer "
+        "keeps buying batteries and the curve stays linear to the floor).")
+
+# %% Figure 8.23 -- STOCH: committing a schedule under a year of weather
+st23 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight10_stoch_s*.json")):
+    st23 += json.load(open(_p))
+if st23:
+    fig, ax = plt.subplots(1, 2, figsize=(12.8, 4.4), constrained_layout=True)
+    for j, pv in enumerate((2.0, 3.0)):
+        ws = {r["date"]: r["total"] for r in st23 if r["kind"] == "ws" and r["pv"] == pv and r.get("feasible")}
+        wsm = float(np.mean(list(ws.values())))
+        cands = sorted({r["cand"] for r in st23 if r["kind"] == "eval"})
+        labs, vals = [], []
+        for cand in ["annual"] + [c for c in cands if c != "annual"]:
+            ev = {r["date"]: r["total"] for r in st23 if r["kind"] == "eval" and r["cand"] == cand
+                  and r["pv"] == pv and r.get("feasible")}
+            days = [d for d in ev if d in ws]
+            labs.append(cand); vals.append(float(np.mean([ev[d] for d in days])))
+        cols = ["#7d3c98" if l == "annual" else "#2E75B6" for l in labs]
+        k_best = int(np.argmin(vals)); cols[k_best] = "#16a085"
+        ax[j].bar(range(len(labs)), vals, color=cols)
+        ax[j].axhline(wsm, ls="--", color="#c0392b", lw=1.4,
+                      label=f"wait-and-see bound (${wsm:,.0f})")
+        ax[j].set_xticks(range(len(labs)))
+        ax[j].set_xticklabels([l.replace("m", "") if l != "annual" else "ann." for l in labs],
+                              fontsize=8)
+        ax[j].set_xlabel("design day used for the committed schedule (month)")
+        ax[j].set_ylabel("expected daily cost over 365 real days ($)")
+        ax[j].set_title(f"({'ab'[j]}) {pv:g}x panels: best commit +"
+                        f"{100 * (min(vals) - wsm) / wsm:.1f}% vs clairvoyance")
+        ax[j].legend(fontsize=8)
+    finish(fig, "fig_8_23_stoch.png")
+    GALLERY.append("\n![fig 8.23](fig_8_23_stoch.png)\n")
+    caption("Figure 8.23",
+        "Committing schedules under uncertain weather: the truck routes, their "
+        "charging plans, and the battery count are fixed on a candidate design "
+        "day; on each of the 365 real days only the stationary battery dispatch "
+        "and fossil generation re-optimize. Bars are expected daily cost per "
+        "design-day candidate (teal = best; purple = the annual-mean day); the "
+        "dashed line is the wait-and-see bound (full foresight, re-optimized "
+        "daily). The best committed schedule lands within 5.6% (2x) and 9.7% "
+        "(3x) of clairvoyance, so the deterministic backbone plus trivial "
+        "recourse is nearly optimal; but the CHOICE of design day carries real "
+        "risk: the annual-mean day gives +19%/+12%, and a winter design day up "
+        "to +48%/+98%. Summer-designed schedules commit generous storage and "
+        "charging plans that winter days simply scale back.")
 
 # %% Parameter provenance -- a source for every empirical anchor
 PROV = [
