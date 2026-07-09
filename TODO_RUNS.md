@@ -39,3 +39,7 @@ Added 2026-07-09 (post-send):
   whether trip coverage is a genuine decision variable in their cross-line
   strategy or a reallocation under fixed timetables, and to firm up the
   intro/lit differentiation accordingly.
+
+- Consider delta=25 kWh for the final experiment rerun: LATTICE shows the
+  50 kWh lattice overestimates the LP by ~0.7% (converged at 25; 12.5
+  identical) at negligible extra time. Cheap accuracy if we rerun anyway.
