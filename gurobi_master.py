@@ -50,6 +50,10 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
     for t in range(T):
         if np.isfinite(caps_t[t]):
             g[t].UB = float(caps_t[t])
+    chg = m.addVars(T, lb=0.0, name="chg")
+    dis = m.addVars(T, lb=0.0, name="dis")
+    s  = m.addVars(T + 1, lb=0.0, name="s")
+    Nb = m.addVar(lb=0.0, vtype=(GRB.INTEGER if integer else GRB.CONTINUOUS), name="Nb")
     _fb = getattr(inst, "fuel_budget", float("inf"))
     if np.isfinite(_fb):                      # daily fossil-fuel stock (endurance studies)
         m.addConstr(gp.quicksum(g[t] for t in range(T)) <= float(_fb), name="fuel_budget")
@@ -59,10 +63,6 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
     _nbf = getattr(inst, "nb_fixed", -1.0)
     if _nbf is not None and _nbf >= 0:        # fixed battery count (two-stage studies)
         m.addConstr(Nb == float(_nbf), name="nb_fixed")
-    chg = m.addVars(T, lb=0.0, name="chg")
-    dis = m.addVars(T, lb=0.0, name="dis")
-    s  = m.addVars(T + 1, lb=0.0, name="s")
-    Nb = m.addVar(lb=0.0, vtype=(GRB.INTEGER if integer else GRB.CONTINUOUS), name="Nb")
 
     m.setObjective(
         gp.quicksum(cols[r].cost(eps) * x[r] for r in range(R))
