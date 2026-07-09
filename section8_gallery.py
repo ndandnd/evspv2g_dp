@@ -462,20 +462,6 @@ if len(design) >= 10:
     ax.axvline(1.0, ls=":", color="#888")
     ax.text(1.02, 0.03, "gamma = 1: surplus equals fleet appetite", transform=ax.get_xaxis_transform(),
             fontsize=8.5, color="#666")
-    # twin-pair annotation: very different bases, same R, same value
-    twin_a = next((r for r in pg if _basep(r) and r.get("points") == 2 and r.get("pv") == 1.0
-                   and r.get("eps") == 2.0 and "v2g_vs_solar_pct" in r), None)
-    twin_b = next((r for r in pg if _basep(r) and r.get("points") == 4 and r.get("pv") == 2.0
-                   and r.get("eps") == 2.0 and "v2g_vs_solar_pct" in r), None)
-    if twin_a and twin_b:
-        for t in (twin_a, twin_b):
-            ax.scatter([t["ratio"]], [t["v2g_vs_solar_pct"]], s=130, facecolors="none",
-                       edgecolors="#c0392b", lw=1.6, zorder=4)
-        ax.annotate("6x different fleet sizes,\nsame gamma, same value\n"
-                    f"(20 tasks: {twin_a['v2g_vs_solar_pct']:.1f}%, 120 tasks: {twin_b['v2g_vs_solar_pct']:.1f}%)",
-                    xy=(twin_a["ratio"], twin_a["v2g_vs_solar_pct"]),
-                    xytext=(1.7, 12), fontsize=8.5, color="#c0392b",
-                    arrowprops=dict(arrowstyle="->", color="#c0392b", lw=1.0))
     ax.set_xlabel("gamma = daily leftover solar / daily fleet driving energy  ('solar per unit of fleet appetite')")
     ax.set_ylabel("% of total daily cost saved by enabling V2G (gross)")
     ax.set_title("what is V2G worth, holding operations fixed? compute gamma, read the curve")
@@ -578,7 +564,7 @@ if eb:
         "the diminishing-returns mechanism (dotted lines are color-matched to their duty level).")
 # %% Figure 8.7 -- realistic solution timeline: 1-hour tasks, full-day schedule
 tlp = os.path.join(ARX, "overnight2_timeline.json")
-GANTT_SEED = None          # <- set to a seed number to flip through candidates; None = first
+GANTT_SEED = 4             # seed 4: cleanest lanes (3.5 tasks/truck, one single-task lane)
 if os.path.exists(tlp):
     tl = json.load(open(tlp))
     seeds_avail = sorted({v.get("seed", 5) for v in tl})
@@ -625,7 +611,7 @@ if os.path.exists(tlp):
                      f"{v['trucks']} trucks ({v['tasks_per_truck']} tasks/truck), "
                      f"{v['batteries']} batteries" + (f" -- {v['tag']}" if v.get("tag") else ""),
                      fontsize=9)
-    axes[-1].set_xlabel("hour of day   (slate = driving, green = free solar charge, "
+    axes[-1].set_xlabel("hour of day   (slate = serving a task, green = free solar charge, "
                         "black = paid charge, red = discharge)")
     finish(fig, "fig_8_7_timeline.png")
     GALLERY.append("\n![fig 8.7](fig_8_7_timeline.png)\n")
@@ -974,18 +960,19 @@ if sa13:
 
     fig, ax = plt.subplots(2, 2, figsize=(12.8, 8.6), constrained_layout=True)
     ax = ax.ravel()
-    for sol, mk in (("2x", "-o"), ("sum2x", "--s")):
-        for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
-            g = []
-            for L in LS13:
-                pp = _pairs13(L, sol, scen)
-                g.append(100 * float(np.mean([(a - b) / a for a, b in pp])) if pp else np.nan)
-            ax[0].plot(LS13, g, mk, color=c, ms=4,
-                       label=f"{'EVSP-Solar' if scen == 'solar' else 'EVSP-V2G'}, {TIT9.get(sol, sol)}")
-    ax[0].axhline(0, color="#888", lw=0.7)
-    ax[0].set_xlabel("number of task locations L"); ax[0].set_ylabel("total-cost saving from chargers everywhere (%)")
-    ax[0].set_title("(a) value of distributed charging grows with the map")
-    ax[0].legend(fontsize=8, loc="lower right")
+    def _mean_lp(L, sol, scen, st):
+        v = [_lp13(r) for (l, s, n, sd, st_, sc), r in _idx13.items()
+             if (l, s, st_, sc) == (L, sol, st, scen)]
+        return float(np.mean(v)) if v else np.nan
+    for scen, c, base_lab in (("solar", "#e08020", "EVSP-Solar"), ("v2g", "#2E75B6", "EVSP-V2G")):
+        for st, ls in (("depot", "--"), ("all", "-")):
+            ys = [_mean_lp(L, "2x", scen, st) / 1000 for L in LS13]
+            ax[0].plot(LS13, ys, ls, marker="o", ms=4, color=c,
+                       label=f"{base_lab}, {'depot charger only' if st == 'depot' else 'chargers everywhere'}")
+    ax[0].set_xlabel("number of task locations L")
+    ax[0].set_ylabel("mean total daily cost (k$, LP bound; 2x solar)")
+    ax[0].set_title("(a) absolute costs: V2G below charge-only; chargers narrow the gap")
+    ax[0].legend(fontsize=7.5)
     for st, c, lab in (("depot", "#888888", "charger at depot only"),
                        ("all", "#16a085", "charger at every location")):
         b = []
@@ -1010,22 +997,20 @@ if sa13:
     ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
     ax[2].set_title("(c) V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=8)
     # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
-    NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", None)]
+    NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", 12.25)]
     for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
         xs_f, ys_f = [], []
         for st, nch in NARMS:
-            pp = []
-            for L in (8, 10, 12, 15):
-                pp += [100 * (a - b) / a for a, b in _pairs13(L, "2x", scen, st2=st)]
-            if pp:
-                xs_f.append(nch if nch is not None else 12.25)   # 'all' ~ mean(L)+1
-                ys_f.append(float(np.mean(pp)))
+            v = [_lp13(r) for (l, s, n, sd, st_, sc), r in _idx13.items()
+                 if l in (8, 10, 12, 15) and (s, st_, sc) == ("2x", st, scen)]
+            if v:
+                xs_f.append(nch); ys_f.append(float(np.mean(v)) / 1000)
         ax[3].plot(xs_f, ys_f, "-o", color=c, ms=5,
                    label="EVSP-Solar" if scen == "solar" else "EVSP-V2G")
-    ax[3].axhline(0, color="#888", lw=0.7)
-    ax[3].set_xlabel("number of charging locations (depot + k)")
-    ax[3].set_ylabel("total-cost saving vs depot-only (%)")
-    ax[3].set_title("(d) charger build-out: diminishing returns"); ax[3].legend(fontsize=8)
+    ax[3].set_xlabel("number of charging locations (depot + k); large maps, 2x solar")
+    ax[3].set_ylabel("mean total daily cost (k$, LP bound)")
+    ax[3].set_title("(d) charger build-out: concave gains, V2G dominant throughout")
+    ax[3].legend(fontsize=8)
     finish(fig, "fig_8_13_stations.png")
     GALLERY.append("\n![fig 8.13](fig_8_13_stations.png)\n")
     caption("Figure 8.13",
