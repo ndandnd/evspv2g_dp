@@ -26,3 +26,16 @@ Medium code work (third wave):
 - NREL-style generator-reliability post-processing layer (survival
   probabilities around the deterministic schedules; needed before making any
   outage-survival claims in the paper beyond feasibility).
+
+Added 2026-07-09 (post-send):
+- SCHED (overnight8, ready to queue): the retiming study -- same tasks, four
+  timetable families (uniform / siesta / night / midday-occupied) at identical
+  gamma, across 5 solar levels x 3 fleet sizes x 3 seeds. Revives the
+  breaks-vs-uniform table as a controlled counterexample to reading gamma as
+  the whole story; also plot "value of retiming" vs gamma (hypothesis: peaks
+  in the transition region). Feeds a new table + small figure in Sec 8.4.
+- Zhou/An/Schmoecker (2025) full text: obtain via library access or author
+  copy (T&F paywalled; only the abstract is verified). Needed to check
+  whether trip coverage is a genuine decision variable in their cross-line
+  strategy or a reallocation under fixed timetables, and to firm up the
+  intro/lit differentiation accordingly.
