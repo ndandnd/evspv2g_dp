@@ -1528,6 +1528,9 @@ if st23:
         ax[j].set_title(f"({'ab'[j]}) {pv:g}x panels: best commit +"
                         f"{100 * (min(vals) - wsm) / wsm:.1f}% vs clairvoyance")
         ax[j].legend(fontsize=8)
+    ym = max(a.get_ylim()[1] for a in ax)
+    for a in ax:
+        a.set_ylim(0, ym)
     finish(fig, "fig_8_23_stoch.png")
     GALLERY.append("\n![fig 8.23](fig_8_23_stoch.png)\n")
     caption("Figure 8.23",

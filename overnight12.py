@@ -205,10 +205,70 @@ def pack3():
         print(f"  G={G} n={n} sd={sd}: gap={rows[-1].get('gap_pct')}", flush=True)
 
 
+def sun():
+    """Solar-shortfall twin of OUT3: assets sized on the forecast day, frozen,
+    then the sun underdelivers, uniformly (forecast bias / haze) or as a cloud
+    window (solar zeroed for 2-4 h). Same 2x2x3 grid and freeze as OUT3."""
+    from profile_robustness import base_curves
+    rows, path = ckpt(f"overnight12_sun_s{SH_I}of{SH_K}.json")
+    done = {(r["kind"], str(r["level"]), r["pv"], r["n_tasks"], r["seed"], r["scenario"])
+            for r in rows}
+    D, S = base_curves()
+    UNI = [0.9, 0.8, 0.7, 0.6, 0.5, 0.3, 0.1]      # fraction of forecast solar delivered
+    CLOUD = {"c10_12": (10, 12), "c12_14": (12, 14), "c14_16": (14, 16),
+             "c10_14": (10, 14), "c12_16": (12, 16)}  # hours with solar zeroed
+    arms = [("uniform", u) for u in UNI] + [("cloud", w) for w in CLOUD]
+    cells = [(sd, n, pv, scen) for sd in (0, 1, 2) for n in (20, 60)
+             for pv in (1.5, 2.5) for scen in ("solar", "v2g_fleet", "v2g")]
+    print(f"SUN: {len(cells)} bases x {len(arms)} arms, shard {SH_I}/{SH_K} "
+          f"({len(rows)} done)", flush=True)
+    for idx, (sd, n, pv, scen) in enumerate(cells):
+        if idx % SH_K != SH_I:
+            continue
+        if all((k, str(v), pv, n, sd, scen) in done for k, v in arms):
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        dh0 = np.round(D - pv * S).astype(int)
+        inst0 = build_instance(3, 2.0, BREAKS, trip_list=fleet, delta_hourly=dh0)
+        base_cap = 1.5 * float(np.maximum(inst0.Delta, 0.0).max())
+        inst0.gen_cap = base_cap
+        s1 = _solve12(inst0, scen, tl=120.0)
+        if s1 is None:
+            continue
+        for kind, v in arms:
+            if (kind, str(v), pv, n, sd, scen) in done:
+                continue
+            Sd = pv * S.copy()
+            if kind == "uniform":
+                Sd = v * Sd
+            else:
+                a, b = CLOUD[v]
+                Sd[a:b] = 0.0
+            inst = build_instance(3, 2.0, BREAKS, trip_list=fleet,
+                                  delta_hourly=np.round(D - Sd).astype(int))
+            inst.gen_cap = base_cap
+            inst.max_trucks = s1["trucks"]
+            inst.nb_fixed = float(s1["batteries"])
+            r = _solve12(inst, scen, tl=120.0)
+            base = {"kind": kind, "level": v, "pv": pv, "n_tasks": n, "seed": sd,
+                    "stage1_trucks": s1["trucks"], "stage1_batteries": s1["batteries"],
+                    "stage1_total": round(s1["total"], 1), **_stats(inst0)}
+            if r is None:
+                rows.append({**base, "scenario": scen, "feasible": False})
+            else:
+                rows.append({**base, "scenario": scen, "feasible": True,
+                             "total": round(r["total"], 1), "g_units": round(r["g_units"], 2),
+                             "trucks": r["trucks"], "batteries": r["batteries"],
+                             "gap_pct": round(r["gap"], 3)})
+            save(rows, path)
+        if idx % 6 == 0:
+            print(f"  [{idx + 1}/{len(cells)}, {len(rows)} rows]", flush=True)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
-    FN = {"DIAG": diag, "SPINE": spine, "END4": end4, "PACK3": pack3}
+    FN = {"DIAG": diag, "SPINE": spine, "END4": end4, "PACK3": pack3, "SUN": sun}
     for s in STUDIES:
         s = s.strip()
         if s in FN:
