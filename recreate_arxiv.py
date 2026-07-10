@@ -75,6 +75,14 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", "arxiv
 
 # trip windows (start hours are enumerated in [a, b) for each window)
 BREAKS  = [(4, 9), (18, 23)]   # the original run file: morning + evening, 10 start hours
+BREAKS2 = [(4, 9), (16, 21)]   # repaired evening window. Under the full-recharge
+                               # convention (s0=sT=G, depot charging, 350 kW) BREAKS has
+                               # TWO infeasibility modes: 22:00 starts cannot return to the
+                               # depot inside the horizon, and 21:00 starts return in time
+                               # but cannot restore full charge before midnight. Starts at
+                               # 16:00-20:00 leave >=3 post-return blocks: all 60 tasks
+                               # individually feasible. (Under the periodic convention
+                               # s0=sT free, the late tasks become feasible again.)
 UNIFORM = [(9, 19)]            # midday window with the SAME trip counts (10 start hours)
 SCAL    = [(4, 9)]             # single window: n(n-1)*5 trips -> 10..450 at 2..10 locations
 

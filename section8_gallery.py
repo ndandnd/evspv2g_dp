@@ -36,6 +36,13 @@ if not INTERACTIVE:
     matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+# consistent print-size typography across every figure (reviewer request):
+# legend/tick text near body-font size at final print scale
+plt.rcParams.update({
+    "font.size": 12, "axes.titlesize": 12, "axes.labelsize": 11.5,
+    "legend.fontsize": 10.5, "xtick.labelsize": 10.5, "ytick.labelsize": 10.5,
+})
+
 
 def finish(fig, fname: str):
     """Save the figure; show inline when interactive, close when scripted."""
@@ -369,7 +376,7 @@ if tt:
             for xg in (2.5, 3.5):
                 a_.axvline(xg, ls=":", lw=0.9, color="#5f8f5f")
         ax[0].text(3.0, 1.01, "measured heavy-duty EVs", ha="center",
-                   transform=ax[0].get_xaxis_transform(), fontsize=8, color="#4d774d")
+                   transform=ax[0].get_xaxis_transform(), fontsize=10, color="#4d774d")
         eff_grid = np.linspace(1.0, 3.6, 50)
         CPRE = {1.0: "#2E75B6", 1.5: "#e08020", 2.0: "#c0392b"}
         for prem in prems:
@@ -385,7 +392,7 @@ if tt:
         ax[0].set_xlabel("kWh of diesel an ICE burns per kWh an EV uses\n(1x = equal-energy bookkeeping)")
         ax[0].set_ylabel("$ saved per day by electrifying")
         ax[0].set_title("one fleet: value is an exact line; diamonds = break-even")
-        ax[0].legend(loc="upper left", fontsize=8.5)
+        ax[0].legend(loc="upper left", fontsize=10)
         if fleets84:
             CUSD = {0.0: "#2E75B6", 22.5: "#e08020", 45.0: "#c0392b"}
             for pu, c in CUSD.items():
@@ -395,12 +402,12 @@ if tt:
                                label=f"{1 + pu / 45:.1f}x ICE: mean {np.mean(v):.2f}, "
                                      f"p95 {np.percentile(v, 95):.2f}")
             ax[1].text(3.0, 1.01, "measured heavy-duty EVs", ha="center",
-                       transform=ax[1].get_xaxis_transform(), fontsize=8, color="#4d774d")
+                       transform=ax[1].get_xaxis_transform(), fontsize=10, color="#4d774d")
             ax[1].set_xlim(1.0, 3.6)
             ax[1].set_xlabel(f"break-even efficiency across {len(fleets84)} randomized fleets")
             ax[1].set_ylabel("number of fleets")
             ax[1].set_title("all fleets: the whole distribution stays left of reality")
-            ax[1].legend(fontsize=8.5, loc="upper right")
+            ax[1].legend(fontsize=10, loc="upper right")
         finish(fig, "fig_8_4_electrify.png")
         GALLERY.append("\n![fig 8.4](fig_8_4_electrify.png)\n")
         caption("Figure 8.4",
@@ -444,7 +451,7 @@ if len(design) >= 10:
     fig, ax = plt.subplots(figsize=(9, 5.2), constrained_layout=True)
     ax.axhspan(-3, 2, color="#fdf2e3", zorder=0)
     ax.text(0.985, 1.0, "below the computed enablement break-even (gamma* ~ 0.31-0.35; see text)", ha="right",
-            fontsize=8, color="#a07020", transform=ax.get_yaxis_transform())
+            fontsize=10, color="#a07020", transform=ax.get_yaxis_transform())
     xs_a = np.array([p[0] for p in sorted(design)]); ys_a = np.array([p[1] for p in sorted(design)])
     ax.set_xscale("log")                       # the action spans R ~ 0.05 to ~70
     ax.scatter(xs_a, ys_a, color="#9aa7b5", s=16, alpha=0.8,
@@ -465,11 +472,11 @@ if len(design) >= 10:
 
     ax.axvline(1.0, ls=":", color="#888")
     ax.text(1.02, 0.03, "gamma = 1: surplus equals fleet appetite", transform=ax.get_xaxis_transform(),
-            fontsize=8.5, color="#666")
+            fontsize=10, color="#666")
     ax.set_xlabel("gamma = daily leftover solar / daily fleet driving energy  ('solar per unit of fleet appetite')")
     ax.set_ylabel("% of total daily cost saved by enabling V2G (gross)")
     ax.set_title("what is V2G worth, holding operations fixed? compute gamma, read the curve")
-    ax.legend(loc="upper left", fontsize=8.5)
+    ax.legend(loc="upper left", fontsize=10)
     finish(fig, "fig_8_5_collapse.png")
     GALLERY.append("\n![fig 8.5](fig_8_5_collapse.png)\n")
     _twin_txt = "(e.g. a 20-task and a 6x-larger 120-task base at similar gamma save 6.5% and 9.2%)"
@@ -533,7 +540,7 @@ if eb:
                 if v:
                     xs_b.append(pv * 14.7); ys_b.append(np.median(v))
             ax2.plot(xs_b, ys_b, ":", color=col, lw=1.0, alpha=0.8)
-        ax2.set_ylabel("batteries deployed (dotted, per duty level)", fontsize=8, color="#666666")
+        ax2.set_ylabel("batteries deployed (dotted, per duty level)", fontsize=10, color="#666666")
         ax2.tick_params(labelsize=7, colors="#666666")
         ax.set_xlabel("available daily solar (MWh)")
         ax.set_title(title, fontsize=10)
@@ -543,7 +550,7 @@ if eb:
                             sharex=True, constrained_layout=True, squeeze=False)
     _panel(axs[0, 0], eb, "(a) 60 tasks: enough solar zeroes out ALL generation")
     axs[0, 0].set_ylabel("TOTAL daily fossil generation, base load + fleet (MWh)")
-    axs[0, 0].legend(title="energy per task", fontsize=8, title_fontsize=8)
+    axs[0, 0].legend(title="energy per task", fontsize=10, title_fontsize=10)
     if eb2:
         _panel(axs[0, 1], eb2, "(b) 150 tasks: heavy duties never reach zero")
     finish(fig, "fig_8_6_diminishing.png")
@@ -612,7 +619,7 @@ if os.path.exists(tlp):
         a_.set_title(f"truck \\${v['cv']:.0f}/day, " + bat_txt + ": "
                      f"{v['trucks']} trucks ({v['tasks_per_truck']} tasks/truck), "
                      f"{v['batteries']} batteries" + (f" -- {v['tag']}" if v.get("tag") else ""),
-                     fontsize=9)
+                     fontsize=10.5)
     axes[-1].set_xlabel("hour of day   (slate = serving a task, green = free solar charge, "
                         "black = paid charge, red = discharge)")
     finish(fig, "fig_8_7_timeline.png")
@@ -727,7 +734,7 @@ if md9:
         ax[1, j].set_xlabel("number of tasks")
     ax[0, 0].set_ylabel("daily fossil energy (MWh, ICE at 3.3x)")
     ax[1, 0].set_ylabel("trucks deployed")
-    ax[0, 0].legend(fontsize=8)
+    ax[0, 0].legend(fontsize=10)
     finish(fig, "fig_8_9_modes.png")
     GALLERY.append("\n![fig 8.9](fig_8_9_modes.png)\n")
     caption("Figure 8.9",
@@ -827,7 +834,7 @@ if cp and "v2g" in cp:
     ax[0].set_xlabel("hour of day"); ax[0].set_ylabel("dispatched fossil generation (kWh/block)")
     ax[0].set_title(f"same fleet, same tasks: V2G cuts daily fossil "
                     f"{cp['solar']['fossil_mwh']:.1f} -> {cp['v2g']['fossil_mwh']:.1f} MWh")
-    ax[0].legend(fontsize=8)
+    ax[0].legend(fontsize=10)
     ax[1].step(hrs, cp["solar"]["charge"], where="mid", color="#777777", lw=1.6,
                label="charging draw, conventional")
     ax[1].step(hrs, cp["v2g"]["charge"], where="mid", color="#2e9e3f", lw=1.8,
@@ -836,7 +843,7 @@ if cp and "v2g" in cp:
                   label=f"charging cap {cp['charge_cap']:.0f}")
     ax[1].set_xlabel("hour of day"); ax[1].set_ylabel("total charging draw (kWh/block)")
     ax[1].set_title("charging concentrates in the midday surplus, under the station cap")
-    ax[1].legend(fontsize=8)
+    ax[1].legend(fontsize=10)
     finish(fig, "fig_8_11_caps.png")
     GALLERY.append("\n![fig 8.11](fig_8_11_caps.png)\n")
     caption("Figure 8.11",
@@ -895,7 +902,7 @@ if vs12:
                 a.set_xlabel("PV build-out (x design size)")
         _shl = "standard day" if sh == "std" else "summer day (longer, brighter)"
         ax[i, 0].set_ylabel(f"daily fossil (MWh)\n{_shl}")
-    ax[0, 0].legend(fontsize=8)
+    ax[0, 0].legend(fontsize=10)
     # headline: the technology beats the panel field (first size where it holds)
     _pvmax = max(PV12)
     for _nn in NS12:
@@ -905,7 +912,7 @@ if vs12:
             _a = ax[0, list(NS12).index(_nn)]
             _a.annotate(f"V2G at 1x panels ({_fv1:.1f} MWh)\nbeats charge-only at "
                         f"{_pvmax:g}x panels ({_fsX:.1f} MWh)",
-                        xy=(1.0, _fv1), xytext=(1.55, _fv1 * 0.35), fontsize=8.5,
+                        xy=(1.0, _fv1), xytext=(1.55, _fv1 * 0.35), fontsize=10,
                         color="#2E75B6",
                         arrowprops=dict(arrowstyle="->", color="#2E75B6", lw=1.0))
             break
@@ -974,7 +981,7 @@ if sa13:
     ax[0].set_xlabel("number of task locations L")
     ax[0].set_ylabel("mean total daily cost (k$, LP bound; 2x solar)")
     ax[0].set_title("(a) absolute costs: V2G below charge-only; chargers narrow the gap")
-    ax[0].legend(fontsize=7.5)
+    ax[0].legend(fontsize=10.5)
     for st, c, lab in (("depot", "#888888", "charger at depot only"),
                        ("all", "#16a085", "charger at every location")):
         b = []
@@ -984,7 +991,7 @@ if sa13:
             b.append(float(np.mean(v)) if v else np.nan)
         ax[1].plot(LS13, b, "-o", color=c, ms=4, label=lab)
     ax[1].set_xlabel("number of task locations L"); ax[1].set_ylabel("stationary batteries bought (mean, 2x solar)")
-    ax[1].set_title("(b) distributed charging substitutes for stationary storage"); ax[1].legend(fontsize=8)
+    ax[1].set_title("(b) distributed charging substitutes for stationary storage"); ax[1].legend(fontsize=10)
     for sol, mk in (("1x", "-o"), ("2x", "-s"), ("summer", "--^"), ("sum2x", "--v")):
         vs = []
         for L in LS13:
@@ -997,7 +1004,7 @@ if sa13:
             vs.append(float(np.mean(pp)) if pp else np.nan)
         ax[2].plot(LS13, vs, mk, ms=4, label=TIT9.get(sol, sol))
     ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
-    ax[2].set_title("(c) V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=8)
+    ax[2].set_title("(c) V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=10)
     # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
     NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", 12.25)]
     for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
@@ -1012,7 +1019,7 @@ if sa13:
     ax[3].set_xlabel("number of charging locations (depot + k); large maps, 2x solar")
     ax[3].set_ylabel("mean total daily cost (k$, LP bound)")
     ax[3].set_title("(d) charger build-out: concave gains, V2G dominant throughout")
-    ax[3].legend(fontsize=8)
+    ax[3].legend(fontsize=10)
     finish(fig, "fig_8_13_stations.png")
     GALLERY.append("\n![fig 8.13](fig_8_13_stations.png)\n")
     caption("Figure 8.13",
@@ -1079,7 +1086,7 @@ if md14:
     ax[0].set_xlabel("number of daily tasks (fleet size)")
     ax[0].set_ylabel("extra fossil displaced by enabling V2G\nvs the charge-only fleet (MWh/day)")
     ax[0].set_title("the V2G advantage: grows with sun, fades with fleet size")
-    ax[0].legend(fontsize=8, title="solar level", ncol=2)
+    ax[0].legend(fontsize=10, title="solar level", ncol=2)
     xs14 = [sur / max(tr, 1e-9) for (_, sur, _, _, _, tr) in gap_pts if np.isfinite(sur)]
     ys14 = [g for (_, sur, _, _, g, _) in gap_pts if np.isfinite(sur)]
     order14 = np.argsort(xs14)
@@ -1101,7 +1108,7 @@ if md14:
     ax[1].set_xlabel("gamma = daily solar surplus / fleet traction (log)")
     ax[1].set_ylabel("extra fossil displaced by enabling V2G\nvs the charge-only fleet (MWh/day)")
     ax[1].set_title("the fade-out boundary is a level set of gamma")
-    ax[1].legend(fontsize=8)
+    ax[1].legend(fontsize=10)
     finish(fig, "fig_8_14_boundary.png")
     GALLERY.append("\n![fig 8.14](fig_8_14_boundary.png)\n")
     caption("Figure 8.14",
@@ -1139,11 +1146,11 @@ if et15:
                 xs.append(eta); ys.append(float(np.mean(v)))
         ax.plot(xs, ys, "-o", ms=4, color=PVC15.get(pv, "#555"), label=f"{pv}x solar")
     ax.axvspan(0.05, 0.15, color="#eef4ea", zorder=0)
-    ax.text(0.10, 0.97, "typical round-trip loss", ha="center", va="top", fontsize=8,
+    ax.text(0.10, 0.97, "typical round-trip loss", ha="center", va="top", fontsize=10,
             color="#4d774d", transform=ax.get_xaxis_transform())
     ax.set_xlabel("round-trip loss eta"); ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
     ax.set_title("losses rescale V2G's value; they do not move the dead zone")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
     finish(fig, "fig_8_15_eta.png")
     GALLERY.append("\n![fig 8.15](fig_8_15_eta.png)\n")
     caption("Figure 8.15",
@@ -1182,7 +1189,7 @@ if cp16:
     ax[0].set_xlabel("generation cap (x no-fleet peak deficit); charging cap fixed at 0.7x peak surplus")
     ax[0].set_ylabel("% of instances INFEASIBLE")
     ax[0].set_title("(a) the feasibility cliff: charge-only fails where V2G operates")
-    ax[0].legend(fontsize=8)
+    ax[0].legend(fontsize=10)
     # (b) charging-cap effect at uncapped generation, matched per fleet size
     ccs = sorted({r["chg_c"] for r in cp16 if not np.isfinite(r["gen_m"])},
                  key=lambda x: (x == float("inf"), x))
@@ -1204,7 +1211,7 @@ if cp16:
     ax[1].set_xlabel("charging cap (x peak solar surplus); generation uncapped")
     ax[1].set_ylabel("V2G saving vs charge-only (%), matched instances")
     ax[1].set_title("(b) tight charging caps clip V2G's value")
-    ax[1].legend(fontsize=8, title="fleet size")
+    ax[1].legend(fontsize=10, title="fleet size")
     finish(fig, "fig_8_16_caps.png")
     GALLERY.append("\n![fig 8.16](fig_8_16_caps.png)\n")
     caption("Figure 8.16",
@@ -1248,7 +1255,7 @@ if pk17:
     ax[0].set_xlabel("truck pack size (kWh)")
     ax[0].set_ylabel("fleet-only V2G saving vs charge-only\n(% of total daily cost)")
     ax[0].set_title("bigger packs raise fleet-as-storage value, with saturation")
-    ax[0].legend(fontsize=8)
+    ax[0].legend(fontsize=10)
     if pk2:
         for n, c in ((8, "#c0392b"), (60, "#2E75B6"), (120, "#16a085")):
             bs = []
@@ -1262,7 +1269,7 @@ if pk17:
         ax[1].set_xlabel("truck pack size (kWh)")
         ax[1].set_ylabel("stationary batteries bought (V2G, mean over draws)")
         ax[1].set_title("pack x workload: the substitution at 8-120 tasks (2x solar)")
-        ax[1].legend(fontsize=8)
+        ax[1].legend(fontsize=10)
     finish(fig, "fig_8_17_pack.png")
     GALLERY.append("\n![fig 8.17](fig_8_17_pack.png)\n")
     caption("Figure 8.17",
@@ -1300,7 +1307,7 @@ if s318:
     ax[0].set_xticks(range(len(FAMS18))); ax[0].set_xticklabels([FLAB18[f] for f in FAMS18])
     ax[0].set_ylabel("daily fossil generation (MWh, mean over grid)")
     ax[0].set_title("(a) equal-width windows included: the siesta still never wins")
-    ax[0].legend(fontsize=8)
+    ax[0].legend(fontsize=10)
     if th18:
         ys = [float(np.mean([r["g_units"] / 10 for r in th18 if r["fam"] == f and r["n_tasks"] == 80]))
               for f in FAMS18]
@@ -1310,7 +1317,7 @@ if s318:
         sp = max(ys) - min(ys)
         ax[1].set_title(f"(b) ablation: no deadheads, free trucks -- spread {sp:.3f} MWh")
         ax[1].text(0.5, 0.9, "with the fleet-size channel removed,\nall five timetables burn identical fuel",
-                   ha="center", transform=ax[1].transAxes, fontsize=9, color="#444")
+                   ha="center", transform=ax[1].transAxes, fontsize=10.5, color="#444")
     finish(fig, "fig_8_18_sched.png")
     GALLERY.append("\n![fig 8.18](fig_8_18_sched.png)\n")
     caption("Figure 8.18",
@@ -1344,9 +1351,9 @@ if o19:
                         and r["scenario"] == scen]
                 ys.append(100 * sum(1 for r in rows if r.get("feasible")) / max(len(rows), 1))
             a.plot(range(len(DER19)), ys, "-o", ms=5, color=c, label=lab)
-        a.set_xticks(range(len(DER19))); a.set_xticklabels(XL19, fontsize=8)
+        a.set_xticks(range(len(DER19))); a.set_xticklabels(XL19, fontsize=10)
         a.set_ylabel("% of instances with a feasible schedule"); a.set_ylim(-4, 104)
-        a.set_title(ttl, fontsize=10); a.legend(fontsize=8)
+        a.set_title(ttl, fontsize=10); a.legend(fontsize=10)
     finish(fig, "fig_8_19_outage2.png")
     GALLERY.append("\n![fig 8.19](fig_8_19_outage2.png)\n")
     caption("Figure 8.19",
@@ -1387,26 +1394,26 @@ if e20d:
         ax.bar(k - 0.34, vsp_floor, 0.30, color="#888888",
                label="ICE fleet (analytic floor)" if k == 0 else None)
         ax.annotate(f"{vsp_floor:.1f}", (k - 0.34, vsp_floor + 0.02), ha="center",
-                    fontsize=9, color="#555")
+                    fontsize=10.5, color="#555")
         v = _floor20("v2g", pv, n)
         ax.bar(k + 0.02, v, 0.30, color="#2E75B6", label="full V2G" if k == 0 else None)
-        ax.annotate(f"{v:.2f}", (k + 0.02, v + 0.02), ha="center", fontsize=9, color="#2E75B6")
+        ax.annotate(f"{v:.2f}", (k + 0.02, v + 0.02), ha="center", fontsize=10.5, color="#2E75B6")
         s = _floor20("solar", pv, n)
         if np.isfinite(s):
             ax.bar(k + 0.34, s, 0.30, color="#e08020",
                    label="charge-only" if k == 0 else None)
-            ax.annotate(f"{s:.2f}", (k + 0.34, s + 0.02), ha="center", fontsize=9, color="#b06010")
+            ax.annotate(f"{s:.2f}", (k + 0.34, s + 0.02), ha="center", fontsize=10.5, color="#b06010")
         else:
             ax.bar(k + 0.34, CEN, 0.30, color="#e08020")
-            ax.annotate("$\\geq$ 1.4", (k + 0.34, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
+            ax.annotate("$\\geq$ 1.4", (k + 0.34, CEN + 0.02), ha="center", fontsize=10.5, color="#b06010")
     ax.axhline(1.0, ls=":", color="#888", lw=1)
-    ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=8, color="#666",
+    ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=10, color="#666",
             transform=ax.get_yaxis_transform())
     ax.set_xticks(range(len(cells20))); ax.set_xticklabels(xt)
     ax.set_ylabel("minimum feasible daily fuel (fraction of no-fleet baseline)")
     ax.set_ylim(0, 4.25)
     ax.set_title("the fuel floor: V2G fleets run the base on less fuel than no fleet at all")
-    ax.legend(fontsize=7.5, loc="upper right")
+    ax.legend(fontsize=10.5, loc="upper right")
     finish(fig, "fig_8_20_endurance.png")
     GALLERY.append("\n![fig 8.20](fig_8_20_endurance.png)\n")
     caption("Figure 8.20",
@@ -1448,11 +1455,11 @@ if w21:
             p10.append(np.percentile(v, 10)); p90.append(np.percentile(v, 90))
         ax.errorbar(xs, mu, yerr=[np.array(mu) - np.array(p10), np.array(p90) - np.array(mu)],
                     fmt="o", ms=7, capsize=5, color=c, label=f"{pv:g}x panels")
-    ax.set_xticks(range(len(CITIES21))); ax.set_xticklabels([lab for _, lab in CITIES21], fontsize=9)
+    ax.set_xticks(range(len(CITIES21))); ax.set_xticklabels([lab for _, lab in CITIES21], fontsize=10.5)
     ax.axhline(0, color="#888", lw=0.7)
     ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
     ax.set_title("same array, five skies: annual mean and 10th-90th percentile days (2023)")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
     finish(fig, "fig_8_21_wcities.png")
     GALLERY.append("\n![fig 8.21](fig_8_21_wcities.png)\n")
     caption("Figure 8.21",
@@ -1480,7 +1487,7 @@ if sf22:
     ax.set_xlabel("PV build-out (x design size)")
     ax.set_ylabel("daily fossil generation (MWh, V2G)")
     ax.set_title("fixed fleet and storage: absorption saturates, fuel bends")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
     finish(fig, "fig_8_22_satfix2.png")
     GALLERY.append("\n![fig 8.22](fig_8_22_satfix2.png)\n")
     caption("Figure 8.22",
@@ -1522,12 +1529,12 @@ if st23:
                    label="perfect foresight within that month (seasonal floor)")
         ax[j].set_xticks(range(len(labs)))
         ax[j].set_xticklabels([l.replace("m", "") if l != "annual" else "ann." for l in labs],
-                              fontsize=8)
+                              fontsize=10)
         ax[j].set_xlabel("design day used for the committed schedule (month)")
         ax[j].set_ylabel("expected daily cost over 365 real days ($)")
         ax[j].set_title(f"({'ab'[j]}) {pv:g}x panels: best commit +"
                         f"{100 * (min(vals) - wsm) / wsm:.1f}% vs clairvoyance")
-        ax[j].legend(fontsize=8)
+        ax[j].legend(fontsize=10)
     ym = max(a.get_ylim()[1] for a in ax)
     for a in ax:
         a.set_ylim(0, ym)

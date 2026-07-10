@@ -143,9 +143,11 @@ def solve_milp_gurobi(inst: Instance, cols: list[Column], time_limit: float = 12
     if m.SolCount == 0:                       # no feasible integer solution found (e.g. time-out)
         return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
                            np.zeros(n), np.zeros(T), True)
+    import gurobipy as _grb
+    status = "optimal" if m.Status == _grb.GRB.OPTIMAL else "feasible"
     xv = np.array([x[r].X for r in range(R)])
     gv = np.array([g[t].X for t in range(T)])
     cv = np.array([chg[t].X for t in range(T)])
     dv = np.array([dis[t].X for t in range(T)])
-    return RMPSolution("optimal", m.ObjVal, xv, gv, np.zeros(n), np.zeros(T),
+    return RMPSolution(status, m.ObjVal, xv, gv, np.zeros(n), np.zeros(T),
                        True, Nb.X, cv, dv)

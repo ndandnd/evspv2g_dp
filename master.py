@@ -248,10 +248,14 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
     if pulp.value(p.objective) is None:
         return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
                            np.zeros(n), np.zeros(T), True)
+    # honest status: CBC at a time limit returns an incumbent, not a proven optimum
+    sol_st = getattr(p, "sol_status", None)
+    status = "optimal" if (st == pulp.LpStatusOptimal
+                           and sol_st in (None, pulp.LpSolutionOptimal)) else "feasible"
     xv = np.array([v.value() or 0.0 for v in x])
     gv = np.array([v.value() or 0.0 for v in g])
     cv = np.array([v.value() or 0.0 for v in chg]); dv = np.array([v.value() or 0.0 for v in dis])
-    return RMPSolution("optimal", pulp.value(p.objective), xv, gv, np.zeros(n), np.zeros(T),
+    return RMPSolution(status, pulp.value(p.objective), xv, gv, np.zeros(n), np.zeros(T),
                        True, Nb.value() or 0.0, cv, dv)
 
 

@@ -158,7 +158,7 @@ Read top to bottom: this is the narrative order of the computational study.
 
 ![fig 8.17](fig_8_17_pack.png)
 
-**Figure 8.17.** The truck pack as the fleet-as-storage capacity knob (8-120 tasks, 2 seeds, 350 kW charging; stationary-battery cost held fixed per kWh as pack size varies). Left: the value of fleet-only V2G (no stationary storage installed) over charge-only rises steeply from a 350 kWh pack to the 700 kWh baseline (dotted) and saturates by ~1 MWh -- consistent with Fig. 8.12's reading that bidirectional trucks alone shave a slice limited by pack capacity. Right: in the full V2G stack the optimizer's stationary-battery purchases fall by a factor of 4-5 as packs grow from 350 to 1400 kWh: pack capacity and stationary storage are direct substitutes, so the trend toward larger EV packs mechanically shrinks the dedicated-storage capex a microgrid needs.
+**Figure 8.17.** The truck pack as the fleet-as-storage capacity knob. Left: fleet-only V2G value vs pack size (8-120 tasks pooled, two task draws per size, 350 kW charging; stationary-battery cost held fixed per kWh). Right: the pack x workload interaction from the dense grid (8-200 tasks, three task draws, 2x solar): stationary-battery purchases fall as packs grow at every workload; the fleet-as-storage substitution is not a small-fleet artifact.
 
 
 ![fig 8.18](fig_8_18_sched.png)
@@ -168,12 +168,12 @@ Read top to bottom: this is the narrative order of the computational study.
 
 ![fig 8.19](fig_8_19_outage2.png)
 
-**Figure 8.19.** Fixed-asset contingency ladder: fleets are sized on the normal day (cap 1.5x the no-fleet peak), then assets are frozen and an evening generator outage window (4 or 8 hours) derates capacity. (a) Charge-only and trucks-only fleets fail in every instance at any derate; the full V2G stack keeps 92% of instances running with one of three generators lost, two thirds with two lost, and half through TOTAL loss of generation in the window. (b) Where it survives, the re-dispatched day costs at most a few percent more. A handful of no-outage cells read infeasible due to integer time limits, not the model.
+**Figure 8.19.** Fixed-asset contingency ladder at fifths resolution, window-resolved (12 instances per morning point, 24 per evening point: 2 fleet sizes x 2 solar levels x 3 task draws x windows). Evening outages need bidirectionality: charge-only and trucks-only fleets die below -20% derates, V2G holds 92% at -20% and half through total loss. Morning outages before the solar day are survivable by ANY fleet down to -60% (the base morning load is low and packs are full), and V2G extends even that to -80%. (c) Survivors pay a few percent.
 
 
 ![fig 8.20](fig_8_20_endurance.png)
 
-**Figure 8.20.** Fuel endurance under a hard daily budget. Bars show the smallest budget, as a fraction of the no-fleet baseline burn, at which any feasible schedule exists. Charge-only fleets exceed 1.0 everywhere sampled: they can only ADD load, so electrifying without bidirectionality strictly shortens a fuel stock's endurance. Full V2G fleets run the entire base on 80% of baseline at modest solar and on as little as 5% at 2.5x solar with a small fleet: on a fixed stock, that is 20x the days of autonomy. (At 1.5x solar with 60 tasks the fleet's own traction exceeds what the surplus can cover, so V2G too needs more than baseline; endurance is an endowment story, like everything else in this study.)
+**Figure 8.20.** Fuel endurance under a hard daily budget, budgets swept 0.05-1.4x. Bars show the smallest budget, as a fraction of the no-fleet baseline burn, at which any feasible schedule exists (mean over three task draws). Charge-only floors are now MEASURED at 20 tasks: 1.2x baseline; at 60 tasks they exceed 1.4x (censored). Electrifying without bidirectionality strictly shortens a fuel stock's endurance. Full V2G runs the entire base+fleet on 0.80x at modest solar and 0.05x at 2.5x solar with a small fleet; at 1.5x/60 the fleet traction outruns the surplus and V2G needs 1.3x. ICE floors are analytic: base burn + 3.3x traction.
 
 
 ![fig 8.21](fig_8_21_wcities.png)

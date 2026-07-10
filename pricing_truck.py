@@ -31,7 +31,32 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
        ice=True            -> ICE truck: no grid coupling, traction is fuel (energy
                               constraints disabled), pure time-feasible coverage (VSP).
        allow_discharge=False -> EV with charge-only (no V2G), as in EVSP-Solar.
+       soc_mode="periodic" -> steady-state convention s0 = sT with the repeated level
+                              free: the core DP runs once per start level and the best
+                              negative-reduced-cost candidates over all levels are
+                              returned (full-recharge s0 = sT = G is the special case
+                              of the single top level).
     """
+    if soc_mode == "periodic":
+        nL = int(round(inst.G / (step or getattr(inst, "soc_step", 5.0)))) + 1
+        out = []
+        for s0 in range(nL):
+            out += _price_truck_dp_core(inst, alpha, mu, step=step, tol=tol,
+                                        allow_charge=allow_charge,
+                                        allow_discharge=allow_discharge, ice=ice,
+                                        nu=nu, soc_mode="periodic", s0_idx=s0)
+        return sorted(out, key=lambda cr: cr[1])
+    return _price_truck_dp_core(inst, alpha, mu, step=step, tol=tol,
+                                allow_charge=allow_charge,
+                                allow_discharge=allow_discharge, ice=ice,
+                                nu=nu, soc_mode=soc_mode, s0_idx=None)
+
+
+def _price_truck_dp_core(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
+                         step: float = None, tol: float = 1e-6,
+                         allow_charge: bool = True, allow_discharge: bool = True,
+                         ice: bool = False, nu: np.ndarray = None,
+                         soc_mode: str = "cyclic", s0_idx: int = None):
     if step is None:                                 # per-instance SoC lattice (default 5 kWh)
         step = getattr(inst, "soc_step", 5.0)
     T = inst.T
@@ -70,8 +95,9 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
     # extra binary dimension k in {0,1}: whether the route has covered >=1 trip.
     # A deployed truck is only worthwhile if it covers a trip (pure arbitrage is
     # dominated by a cheaper battery schedule), so the terminal requires k = 1.
+    si0 = Gidx if s0_idx is None else int(s0_idx)
     dp = np.full((T + 1, nLoc, nL, 2), INF)
-    dp[0, origin, Gidx, 0] = 0.0
+    dp[0, origin, si0, 0] = 0.0
 
     stations = list(getattr(inst, "charge_locs", None) or [origin])
 
@@ -121,6 +147,9 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
     if soc_mode == "free":
         term = dp[T, origin, :, 1]
         best_si = int(np.argmin(term)); best = float(term[best_si])
+    elif soc_mode == "periodic":
+        best_si = si0                             # end exactly at the (free) start level
+        best = dp[T, origin, si0, 1]
     else:
         best_si = Gidx
         best = dp[T, origin, Gidx, 1]
@@ -135,7 +164,7 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
         trips_end.setdefault((tr.end, tr.eloc), []).append(tr)
     t, loc, si, k = T, origin, best_si, 1
     guard = 0
-    while not (t == 0 and loc == origin and si == Gidx and k == 0) and guard < 12 * T:
+    while not (t == 0 and loc == origin and si == si0 and k == 0) and guard < 12 * T:
         guard += 1
         v = dp[t, loc, si, k]; found = False
         # wait (preserves k)

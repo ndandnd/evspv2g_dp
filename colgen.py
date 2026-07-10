@@ -25,6 +25,9 @@ SCENARIOS = {                          # (ice, allow_charge, allow_discharge, ba
                                         # charged kWh pays c_g flat; fleet does not touch
                                         # the power balance (energy folded into route cost)
     "solar": dict(ice=False, allow_charge=True,  allow_discharge=False, battery=False),
+    "solar_bess": dict(ice=False, allow_charge=True, allow_discharge=False, battery=True),
+                                        # charge-only trucks WITH purchasable stationary
+                                        # storage -- the missing factorial arm (V1G+BESS)
     "v2g":   dict(ice=False, allow_charge=True,  allow_discharge=True,  battery=True),
     "v2g_fleet": dict(ice=False, allow_charge=True, allow_discharge=True, battery=False),
                                         # V2G-capable fleet at a depot WITHOUT stationary
@@ -49,6 +52,10 @@ def single_trip_column(inst: Instance, tr, ice: bool = False, free_start: bool =
     so no recharge is needed (e = 0). ICE (VSP): traction is fuel, e = 0."""
     a = np.zeros(inst.n_trips); a[tr.idx] = 1.0
     e = np.zeros(inst.T)
+    o0 = inst.depot
+    if tr.start - inst.deadhead_time(o0, tr.sloc) < 0 or \
+       tr.end + inst.deadhead_time(tr.eloc, o0) > inst.T:
+        return None                                   # cannot pull out and return in-horizon
     if not ice and not free_start:
         o = inst.depot
         trac = tr.energy + inst.deadhead_energy(o, tr.sloc) + inst.deadhead_energy(tr.eloc, o)
@@ -56,14 +63,17 @@ def single_trip_column(inst: Instance, tr, ice: bool = False, free_start: bool =
         dep = tr.start - inst.deadhead_time(o, tr.sloc)
         ret = tr.end + inst.deadhead_time(tr.eloc, o)
         # AFTER-return blocks only: the vehicle starts FULL, so charging before
-        # departure would overfill the battery -- the seed's SoC trajectory must be
-        # feasible (full -> trip -> recharge to full). If the post-return window is
-        # too short for the full need (rare late+heavy trips), the remainder falls
-        # back to pre-departure blocks; DP columns replace such seeds immediately.
+        # departure would overfill the battery. A seed is returned ONLY if the
+        # trip departs after t=0, returns to the depot within the horizon, and the
+        # post-return window can restore the full charge; otherwise the task has
+        # no feasible single-trip column and the caller must fall back to a
+        # Phase-I artificial column (an infeasible seed must never enter the pool).
+        if dep < 0 or ret > inst.T:
+            return None
         idle = list(range(min(inst.T, ret), inst.T))
         cap = len(idle) * inst.rho
         if cap < need - 1e-9:
-            idle = idle + list(range(0, max(0, dep)))
+            return None
         if idle:
             if np.isfinite(inst.charge_cap):       # spread uniformly so the initial pool
                 per = min(inst.rho, need / len(idle))   # respects the charging cap
@@ -107,10 +117,20 @@ def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None,
     return cols
 
 
+ARTIFICIAL_COST = 1e5                    # Phase-I penalty: any selected artificial
+                                         # column flags an individually infeasible task
+
+def artificial_column(inst: Instance, tr) -> Column:
+    a = np.zeros(inst.n_trips); a[tr.idx] = 1.0
+    return Column("artificial", a, np.zeros(inst.T), ARTIFICIAL_COST, label=f"art[{tr.idx}]")
+
+
 def initial_columns(inst: Instance, start: str, caps: dict,
                     soc_mode: str = "cyclic") -> list[Column]:
-    base = [single_trip_column(inst, tr, ice=caps["ice"], free_start=(soc_mode == "free"))
-            for tr in inst.trips]
+    base = []
+    for tr in inst.trips:
+        c = single_trip_column(inst, tr, ice=caps["ice"], free_start=(soc_mode == "free"))
+        base.append(c if c is not None else artificial_column(inst, tr))
     if start == "cold":
         return base
     extra = dp_greedy_columns(inst, caps, soc_mode=soc_mode)
@@ -175,7 +195,12 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
         if verbose and (iters % 10 == 0 or added == 0):
             print(f"  it {iters:3d} LP={lp.obj:9.1f} cols={len(cols):4d} best_rc={best_true:8.1f} added={added}")
         if added == 0:
+            converged, term_reason = True, "priced_out"
             break
+    else:
+        converged, term_reason = False, "max_iter"
+    if lp.status != "optimal":
+        converged, term_reason = False, "lp_" + lp.status
     # pool enrichment: price at perturbed duals to add diverse covering columns,
     # which shrinks the restricted-master integrality gap (the LP bound is unchanged).
     if enrich > 0 and lp.status == "optimal":
@@ -194,7 +219,9 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
                      solver=milp_solver, soc_mode=soc_mode) if do_milp else None
     return {"scenario": scenario, "lp_obj": lp.obj, "mip_obj": (mip.obj if mip else None),
             "iters": iters, "n_cols": len(cols), "time": lp_time, "pricing_time": pricing_t,
-            "lp": lp, "mip": mip, "cols": cols}
+            "lp": lp, "mip": mip, "cols": cols,
+            "converged": converged, "term_reason": term_reason,
+            "artificial_selected": None}
 
 
 def summarize(inst: Instance, res: dict) -> dict:
