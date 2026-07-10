@@ -40,6 +40,10 @@ import matplotlib.pyplot as plt
 def finish(fig, fname: str):
     """Save the figure; show inline when interactive, close when scripted."""
     fig.savefig(os.path.join(FIG, fname), dpi=140)
+    root, ext = os.path.splitext(fname)
+    if ext.lower() == ".png":
+        # vector sibling for journal submission (Springer asks for vector art)
+        fig.savefig(os.path.join(FIG, root + ".pdf"))
     if INTERACTIVE:
         plt.show()
     else:
@@ -1215,55 +1219,60 @@ if cp16:
         "can absorb; gaps in a line mean the tighter cap left no feasible "
         "charge-only counterpart at that fleet size.")
 
-# %% Figure 8.17 -- pack size and charge rate: the fleet-as-storage capacity knob
+# %% Figure 8.17 -- pack size: capacity knob + substitution across workloads
 pk17 = []
 for _p in _glob.glob(os.path.join(ARX, "overnight4_pack_s*.json")):
     pk17 += json.load(open(_p))
+pk2 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight11_pack2_s*.json")):
+    pk2 += json.load(open(_p))
 if pk17:
     pidx17 = {(r["G"], r["rho"], r["pv"], r["n_tasks"], r["seed"], r["scenario"]): r
               for r in pk17}
     fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.4), constrained_layout=True)
     GS17 = [3.5, 7.0, 10.5, 14.0]
     for pv, c in ((2.0, "#2E75B6"), (4.0, "#16a085")):
-        vs, bs = [], []
+        vs = []
         for G in GS17:
-            v, b = [], []
+            v = []
             for (g_, rh, p, n, sd, sc), r in pidx17.items():
-                if (g_, rh, p) != (G, 1.75, pv):
+                if (g_, rh, p) != (G, 1.75, pv) or sc != "solar":
                     continue
-                if sc == "solar":
-                    w = pidx17.get((g_, rh, p, n, sd, "v2g_fleet"))
-                    if w:
-                        v.append(100 * (r["total"] - w["total"]) / r["total"])
-                if sc == "v2g":
-                    b.append(r["batteries"])
+                w = pidx17.get((g_, rh, p, n, sd, "v2g_fleet"))
+                if w:
+                    v.append(100 * (r["total"] - w["total"]) / r["total"])
             vs.append(float(np.mean(v)) if v else np.nan)
-            bs.append(float(np.mean(b)) if b else np.nan)
         ax[0].plot([g * 100 for g in GS17], vs, "-o", ms=5, color=c,
                    label=f"{pv:g}x solar")
-        ax[1].plot([g * 100 for g in GS17], bs, "-o", ms=5, color=c,
-                   label=f"{pv:g}x solar")
     ax[0].axvline(700, ls=":", color="#888", lw=1)
-    ax[0].set_xlabel("truck pack size (kWh)"); ax[0].set_ylabel("fleet-only V2G saving vs charge-only\n(% of total daily cost)")
+    ax[0].set_xlabel("truck pack size (kWh)")
+    ax[0].set_ylabel("fleet-only V2G saving vs charge-only\n(% of total daily cost)")
     ax[0].set_title("bigger packs raise fleet-as-storage value, with saturation")
     ax[0].legend(fontsize=8)
-    ax[1].axvline(700, ls=":", color="#888", lw=1)
-    ax[1].set_xlabel("truck pack size (kWh)"); ax[1].set_ylabel("stationary batteries bought (V2G, mean)")
-    ax[1].set_title("bigger packs substitute for stationary storage")
-    ax[1].legend(fontsize=8)
+    if pk2:
+        for n, c in ((8, "#c0392b"), (60, "#2E75B6"), (200, "#16a085")):
+            bs = []
+            for G in GS17:
+                b = [r["batteries"] for r in pk2 if r["G"] == G and r["n_tasks"] == n
+                     and r["pv"] == 2.0 and r["scenario"] == "v2g" and r.get("feasible")]
+                bs.append(float(np.mean(b)) if b else np.nan)
+            ax[1].plot([g * 100 for g in GS17], bs, "-o", ms=5, color=c,
+                       label=f"{n} tasks")
+        ax[1].axvline(700, ls=":", color="#888", lw=1)
+        ax[1].set_xlabel("truck pack size (kWh)")
+        ax[1].set_ylabel("stationary batteries bought (V2G, mean over draws)")
+        ax[1].set_title("pack x workload: substitution strong at 8-60 tasks; dead zone buys none (2x solar)")
+        ax[1].legend(fontsize=8)
     finish(fig, "fig_8_17_pack.png")
     GALLERY.append("\n![fig 8.17](fig_8_17_pack.png)\n")
     caption("Figure 8.17",
-        "The truck pack as the fleet-as-storage capacity knob (8-120 tasks, 2 seeds, "
-        "350 kW charging; stationary-battery cost held fixed per kWh as pack size "
-        "varies). Left: the value of fleet-only V2G (no stationary storage installed) "
-        "over charge-only rises steeply from a 350 kWh pack to the 700 kWh baseline "
-        "(dotted) and saturates by ~1 MWh -- consistent with Fig. 8.12's reading that "
-        "bidirectional trucks alone shave a slice limited by pack capacity. Right: in "
-        "the full V2G stack the optimizer's stationary-battery purchases fall by a "
-        "factor of 4-5 as packs grow from 350 to 1400 kWh: pack capacity and "
-        "stationary storage are direct substitutes, so the trend toward larger EV "
-        "packs mechanically shrinks the dedicated-storage capex a microgrid needs.")
+        "The truck pack as the fleet-as-storage capacity knob. Left: fleet-only "
+        "V2G value vs pack size (8-120 tasks pooled, two task draws per size, "
+        "350 kW charging; stationary-battery cost held fixed per kWh). Right: the "
+        "pack x workload interaction from the dense grid (8-200 tasks, three task "
+        "draws, 2x solar): stationary-battery purchases fall as packs grow at "
+        "every workload; the fleet-as-storage substitution is not a small-fleet "
+        "artifact.")
 
 # %% Figure 8.18 -- SCHED3 + THEORY: the retiming verdict, confound-free
 s318 = []
@@ -1315,56 +1324,57 @@ if s318:
         "available the energy layer is timetable-invariant and every scheduling "
         "effect flows through fleet size and its deadhead overhead.")
 
-# %% Figure 8.19 -- OUTAGE2: fixed-asset contingency ladder
+# %% Figure 8.19 -- OUT3: fixed-asset contingency ladder, window-resolved fifths
 o19 = []
-for _p in _glob.glob(os.path.join(ARX, "overnight9_outage2_s*.json")):
+for _p in _glob.glob(os.path.join(ARX, "overnight11_out3_s*.json")):
     o19 += json.load(open(_p))
 if o19:
-    DER19 = [1.0, 0.667, 0.333, 0.0]
-    fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.3), constrained_layout=True)
-    for scen, c, lab in (("solar", "#e08020", "charge-only"),
-                         ("v2g_fleet", "#16a085", "V2G trucks only"),
-                         ("v2g", "#2E75B6", "full V2G")):
-        ys = []
-        for d in DER19:
-            rows = [r for r in o19 if abs(r["derate"] - d) < .01 and r["scenario"] == scen]
-            ys.append(100 * sum(1 for r in rows if r.get("feasible")) / max(len(rows), 1))
-        ax[0].plot(range(len(DER19)), ys, "-o", ms=6, color=c, label=lab)
-    ax[0].set_xticks(range(len(DER19)))
-    ax[0].set_xticklabels(["no outage", "1 of 3 lost", "2 of 3 lost", "total loss"])
-    ax[0].set_ylabel("% of instances with a feasible schedule")
-    ax[0].set_title("(a) evening generator outage, assets fixed at normal-day sizing")
-    ax[0].legend(fontsize=8)
+    DER19 = [1.0, 0.8, 0.6, 0.5, 0.4, 0.2, 0.0]
+    XL19 = ["no\noutage", "-20%", "-40%", "-50%", "-60%", "-80%", "total\nloss"]
+    SC19 = (("solar", "#e08020", "charge-only"),
+            ("v2g_fleet", "#16a085", "V2G trucks only"),
+            ("v2g", "#2E75B6", "full V2G"))
+    fig, ax = plt.subplots(1, 3, figsize=(13.6, 4.2), constrained_layout=True)
+    for a, wins, ttl in ((ax[0], ("eve4h", "eve8h"), "(a) evening windows (17-21h / 14-22h)"),
+                         (ax[1], ("morn4h",), "(b) morning window (5-9h)")):
+        for scen, c, lab in SC19:
+            ys = []
+            for d in DER19:
+                rows = [r for r in o19 if r["win"] in wins and abs(r["derate"] - d) < .01
+                        and r["scenario"] == scen]
+                ys.append(100 * sum(1 for r in rows if r.get("feasible")) / max(len(rows), 1))
+            a.plot(range(len(DER19)), ys, "-o", ms=5, color=c, label=lab)
+        a.set_xticks(range(len(DER19))); a.set_xticklabels(XL19, fontsize=8)
+        a.set_ylabel("% of instances with a feasible schedule"); a.set_ylim(-4, 104)
+        a.set_title(ttl, fontsize=10); a.legend(fontsize=8)
     xs, med, lo, hi = [], [], [], []
     for d in DER19:
         v = [100 * (r["total"] - r["stage1_total"]) / r["stage1_total"] for r in o19
-             if abs(r["derate"] - d) < .01 and r["scenario"] == "v2g"
-             and r.get("feasible") and r.get("stage1_total")]
+             if r["win"] in ("eve4h", "eve8h") and abs(r["derate"] - d) < .01
+             and r["scenario"] == "v2g" and r.get("feasible") and r.get("stage1_total")]
         if v:
             xs.append(d); med.append(float(np.median(v)))
             lo.append(float(np.percentile(v, 10))); hi.append(float(np.percentile(v, 90)))
-    ax[1].fill_between(range(len(xs)), lo, hi, color="#2E75B6", alpha=0.15)
-    ax[1].plot(range(len(xs)), med, "-o", ms=6, color="#2E75B6")
-    ax[1].set_xticks(range(len(xs)))
-    ax[1].set_xticklabels(["no outage", "1 of 3 lost", "2 of 3 lost", "total loss"][:len(xs)])
-    ax[1].set_ylabel("cost increase vs normal day (%, V2G, feasible instances)")
-    ax[1].set_title("(b) the surviving fleet pays almost nothing to ride it out")
+    ax[2].fill_between(range(len(xs)), lo, hi, color="#2E75B6", alpha=0.15)
+    ax[2].plot(range(len(xs)), med, "-o", ms=5, color="#2E75B6")
+    ax[2].set_xticks(range(len(xs))); ax[2].set_xticklabels(XL19[:len(xs)], fontsize=8)
+    ax[2].set_ylabel("cost increase vs normal day (%)")
+    ax[2].set_title("(c) surviving V2G re-dispatch cost, evening", fontsize=10)
     finish(fig, "fig_8_19_outage2.png")
     GALLERY.append("\n![fig 8.19](fig_8_19_outage2.png)\n")
     caption("Figure 8.19",
-        "Fixed-asset contingency ladder: fleets are sized on the normal day (cap "
-        "1.5x the no-fleet peak), then assets are frozen and an evening generator "
-        "outage window (4 or 8 hours) derates capacity. (a) Charge-only and "
-        "trucks-only fleets fail in every instance at any derate; the full V2G "
-        "stack keeps 92% of instances running with one of three generators lost, "
-        "two thirds with two lost, and half through TOTAL loss of generation in "
-        "the window. (b) Where it survives, the re-dispatched day costs at most a "
-        "few percent more. A handful of no-outage cells read infeasible due to "
-        "integer time limits, not the model.")
+        "Fixed-asset contingency ladder at fifths resolution, window-resolved "
+        "(12 instances per morning point, 24 per evening point: 2 fleet sizes x "
+        "2 solar levels x 3 task draws x windows). Evening outages need "
+        "bidirectionality: charge-only and trucks-only fleets die below -20% "
+        "derates, V2G holds 92% at -20% and half through total loss. Morning "
+        "outages before the solar day are survivable by ANY fleet down to -60% "
+        "(the base morning load is low and packs are full), and V2G extends "
+        "even that to -80%. (c) Survivors pay a few percent.")
 
-# %% Figure 8.20 -- ENDUR2: the fuel floor (fixed daily budget)
+# %% Figure 8.20 -- END3: the fuel floor (fixed daily budget, budgets to 1.4x)
 e20d = []
-for _p in _glob.glob(os.path.join(ARX, "overnight9_endur_s*.json")):
+for _p in _glob.glob(os.path.join(ARX, "overnight11_end3_s*.json")):
     e20d += json.load(open(_p))
 if e20d:
     import collections as _cl20
@@ -1374,10 +1384,15 @@ if e20d:
     fig, ax = plt.subplots(figsize=(8.2, 4.4), constrained_layout=True)
     cells20 = [(1.5, 20), (1.5, 60), (2.5, 20), (2.5, 60)]
     xt = [f"{pv}x solar\n{n} tasks" for pv, n in cells20]
-    CEN = 1.12                                        # censored bars drawn AT this level, hatched
+    CEN = 1.55                                        # censored bars drawn AT this level, hatched
     ICE20 = 3.3                                       # measured drivetrain disadvantage
+
+    def _floor20(scen, pv, n):
+        fmins = [min([r["frac"] for r in idx20[(scen, pv, n, sd)] if r.get("feasible")],
+                     default=np.nan) for sd in (0, 1, 2)]
+        return float(np.nanmean(fmins)) if np.isfinite(np.nanmean(fmins)) else np.nan
+
     for k, (pv, n) in enumerate(cells20):
-        # analytic ICE floor: base burn + 3.3x traction, as fraction of base burn
         rr0 = next(r for r in idx20[("v2g", pv, n, 0)])
         _base = rr0["budget_units"] / rr0["frac"]
         vsp_floor = 1.0 + ICE20 * rr0["traction_mwh"] * 10 / _base
@@ -1385,42 +1400,40 @@ if e20d:
                label="ICE fleet (analytic floor)" if k == 0 else None)
         ax.annotate(f"{vsp_floor:.1f}", (k - 0.34, vsp_floor + 0.02), ha="center",
                     fontsize=9, color="#555")
-        fmins = [min([r["frac"] for r in idx20[("v2g", pv, n, sd)] if r.get("feasible")], default=np.nan)
-                 for sd in (0, 1, 2)]
-        v = float(np.nanmean(fmins))
-        if np.isfinite(v):
-            ax.bar(k + 0.02, v, 0.30, color="#2E75B6", label="full V2G" if k == 0 else None)
-            ax.annotate(f"{v:.2f}", (k + 0.02, v + 0.02), ha="center", fontsize=9, color="#2E75B6")
+        v = _floor20("v2g", pv, n)
+        ax.bar(k + 0.02, v, 0.30, color="#2E75B6", label="full V2G" if k == 0 else None)
+        ax.annotate(f"{v:.2f}", (k + 0.02, v + 0.02), ha="center", fontsize=9, color="#2E75B6")
+        s = _floor20("solar", pv, n)
+        if np.isfinite(s):
+            ax.bar(k + 0.34, s, 0.30, color="#e08020",
+                   label="charge-only (measured floor)" if k == 0 else None)
+            ax.annotate(f"{s:.2f}", (k + 0.34, s + 0.02), ha="center", fontsize=9, color="#b06010")
         else:
-            ax.bar(k - 0.17, CEN, 0.32, color="#2E75B6", alpha=0.35, hatch="//",
-                   label="V2G, censored (> largest budget sampled)" if True else None)
-            ax.annotate("> 1.0", (k + 0.02, CEN + 0.02), ha="center", fontsize=9, color="#2E75B6")
-        ax.bar(k + 0.34, CEN, 0.30, color="#e08020", alpha=0.35, hatch="//",
-               label="charge-only, censored (> largest budget sampled)" if k == 0 else None)
-        ax.annotate("> 1.0", (k + 0.34, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
+            ax.bar(k + 0.34, CEN, 0.30, color="#e08020", alpha=0.35, hatch="//",
+                   label="charge-only, censored (> 1.4)" if k == 1 else None)
+            ax.annotate("> 1.4", (k + 0.34, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
     ax.axhline(1.0, ls=":", color="#888", lw=1)
     ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=8, color="#666",
             transform=ax.get_yaxis_transform())
     ax.set_xticks(range(len(cells20))); ax.set_xticklabels(xt)
     ax.set_ylabel("minimum feasible daily fuel (fraction of no-fleet baseline)")
-    ax.set_ylim(0, 4.0)
+    ax.set_ylim(0, 4.25)
     ax.set_title("the fuel floor: V2G fleets run the base on less fuel than no fleet at all")
-    ax.legend(fontsize=7.5, loc="lower left")
+    ax.legend(fontsize=7.5, loc="upper right")
     finish(fig, "fig_8_20_endurance.png")
     GALLERY.append("\n![fig 8.20](fig_8_20_endurance.png)\n")
     caption("Figure 8.20",
-        "Fuel endurance under a hard daily budget. Bars show the smallest budget, "
-        "as a fraction of the no-fleet baseline burn, at which any feasible "
-        "schedule exists. Charge-only fleets exceed 1.0 everywhere sampled: they "
-        "can only ADD load, so electrifying without bidirectionality strictly "
-        "shortens a fuel stock's endurance. Full V2G fleets run the entire base "
-        "on 80% of baseline at modest solar and on as little as 5% at 2.5x solar "
-        "with a small fleet: on a fixed stock, that is 20x the days of autonomy. "
-        "(At 1.5x solar with 60 tasks the fleet's own traction exceeds what the "
-        "surplus can cover, so V2G too needs more than baseline; endurance is an "
-        "endowment story, like everything else in this study.)")
+        "Fuel endurance under a hard daily budget, budgets swept 0.05-1.4x. Bars "
+        "show the smallest budget, as a fraction of the no-fleet baseline burn, at "
+        "which any feasible schedule exists (mean over three task draws). "
+        "Charge-only floors are now MEASURED at 20 tasks: 1.2x baseline; at 60 "
+        "tasks they exceed 1.4x (censored). Electrifying without bidirectionality "
+        "strictly shortens a fuel stock's endurance. Full V2G runs the entire "
+        "base+fleet on 0.80x at modest solar and 0.05x at 2.5x solar with a small "
+        "fleet; at 1.5x/60 the fleet traction outruns the surplus and V2G needs "
+        "1.3x. ICE floors are analytic: base burn + 3.3x traction.")
 
-# %% Figure 8.21 -- WCITIES: same array, four skies
+# %% Figure 8.21 -- WCITIES: same array, five skies
 w21 = []
 for _p in _glob.glob(os.path.join(ARX, "overnight9_wcities_s*.json")):
     w21 += json.load(open(_p))
@@ -1451,7 +1464,7 @@ if w21:
     ax.set_xticks(range(len(CITIES21))); ax.set_xticklabels([lab for _, lab in CITIES21], fontsize=9)
     ax.axhline(0, color="#888", lw=0.7)
     ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
-    ax.set_title("same array, four skies: annual mean and 10th-90th percentile days (2023)")
+    ax.set_title("same array, five skies: annual mean and 10th-90th percentile days (2023)")
     ax.legend(fontsize=8)
     finish(fig, "fig_8_21_wcities.png")
     GALLERY.append("\n![fig 8.21](fig_8_21_wcities.png)\n")
