@@ -1244,7 +1244,7 @@ if pk17:
         ax[1].plot([g * 100 for g in GS17], bs, "-o", ms=5, color=c,
                    label=f"{pv:g}x solar")
     ax[0].axvline(700, ls=":", color="#888", lw=1)
-    ax[0].set_xlabel("truck pack size (kWh)"); ax[0].set_ylabel("fleet-only V2G saving vs charge-only (%)")
+    ax[0].set_xlabel("truck pack size (kWh)"); ax[0].set_ylabel("fleet-only V2G saving vs charge-only\n(% of total daily cost)")
     ax[0].set_title("bigger packs raise fleet-as-storage value, with saturation")
     ax[0].legend(fontsize=8)
     ax[1].axvline(700, ls=":", color="#888", lw=1)
@@ -1374,24 +1374,29 @@ if e20d:
     fig, ax = plt.subplots(figsize=(8.2, 4.4), constrained_layout=True)
     cells20 = [(1.5, 20), (1.5, 60), (2.5, 20), (2.5, 60)]
     xt = [f"{pv}x solar\n{n} tasks" for pv, n in cells20]
+    CEN = 1.12                                        # censored bars drawn AT this level, hatched
     for k, (pv, n) in enumerate(cells20):
         fmins = [min([r["frac"] for r in idx20[("v2g", pv, n, sd)] if r.get("feasible")], default=np.nan)
                  for sd in (0, 1, 2)]
         v = float(np.nanmean(fmins))
         if np.isfinite(v):
             ax.bar(k - 0.17, v, 0.32, color="#2E75B6", label="full V2G" if k == 0 else None)
+            ax.annotate(f"{v:.2f}", (k - 0.17, v + 0.02), ha="center", fontsize=9, color="#2E75B6")
         else:
-            ax.annotate("V2G > 1.0 too", (k - 0.17, 1.02), ha="center", fontsize=8, color="#2E75B6")
-        ax.bar(k + 0.17, 1.0, 0.32, color="#e08020", alpha=0.55,
-               label="charge-only (censored)" if k == 0 else None)
-        ax.annotate("> 1.0", (k + 0.17, 1.02), ha="center", fontsize=9, color="#b06010")
+            ax.bar(k - 0.17, CEN, 0.32, color="#2E75B6", alpha=0.35, hatch="//",
+                   label="V2G, censored (> largest budget sampled)" if True else None)
+            ax.annotate("> 1.0", (k - 0.17, CEN + 0.02), ha="center", fontsize=9, color="#2E75B6")
+        ax.bar(k + 0.17, CEN, 0.32, color="#e08020", alpha=0.35, hatch="//",
+               label="charge-only, censored (> largest budget sampled)" if k == 0 else None)
+        ax.annotate("> 1.0", (k + 0.17, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
     ax.axhline(1.0, ls=":", color="#888", lw=1)
     ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=8, color="#666",
             transform=ax.get_yaxis_transform())
     ax.set_xticks(range(len(cells20))); ax.set_xticklabels(xt)
     ax.set_ylabel("minimum feasible daily fuel (fraction of no-fleet baseline)")
+    ax.set_ylim(0, 1.28)
     ax.set_title("the fuel floor: V2G fleets run the base on less fuel than no fleet at all")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=7.5, loc="lower left")
     finish(fig, "fig_8_20_endurance.png")
     GALLERY.append("\n![fig 8.20](fig_8_20_endurance.png)\n")
     caption("Figure 8.20",
