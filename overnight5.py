@@ -170,6 +170,10 @@ if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
     FN = {"BOUNDARY": boundary, "MODESX2": modesx2, "CAPS2": caps2}
+    _known = {s.strip().upper() for s in FN}
+    _bad = [s for s in STUDIES if s.strip().upper() not in _known]
+    if _bad:
+        sys.exit(f"unknown OVERNIGHT5_STUDIES entries: {_bad} -- known: {sorted(FN)}")
     for st in [s.strip().upper() for s in STUDIES]:
         t1 = time.time()
         FN[st]()

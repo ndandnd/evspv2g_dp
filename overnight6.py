@@ -102,6 +102,10 @@ def satfix():
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     FN = {"CAPS3": caps3, "SATFIX": satfix}
+    _known = {s.strip().upper() for s in FN}
+    _bad = [s for s in STUDIES if s.strip().upper() not in _known]
+    if _bad:
+        sys.exit(f"unknown OVERNIGHT6_STUDIES entries: {_bad} -- known: {sorted(FN)}")
     t0 = time.time()
     for st in [s.strip().upper() for s in STUDIES]:
         t1 = time.time(); FN[st]()
