@@ -1375,26 +1375,35 @@ if e20d:
     cells20 = [(1.5, 20), (1.5, 60), (2.5, 20), (2.5, 60)]
     xt = [f"{pv}x solar\n{n} tasks" for pv, n in cells20]
     CEN = 1.12                                        # censored bars drawn AT this level, hatched
+    ICE20 = 3.3                                       # measured drivetrain disadvantage
     for k, (pv, n) in enumerate(cells20):
+        # analytic ICE floor: base burn + 3.3x traction, as fraction of base burn
+        rr0 = next(r for r in idx20[("v2g", pv, n, 0)])
+        _base = rr0["budget_units"] / rr0["frac"]
+        vsp_floor = 1.0 + ICE20 * rr0["traction_mwh"] * 10 / _base
+        ax.bar(k - 0.34, vsp_floor, 0.30, color="#888888",
+               label="ICE fleet (analytic floor)" if k == 0 else None)
+        ax.annotate(f"{vsp_floor:.1f}", (k - 0.34, vsp_floor + 0.02), ha="center",
+                    fontsize=9, color="#555")
         fmins = [min([r["frac"] for r in idx20[("v2g", pv, n, sd)] if r.get("feasible")], default=np.nan)
                  for sd in (0, 1, 2)]
         v = float(np.nanmean(fmins))
         if np.isfinite(v):
-            ax.bar(k - 0.17, v, 0.32, color="#2E75B6", label="full V2G" if k == 0 else None)
-            ax.annotate(f"{v:.2f}", (k - 0.17, v + 0.02), ha="center", fontsize=9, color="#2E75B6")
+            ax.bar(k + 0.02, v, 0.30, color="#2E75B6", label="full V2G" if k == 0 else None)
+            ax.annotate(f"{v:.2f}", (k + 0.02, v + 0.02), ha="center", fontsize=9, color="#2E75B6")
         else:
             ax.bar(k - 0.17, CEN, 0.32, color="#2E75B6", alpha=0.35, hatch="//",
                    label="V2G, censored (> largest budget sampled)" if True else None)
-            ax.annotate("> 1.0", (k - 0.17, CEN + 0.02), ha="center", fontsize=9, color="#2E75B6")
-        ax.bar(k + 0.17, CEN, 0.32, color="#e08020", alpha=0.35, hatch="//",
+            ax.annotate("> 1.0", (k + 0.02, CEN + 0.02), ha="center", fontsize=9, color="#2E75B6")
+        ax.bar(k + 0.34, CEN, 0.30, color="#e08020", alpha=0.35, hatch="//",
                label="charge-only, censored (> largest budget sampled)" if k == 0 else None)
-        ax.annotate("> 1.0", (k + 0.17, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
+        ax.annotate("> 1.0", (k + 0.34, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
     ax.axhline(1.0, ls=":", color="#888", lw=1)
     ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=8, color="#666",
             transform=ax.get_yaxis_transform())
     ax.set_xticks(range(len(cells20))); ax.set_xticklabels(xt)
     ax.set_ylabel("minimum feasible daily fuel (fraction of no-fleet baseline)")
-    ax.set_ylim(0, 1.28)
+    ax.set_ylim(0, 4.0)
     ax.set_title("the fuel floor: V2G fleets run the base on less fuel than no fleet at all")
     ax.legend(fontsize=7.5, loc="lower left")
     finish(fig, "fig_8_20_endurance.png")
@@ -1417,21 +1426,29 @@ for _p in _glob.glob(os.path.join(ARX, "overnight9_wcities_s*.json")):
     w21 += json.load(open(_p))
 if w21:
     widx21 = {(r["city"], r["date"], r["pv"], r["scenario"]): r for r in w21 if r.get("feasible")}
-    CITIES21 = [("gulf_desert", "Gulf desert"), ("seoul", "Seoul"),
-                ("london", "London"), ("tromso", "Tromso")]
-    fig, ax = plt.subplots(figsize=(8.6, 4.5), constrained_layout=True)
+    wx21 = load(ARX, "overnight_weather.json") or []
+    CITIES21 = [("socal", "SoCal\n(benchmark)"), ("gulf_desert", "Gulf desert\n(UAE)"),
+                ("seoul", "Seoul"), ("keflavik", "Keflavik\n(Iceland)"), ("tromso", "Tromso")]
+    fig, ax = plt.subplots(figsize=(9.2, 4.5), constrained_layout=True)
     for j, (pv, c) in enumerate(((2.0, "#2E75B6"), (3.0, "#16a085"))):
         xs, mu, p10, p90 = [], [], [], []
         for i, (key, lab) in enumerate(CITIES21):
-            days = {k[1] for k in widx21 if k[0] == key and k[2] == pv}
-            v = [100 * (widx21[(key, d, pv, "solar")]["total"] - widx21[(key, d, pv, "v2g")]["total"])
-                 / widx21[(key, d, pv, "solar")]["total"]
-                 for d in days if (key, d, pv, "solar") in widx21 and (key, d, pv, "v2g") in widx21]
+            if key == "socal":
+                v = [r["v2g_vs_solar_pct"] for r in wx21
+                     if r.get("pv") == pv and "v2g_vs_solar_pct" in r]
+            else:
+                days = {k[1] for k in widx21 if k[0] == key and k[2] == pv}
+                v = [100 * (widx21[(key, d, pv, "solar")]["total"] - widx21[(key, d, pv, "v2g")]["total"])
+                     / widx21[(key, d, pv, "solar")]["total"]
+                     for d in days if (key, d, pv, "solar") in widx21 and (key, d, pv, "v2g") in widx21]
+            if not v:
+                xs.append(np.nan); mu.append(np.nan); p10.append(np.nan); p90.append(np.nan)
+                continue
             xs.append(i + (j - 0.5) * 0.22); mu.append(np.mean(v))
             p10.append(np.percentile(v, 10)); p90.append(np.percentile(v, 90))
         ax.errorbar(xs, mu, yerr=[np.array(mu) - np.array(p10), np.array(p90) - np.array(mu)],
                     fmt="o", ms=7, capsize=5, color=c, label=f"{pv:g}x panels")
-    ax.set_xticks(range(len(CITIES21))); ax.set_xticklabels([lab for _, lab in CITIES21])
+    ax.set_xticks(range(len(CITIES21))); ax.set_xticklabels([lab for _, lab in CITIES21], fontsize=9)
     ax.axhline(0, color="#888", lw=0.7)
     ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
     ax.set_title("same array, four skies: annual mean and 10th-90th percentile days (2023)")
@@ -1492,10 +1509,17 @@ if st23:
             days = [d for d in ev if d in ws]
             labs.append(cand); vals.append(float(np.mean([ev[d] for d in days])))
         cols = ["#7d3c98" if l == "annual" else "#2E75B6" for l in labs]
-        k_best = int(np.argmin(vals)); cols[k_best] = "#16a085"
         ax[j].bar(range(len(labs)), vals, color=cols)
-        ax[j].axhline(wsm, ls="--", color="#c0392b", lw=1.4,
-                      label=f"wait-and-see bound (${wsm:,.0f})")
+        ax[j].axhline(wsm, ls=":", color="#888888", lw=1.2,
+                      label=f"wait-and-see, annual mean (${wsm:,.0f})")
+        ws_m = []
+        for l in labs:
+            if l == "annual":
+                ws_m.append(np.nan); continue
+            mdays = [d for d in ws if d[5:7] == l.replace("m", "")]
+            ws_m.append(float(np.mean([ws[d] for d in mdays])) if mdays else np.nan)
+        ax[j].plot(range(len(labs)), ws_m, "--", color="#c0392b", lw=1.5, marker="v", ms=4,
+                   label="wait-and-see within that month (seasonal floor)")
         ax[j].set_xticks(range(len(labs)))
         ax[j].set_xticklabels([l.replace("m", "") if l != "annual" else "ann." for l in labs],
                               fontsize=8)

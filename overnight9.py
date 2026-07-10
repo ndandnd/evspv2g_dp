@@ -204,7 +204,7 @@ def _load_city_days(key):
 def wcities():
     rows, path = ckpt(f"overnight9_wcities_s{SH_I}of{SH_K}.json")
     done = {(r["city"], r["date"], r["pv"], r["scenario"]) for r in rows}
-    CITIES = ["gulf_desert", "tromso", "london", "seoul"]
+    CITIES = ["gulf_desert", "tromso", "london", "seoul", "keflavik"]
     D, S = base_curves()
     socal_mean = np.mean([d[1].sum() for d in load_days()])   # SoCal calibration factor
     fleet = rand_trips(3, 60, 0, salt=50_000)

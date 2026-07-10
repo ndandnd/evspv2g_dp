@@ -92,7 +92,7 @@ def out3():
     rows, path = ckpt(f"overnight11_out3_s{SH_I}of{SH_K}.json")
     done = {(r["derate"], r["win"], r["pv"], r["n_tasks"], r["seed"], r["scenario"])
             for r in rows}
-    DER = [1.0, 5/6, 2/3, 1/2, 1/3, 1/6, 0.0]
+    DER = [1.0, 0.8, 0.6, 0.5, 0.4, 0.2, 0.0]
     WINS = {"eve4h": (34, 42), "eve8h": (28, 44), "morn4h": (10, 18)}
     cells = [(sd, n, pv, w, scen) for sd in (0, 1, 2) for n in (20, 60)
              for pv in (1.5, 2.5) for w in WINS for scen in ("solar", "v2g_fleet", "v2g")]
@@ -177,9 +177,41 @@ def sched3x():
             print(f"  [{idx + 1}/{len(cells)}, {len(rows)} rows]", flush=True)
 
 
+def modesx3():
+    from overnight3 import sol_kwargs
+    rows, path = ckpt(f"overnight3_modes_sX3_{SH_I}of{SH_K}.json")
+    done = {(r["n_tasks"], r["sol"], r["seed"], r["scenario"]) for r in rows}
+    NT = list(range(4, 44, 4)) + list(range(50, 201, 10))
+    cells = [(sd, n, sol, scen) for sd in (3, 4, 5) for n in NT
+             for sol in ("1x", "2x", "3x", "4x", "summer", "sum2x")
+             for scen in ("vsp", "ev", "solar", "v2g")]
+    print(f"MODESX3: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (sd, n, sol, scen) in enumerate(cells):
+        if idx % SH_K != SH_I or (n, sol, sd, scen) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, **sol_kwargs(sol))
+        traction = float(sum(tr.energy for tr in inst.trips))
+        r = solve(inst, scen, tl=120.0)
+        if r is None:
+            continue
+        fleet_paid = 0.0
+        if scen == "ev":
+            fleet_paid = sum((c.fixed_cost - inst.c_v) / inst.c_g * round(x)
+                             for c, x in zip(r["cols"], r["mip"].x) if x > 0.5)
+        rows.append({"n_tasks": n, "sol": sol, "seed": sd, "scenario": scen,
+                     "g_units": round(r["g_units"], 2), "traction_units": round(traction, 2),
+                     "fleet_paid_units": round(fleet_paid, 2), "trucks": r["trucks"],
+                     "batteries": r["batteries"], "gap_pct": round(r["gap"], 3)})
+        save(rows, path)
+        if idx % 40 == 0:
+            print(f"  [{idx + 1}/{len(cells)}, {len(rows)} rows]", flush=True)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
-    FN = {"PACK2": pack2, "OUT3": out3, "END3": end3, "SCHED3X": sched3x}
+    FN = {"PACK2": pack2, "OUT3": out3, "END3": end3, "SCHED3X": sched3x,
+          "MODESX3": modesx3}
     t0 = time.time()
     for st in [s.strip().upper() for s in STUDIES]:
         t1 = time.time(); FN[st]()
