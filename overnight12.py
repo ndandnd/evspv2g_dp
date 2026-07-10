@@ -150,10 +150,65 @@ def spine():
             print(f"  [{idx}/{len(cells)}] {f}={v} sd={sd} {scen}", flush=True)
 
 
+def end4():
+    """Measure the still-censored 60-task charge-only floors: budgets 1.5-2.5x."""
+    rows, path = ckpt(f"overnight12_end4_s{SH_I}of{SH_K}.json")
+    done = {(r["frac"], r["pv"], r["n_tasks"], r["seed"]) for r in rows}
+    FRACS = [1.5, 1.6, 1.8, 2.0, 2.5]
+    cells = [(sd, 60, pv, f) for sd in (0, 1, 2) for pv in (1.5, 2.5) for f in FRACS]
+    print(f"END4: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (sd, n, pv, f) in enumerate(cells):
+        if idx % SH_K != SH_I or (f, pv, n, sd) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+        baseline = float(np.maximum(inst.Delta, 0.0).sum())
+        base = {"frac": f, "pv": pv, "n_tasks": n, "seed": sd,
+                "budget_units": round(f * baseline, 1), **_stats(inst)}
+        inst.fuel_budget = f * baseline
+        r = _solve12(inst, "solar", tl=300.0)
+        if r is None:
+            rows.append({**base, "scenario": "solar", "feasible": False})
+        else:
+            rows.append({**base, "scenario": "solar", "feasible": True,
+                         "total": round(r["total"], 1), "g_units": round(r["g_units"], 2),
+                         "trucks": r["trucks"], "batteries": r["batteries"],
+                         "gap_pct": round(r["gap"], 3)})
+        save(rows, path)
+        print(f"  frac={f} pv={pv} sd={sd}: feasible={rows[-1]['feasible']}", flush=True)
+
+
+def pack3():
+    """Tight-gap rerun of the dead-zone pack cells: n in {120,200}, 6 draws, 1800 s."""
+    from overnight11 import _solve_pack
+    rows, path = ckpt(f"overnight12_pack3_s{SH_I}of{SH_K}.json")
+    done = {(r["G"], r["n_tasks"], r["seed"]) for r in rows}
+    cells = [(sd, n, G) for sd in range(6) for n in (120, 200)
+             for G in (3.5, 7.0, 10.5, 14.0)]
+    print(f"PACK3: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (sd, n, G) in enumerate(cells):
+        if idx % SH_K != SH_I or (G, n, sd) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=90_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.0)
+        base = {"G": G, "pv": 2.0, "n_tasks": n, "seed": sd,
+                "c_b": round(CB_COST * G / 7.0, 1), **_stats(inst)}
+        r = _solve_pack(inst, "v2g", G, tl=1800.0)
+        if r is None:
+            rows.append({**base, "scenario": "v2g", "feasible": False})
+        else:
+            rows.append({**base, "scenario": "v2g", "feasible": True,
+                         "total": round(r["total"], 1), "g_units": round(r["g_units"], 2),
+                         "trucks": r["trucks"], "batteries": r["batteries"],
+                         "gap_pct": round(r["gap"], 3)})
+        save(rows, path)
+        print(f"  G={G} n={n} sd={sd}: gap={rows[-1].get('gap_pct')}", flush=True)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
-    FN = {"DIAG": diag, "SPINE": spine}
+    FN = {"DIAG": diag, "SPINE": spine, "END4": end4, "PACK3": pack3}
     for s in STUDIES:
         s = s.strip()
         if s in FN:

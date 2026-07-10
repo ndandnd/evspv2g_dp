@@ -1250,7 +1250,7 @@ if pk17:
     ax[0].set_title("bigger packs raise fleet-as-storage value, with saturation")
     ax[0].legend(fontsize=8)
     if pk2:
-        for n, c in ((8, "#c0392b"), (60, "#2E75B6"), (200, "#16a085")):
+        for n, c in ((8, "#c0392b"), (60, "#2E75B6"), (120, "#16a085")):
             bs = []
             for G in GS17:
                 b = [r["batteries"] for r in pk2 if r["G"] == G and r["n_tasks"] == n
@@ -1261,7 +1261,7 @@ if pk17:
         ax[1].axvline(700, ls=":", color="#888", lw=1)
         ax[1].set_xlabel("truck pack size (kWh)")
         ax[1].set_ylabel("stationary batteries bought (V2G, mean over draws)")
-        ax[1].set_title("pack x workload: substitution strong at 8-60 tasks; dead zone buys none (2x solar)")
+        ax[1].set_title("pack x workload: the substitution at 8-120 tasks (2x solar)")
         ax[1].legend(fontsize=8)
     finish(fig, "fig_8_17_pack.png")
     GALLERY.append("\n![fig 8.17](fig_8_17_pack.png)\n")
@@ -1334,7 +1334,7 @@ if o19:
     SC19 = (("solar", "#e08020", "charge-only"),
             ("v2g_fleet", "#16a085", "V2G trucks only"),
             ("v2g", "#2E75B6", "full V2G"))
-    fig, ax = plt.subplots(1, 3, figsize=(13.6, 4.2), constrained_layout=True)
+    fig, ax = plt.subplots(1, 2, figsize=(11.2, 4.2), constrained_layout=True)
     for a, wins, ttl in ((ax[0], ("eve4h", "eve8h"), "(a) evening windows (17-21h / 14-22h)"),
                          (ax[1], ("morn4h",), "(b) morning window (5-9h)")):
         for scen, c, lab in SC19:
@@ -1347,19 +1347,6 @@ if o19:
         a.set_xticks(range(len(DER19))); a.set_xticklabels(XL19, fontsize=8)
         a.set_ylabel("% of instances with a feasible schedule"); a.set_ylim(-4, 104)
         a.set_title(ttl, fontsize=10); a.legend(fontsize=8)
-    xs, med, lo, hi = [], [], [], []
-    for d in DER19:
-        v = [100 * (r["total"] - r["stage1_total"]) / r["stage1_total"] for r in o19
-             if r["win"] in ("eve4h", "eve8h") and abs(r["derate"] - d) < .01
-             and r["scenario"] == "v2g" and r.get("feasible") and r.get("stage1_total")]
-        if v:
-            xs.append(d); med.append(float(np.median(v)))
-            lo.append(float(np.percentile(v, 10))); hi.append(float(np.percentile(v, 90)))
-    ax[2].fill_between(range(len(xs)), lo, hi, color="#2E75B6", alpha=0.15)
-    ax[2].plot(range(len(xs)), med, "-o", ms=5, color="#2E75B6")
-    ax[2].set_xticks(range(len(xs))); ax[2].set_xticklabels(XL19[:len(xs)], fontsize=8)
-    ax[2].set_ylabel("cost increase vs normal day (%)")
-    ax[2].set_title("(c) surviving V2G re-dispatch cost, evening", fontsize=10)
     finish(fig, "fig_8_19_outage2.png")
     GALLERY.append("\n![fig 8.19](fig_8_19_outage2.png)\n")
     caption("Figure 8.19",
@@ -1374,7 +1361,8 @@ if o19:
 
 # %% Figure 8.20 -- END3: the fuel floor (fixed daily budget, budgets to 1.4x)
 e20d = []
-for _p in _glob.glob(os.path.join(ARX, "overnight11_end3_s*.json")):
+for _p in (_glob.glob(os.path.join(ARX, "overnight11_end3_s*.json"))
+           + _glob.glob(os.path.join(ARX, "overnight12_end4_s*.json"))):
     e20d += json.load(open(_p))
 if e20d:
     import collections as _cl20
@@ -1406,12 +1394,11 @@ if e20d:
         s = _floor20("solar", pv, n)
         if np.isfinite(s):
             ax.bar(k + 0.34, s, 0.30, color="#e08020",
-                   label="charge-only (measured floor)" if k == 0 else None)
+                   label="charge-only" if k == 0 else None)
             ax.annotate(f"{s:.2f}", (k + 0.34, s + 0.02), ha="center", fontsize=9, color="#b06010")
         else:
-            ax.bar(k + 0.34, CEN, 0.30, color="#e08020", alpha=0.35, hatch="//",
-                   label="charge-only, censored (> 1.4)" if k == 1 else None)
-            ax.annotate("> 1.4", (k + 0.34, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
+            ax.bar(k + 0.34, CEN, 0.30, color="#e08020")
+            ax.annotate("$\\geq$ 1.4", (k + 0.34, CEN + 0.02), ha="center", fontsize=9, color="#b06010")
     ax.axhline(1.0, ls=":", color="#888", lw=1)
     ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=8, color="#666",
             transform=ax.get_yaxis_transform())
@@ -1524,7 +1511,7 @@ if st23:
         cols = ["#7d3c98" if l == "annual" else "#2E75B6" for l in labs]
         ax[j].bar(range(len(labs)), vals, color=cols)
         ax[j].axhline(wsm, ls=":", color="#888888", lw=1.2,
-                      label=f"wait-and-see, annual mean (${wsm:,.0f})")
+                      label=f"perfect foresight, annual mean (${wsm:,.0f})")
         ws_m = []
         for l in labs:
             if l == "annual":
@@ -1532,7 +1519,7 @@ if st23:
             mdays = [d for d in ws if d[5:7] == l.replace("m", "")]
             ws_m.append(float(np.mean([ws[d] for d in mdays])) if mdays else np.nan)
         ax[j].plot(range(len(labs)), ws_m, "--", color="#c0392b", lw=1.5, marker="v", ms=4,
-                   label="wait-and-see within that month (seasonal floor)")
+                   label="perfect foresight within that month (seasonal floor)")
         ax[j].set_xticks(range(len(labs)))
         ax[j].set_xticklabels([l.replace("m", "") if l != "annual" else "ann." for l in labs],
                               fontsize=8)
