@@ -5,20 +5,44 @@
 
 Since v1: outcome classes replace the feasible/infeasible conflation
 (`feasible` / `lp_certified_infeasible` / `no_real_incumbent` /
-`no_incumbent`), LP artificial mass recorded (the certificate lives at the LP
-level), full diagnostics per row (cg_s, milp_s, pricing_s, iters, cols),
-PERIODIC now at 25 kWh like its controls, the independent oracle validates the
-periodic boundary properly (GATE samples cyclic/free/periodic, charge-only,
-and priced-station cases; passes at 1e-14), SPINE25's infinite-cap resume keys
-canonicalized, CHARGECAPS added (the charging-cap panel with utilization),
-PACK4 replaces the legacy-schema PACK3, HOLDOUT22 at 25 kWh with stage-1
-provenance. SUN2 and the old SUN/DIAG/PACK3/MODESX/CAPS resumes are OFF the
-queue.
+`no_incumbent`), LP artificial mass recorded, full diagnostics per row (cg_s,
+milp_s, pricing_s, iters, cols), PERIODIC now at 25 kWh like its controls,
+SPINE25's infinite-cap resume keys canonicalized, CHARGECAPS added (the
+charging-cap panel with utilization), PACK4 replaces the legacy-schema PACK3,
+HOLDOUT22 at 25 kWh with stage-1 provenance. SUN2 and the old
+SUN/DIAG/PACK3/MODESX/CAPS resumes are OFF the queue.
 
-Known open item (documented, not weekend-blocking): the max_trucks dual is
-absent from reduced-cost pricing, so frozen-asset stage-2 runs (OUT3, SUN)
-carry valid incumbents but no LP price-out certificate. Nothing this weekend
-uses max_trucks. Fix lands before any SUN2/OUT4 rerun.
+Since v2 (pre-launch review round):
+- **True Phase-I certificate.** Positive artificial mass in the converged
+  economic LP is NOT an infeasibility certificate (the finite 1e6 penalty only
+  bounds optimal mass by ~U/1e6, so a feasible near-cliff cell can park
+  fractional mass legitimately). `_solve13` now treats positive mass as a
+  TRIGGER: `_phase1_certify` minimizes artificial mass with all real costs
+  zeroed, priced to optimality. Priced-out positive Phase-I mass =>
+  `lp_certified_infeasible`; Phase-I mass zero => the economic CG resumes with
+  the Phase-I columns injected (`ph1_resume`); budget exhausted =>
+  `positive_artificial_unresolved`, and the MILP still runs (an artificial-free
+  incumbent proves feasibility by exhibit). Validated: BREAKS benchmark
+  certifies at exactly mass 12 (the 12 dead tasks); repaired BREAKS2 drives to
+  mass 0; the m=1.0 reference cell reproduces solar 6,871.3 / v2g 1,044.7
+  artificial-free.
+- **GATE hardened** (it was a strong smoke test, not yet an oracle): the
+  Bellman-Ford comparator now keeps min-weight parallel transitions
+  (DiGraph.add_edge overwrote; parallel trip/relocation arcs could mask
+  disagreements), duals are heterogeneous (identity seeds gave near-uniform
+  duals), both 50 and 25 kWh are sampled, synthetic station prices replay
+  through the master reduced-cost formula (previously rc_master := rc_dp was
+  tautological), free mode covers synthetic nu and charge-only, and a fixed
+  periodic tail runs at 25 kWh (the PERIODIC study's lattice). Local smoke
+  shards pass at 2.8e-14.
+- **max_trucks dual: consequence corrected (less severe than v2 said).** The
+  dual on sum x_r <= M is <= 0 in the min LP, so omitting it UNDERSTATES every
+  truck reduced cost uniformly: a reported price-out remains a valid LP
+  certificate; the real failure mode is phantom negative columns (churn /
+  stalling to max_iter, visible in cg_converged). Old SUN/OUT rows are still
+  not publication-grade -- they lack the new statuses -- but not because their
+  convergence was unsound. The dual still gets added before SUN2/OUT4, for
+  efficiency and cleanliness. Nothing this weekend uses max_trucks.
 
 ## Step 0 — blocking gate (scaglione; read the output before releasing bulk)
 
@@ -54,7 +78,11 @@ for i in $(seq 0 11); do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=FOURARMX,OV
 ```bash
 DPN="$DP --nice=200"
 for i in $(seq 0 9); do sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=W2,OVERNIGHT13_SHARD=$i/10 run_overnight13_unicorn.sbatch; done
-sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=EXPORT2,REGIME2,OVERNIGHT13_SHARD=0/1 run_overnight13_unicorn.sbatch
+# NOTE: one study per job. sbatch --export splits on commas, so
+# "OVERNIGHT13_STUDIES=EXPORT2,REGIME2" would be parsed as the assignment
+# EXPORT2 plus a bare env-var name REGIME2 -- REGIME2 would silently never run.
+sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=EXPORT2,OVERNIGHT13_SHARD=0/1 run_overnight13_unicorn.sbatch
+sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=REGIME2,OVERNIGHT13_SHARD=0/1 run_overnight13_unicorn.sbatch
 for i in $(seq 0 3); do sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=SPINE25,OVERNIGHT13_SHARD=$i/4 run_overnight13_unicorn.sbatch; done
 sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=ETA125,OVERNIGHT13_SHARD=0/2 run_overnight13_unicorn.sbatch
 sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=ETA125,OVERNIGHT13_SHARD=1/2 run_overnight13_unicorn.sbatch
@@ -85,5 +113,10 @@ for i in $(seq 0 31); do sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=HOLDOUT22,
   as continuous-model gaps.
 - Paper rows require: `cg_converged = true`, outcome `feasible` (artificial-
   free) for any feasibility claim, and `lp_certified_infeasible` for any
-  infeasibility claim. `no_real_incumbent` / `no_incumbent` rows are
-  diagnostics only.
+  infeasibility claim -- which now means the TRUE Phase-I certificate
+  (`ph1_converged = true` with `ph1_mass > 0`), never the finite-penalty
+  economic LP alone. `no_real_incumbent` / `no_incumbent` /
+  `positive_artificial_unresolved` rows are diagnostics only.
+- Rows with positive `lp_artificial_mass` after a `ph1_resume` carry a
+  penalized `lp_obj` (a lower bound on the true economic LP value); quote their
+  MILP incumbents, not their LP objective.

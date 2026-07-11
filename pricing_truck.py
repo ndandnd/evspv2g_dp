@@ -229,31 +229,40 @@ def _dp_cost_via_networkx(inst, alpha, mu, step=5.0, soc_mode="cyclic"):
     # node = (t, loc, si, k); k = 1 once >= 1 trip is covered (mirrors the DP's
     # requirement that a deployed truck covers at least one task)
     Gr = nx.DiGraph(); SRC = ("S",); SNK = ("K",)
-    Gr.add_edge(SRC, (0, origin, Gidx, 0), weight=0.0)
+
+    def _add(u, v, w):
+        # DiGraph.add_edge overwrites: parallel transitions (e.g. two trips with
+        # the same state move, or a trip colliding with a relocation) must keep
+        # the MINIMUM weight, as the production DP does.
+        d = Gr.get_edge_data(u, v)
+        if d is None or w < d["weight"]:
+            Gr.add_edge(u, v, weight=w)
+
+    _add(SRC, (0, origin, Gidx, 0), 0.0)
     for t in range(T):
         for loc in range(nLoc):
             for si in range(nL):
                 for k in (0, 1):
                     u = (t, loc, si, k); s = si * step
-                    Gr.add_edge(u, (t + 1, loc, si, k), weight=0.0)
+                    _add(u, (t + 1, loc, si, k), 0.0)
                     if loc in stations:
                         for dl in range(-dn, up + 1):
                             sj = si + dl
                             if sj < 0 or sj >= nL: continue
                             ds = dl * step
                             e = ds / (1 - eta) if ds >= 0 else ds
-                            Gr.add_edge(u, (t + 1, loc, sj, k), weight=mu[t] * e + eps * abs(e))
+                            _add(u, (t + 1, loc, sj, k), mu[t] * e + eps * abs(e))
                     for loc2 in range(nLoc):
                         if loc2 == loc: continue
                         dd = int(round(inst.dist[loc, loc2]))
                         if dd <= 0 or t + dd > T: continue
                         s2 = s - inst.dist[loc, loc2] * epd
                         if s2 < -1e-9: continue
-                        Gr.add_edge(u, (t + dd, loc2, sidx(s2), k), weight=0.0)
+                        _add(u, (t + dd, loc2, sidx(s2), k), 0.0)
                     for tr in trips_at.get((t, loc), []):
                         s2 = s - tr.energy
                         if s2 < -1e-9 or tr.end > T: continue
-                        Gr.add_edge(u, (tr.end, tr.eloc, sidx(s2), 1), weight=-alpha[tr.idx])
+                        _add(u, (tr.end, tr.eloc, sidx(s2), 1), -alpha[tr.idx])
     if soc_mode == "free":
         for si in range(nL):
             if (T, origin, si, 1) in Gr:
@@ -279,8 +288,9 @@ def _dp_cost_via_networkx_periodic(inst, alpha, mu, step=5.0, nu=None,
 
 def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
                              allow_discharge=True, soc_mode="cyclic"):
-    """Bellman-Ford cross-check with explicit start level s0 (defaults to full)
-    and terminal fixed to the same level (cyclic/periodic-at-s0 semantics)."""
+    """Bellman-Ford cross-check with explicit start level s0 (defaults to full).
+    Terminal: cyclic/periodic-at-s0 fixes the terminal to s0; soc_mode="free"
+    starts full and accepts any terminal level (the free-start diagnostic)."""
     import networkx as nx
     T = inst.T; eta, rho, G = inst.eta, inst.rho, inst.G
     eps = inst.eps_pen; epd = inst.energy_per_dist; origin = inst.depot
@@ -298,13 +308,20 @@ def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
         trips_at.setdefault((tr.start, tr.sloc), []).append(tr)
     stations = list(getattr(inst, "charge_locs", None) or [origin])
     Gr = nx.DiGraph(); SRC = ("S",); SNK = ("K",)
-    Gr.add_edge(SRC, (0, origin, si0, 0), weight=0.0)
+
+    def _add(u, v, w):
+        # keep the MIN over parallel transitions (DiGraph.add_edge overwrites)
+        d = Gr.get_edge_data(u, v)
+        if d is None or w < d["weight"]:
+            Gr.add_edge(u, v, weight=w)
+
+    _add(SRC, (0, origin, si0, 0), 0.0)
     for t in range(T):
         for loc in range(nLoc):
             for si in range(nL):
                 for k in (0, 1):
                     u = (t, loc, si, k); s = si * step
-                    Gr.add_edge(u, (t + 1, loc, si, k), weight=0.0)
+                    _add(u, (t + 1, loc, si, k), 0.0)
                     if loc in stations:
                         for dl in range(-dn, up + 1):
                             if dl == 0:
@@ -317,7 +334,7 @@ def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
                             w = mu[t] * e + eps * abs(e)
                             if ds >= 0:
                                 w += nu[t] * e
-                            Gr.add_edge(u, (t + 1, loc, sj, k), weight=w)
+                            _add(u, (t + 1, loc, sj, k), w)
                     for loc2 in range(nLoc):
                         if loc2 == loc:
                             continue
@@ -327,14 +344,18 @@ def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
                         s2 = s - inst.dist[loc, loc2] * epd
                         if s2 < -1e-9:
                             continue
-                        Gr.add_edge(u, (t + dd, loc2, sidx(s2), k), weight=0.0)
+                        _add(u, (t + dd, loc2, sidx(s2), k), 0.0)
                     for tr in trips_at.get((t, loc), []):
                         s2 = s - tr.energy
                         if s2 < -1e-9 or tr.end > T:
                             continue
-                        Gr.add_edge(u, (tr.end, tr.eloc, sidx(s2), 1), weight=-alpha[tr.idx])
-    if (T, origin, si0, 1) in Gr:
-        Gr.add_edge((T, origin, si0, 1), SNK, weight=0.0)
+                        _add(u, (tr.end, tr.eloc, sidx(s2), 1), -alpha[tr.idx])
+    if soc_mode == "free":
+        for si in range(nL):
+            if (T, origin, si, 1) in Gr:
+                _add((T, origin, si, 1), SNK, 0.0)
+    elif (T, origin, si0, 1) in Gr:
+        _add((T, origin, si0, 1), SNK, 0.0)
     try:
         return inst.c_v + nx.bellman_ford_path_length(Gr, SRC, SNK)
     except nx.NetworkXNoPath:

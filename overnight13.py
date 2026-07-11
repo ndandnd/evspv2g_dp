@@ -4,12 +4,17 @@ Every study records honest solver status, CG convergence, Phase-I artificial
 counts, git commit, solver names, lattice step, and SoC boundary.
 Headline studies run at delta = 25 kWh (exact lattice for the lossless family,
 Corollary 1). Universal Phase-I coverage means the initial RMP is always
-feasible: infeasibility is certified by artificials in the priced-out LP,
-never by seed accidents.
+feasible. Infeasibility is certified ONLY by a true Phase-I price-out
+(_phase1_certify: minimize artificial mass with all real costs zeroed): a
+finite 1e6 penalty in the economic LP cannot certify on its own, because a
+feasible instance whose marginal coverage cost exceeds the penalty near a cap
+boundary can legitimately park fractional artificial mass.
 
   GATE      : BLOCKING pre-launch oracle gate (DP vs independent Bellman-Ford
               vs master reduced-cost formula across boundary/loss/station
-              variants; fails loud). Requires networkx. ~120 comparisons.
+              variants, 50 AND 25 kWh, heterogeneous duals, synthetic station
+              prices replayed through the master formula; fails loud).
+              Requires networkx. ~126 comparisons.
   FOURARM   : V2G x BESS factorial, 324 solves (3 draws x 3 sizes x 9 pv x 4
               arms), 25 kWh, tl 900.
   FOURARMX  : +336 solves, draws 3-9 in the activation region pv 1.5-2.5.
@@ -76,18 +81,93 @@ def _stats(inst):
             "ratio": round(surplus / max(traction, 1e-9), 3)}
 
 
+def _phase1_certify(inst, scen, soc_mode="cyclic", pool=None, budget_s=600.0,
+                    max_iter=4000, tol=1e-6):
+    """True Phase-I: minimize artificial mass over the same lattice column
+    family, with every real cost zeroed (c_g = c_b = c_v = eps = deg = 0), by
+    column generation priced to optimality with true duals.
+
+    Why: the finite 1e6 penalty in the economic LP is NOT a certificate. The
+    artificials are continuous, so knowing 1e6 > (total real cost ~1e5) only
+    bounds the optimal artificial mass by ~0.1; a FEASIBLE instance whose
+    marginal coverage cost exceeds 1e6 near a cap boundary can park fractional
+    mass in the converged economic LP. A priced-out Phase-I optimum with
+    mass > 0 IS a certificate: no real lattice column can reduce it.
+
+    Returns dict(ph1_mass, ph1_converged, ph1_iters, ph1_s, real_cols) where
+    real_cols are Phase-I-discovered truck columns re-costed economically for
+    injection into a resumed economic solve."""
+    import copy
+    from colgen import SCENARIOS as _SC, artificial_column, _col_key, _flatten_col
+    from pricing_truck import price_truck_dp
+    from master import Column, solve_lp as _slp, reduced_cost as _rc
+    caps = _SC[scen]
+    flat = caps.get("flat_price", False)
+    p1 = copy.copy(inst)
+    p1.c_g = 0.0; p1.c_b = 0.0; p1.c_v = 0.0; p1.eps_pen = 0.0; p1.deg_cost = 0.0
+    cols, covered = [], set()
+    for c in (pool or []):
+        if getattr(c, "kind", "") == "artificial":
+            cols.append(c)                       # keep 1e6: argmin equals min mass
+            covered.update(np.flatnonzero(c.a > 0.5).tolist())
+        else:
+            cols.append(Column(c.kind, c.a, c.e, 0.0, c.label))
+    for tr in inst.trips:                        # universal coverage regardless of pool
+        if tr.idx not in covered:
+            cols.append(artificial_column(p1, tr))
+    keys = set(_col_key(c) for c in cols)
+    t0 = time.time()
+    it, mass, converged, new_raw = 0, None, False, []
+    while it < max_iter and time.time() - t0 < budget_s:
+        it += 1
+        lp = _slp(p1, cols, battery_allowed=caps["battery"], soc_mode=soc_mode)
+        if lp.status != "optimal":
+            break
+        mass = float(sum(x for c, x in zip(cols, lp.x)
+                         if getattr(c, "kind", "") == "artificial"))
+        if mass <= tol:
+            converged = True                     # feasibility exhibited: optimum is zero
+            break
+        nu_cur = lp.nu if lp.nu is not None else np.zeros(inst.T)
+        mu_p, nu_p = ((np.zeros(inst.T), np.zeros(inst.T)) if flat
+                      else (lp.mu, nu_cur))      # flat arm: energy folded, price is c_g = 0
+        out = price_truck_dp(p1, lp.alpha, mu_p, allow_charge=caps["allow_charge"],
+                             allow_discharge=caps["allow_discharge"], ice=caps["ice"],
+                             nu=nu_p, soc_mode=soc_mode)
+        added = 0
+        for tc_raw, _ in out:
+            tc = _flatten_col(tc_raw, p1) if flat else tc_raw
+            if _rc(tc, lp, p1) < -tol and _col_key(tc) not in keys:
+                cols.append(tc); keys.add(_col_key(tc)); added += 1
+                new_raw.append(tc_raw)
+        if added == 0:
+            converged = True                     # priced out at positive mass: certificate
+            break
+    real_cols = [Column("truck", c.a, c.e, inst.c_v, c.label + "|ph1") for c in new_raw]
+    return {"ph1_mass": (None if mass is None else round(mass, 6)),
+            "ph1_converged": converged, "ph1_iters": it,
+            "ph1_s": round(time.time() - t0, 2), "real_cols": real_cols}
+
+
 def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None,
              want_profile=False):
     """Full-status solve: CG + restricted MILP.
     Outcome classes (never conflated):
       feasible                 artificial-free incumbent (feasible=True)
-      lp_certified_infeasible  converged lattice LP still uses artificials
-                               (valid certificate: the 1e6 penalty provably
-                               dominates any real schedule cost at our scale,
-                               which is bounded above by ~1e5) (feasible=False)
+      lp_certified_infeasible  a TRUE Phase-I (min artificial mass, real costs
+                               zeroed) priced out at positive mass: no real
+                               lattice column can reduce it (feasible=False).
+                               Positive mass in the economic LP alone never
+                               certifies (finite-penalty caveat above); it only
+                               triggers the Phase-I check.
       no_real_incumbent        MILP returned only artificial-bearing solutions
                                over the generated pool (feasible=None)
       no_incumbent             MILP failed / timed out with nothing (feasible=None)
+    When the economic LP parks positive mass but Phase-I proves feasibility
+    (mass 0), the economic CG is re-run with the Phase-I columns injected and
+    the row records ph1_resume=True. A Phase-I that exhausts its budget leaves
+    outcome_note=positive_artificial_unresolved and falls through to the MILP:
+    an artificial-free incumbent still proves feasibility by exhibit.
     """
     inst.c_g, inst.c_v = CG_COST, CV
     inst.c_b = CB_COST if c_b is None else c_b
@@ -114,10 +194,44 @@ def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None,
                          if getattr(c, "kind", "") == "artificial")) \
         if lp.status == "optimal" else None
     out["lp_artificial_mass"] = (None if art_mass is None else round(art_mass, 6))
-    if art_mass is not None and art_mass > 1e-6 and res.get("converged"):
-        out.update({"feasible": False, "outcome": "lp_certified_infeasible",
-                    "milp_status": "skipped"})
-        return out
+    if art_mass is not None and art_mass > 1e-6:
+        ph1 = _phase1_certify(inst, scen, soc_mode=soc_mode, pool=res["cols"],
+                              budget_s=max(300.0, tl))
+        out.update({k: ph1[k] for k in ("ph1_mass", "ph1_converged",
+                                        "ph1_iters", "ph1_s")})
+        if ph1["ph1_converged"] and ph1["ph1_mass"] is not None \
+           and ph1["ph1_mass"] > 1e-6:
+            out.update({"feasible": False, "outcome": "lp_certified_infeasible",
+                        "milp_status": "skipped"})
+            return out
+        if ph1["ph1_converged"]:
+            # Phase-I optimum is zero: the instance is LP-feasible. Resume the
+            # economic solve with the Phase-I discoveries injected.
+            inject = ([c for c in res["cols"]
+                       if getattr(c, "kind", "") != "artificial"]
+                      + ph1["real_cols"])
+            res = column_generation(inst, scenario=scen, start="warm",
+                                    do_milp=False, enrich=25,
+                                    max_iter=max(2000, 5 * inst.n_trips),
+                                    soc_mode=soc_mode, extra_cols=inject)
+            out.update({"ph1_resume": True, "cg_converged": res.get("converged"),
+                        "cg_term": res.get("term_reason"),
+                        "cg_iters": res.get("iters"), "cols": res.get("n_cols"),
+                        "lp_obj": (None if not np.isfinite(res["lp_obj"])
+                                   else round(res["lp_obj"], 2))})
+            if not np.isfinite(res["lp_obj"]):
+                out.update({"feasible": None, "outcome": "lp_unsolved",
+                            "milp_status": "none"})
+                return out
+            lp = _slp(inst, res["cols"], battery_allowed=SCENARIOS[scen]["battery"],
+                      soc_mode=soc_mode)
+            art_mass = float(sum(x for c, x in zip(res["cols"], lp.x)
+                                 if getattr(c, "kind", "") == "artificial")) \
+                if lp.status == "optimal" else None
+            out["lp_artificial_mass"] = (None if art_mass is None
+                                         else round(art_mass, 6))
+        else:
+            out["outcome_note"] = "positive_artificial_unresolved"
     t1 = time.time()
     mip = solve_milp(inst, res["cols"], time_limit=tl,
                      battery_allowed=SCENARIOS[scen]["battery"],
@@ -455,65 +569,93 @@ def holdout22():
 
 
 def gate():
-    """Pre-launch oracle gate: DP vs independent Bellman-Ford on small instances
-    across boundary/loss/station variants, plus reduced-cost replay. FAILS LOUD."""
-    from pricing_truck import price_truck_dp, _dp_cost_via_networkx
+    """Pre-launch oracle gate: DP vs independent Bellman-Ford vs master
+    reduced-cost replay on small instances. FAILS LOUD. Hardened:
+      - HETEROGENEOUS duals (perturbed), so parallel same-transition trips
+        carry distinct weights and the min-edge comparator logic is exercised
+        (identity seeds gave near-homogeneous duals and masked overwrites);
+      - both lattice steps: 50 kWh and the weekend's 25 kWh;
+      - rc_master is ALWAYS recomputed from the column via the master formula
+        with the same (alpha, mu, nu), including synthetic nu (previously
+        rc_master := rc_dp made that half of the replay tautological);
+      - free mode now covers synthetic nu and charge-only via the extended
+        _dp_cost_via_networkx_at(soc_mode="free");
+      - fixed periodic tail at 25 kWh (the PERIODIC study's lattice)."""
+    from dataclasses import replace as _dcreplace
+    from pricing_truck import (price_truck_dp, _dp_cost_via_networkx_periodic,
+                               _dp_cost_via_networkx_at)
     from master import solve_lp, Column, reduced_cost
     rows, path = ckpt(f"overnight13_gate_s{SH_I}of{SH_K}.json")
     rng = np.random.default_rng(7)
     n_cmp, n_col, worst = 0, 0, 0.0
-    for k in range(120):
+    # (n, eta, allow_dis, use_nu, sd, stations) at soc_mode=periodic, 25 kWh
+    TAIL = [(4, 0.0, True, False, 101, None), (4, 0.1, True, True, 102, None),
+            (4, 0.0, False, True, 103, "all"), (5, 0.1, True, False, 104, None),
+            (5, 0.0, True, True, 105, "all"), (4, 0.1, False, False, 106, None)]
+    for k in range(120 + len(TAIL)):
         if k % SH_K != SH_I:
             continue
-        sd = int(rng.integers(0, 10_000))
-        n = int(rng.integers(4, 9))
-        eta = float(rng.choice([0.0, 0.1]))
-        mode = str(rng.choice(["cyclic", "free", "periodic"]))
-        allow_dis = bool(rng.choice([True, False]))
-        use_nu = bool(rng.choice([True, False]))
-        stations = rng.choice([None, "all"])
+        if k < 120:
+            sd = int(rng.integers(0, 10_000))
+            n = int(rng.integers(4, 9))
+            eta = float(rng.choice([0.0, 0.1]))
+            mode = str(rng.choice(["cyclic", "free", "periodic"]))
+            allow_dis = bool(rng.choice([True, False]))
+            use_nu = bool(rng.choice([True, False]))
+            stations = rng.choice([None, "all"])
+            # 25 kWh for cyclic/free draws; periodic 25 kWh lives in the tail
+            step = 0.25 if (mode != "periodic" and rng.random() < 0.4) else 0.5
+        else:
+            n, eta, allow_dis, use_nu, sd, stations = TAIL[k - 120]
+            mode, step = "periodic", 0.25
         fleet = rand_trips(3, n, sd, salt=11_000)
         inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.0,
                               stations=(None if stations is None else "all"))
         inst.c_g, inst.c_b, inst.rho, inst.c_v = CG_COST, CB_COST, RHO, CV
         inst.eta = eta
+        inst.soc_step = step
         cols = [Column("truck", np.eye(inst.n_trips)[i], np.zeros(inst.T), inst.c_v, f"t{i}")
                 for i in range(inst.n_trips)]
         sol = solve_lp(inst, cols)
         if sol.status != "optimal":
             continue
+        # heterogeneous duals: the oracle identity must hold for ARBITRARY prices
+        al = sol.alpha * rng.uniform(0.5, 1.7, inst.n_trips) + rng.normal(0, 8.0, inst.n_trips)
+        mu_s = sol.mu * rng.uniform(0.6, 1.5, inst.T)
         nu = (np.abs(rng.normal(0, 0.3, inst.T)) if use_nu else None)
-        out = price_truck_dp(inst, sol.alpha, sol.mu, step=inst.soc_step, soc_mode=mode,
+        sol2 = _dcreplace(sol, alpha=al, mu=mu_s,
+                          nu=(nu if nu is not None else np.zeros(inst.T)))
+        out = price_truck_dp(inst, al, mu_s, step=inst.soc_step, soc_mode=mode,
                              nu=nu, allow_discharge=allow_dis)
-        from pricing_truck import _dp_cost_via_networkx_periodic, _dp_cost_via_networkx_at
         if mode == "periodic":
-            rc_bf = _dp_cost_via_networkx_periodic(inst, sol.alpha, sol.mu,
+            rc_bf = _dp_cost_via_networkx_periodic(inst, al, mu_s,
                                                    step=inst.soc_step, nu=nu,
                                                    allow_discharge=allow_dis)
         elif mode == "cyclic":
-            rc_bf = _dp_cost_via_networkx_at(inst, sol.alpha, sol.mu, step=inst.soc_step,
+            rc_bf = _dp_cost_via_networkx_at(inst, al, mu_s, step=inst.soc_step,
                                              nu=nu, allow_discharge=allow_dis)
         else:
-            rc_bf = (_dp_cost_via_networkx(inst, sol.alpha, sol.mu, step=inst.soc_step,
-                                           soc_mode="free")
-                     if (nu is None and allow_dis) else None)
+            rc_bf = _dp_cost_via_networkx_at(inst, al, mu_s, step=inst.soc_step,
+                                             nu=nu, allow_discharge=allow_dis,
+                                             soc_mode="free")
         if rc_bf is None:
             continue
         n_cmp += 1
         if out:
             col, rc_dp = out[0]
-            rc_master = (reduced_cost(col, sol, inst) if nu is None else rc_dp)
+            rc_master = reduced_cost(col, sol2, inst)
             d1 = abs(rc_dp - rc_bf)
             d2 = abs(rc_dp - rc_master)
             worst = max(worst, d1, d2)
             n_col += 1
             if d1 > 1e-5 or d2 > 1e-5:
                 sys.exit(f"GATE FAIL k={k} sd={sd} n={n} eta={eta} mode={mode} "
-                         f"stations={stations}: rc_dp={rc_dp:.6f} rc_bf={rc_bf:.6f} "
-                         f"rc_master={rc_master:.6f}")
+                         f"step={step} stations={stations}: rc_dp={rc_dp:.6f} "
+                         f"rc_bf={rc_bf:.6f} rc_master={rc_master:.6f}")
         else:
             if rc_bf < -1e-5:
-                sys.exit(f"GATE FAIL k={k}: DP found no column but BF found rc={rc_bf:.6f}")
+                sys.exit(f"GATE FAIL k={k} mode={mode} step={step}: DP found no "
+                         f"column but BF found rc={rc_bf:.6f}")
     rows.append({"comparisons": n_cmp, "columns_checked": n_col,
                  "worst_abs_diff": worst, "commit": COMMIT, "status": "PASS"})
     save(rows, path)

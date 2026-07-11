@@ -119,9 +119,15 @@ def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None,
 
 ARTIFICIAL_COST = 1e6                    # Phase-I penalty. Artificials carry zero
                                          # energy, so the initial RMP is feasible under
-                                         # any caps; a strictly positive artificial use
-                                         # in the PRICED-OUT lattice LP certifies
-                                         # infeasibility of the coupled lattice LP.
+                                         # any caps. NOTE: positive artificial mass in
+                                         # the priced-out ECONOMIC LP is only a trigger,
+                                         # not a certificate -- a finite penalty can park
+                                         # fractional mass on a feasible instance whose
+                                         # marginal coverage cost exceeds 1e6 near a cap
+                                         # boundary. Infeasibility is certified by a true
+                                         # Phase-I (min artificial mass, real costs
+                                         # zeroed) priced to optimality; see
+                                         # overnight13._phase1_certify.
 
 def artificial_column(inst: Instance, tr) -> Column:
     a = np.zeros(inst.n_trips); a[tr.idx] = 1.0
@@ -151,11 +157,17 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
                       tol: float = 1e-6, rc_stop: float = 0.0, beta: float = 0.5,
                       max_iter: int = 1000, do_milp: bool = True, verbose: bool = False,
                       enrich: int = 25, lp_solver: str = "highs", milp_solver: str = "cbc",
-                      soc_mode: str = "cyclic"):
+                      soc_mode: str = "cyclic", extra_cols: list | None = None):
     caps = SCENARIOS[scenario]
     batt = caps["battery"]
     flat = caps.get("flat_price", False)
     cols = initial_columns(inst, start, caps, soc_mode=soc_mode)
+    if extra_cols:                        # warm pool injection (e.g. Phase-I discoveries);
+        seen0 = set(_col_key(c) for c in cols)   # injected raw, so the flat transform below
+        for c in extra_cols:                     # applies uniformly (idempotent on e = 0)
+            k0 = _col_key(c)
+            if k0 not in seen0:
+                cols.append(c); seen0.add(k0)
     if flat:
         cols = [_flatten_col(c, inst) for c in cols]
         mu_flat = np.full(inst.T, inst.c_g)   # every charged unit pays c_g, always
