@@ -81,8 +81,10 @@ BREAKS2 = [(4, 9), (16, 21)]   # repaired evening window. Under the full-recharg
                                # depot inside the horizon, and 21:00 starts return in time
                                # but cannot restore full charge before midnight. Starts at
                                # 16:00-20:00 leave >=3 post-return blocks: all 60 tasks
-                               # individually feasible. (Under the periodic convention
-                               # s0=sT free, the late tasks become feasible again.)
+                               # individually feasible. (The periodic convention
+                               # s0=sT free restores the 21:00 tasks, whose failure
+                               # is SoC restoration; the 22:00 tasks stay infeasible
+                               # under any convention -- depot return exceeds T.)
 UNIFORM = [(9, 19)]            # midday window with the SAME trip counts (10 start hours)
 SCAL    = [(4, 9)]             # single window: n(n-1)*5 trips -> 10..450 at 2..10 locations
 
