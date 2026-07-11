@@ -1,42 +1,36 @@
 """
-Overnight-13: the correction round. Every study records honest solver status
-(optimal / feasible-incumbent), CG convergence, and Phase-I artificial counts.
+Overnight-13: the correction round, finalized for the 48h+ weekend.
+Every study records honest solver status, CG convergence, Phase-I artificial
+counts, git commit, solver names, lattice step, and SoC boundary.
+Headline studies run at delta = 25 kWh (exact lattice for the lossless family,
+Corollary 1). Universal Phase-I coverage means the initial RMP is always
+feasible: infeasibility is certified by artificials in the priced-out LP,
+never by seed accidents.
 
-  FOURARM   : the V2G x BESS factorial that identifies the treatment effects the
-              two-arm design confounded: arms {solar, solar_bess, v2g_fleet, v2g}
-              over pv {1..4} x n {20,60,120} x 3 draws. 324 bases. tl 900.
-  FOURCAPS  : the generation-cap feasibility cliff re-run with all four arms
-              (does charge-only + BESS survive tight caps?): gen_m {1.0,1.05,
-              1.1,1.2,1.3,inf} x n {20,60,120} x 3 draws at pv 2.5, charging
-              cap 0.7x trough. 216 cells. tl 300.
-  W2        : weather-year rerun on the REPAIRED deterministic base (BREAKS2:
-              all 60 tasks individually feasible): 365 days x pv {1,1.5,2,2.5,3}
-              x arms {solar, solar_bess, v2g}. 5,475 solves. tl 60.
-  EXPORT2   : honest-export table rerun on BREAKS2-window fleets:
-              n 20..200 x pv 7 levels, v2g. 70 solves. tl 300.
-  REGIME2   : regime ladder rerun on the repaired deterministic base:
-              {vsp, ev, solar, solar_bess, v2g_fleet, v2g} x n {20,60,120}
-              x pv {1,2,3}. 162 solves. tl 300.
-  SPINE25   : the one-factor spine re-run at delta = 25 kWh (the step at which
-              every energy and rate quantum divides, so the oracle is exact for
-              the planning family). 240 cells. tl 300.
-  ETA125    : the round-trip-loss sweep at delta = 12.5 kWh (minimizes the
-              rate-quantization confound): eta {0,.05,.1,.15,.2,.3} x n {20,60}
-              x 2 draws x {solar, v2g}. 144 cells. tl 300.
-  PERIODIC  : the steady-state boundary robustness Anna asked for: truck
-              s0 = sT with the level free (soc_mode="periodic"): export subgrid
-              n {20,60,100,140} x pv {1,1.5,2,2.5,3} (v2g) + the reference-cell
-              four arms x 3 draws. 32 solves, each ~15x pricing cost. tl 600.
-  HOLDOUT22 : out-of-sample test of the committed-schedule study: candidates =
-              2023 annual + monthly mean days (design year), evaluated on all
-              365 days of 2022 (holdout year) at pv {2,3}, plus the 2022
-              perfect-foresight floor. tl 180/60.
+  GATE      : BLOCKING pre-launch oracle gate (DP vs independent Bellman-Ford
+              vs master reduced-cost formula across boundary/loss/station
+              variants; fails loud). Requires networkx. ~120 comparisons.
+  FOURARM   : V2G x BESS factorial, 324 solves (3 draws x 3 sizes x 9 pv x 4
+              arms), 25 kWh, tl 900.
+  FOURARMX  : +336 solves, draws 3-9 in the activation region pv 1.5-2.5.
+  FOURCAPS  : generation-cap frontier, all 4 arms, 216 solves, 25 kWh, tl 300.
+  ALIGN     : lattice/theorem alignment, 64 solves: matched 50/25/12.5 lossless
+              (LP must tie at 25 vs 12.5 by Corollary 1) + eta=0.15 refinement.
+  DIAG2     : corrected integer diagnostics on the U6 maps, 24 cells, tl 1800
+              (incumbents preserved; shard 12 ways for the 4h wall).
+  AUDIT     : CBC vs Gurobi on identical column pools, 8 matched cells.
+  PERIODIC  : full-recharge vs periodic boundary, 32 cells, 25 kWh.
+  W2        : weather year on repaired BREAKS2, 3 arms x 5 pv x 365d, 25 kWh.
+  EXPORT2   : repaired export table, 70 solves, 25 kWh.
+  REGIME2   : regime ladder, 162 solves (3 draws x 3 sizes x 3 pv x 6 scen).
+  SPINE25   : one-factor spine, 456 solves (4 arms), 25 kWh.
+  ETA125    : loss sweep at 12.5 kWh, 192 solves (4 arms).
+  HOLDOUT22 : 2023-design vs 2022-test commitment study.
+  SUN2      : solar-shortfall ladder, corrected: 4 arms, 25 kWh, fixed assets.
 
 Run: OVERNIGHT13_STUDIES="..." OVERNIGHT13_SHARD="i/K" python3 overnight13.py
-Suggested shards: FOURARM 6, FOURCAPS 2, W2 8, EXPORT2 1, REGIME2 1,
-SPINE25 3, ETA125 2, PERIODIC 2, HOLDOUT22 3.
-All studies checkpoint per row (atomic) and skip done cells, so they are
-preemption/requeue safe on default_partition.
+All studies checkpoint per row (atomic) and skip done cells: preemption/requeue
+safe on default_partition.
 """
 from __future__ import annotations
 import csv
@@ -50,6 +44,14 @@ from recreate_arxiv import build_instance, BREAKS, BREAKS2
 from colgen import column_generation, SCENARIOS
 from master import solve_milp, solve_lp
 from overnight3 import ckpt, save, rand_trips, CG_COST, CB_COST, RHO, CV, MILP_SOLVER
+
+import subprocess
+try:
+    COMMIT = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"],
+                                     cwd=os.path.dirname(os.path.abspath(__file__)),
+                                     text=True).strip()
+except Exception:
+    COMMIT = "unknown"
 
 STUDIES = os.environ.get("OVERNIGHT13_STUDIES", "FOURARM").split(",")
 SH_I, SH_K = (int(x) for x in os.environ.get("OVERNIGHT13_SHARD", "0/1").split("/"))
@@ -75,7 +77,9 @@ def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None):
                             enrich=25, max_iter=max(2000, 5 * inst.n_trips),
                             soc_mode=soc_mode)
     out = {"cg_converged": res.get("converged"), "cg_term": res.get("term_reason"),
-           "lp_obj": (None if not np.isfinite(res["lp_obj"]) else round(res["lp_obj"], 2))}
+           "lp_obj": (None if not np.isfinite(res["lp_obj"]) else round(res["lp_obj"], 2)),
+           "commit": COMMIT, "milp_solver": MILP_SOLVER, "lp_solver": "highs",
+           "soc_step": float(getattr(inst, "soc_step", 0.5)), "soc_mode": soc_mode}
     if not np.isfinite(res["lp_obj"]):
         out.update({"feasible": False, "milp_status": "lp_infeasible"})
         return out
@@ -94,6 +98,7 @@ def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None):
                 "trucks": int(sum(round(x) for c, x in zip(res["cols"], mip.x)
                                   if x > 0.5 and getattr(c, "kind", "") == "truck")),
                 "batteries": int(round(mip.nb)),
+                "solver_bound": getattr(mip, "solver_bound", None),
                 "gap_pct": round((mip.obj - res["lp_obj"]) / abs(mip.obj) * 100, 3)})
     return out
 
@@ -110,6 +115,7 @@ def fourarm():
             continue
         fleet = rand_trips(3, n, sd, salt=50_000)
         inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+        inst.soc_step = 0.25                    # exact lattice for the lossless family
         rows.append({"pv": pv, "n_tasks": n, "seed": sd, "scenario": arm,
                      **_stats(inst), **_solve13(inst, arm, tl=900.0)})
         save(rows, path)
@@ -133,6 +139,7 @@ def fourcaps():
         peak_sur = float(np.maximum(-inst.Delta, 0.0).max())
         inst.gen_cap = m * peak_def if np.isfinite(m) else float("inf")
         inst.charge_cap = 0.7 * peak_sur
+        inst.soc_step = 0.25
         rows.append({"gen_m": (m if np.isfinite(m) else None), "n_tasks": n, "seed": sd,
                      "scenario": arm, "pv": 2.5, **_stats(inst),
                      **_solve13(inst, arm, tl=300.0)})
@@ -171,6 +178,7 @@ def w2():
             continue
         dh = np.round(D - ghi * (S.sum() * pv / mean_daily)).astype(int)
         inst = build_instance(3, 2.0, BREAKS2, delta_hourly=dh)
+        inst.soc_step = 0.25
         rows.append({"date": date, "pv": pv, "scenario": arm, **_stats(inst),
                      **_solve13(inst, arm, tl=60.0)})
         save(rows, path)
@@ -190,6 +198,7 @@ def export2():
             continue
         fleet = sample_fleet(np.random.default_rng(40 + n), 3, n, BREAKS2)
         inst = build_instance(3, 2.0, BREAKS2, pv_scale=pv, trip_list=fleet)
+        inst.soc_step = 0.25
         baseline = float(np.maximum(inst.Delta, 0.0).sum())
         r = _solve13(inst, "v2g", tl=300.0)
         incr = (None if not r.get("feasible") else round((r["g_units"] - baseline) / 10, 2))
@@ -200,23 +209,24 @@ def export2():
 
 
 def regime2():
+    from overnight2 import sample_fleet
     rows, path = ckpt(f"overnight13_regime2_s{SH_I}of{SH_K}.json")
-    done = {(r["n_tasks"], r["pv"], r["scenario"]) for r in rows}
+    done = {(r["n_tasks"], r["pv"], r["seed"], r["scenario"]) for r in rows}
     SCENS = ["vsp", "ev", "solar", "solar_bess", "v2g_fleet", "v2g"]
-    cells = [(n, pv, sc) for n in (20, 60, 120) for pv in (1.0, 2.0, 3.0) for sc in SCENS]
+    cells = [(sd, n, pv, sc) for sd in (0, 1, 2) for n in (20, 60, 120)
+             for pv in (1.0, 2.0, 3.0) for sc in SCENS]
     print(f"REGIME2: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
-    for idx, (n, pv, sc) in enumerate(cells):
-        if idx % SH_K != SH_I or (n, pv, sc) in done:
+    for idx, (sd, n, pv, sc) in enumerate(cells):
+        if idx % SH_K != SH_I or (n, pv, sd, sc) in done:
             continue
-        inst = build_instance(3, 2.0, BREAKS2, pv_scale=pv)
-        if n != 60:
-            inst = build_instance(3, 2.0, BREAKS2, pv_scale=pv,
-                                  trip_list=[(t.sloc, t.eloc, t.start / 2) for t in
-                                             build_instance(3, 2.0, BREAKS2).trips][:n])
-        rows.append({"n_tasks": inst.n_trips, "pv": pv, "scenario": sc, **_stats(inst),
+        fleet = sample_fleet(np.random.default_rng(100 * sd + n), 3, n, BREAKS2)
+        inst = build_instance(3, 2.0, BREAKS2, pv_scale=pv, trip_list=fleet)
+        inst.soc_step = 0.25
+        rows.append({"n_tasks": n, "pv": pv, "seed": sd, "scenario": sc, **_stats(inst),
                      **_solve13(inst, sc, tl=300.0)})
         save(rows, path)
-    print("REGIME2 done", flush=True)
+        if idx % 12 == 0:
+            print(f"  [{idx + 1}/{len(cells)}]", flush=True)
 
 
 def spine25():
@@ -230,7 +240,7 @@ def spine25():
             + [("genm", v) for v in (1.0, 1.1, 1.3, float("inf"))]
             + [("chgc", v) for v in (0.35, 0.7, 1.4, float("inf"))])
     cells = [(sd, f, v, scen) for sd in (0, 1, 2) for (f, v) in arms
-             for scen in ("solar", "v2g")]
+             for scen in ARMS4]
     print(f"SPINE25: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
     for idx, (sd, f, v, scen) in enumerate(cells):
         if idx % SH_K != SH_I or (f, str(v), sd, scen) in done:
@@ -268,7 +278,7 @@ def eta125():
     done = {(r["eta"], r["n_tasks"], r["seed"], r["scenario"], r["pv"]) for r in rows}
     cells = [(sd, n, e, scen) for sd in (0, 1) for n in (20, 60)
              for e in (0.0, 0.05, 0.1, 0.15, 0.2, 0.3)
-             for scen in ("solar", "v2g")]
+             for scen in ARMS4]
     print(f"ETA125: {len(cells)} cells x pv{{1,2.5}}, shard {SH_I}/{SH_K} "
           f"({len(rows)} done)", flush=True)
     for idx, (sd, n, e, scen) in enumerate(cells):
@@ -390,12 +400,236 @@ def holdout22():
     print("HOLDOUT22 done", flush=True)
 
 
+def gate():
+    """Pre-launch oracle gate: DP vs independent Bellman-Ford on small instances
+    across boundary/loss/station variants, plus reduced-cost replay. FAILS LOUD."""
+    from pricing_truck import price_truck_dp, _dp_cost_via_networkx
+    from master import solve_lp, Column, reduced_cost
+    rows, path = ckpt(f"overnight13_gate_s{SH_I}of{SH_K}.json")
+    rng = np.random.default_rng(7)
+    n_cmp, n_col, worst = 0, 0, 0.0
+    for k in range(120):
+        if k % SH_K != SH_I:
+            continue
+        sd = int(rng.integers(0, 10_000))
+        n = int(rng.integers(4, 9))
+        eta = float(rng.choice([0.0, 0.1]))
+        mode = str(rng.choice(["cyclic", "free"]))
+        stations = rng.choice([None, "all"])
+        fleet = rand_trips(3, n, sd, salt=11_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.0,
+                              stations=(None if stations is None else "all"))
+        inst.c_g, inst.c_b, inst.rho, inst.c_v = CG_COST, CB_COST, RHO, CV
+        inst.eta = eta
+        cols = [Column("truck", np.eye(inst.n_trips)[i], np.zeros(inst.T), inst.c_v, f"t{i}")
+                for i in range(inst.n_trips)]
+        sol = solve_lp(inst, cols)
+        if sol.status != "optimal":
+            continue
+        out = price_truck_dp(inst, sol.alpha, sol.mu, step=inst.soc_step, soc_mode=mode)
+        rc_bf = _dp_cost_via_networkx(inst, sol.alpha, sol.mu, step=inst.soc_step,
+                                      soc_mode=mode)
+        n_cmp += 1
+        if out:
+            col, rc_dp = out[0]
+            rc_master = reduced_cost(col, sol, inst)
+            d1 = abs(rc_dp - rc_bf)
+            d2 = abs(rc_dp - rc_master)
+            worst = max(worst, d1, d2)
+            n_col += 1
+            if d1 > 1e-5 or d2 > 1e-5:
+                sys.exit(f"GATE FAIL k={k} sd={sd} n={n} eta={eta} mode={mode} "
+                         f"stations={stations}: rc_dp={rc_dp:.6f} rc_bf={rc_bf:.6f} "
+                         f"rc_master={rc_master:.6f}")
+        else:
+            if rc_bf < -1e-5:
+                sys.exit(f"GATE FAIL k={k}: DP found no column but BF found rc={rc_bf:.6f}")
+    rows.append({"comparisons": n_cmp, "columns_checked": n_col,
+                 "worst_abs_diff": worst, "commit": COMMIT, "status": "PASS"})
+    save(rows, path)
+    print(f"GATE PASS: {n_cmp} comparisons, {n_col} columns, worst |diff| {worst:.2e}", flush=True)
+
+
+def align():
+    """Lattice/theorem alignment: matched 50/25/12.5 kWh lossless solves (LP must
+    agree at 25 vs 12.5 by Corollary 1) plus eta>0 refinement (12.5 vs 6.25)."""
+    rows, path = ckpt(f"overnight13_align_s{SH_I}of{SH_K}.json")
+    done = {(r["n_tasks"], r["pv"], r["seed"], r["scenario"], r["soc_step"], r["eta"])
+            for r in rows}
+    cells = []
+    for sd in (0, 1):
+        for n in (20, 60):
+            for pv in (1.5, 2.5):
+                for step in (0.5, 0.25, 0.125):
+                    for scen in ("solar", "v2g"):
+                        cells.append((sd, n, pv, 0.0, step, scen))
+    for sd in (0, 1):
+        for n in (20, 60):
+            for step in (0.125, 0.0625):
+                cells.append((sd, n, 2.5, 0.15, step, "v2g"))
+    print(f"ALIGN: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (sd, n, pv, eta, step, scen) in enumerate(cells):
+        if idx % SH_K != SH_I or (n, pv, sd, scen, step, eta) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+        inst.soc_step = step
+        inst.eta = eta
+        rows.append({"n_tasks": n, "pv": pv, "seed": sd, "eta": eta, "scenario": scen,
+                     **_stats(inst), **_solve13(inst, scen, tl=600.0)})
+        save(rows, path)
+        print(f"  [{idx + 1}/{len(cells)}] n{n} pv{pv} eta{eta} step{step} {scen}", flush=True)
+
+
+def diag2():
+    """Corrected integer diagnostics on the U6 maps: incumbents preserved, full
+    provenance, fresh checkpoint schema. Shard finely (12 shards = 2 cells each)."""
+    from overnight3 import POOL
+    rows, path = ckpt(f"overnight13_diag2_s{SH_I}of{SH_K}.json")
+    done = {(r["L"], r["n_tasks"], r["seed"]) for r in rows}
+    cells = [(L, n, sd) for L in (4, 15) for n in (100, 200, 400, 600, 800, 1000)
+             for sd in (0, 1)]
+    print(f"DIAG2: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (L, n, sd) in enumerate(cells):
+        if idx % SH_K != SH_I or (L, n, sd) in done:
+            continue
+        fleet = rand_trips(L, n, 200 + sd)
+        inst = build_instance(L, 1.0, [(6, 20)], trip_list=fleet, duration=1.0,
+                              coords_override=POOL[:L], stations="all", pv_scale=2.0)
+        r = _solve13(inst, "v2g", tl=1800.0)
+        rows.append({"L": L, "n_tasks": n, "seed": sd, **r})
+        save(rows, path)
+        print(f"  L={L} n={n} sd={sd}: lp {r.get('lp_obj')} ip {r.get('total')} "
+              f"({r.get('milp_status')})", flush=True)
+
+
+def audit():
+    """Solver audit: same column pool, final MILP solved by BOTH CBC and Gurobi,
+    on a matched hard/easy subset. Records incumbents, bounds, times."""
+    from overnight3 import POOL
+    rows, path = ckpt(f"overnight13_audit_s{SH_I}of{SH_K}.json")
+    done = {r["cell"] for r in rows}
+    cells = [("bench_n60", 3, 60, 0, 2.0, None, 0.0), ("bench_n120", 3, 120, 0, 2.0, None, 0.0),
+             ("cap_n60", 3, 60, 0, 2.5, "cap", 0.0), ("eta_n60", 3, 60, 0, 2.5, None, 0.15),
+             ("ms_L4_n100", 4, 100, 0, 2.0, "ms", 0.0), ("ms_L15_n100", 15, 100, 0, 2.0, "ms", 0.0),
+             ("ms_L4_n200", 4, 200, 0, 2.0, "ms", 0.0), ("bench_n20", 3, 20, 0, 2.0, None, 0.0)]
+    print(f"AUDIT: {len(cells)} cells x 2 solvers, shard {SH_I}/{SH_K}", flush=True)
+    for idx, (name, L, n, sd, pv, kind, eta) in enumerate(cells):
+        if idx % SH_K != SH_I or name in done:
+            continue
+        if kind == "ms":
+            fleet = rand_trips(L, n, 200 + sd)
+            inst = build_instance(L, 1.0, [(6, 20)], trip_list=fleet, duration=1.0,
+                                  coords_override=POOL[:L], stations="all", pv_scale=pv)
+        else:
+            fleet = rand_trips(3, n, sd, salt=50_000)
+            inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+            inst.soc_step = 0.25
+            inst.eta = eta
+            if kind == "cap":
+                inst.gen_cap = 1.1 * float(np.maximum(inst.Delta, 0.0).max())
+        inst.c_g, inst.c_b, inst.rho, inst.c_v = CG_COST, CB_COST, RHO, CV
+        res = column_generation(inst, scenario="v2g", start="warm", do_milp=False,
+                                enrich=25, max_iter=max(2000, 5 * inst.n_trips))
+        row = {"cell": name, "lp_obj": round(res["lp_obj"], 2), "commit": COMMIT,
+               "cg_converged": res.get("converged")}
+        for solver in ("cbc", "gurobi"):
+            t0 = time.time()
+            try:
+                mip = solve_milp(inst, res["cols"], time_limit=1800.0,
+                                 battery_allowed=True, solver=solver)
+                row[solver] = {"obj": (None if not np.isfinite(mip.obj) else round(mip.obj, 2)),
+                               "status": mip.status,
+                               "bound": getattr(mip, "solver_bound", None),
+                               "time_s": round(time.time() - t0, 1)}
+            except Exception as ex:
+                row[solver] = {"error": str(ex)[:200]}
+        rows.append(row)
+        save(rows, path)
+        print(f"  {name}: cbc {row.get('cbc')} | grb {row.get('gurobi')}", flush=True)
+
+
+def fourarmx():
+    """Extra task draws (seeds 3-9) in the activation region gamma ~ 0.2-0.6."""
+    rows, path = ckpt(f"overnight13_fourarmx_s{SH_I}of{SH_K}.json")
+    done = {(r["pv"], r["n_tasks"], r["seed"], r["scenario"]) for r in rows}
+    cells = [(sd, n, pv, arm) for sd in range(3, 10) for n in (20, 60, 120)
+             for pv in (1.5, 1.75, 2.0, 2.5) for arm in ARMS4]
+    print(f"FOURARMX: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (sd, n, pv, arm) in enumerate(cells):
+        if idx % SH_K != SH_I or (pv, n, sd, arm) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+        inst.soc_step = 0.25
+        rows.append({"pv": pv, "n_tasks": n, "seed": sd, "scenario": arm,
+                     **_stats(inst), **_solve13(inst, arm, tl=900.0)})
+        save(rows, path)
+        if idx % 16 == 0:
+            print(f"  [{idx + 1}/{len(cells)}]", flush=True)
+
+
+def sun2():
+    """Solar-shortfall ladder, corrected: four arms, 25 kWh lattice, honest statuses."""
+    from profile_robustness import base_curves
+    rows, path = ckpt(f"overnight13_sun2_s{SH_I}of{SH_K}.json")
+    done = {(r["kind"], str(r["level"]), r["pv"], r["n_tasks"], r["seed"], r["scenario"])
+            for r in rows}
+    D, S = base_curves()
+    UNI = [0.9, 0.8, 0.7, 0.6, 0.5, 0.3, 0.1]
+    CLOUD = {"c10_12": (10, 12), "c12_14": (12, 14), "c14_16": (14, 16),
+             "c10_14": (10, 14), "c12_16": (12, 16)}
+    arms = [("uniform", u) for u in UNI] + [("cloud", w) for w in CLOUD]
+    cells = [(sd, n, pv, scen) for sd in (0, 1, 2) for n in (20, 60)
+             for pv in (1.5, 2.5) for scen in ARMS4]
+    print(f"SUN2: {len(cells)} bases x {len(arms)} arms, shard {SH_I}/{SH_K} "
+          f"({len(rows)} done)", flush=True)
+    for idx, (sd, n, pv, scen) in enumerate(cells):
+        if idx % SH_K != SH_I:
+            continue
+        if all((k, str(v), pv, n, sd, scen) in done for k, v in arms):
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        dh0 = np.round(D - pv * S).astype(int)
+        inst0 = build_instance(3, 2.0, BREAKS, trip_list=fleet, delta_hourly=dh0)
+        inst0.soc_step = 0.25
+        base_cap = 1.5 * float(np.maximum(inst0.Delta, 0.0).max())
+        inst0.gen_cap = base_cap
+        s1 = _solve13(inst0, scen, tl=300.0)
+        if not s1.get("feasible"):
+            continue
+        for kind, v in arms:
+            if (kind, str(v), pv, n, sd, scen) in done:
+                continue
+            Sd = pv * S.copy()
+            if kind == "uniform":
+                Sd = v * Sd
+            else:
+                a, b = CLOUD[v]
+                Sd[a:b] = 0.0
+            inst = build_instance(3, 2.0, BREAKS, trip_list=fleet,
+                                  delta_hourly=np.round(D - Sd).astype(int))
+            inst.soc_step = 0.25
+            inst.gen_cap = base_cap
+            inst.max_trucks = s1["trucks"]
+            inst.nb_fixed = float(s1["batteries"])
+            r = _solve13(inst, scen, tl=300.0)
+            rows.append({"kind": kind, "level": v, "pv": pv, "n_tasks": n, "seed": sd,
+                         "scenario": scen, "stage1_trucks": s1["trucks"],
+                         "stage1_batteries": s1["batteries"],
+                         "stage1_total": s1["total"], **_stats(inst0), **r})
+            save(rows, path)
+        if idx % 8 == 0:
+            print(f"  [{idx + 1}/{len(cells)}]", flush=True)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
     FN = {"FOURARM": fourarm, "FOURCAPS": fourcaps, "W2": w2, "EXPORT2": export2,
           "REGIME2": regime2, "SPINE25": spine25, "ETA125": eta125,
-          "PERIODIC": periodic, "HOLDOUT22": holdout22}
+          "PERIODIC": periodic, "HOLDOUT22": holdout22, "GATE": gate, "ALIGN": align,
+          "DIAG2": diag2, "AUDIT": audit, "FOURARMX": fourarmx, "SUN2": sun2}
     _known = {s.strip().upper() for s in FN}
     _bad = [s for s in STUDIES if s.strip().upper() not in _known]
     if _bad:

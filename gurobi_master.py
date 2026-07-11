@@ -149,5 +149,10 @@ def solve_milp_gurobi(inst: Instance, cols: list[Column], time_limit: float = 12
     gv = np.array([g[t].X for t in range(T)])
     cv = np.array([chg[t].X for t in range(T)])
     dv = np.array([dis[t].X for t in range(T)])
-    return RMPSolution(status, m.ObjVal, xv, gv, np.zeros(n), np.zeros(T),
-                       True, Nb.X, cv, dv)
+    sol = RMPSolution(status, m.ObjVal, xv, gv, np.zeros(n), np.zeros(T),
+                      True, Nb.X, cv, dv)
+    try:
+        sol.solver_bound = float(m.ObjBound)
+    except Exception:
+        sol.solver_bound = None
+    return sol

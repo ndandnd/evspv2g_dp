@@ -1,105 +1,96 @@
-# Weekend run plan (48h unattended, finalize before submitting)
+# Weekend run plan — FINAL (48h+, unattended; longer is better)
 
-Two tiers on the unicorn/G2 cluster:
+Everything assumes `cd ~/evspv2g_dp && git pull` first, and that the conda env
+has networkx (`pip install --user networkx` once if the GATE job complains).
 
-- **`-p scaglione`** (group priority): never preempted, but ~4 h wall limit.
-  Reserve for runs whose single cells are long (a preemption mid-cell wastes
-  the most work here).
-- **`-p default_partition --requeue --time=48:00:00`**: preemptible, but every
-  overnight study checkpoints per row (atomic write) and skips done cells on
-  restart, so preemption is a pause, not a loss. `--requeue` puts the job back
-  in queue automatically; `--open-mode=append` (in the sbatch files) keeps logs
-  across restarts. This tier carries the bulk.
+Two tiers:
+- **`-p scaglione`**: no preemption, ~4h wall. Gets the GATE and the runs whose
+  single cells are long (DIAG2, AUDIT, PERIODIC).
+- **`-p default_partition --requeue --time=48:00:00`**: preemptible bulk; every
+  study checkpoints per row and resumes, so preemption is a pause.
 
-Everything below assumes `cd ~/evspv2g_dp && git pull` first.
+Corrections baked in since the draft plan (all smoke-tested):
+honest MILP statuses preserved everywhere (time-limit incumbents are kept and
+labeled `feasible`), universal Phase-I artificial coverage (the initial RMP can
+never be infeasible before pricing — this **invalidated the old feasibility
+cliff**: a first corrected solve shows charge-only IS feasible at the 1.0x cap
+at ~6.5x the full-stack cost), delta = 25 kWh on all headline studies (exact
+lattice for the lossless family), REGIME2 rebuilt (162 real cells), SPINE25 and
+ETA125 de-confounded (all four arms), provenance (commit, solvers, step,
+boundary) recorded per row, independent oracle fixed to the correct terminal
+condition and gated.
 
-## Tier 1 -- scaglione (uninterruptible, one job per line)
+## Step 0 — the blocking gate (run first, read output before releasing bulk)
 
 ```bash
-# DIAG: integer diagnostics on the 100-1000-task maps (completes Table 5).
-# Long cells (LP up to ~1 h + MILP up to 30 min): 4 shards fit the 4 h wall.
-for i in 0 1 2 3; do OVERNIGHT12_STUDIES=DIAG OVERNIGHT12_SHARD=$i/4 sbatch -p scaglione -N1 run_overnight12_unicorn.sbatch; done
-
-# PERIODIC: steady-state boundary robustness (32 cells, ~15x pricing cost each)
-OVERNIGHT13_STUDIES=PERIODIC OVERNIGHT13_SHARD=0/2 sbatch -p scaglione -N1 run_overnight13_unicorn.sbatch
-OVERNIGHT13_STUDIES=PERIODIC OVERNIGHT13_SHARD=1/2 sbatch -p scaglione -N1 run_overnight13_unicorn.sbatch
+JG=$(sbatch --parsable -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=GATE,OVERNIGHT13_SHARD=0/1 run_overnight13_unicorn.sbatch)
+echo "gate job $JG -- check overnight13_${JG}.out says GATE PASS before proceeding"
 ```
 
-## Tier 2 -- default_partition (preemptible bulk; requeue-safe)
+If the gate FAILS, stop and send me the output. If it passes:
+
+## Step 1 — the core (priorities 1–5; release immediately after the gate)
 
 ```bash
 DP="-p default_partition --requeue --time=48:00:00 -N1"
 
-# FOURARM: the V2G x BESS factorial (324 bases x 4 arms grid, tl 900) -- the
-# run that identifies the treatment effects; highest priority of the weekend.
-for i in 0 1 2 3 4 5; do OVERNIGHT13_STUDIES=FOURARM OVERNIGHT13_SHARD=$i/6 sbatch $DP run_overnight13_unicorn.sbatch; done
+# P1: the factorial that decides the paper's economics (12 shards)
+for i in $(seq 0 11); do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=FOURARM,OVERNIGHT13_SHARD=$i/12 run_overnight13_unicorn.sbatch; done
 
-# FOURCAPS: the feasibility cliff with all four arms (does charge-only+BESS survive?)
-OVERNIGHT13_STUDIES=FOURCAPS OVERNIGHT13_SHARD=0/2 sbatch $DP run_overnight13_unicorn.sbatch
-OVERNIGHT13_STUDIES=FOURCAPS OVERNIGHT13_SHARD=1/2 sbatch $DP run_overnight13_unicorn.sbatch
+# P2: the corrected cap frontier (does charge-only+BESS survive? is anything infeasible at all?)
+for i in $(seq 0 5); do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=FOURCAPS,OVERNIGHT13_SHARD=$i/6 run_overnight13_unicorn.sbatch; done
 
-# W2: weather year on the repaired deterministic base (BREAKS2), 3 arms x 5 pv
-for i in 0 1 2 3 4 5 6 7; do OVERNIGHT13_STUDIES=W2 OVERNIGHT13_SHARD=$i/8 sbatch $DP run_overnight13_unicorn.sbatch; done
+# P3: lattice/theorem alignment (Corollary-1 test: LP(25) must equal LP(12.5) lossless)
+for i in $(seq 0 3); do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=ALIGN,OVERNIGHT13_SHARD=$i/4 run_overnight13_unicorn.sbatch; done
 
-# EXPORT2 + REGIME2: repaired-window export table and regime ladder (small)
-OVERNIGHT13_STUDIES=EXPORT2,REGIME2 OVERNIGHT13_SHARD=0/1 sbatch $DP run_overnight13_unicorn.sbatch
+# P4: corrected scalability diagnostics + solver audit (scaglione: long single cells)
+for i in $(seq 0 11); do sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=DIAG2,OVERNIGHT13_SHARD=$i/12 run_overnight13_unicorn.sbatch; done
+sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=AUDIT,OVERNIGHT13_SHARD=0/2 run_overnight13_unicorn.sbatch
+sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=AUDIT,OVERNIGHT13_SHARD=1/2 run_overnight13_unicorn.sbatch
 
-# SPINE25: the one-factor spine at delta = 25 kWh (exact-lattice headline runs)
-for i in 0 1 2; do OVERNIGHT13_STUDIES=SPINE25 OVERNIGHT13_SHARD=$i/3 sbatch $DP run_overnight13_unicorn.sbatch; done
-
-# ETA125: loss sweep at delta = 12.5 kWh (minimal rate-quantization confound)
-OVERNIGHT13_STUDIES=ETA125 OVERNIGHT13_SHARD=0/2 sbatch $DP run_overnight13_unicorn.sbatch
-OVERNIGHT13_STUDIES=ETA125 OVERNIGHT13_SHARD=1/2 sbatch $DP run_overnight13_unicorn.sbatch
-
-# HOLDOUT22: committed schedules designed on 2023, tested on 2022 (out-of-sample)
-for i in 0 1 2; do OVERNIGHT13_STUDIES=HOLDOUT22 OVERNIGHT13_SHARD=$i/3 sbatch $DP run_overnight13_unicorn.sbatch; done
-
-# Completions from the previous round
-OVERNIGHT12_STUDIES=PACK3 OVERNIGHT12_SHARD=0/2 sbatch $DP run_overnight12_unicorn.sbatch
-OVERNIGHT12_STUDIES=PACK3 OVERNIGHT12_SHARD=1/2 sbatch $DP run_overnight12_unicorn.sbatch
-OVERNIGHT12_STUDIES=SUN  OVERNIGHT12_SHARD=0/2 sbatch $DP run_overnight12_unicorn.sbatch   # resumes; s1of2 done
-OVERNIGHT11_STUDIES=MODESX3 sbatch $DP run_overnight11_unicorn.sbatch                      # resumes at ~800/1872
+# P5: boundary-convention comparison (scaglione)
+sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=PERIODIC,OVERNIGHT13_SHARD=0/2 run_overnight13_unicorn.sbatch
+sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=PERIODIC,OVERNIGHT13_SHARD=1/2 run_overnight13_unicorn.sbatch
 ```
 
-## The trio (MODESX2 / CAPS2 / CAPS3): diagnose BEFORE resubmitting
-
-They completed in ~1 second five times. First print what they actually said:
+## Step 2 — the breadth tail (submit right after Step 1; preemption ordering
+## naturally lets the core drain first, and these soak the remaining 48h+)
 
 ```bash
-cat overnight5_822328.out overnight5_822329.out overnight6_822330.out
+for i in $(seq 0 9);  do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=W2,OVERNIGHT13_SHARD=$i/10 run_overnight13_unicorn.sbatch; done
+sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=EXPORT2,REGIME2,OVERNIGHT13_SHARD=0/1 run_overnight13_unicorn.sbatch
+for i in $(seq 0 3);  do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=SPINE25,OVERNIGHT13_SHARD=$i/4 run_overnight13_unicorn.sbatch; done
+sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=ETA125,OVERNIGHT13_SHARD=0/2 run_overnight13_unicorn.sbatch
+sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=ETA125,OVERNIGHT13_SHARD=1/2 run_overnight13_unicorn.sbatch
+for i in $(seq 0 2);  do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=HOLDOUT22,OVERNIGHT13_SHARD=$i/3 run_overnight13_unicorn.sbatch; done
+for i in $(seq 0 3);  do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=SUN2,OVERNIGHT13_SHARD=$i/4 run_overnight13_unicorn.sbatch; done
+for i in $(seq 0 11); do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=FOURARMX,OVERNIGHT13_SHARD=$i/12 run_overnight13_unicorn.sbatch; done
+# finish PACK3 (resumes at 38/48 under the corrected status wrapper)
+sbatch $DP --export=ALL,OVERNIGHT12_STUDIES=PACK3,OVERNIGHT12_SHARD=0/2 run_overnight12_unicorn.sbatch
+sbatch $DP --export=ALL,OVERNIGHT12_STUDIES=PACK3,OVERNIGHT12_SHARD=1/2 run_overnight12_unicorn.sbatch
 ```
 
-The runners now FAIL LOUD on unknown study names, so a name mismatch can no
-longer no-op silently. After reading the output (and `git pull`):
+## Deliberately dropped
 
-```bash
-OVERNIGHT5_STUDIES=MODESX2 sbatch $DP run_overnight5_unicorn.sbatch
-OVERNIGHT5_STUDIES=CAPS2   sbatch $DP run_overnight5_unicorn.sbatch
-OVERNIGHT6_STUDIES=CAPS3   sbatch $DP run_overnight6_unicorn.sbatch
-```
+- **MODESX2 / MODESX3 / CAPS2 / CAPS3**: superseded. The caps figure's error
+  bars now come from FOURCAPS (which also fixes the initialization artifact and
+  the missing arm); the modes 240–400 extension is deferred — the corrected
+  factorial carries the workload story. This also ends the five-submission
+  mystery chase.
+- **Old SUN/DIAG resumes**: replaced by SUN2/DIAG2 with corrected recorders and
+  fresh checkpoint schemas; do not resume the old shards.
 
-## Rules that keep the weekend safe
+## Solver policy (decided; revisit if you disagree)
 
-1. **Never two jobs on the same checkpoint file** (same study AND same shard
-   i/K). Different shards of one study are different files and are fine.
-2. Preempted/requeued jobs resume from their checkpoint automatically; a job
-   that hits `--time` can simply be resubmitted with the identical command.
-3. The correctness fixes in this round (honest MILP statuses, CG termination
-   flags, Phase-I artificial seeds, BREAKS2 windows, periodic pricing mode)
-   are all in `git`; the cluster MUST `git pull` before submitting anything.
-4. `squeue --me` truth check: our jobs are named `evsp_overnight*`; `sacct`
-   entries with other names/nodes are other clusters' recycled job IDs.
+Cluster runs use Gurobi for the final integer master, recorded per row; the
+AUDIT study solves eight matched cells with BOTH CBC and Gurobi so the paper
+can state the open-source reproducibility claim family-by-family, honestly.
 
-## What lands where (for the rebuild after the weekend)
+## Safety rules
 
-| Study | Feeds |
-|---|---|
-| FOURARM | collapse/value story recomputed with 4 arms; new gamma* (conditional); fig 5/7 successors |
-| FOURCAPS | feasibility-cliff figure with 4 arms (the "prerequisite" claim test) |
-| W2/EXPORT2/REGIME2 | weather fig, export table, regime fig on repaired instances |
-| SPINE25 | headline one-factor numbers at the exact lattice |
-| ETA125 | loss sweep without rate quantization |
-| PERIODIC | boundary-robustness table vs full-recharge (Table 3 companion) |
-| HOLDOUT22 | out-of-sample commitment figure (2023-design vs 2022-test) |
-| DIAG | integer columns for Table 5 |
-| PACK3 / MODESX3 / SUN / trio | pack fig 200-task curve; modes 6-seed; solar-shortfall fig; caps error bars |
+1. Never two jobs on the same (study, shard) key.
+2. A job that hits --time can be resubmitted with the identical command.
+3. `squeue --me` shows our jobs as `evsp_overnight13`; foreign names under
+   recycled IDs in sacct are other clusters' jobs.
+4. Results enter the paper only from rows with `cg_converged = true`, an
+   artificial-free incumbent for feasibility claims, and recorded statuses.

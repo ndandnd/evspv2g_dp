@@ -213,7 +213,7 @@ def _price_truck_dp_core(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
     return [(col, rc)]
 
 
-def _dp_cost_via_networkx(inst, alpha, mu, step=5.0):
+def _dp_cost_via_networkx(inst, alpha, mu, step=5.0, soc_mode="cyclic"):
     """Independent shortest-path on the same DAG (Bellman-Ford) -- coding cross-check."""
     import networkx as nx
     T = inst.T; eta, rho, G = inst.eta, inst.rho, inst.G
@@ -254,9 +254,13 @@ def _dp_cost_via_networkx(inst, alpha, mu, step=5.0):
                         s2 = s - tr.energy
                         if s2 < -1e-9 or tr.end > T: continue
                         Gr.add_edge(u, (tr.end, tr.eloc, sidx(s2), 1), weight=-alpha[tr.idx])
-    for si in range(nL):
-        if (T, origin, si, 1) in Gr:
-            Gr.add_edge((T, origin, si, 1), SNK, weight=0.0)
+    if soc_mode == "free":
+        for si in range(nL):
+            if (T, origin, si, 1) in Gr:
+                Gr.add_edge((T, origin, si, 1), SNK, weight=0.0)
+    else:                                       # cyclic full recharge: terminal s = G only
+        if (T, origin, Gidx, 1) in Gr:
+            Gr.add_edge((T, origin, Gidx, 1), SNK, weight=0.0)
     return inst.c_v + nx.bellman_ford_path_length(Gr, SRC, SNK)
 
 

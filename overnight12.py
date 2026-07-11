@@ -89,9 +89,10 @@ def _solve12(inst, scen, tl=180.0, c_b=None, rho=None):
         return None
     mip = solve_milp(inst, res["cols"], time_limit=tl,
                      battery_allowed=SCENARIOS[scen]["battery"], solver=MILP_SOLVER)
-    if getattr(mip, "status", "optimal") != "optimal" or not np.isfinite(mip.obj):
+    if getattr(mip, "status", "optimal") == "milp_failed" or not np.isfinite(mip.obj):
         return None
-    return {"total": mip.obj, "g_units": float(mip.g.sum()),
+    return {"total": mip.obj, "milp_status": getattr(mip, "status", "optimal"),
+            "g_units": float(mip.g.sum()),
             "trucks": int(sum(round(x) for x in mip.x)),
             "batteries": int(round(mip.nb)),
             "gap": (mip.obj - res["lp_obj"]) / abs(mip.obj) * 100}

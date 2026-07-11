@@ -117,8 +117,11 @@ def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None,
     return cols
 
 
-ARTIFICIAL_COST = 1e5                    # Phase-I penalty: any selected artificial
-                                         # column flags an individually infeasible task
+ARTIFICIAL_COST = 1e6                    # Phase-I penalty. Artificials carry zero
+                                         # energy, so the initial RMP is feasible under
+                                         # any caps; a strictly positive artificial use
+                                         # in the PRICED-OUT lattice LP certifies
+                                         # infeasibility of the coupled lattice LP.
 
 def artificial_column(inst: Instance, tr) -> Column:
     a = np.zeros(inst.n_trips); a[tr.idx] = 1.0
@@ -130,7 +133,13 @@ def initial_columns(inst: Instance, start: str, caps: dict,
     base = []
     for tr in inst.trips:
         c = single_trip_column(inst, tr, ice=caps["ice"], free_start=(soc_mode == "free"))
-        base.append(c if c is not None else artificial_column(inst, tr))
+        if c is not None:
+            base.append(c)
+        base.append(artificial_column(inst, tr))   # Phase-I coverage for EVERY task:
+                                                   # seeds can violate shared caps that
+                                                   # pricing would respect, and the RMP
+                                                   # must never be infeasible before
+                                                   # pricing has run
     if start == "cold":
         return base
     extra = dp_greedy_columns(inst, caps, soc_mode=soc_mode)
