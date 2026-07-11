@@ -14,10 +14,12 @@ never by seed accidents.
               arms), 25 kWh, tl 900.
   FOURARMX  : +336 solves, draws 3-9 in the activation region pv 1.5-2.5.
   FOURCAPS  : generation-cap frontier, all 4 arms, 216 solves, 25 kWh, tl 300.
-  ALIGN     : lattice/theorem alignment, 64 solves: matched 50/25/12.5 lossless
+  ALIGN     : lattice/theorem alignment, 56 solves: matched 50/25/12.5 lossless
               (LP must tie at 25 vs 12.5 by Corollary 1) + eta=0.15 refinement.
-  DIAG2     : corrected integer diagnostics on the U6 maps, 24 cells, tl 1800
-              (incumbents preserved; shard 12 ways for the 4h wall).
+  DIAG2     : corrected integer diagnostics on the U6 maps, 24 cells, tl 1800.
+              Stays at 50 kWh BY DESIGN (multi-station energies divide no lattice)
+              and is labeled a coarse-lattice scalability study. Shard 24 ways:
+              one hard cell per scaglione job.
   AUDIT     : CBC vs Gurobi on identical column pools, 8 matched cells.
   PERIODIC  : full-recharge vs periodic boundary, 32 cells, 25 kWh.
   W2        : weather year on repaired BREAKS2, 3 arms x 5 pv x 365d, 25 kWh.
@@ -26,7 +28,13 @@ never by seed accidents.
   SPINE25   : one-factor spine, 456 solves (4 arms), 25 kWh.
   ETA125    : loss sweep at 12.5 kWh, 192 solves (4 arms).
   HOLDOUT22 : 2023-design vs 2022-test commitment study.
-  SUN2      : solar-shortfall ladder, corrected: 4 arms, 25 kWh, fixed assets.
+  SUN2      : DEFERRED this weekend: needs the max_trucks dual in pricing,
+              stage-1 persistence, and sunk-cost accounting before its rows are
+              publication-grade. Do not launch.
+  CHARGECAPS: charging-cap panel, corrected: 4 arms, generation uncapped,
+              25 kWh, peak-utilization recorded. 216 cells. Replaces fig (b).
+  PACK4     : fresh tight-gap pack x workload cells (G x {120,200} x 6 draws,
+              25 kWh, tl 1800). Replaces the legacy-schema PACK3.
 
 Run: OVERNIGHT13_STUDIES="..." OVERNIGHT13_SHARD="i/K" python3 overnight13.py
 All studies checkpoint per row (atomic) and skip done cells: preemption/requeue
@@ -68,38 +76,79 @@ def _stats(inst):
             "ratio": round(surplus / max(traction, 1e-9), 3)}
 
 
-def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None):
-    """Full-status solve: CG + restricted MILP, honest statuses, artificial count."""
+def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None,
+             want_profile=False):
+    """Full-status solve: CG + restricted MILP.
+    Outcome classes (never conflated):
+      feasible                 artificial-free incumbent (feasible=True)
+      lp_certified_infeasible  converged lattice LP still uses artificials
+                               (valid certificate: the 1e6 penalty provably
+                               dominates any real schedule cost at our scale,
+                               which is bounded above by ~1e5) (feasible=False)
+      no_real_incumbent        MILP returned only artificial-bearing solutions
+                               over the generated pool (feasible=None)
+      no_incumbent             MILP failed / timed out with nothing (feasible=None)
+    """
     inst.c_g, inst.c_v = CG_COST, CV
     inst.c_b = CB_COST if c_b is None else c_b
     inst.rho = RHO if rho is None else rho
+    t0 = time.time()
     res = column_generation(inst, scenario=scen, start="warm", do_milp=False,
                             enrich=25, max_iter=max(2000, 5 * inst.n_trips),
                             soc_mode=soc_mode)
+    cg_s = time.time() - t0
     out = {"cg_converged": res.get("converged"), "cg_term": res.get("term_reason"),
+           "cg_s": round(cg_s, 2), "cg_iters": res.get("iters"),
+           "cols": res.get("n_cols"), "pricing_s": round(res.get("pricing_time", 0.0), 2),
            "lp_obj": (None if not np.isfinite(res["lp_obj"]) else round(res["lp_obj"], 2)),
            "commit": COMMIT, "milp_solver": MILP_SOLVER, "lp_solver": "highs",
            "soc_step": float(getattr(inst, "soc_step", 0.5)), "soc_mode": soc_mode}
     if not np.isfinite(res["lp_obj"]):
-        out.update({"feasible": False, "milp_status": "lp_infeasible"})
+        out.update({"feasible": None, "outcome": "lp_unsolved", "milp_status": "none"})
         return out
+    # LP artificial mass on the final pool (the certificate lives at the LP level)
+    from master import solve_lp as _slp
+    lp = _slp(inst, res["cols"], battery_allowed=SCENARIOS[scen]["battery"],
+              soc_mode=soc_mode)
+    art_mass = float(sum(x for c, x in zip(res["cols"], lp.x)
+                         if getattr(c, "kind", "") == "artificial")) \
+        if lp.status == "optimal" else None
+    out["lp_artificial_mass"] = (None if art_mass is None else round(art_mass, 6))
+    if art_mass is not None and art_mass > 1e-6 and res.get("converged"):
+        out.update({"feasible": False, "outcome": "lp_certified_infeasible",
+                    "milp_status": "skipped"})
+        return out
+    t1 = time.time()
     mip = solve_milp(inst, res["cols"], time_limit=tl,
                      battery_allowed=SCENARIOS[scen]["battery"],
                      solver=MILP_SOLVER, soc_mode=soc_mode)
+    out["milp_s"] = round(time.time() - t1, 2)
     out["milp_status"] = mip.status
     if mip.status == "milp_failed" or not np.isfinite(mip.obj):
-        out["feasible"] = False
+        out.update({"feasible": None, "outcome": "no_incumbent"})
         return out
     n_art = sum(1 for c, x in zip(res["cols"], mip.x)
                 if x > 0.5 and getattr(c, "kind", "") == "artificial")
     out.update({"artificials": n_art,
-                "feasible": (n_art == 0),
+                "feasible": (True if n_art == 0 else None),
+                "outcome": ("feasible" if n_art == 0 else "no_real_incumbent"),
                 "total": round(mip.obj, 1), "g_units": round(float(mip.g.sum()), 2),
                 "trucks": int(sum(round(x) for c, x in zip(res["cols"], mip.x)
                                   if x > 0.5 and getattr(c, "kind", "") == "truck")),
                 "batteries": int(round(mip.nb)),
                 "solver_bound": getattr(mip, "solver_bound", None),
                 "gap_pct": round((mip.obj - res["lp_obj"]) / abs(mip.obj) * 100, 3)})
+    if want_profile and n_art == 0:
+        chg = np.zeros(inst.T)
+        for c, x in zip(res["cols"], mip.x):
+            if x > 0.5:
+                chg += np.maximum(c.e, 0.0) * round(x)
+        if getattr(mip, "charge", None) is not None:
+            chg += mip.charge
+        cap = float(getattr(inst, "charge_cap", float("inf")))
+        out["charge_total_units"] = round(float(chg.sum()), 2)
+        out["chargecap_util"] = (None if not np.isfinite(cap)
+                                 else round(float(chg.max()) / cap, 4))
     return out
 
 
@@ -250,7 +299,7 @@ def spine25():
         fleet = rand_trips(3, n, sd, salt=50_000)
         inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
         inst.soc_step = 0.25
-        base = {"factor": f, "value": (None if not np.isfinite(v) else v),
+        base = {"factor": f, "value": ("inf" if not np.isfinite(v) else v),
                 "n_tasks": n, "pv": pv, "seed": sd, **_stats(inst)}
         c_b = rho = None
         if f == "eta":
@@ -316,6 +365,7 @@ def periodic():
         else:
             fleet = rand_trips(3, n, sd, salt=50_000)
             inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+        inst.soc_step = 0.25                   # same lattice as the matched controls
         baseline = float(np.maximum(inst.Delta, 0.0).sum())
         r = _solve13(inst, arm, tl=600.0, soc_mode="periodic")
         rows.append({"cell": name, "kind": kind, "n_tasks": n, "pv": pv, "seed": sd,
@@ -360,6 +410,7 @@ def holdout22():
             ghi = dict(days22)[date]
             inst = build_instance(3, 2.0, BREAKS, trip_list=fleet,
                                   delta_hourly=dh_of(ghi, pv))
+            inst.soc_step = 0.25
             r = _solve13(inst, "v2g", tl=60.0)
             rows.append({"kind": "ws", "cand": "-", "date": date, "pv": pv,
                          **_stats(inst), **r})
@@ -370,6 +421,7 @@ def holdout22():
                 continue
             inst = build_instance(3, 2.0, BREAKS, trip_list=fleet,
                                   delta_hourly=dh_of(cands[cand], pv))
+            inst.soc_step = 0.25
             inst.c_g, inst.c_b, inst.rho, inst.c_v = CG_COST, CB_COST, RHO, CV
             res = column_generation(inst, scenario="v2g", start="warm", do_milp=False,
                                     enrich=25, max_iter=2000)
@@ -382,6 +434,8 @@ def holdout22():
             if ("cand", cand, "-", pv) not in done:
                 rows.append({"kind": "cand", "cand": cand, "date": "-", "pv": pv,
                              "total": round(mip.obj, 1), "milp_status": mip.status,
+                             "cg_converged": res.get("converged"), "commit": COMMIT,
+                             "soc_step": 0.25, "milp_solver": MILP_SOLVER,
                              "batteries": int(round(nb1)), **_stats(inst)})
                 save(rows, path)
             for d2, ghi2 in days22:
@@ -414,7 +468,9 @@ def gate():
         sd = int(rng.integers(0, 10_000))
         n = int(rng.integers(4, 9))
         eta = float(rng.choice([0.0, 0.1]))
-        mode = str(rng.choice(["cyclic", "free"]))
+        mode = str(rng.choice(["cyclic", "free", "periodic"]))
+        allow_dis = bool(rng.choice([True, False]))
+        use_nu = bool(rng.choice([True, False]))
         stations = rng.choice([None, "all"])
         fleet = rand_trips(3, n, sd, salt=11_000)
         inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.0,
@@ -426,13 +482,27 @@ def gate():
         sol = solve_lp(inst, cols)
         if sol.status != "optimal":
             continue
-        out = price_truck_dp(inst, sol.alpha, sol.mu, step=inst.soc_step, soc_mode=mode)
-        rc_bf = _dp_cost_via_networkx(inst, sol.alpha, sol.mu, step=inst.soc_step,
-                                      soc_mode=mode)
+        nu = (np.abs(rng.normal(0, 0.3, inst.T)) if use_nu else None)
+        out = price_truck_dp(inst, sol.alpha, sol.mu, step=inst.soc_step, soc_mode=mode,
+                             nu=nu, allow_discharge=allow_dis)
+        from pricing_truck import _dp_cost_via_networkx_periodic, _dp_cost_via_networkx_at
+        if mode == "periodic":
+            rc_bf = _dp_cost_via_networkx_periodic(inst, sol.alpha, sol.mu,
+                                                   step=inst.soc_step, nu=nu,
+                                                   allow_discharge=allow_dis)
+        elif mode == "cyclic":
+            rc_bf = _dp_cost_via_networkx_at(inst, sol.alpha, sol.mu, step=inst.soc_step,
+                                             nu=nu, allow_discharge=allow_dis)
+        else:
+            rc_bf = (_dp_cost_via_networkx(inst, sol.alpha, sol.mu, step=inst.soc_step,
+                                           soc_mode="free")
+                     if (nu is None and allow_dis) else None)
+        if rc_bf is None:
+            continue
         n_cmp += 1
         if out:
             col, rc_dp = out[0]
-            rc_master = reduced_cost(col, sol, inst)
+            rc_master = (reduced_cost(col, sol, inst) if nu is None else rc_dp)
             d1 = abs(rc_dp - rc_bf)
             d2 = abs(rc_dp - rc_master)
             worst = max(worst, d1, d2)
@@ -623,13 +693,63 @@ def sun2():
             print(f"  [{idx + 1}/{len(cells)}]", flush=True)
 
 
+def chargecaps():
+    """Charging-cap panel, corrected: four arms, generation uncapped, 25 kWh,
+    with peak charging-cap utilization recorded. Replaces fig capsfrontier(b)."""
+    rows, path = ckpt(f"overnight13_chargecaps_s{SH_I}of{SH_K}.json")
+    done = {(str(r["chg_c"]), r["n_tasks"], r["seed"], r["scenario"]) for r in rows}
+    CHG = [0.35, 0.5, 0.7, 1.0, 1.4, float("inf")]
+    cells = [(sd, n, c, arm) for sd in (0, 1, 2) for n in (20, 60, 120)
+             for c in CHG for arm in ARMS4]
+    print(f"CHARGECAPS: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (sd, n, c, arm) in enumerate(cells):
+        key_c = "inf" if not np.isfinite(c) else c
+        if idx % SH_K != SH_I or (str(key_c), n, sd, arm) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.5)
+        inst.soc_step = 0.25
+        peak_sur = float(np.maximum(-inst.Delta, 0.0).max())
+        inst.charge_cap = c * peak_sur if np.isfinite(c) else float("inf")
+        rows.append({"chg_c": key_c, "n_tasks": n, "seed": sd, "scenario": arm,
+                     "pv": 2.5, **_stats(inst),
+                     **_solve13(inst, arm, tl=300.0, want_profile=True)})
+        save(rows, path)
+        if idx % 12 == 0:
+            print(f"  [{idx + 1}/{len(cells)}]", flush=True)
+
+
+def pack4():
+    """Fresh tight-gap pack x workload cells (replaces the legacy-schema PACK3):
+    G x n in {120,200}, six draws, v2g, 25 kWh, tl 1800."""
+    rows, path = ckpt(f"overnight13_pack4_s{SH_I}of{SH_K}.json")
+    done = {(r["G"], r["n_tasks"], r["seed"]) for r in rows}
+    cells = [(sd, n, G) for sd in range(6) for n in (120, 200)
+             for G in (3.5, 7.0, 10.5, 14.0)]
+    print(f"PACK4: {len(cells)} cells, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
+    for idx, (sd, n, G) in enumerate(cells):
+        if idx % SH_K != SH_I or (G, n, sd) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=90_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.0)
+        inst.soc_step = 0.25
+        inst.G = G
+        rows.append({"G": G, "n_tasks": n, "seed": sd, "pv": 2.0, "scenario": "v2g",
+                     **_stats(inst),
+                     **_solve13(inst, "v2g", tl=1800.0, c_b=CB_COST * G / 7.0)})
+        save(rows, path)
+        print(f"  G={G} n={n} sd={sd}: {rows[-1].get('total')} ({rows[-1].get('outcome')})",
+              flush=True)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
     FN = {"FOURARM": fourarm, "FOURCAPS": fourcaps, "W2": w2, "EXPORT2": export2,
           "REGIME2": regime2, "SPINE25": spine25, "ETA125": eta125,
           "PERIODIC": periodic, "HOLDOUT22": holdout22, "GATE": gate, "ALIGN": align,
-          "DIAG2": diag2, "AUDIT": audit, "FOURARMX": fourarmx, "SUN2": sun2}
+          "DIAG2": diag2, "AUDIT": audit, "FOURARMX": fourarmx, "SUN2": sun2,
+          "CHARGECAPS": chargecaps, "PACK4": pack4}
     _known = {s.strip().upper() for s in FN}
     _bad = [s for s in STUDIES if s.strip().upper() not in _known]
     if _bad:

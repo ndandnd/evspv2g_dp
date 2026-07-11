@@ -264,6 +264,83 @@ def _dp_cost_via_networkx(inst, alpha, mu, step=5.0, soc_mode="cyclic"):
     return inst.c_v + nx.bellman_ford_path_length(Gr, SRC, SNK)
 
 
+def _dp_cost_via_networkx_periodic(inst, alpha, mu, step=5.0, nu=None,
+                                   allow_discharge=True):
+    """Independent periodic (s0 = sT free) check: min over repeated start levels
+    of the per-level full-recharge-style graph with start = end = s0."""
+    best = INF
+    nL = int(round(inst.G / step)) + 1
+    for s0 in range(nL):
+        v = _dp_cost_via_networkx_at(inst, alpha, mu, step=step, s0=s0, nu=nu,
+                                     allow_discharge=allow_discharge)
+        best = min(best, v)
+    return best
+
+
+def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
+                             allow_discharge=True, soc_mode="cyclic"):
+    """Bellman-Ford cross-check with explicit start level s0 (defaults to full)
+    and terminal fixed to the same level (cyclic/periodic-at-s0 semantics)."""
+    import networkx as nx
+    T = inst.T; eta, rho, G = inst.eta, inst.rho, inst.G
+    eps = inst.eps_pen; epd = inst.energy_per_dist; origin = inst.depot
+    nLoc = inst.dist.shape[0]; nL = int(round(G / step)) + 1
+    if nu is None:
+        nu = np.zeros(T)
+    def sidx(v): return int(round(v / step))
+    Gidx = nL - 1
+    si0 = Gidx if s0 is None else int(s0)
+    up = int(np.floor((1 - eta) * rho / step)); dn = int(np.floor(rho / step))
+    if not allow_discharge:
+        dn = 0
+    trips_at = {}
+    for tr in inst.trips:
+        trips_at.setdefault((tr.start, tr.sloc), []).append(tr)
+    stations = list(getattr(inst, "charge_locs", None) or [origin])
+    Gr = nx.DiGraph(); SRC = ("S",); SNK = ("K",)
+    Gr.add_edge(SRC, (0, origin, si0, 0), weight=0.0)
+    for t in range(T):
+        for loc in range(nLoc):
+            for si in range(nL):
+                for k in (0, 1):
+                    u = (t, loc, si, k); s = si * step
+                    Gr.add_edge(u, (t + 1, loc, si, k), weight=0.0)
+                    if loc in stations:
+                        for dl in range(-dn, up + 1):
+                            if dl == 0:
+                                continue
+                            sj = si + dl
+                            if sj < 0 or sj >= nL:
+                                continue
+                            ds = dl * step
+                            e = ds / (1 - eta) if ds >= 0 else ds
+                            w = mu[t] * e + eps * abs(e)
+                            if ds >= 0:
+                                w += nu[t] * e
+                            Gr.add_edge(u, (t + 1, loc, sj, k), weight=w)
+                    for loc2 in range(nLoc):
+                        if loc2 == loc:
+                            continue
+                        dd = int(round(inst.dist[loc, loc2]))
+                        if dd <= 0 or t + dd > T:
+                            continue
+                        s2 = s - inst.dist[loc, loc2] * epd
+                        if s2 < -1e-9:
+                            continue
+                        Gr.add_edge(u, (t + dd, loc2, sidx(s2), k), weight=0.0)
+                    for tr in trips_at.get((t, loc), []):
+                        s2 = s - tr.energy
+                        if s2 < -1e-9 or tr.end > T:
+                            continue
+                        Gr.add_edge(u, (tr.end, tr.eloc, sidx(s2), 1), weight=-alpha[tr.idx])
+    if (T, origin, si0, 1) in Gr:
+        Gr.add_edge((T, origin, si0, 1), SNK, weight=0.0)
+    try:
+        return inst.c_v + nx.bellman_ford_path_length(Gr, SRC, SNK)
+    except nx.NetworkXNoPath:
+        return INF
+
+
 if __name__ == "__main__":
     import time
     from instance import make_instance
