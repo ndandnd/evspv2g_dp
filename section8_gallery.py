@@ -616,7 +616,9 @@ if os.path.exists(tlp):
                 else:
                     continue
                 a_.add_patch(plt.Rectangle((t / 2.0, i - 0.42), 0.5, 0.84, color=c))
-        labels = [f"Truck {i + 1}" + (f" ({tcounts[i]} tasks)" if tcounts[i] is not None else "")
+        labels = [f"Truck {i + 1}"
+                  + (f" ({tcounts[i]} task{'s' if tcounts[i] != 1 else ''})"
+                     if tcounts[i] is not None else "")
                   for i in range(len(truck_lanes))]
         if v.get("battery_net"):
             labels.append(f"Battery (x{v['batteries']})")
@@ -1007,6 +1009,7 @@ if sa13:
         ax[1].plot(LS13, b, "-o", color=c, ms=4, label=lab)
     ax[1].set_xlabel("number of task locations L"); ax[1].set_ylabel("stationary batteries bought (mean, 2x solar)")
     ax[1].set_title("(b) chargers substitute for storage"); ax[1].legend(fontsize=10)
+    C13c = {"1x": "#2E75B6", "2x": "#e08020", "summer": "#1e7d44", "sum2x": "#b02a20"}
     for sol, mk in (("1x", "-o"), ("2x", "-s"), ("summer", "--^"), ("sum2x", "--v")):
         vs = []
         for L in LS13:
@@ -1017,9 +1020,9 @@ if sa13:
                     if r2:
                         pp.append(100 * (_lp13(r) - _lp13(r2)) / _lp13(r))
             vs.append(float(np.mean(pp)) if pp else np.nan)
-        ax[2].plot(LS13, vs, mk, ms=4, label=TIT9.get(sol, sol))
+        ax[2].plot(LS13, vs, mk, ms=4.5, lw=1.9, color=C13c[sol], label=TIT9.get(sol, sol))
     ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
-    ax[2].set_title("(c) V2G value by solar regime"); ax[2].legend(fontsize=10)
+    ax[2].set_title("(c) V2G value by solar regime"); ax[2].legend(fontsize=10, loc="center right")
     # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
     NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", 12.25)]
     for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
@@ -1205,10 +1208,10 @@ if fc16 and cp16:
     # feasible; outcome markers where no cost exists
     GM16 = [1.0, 1.05, 1.1, 1.2, 1.3, None]
     xl16 = [("uncapped" if m is None else f"{m:g}") for m in GM16]
-    ARM16 = (("solar", "#e08020", "charge-only, no storage"),
-             ("v2g_fleet", "#7d3c98", "V2G fleet, no storage"),
-             ("solar_bess", "#16a085", "charge-only + storage"),
-             ("v2g", "#2E75B6", "V2G + storage"))
+    ARM16 = (("solar", "#e08020", "charge-only, no BESS"),
+             ("v2g_fleet", "#7d3c98", "V2G fleet, no BESS"),
+             ("solar_bess", "#16a085", "charge-only + BESS"),
+             ("v2g", "#2E75B6", "V2G + BESS"))
     N16 = 120
     Y_CERT, Y_NRI = 13.1, 12.55           # marker bands above the cost range
     XOFF16 = {"solar": -0.09, "v2g_fleet": 0.09}   # de-overlap the two storage-less arms
@@ -1242,7 +1245,7 @@ if fc16 and cp16:
     ax[0].set_ylim(9.9, 13.6)
     ax[0].set_xlabel("generation cap (x no-fleet peak deficit); charging cap 0.7x peak surplus")
     ax[0].set_ylabel("median total daily cost (k$), 120 tasks")
-    ax[0].set_title("(a) corrected cliff at scale: storage-less arms leave the map")
+    ax[0].set_title("(a) corrected cliff at scale: no-BESS arms leave the map")
     # (b) charging-cap effect at uncapped generation, matched per fleet size
     ccs = sorted({r["chg_c"] for r in cp16 if not np.isfinite(r["gen_m"])},
                  key=lambda x: (x == float("inf"), x))
