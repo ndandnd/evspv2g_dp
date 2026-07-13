@@ -25,7 +25,7 @@ from master import Column, RMPSolution
 
 def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: bool,
            time_limit: float | None = None, soc_mode: str = "cyclic",
-           mip_gap: float | None = None):
+           mip_gap: float | None = None, x_start: dict | None = None):
     """Build the restricted master in Gurobi. Returns (model, x, g, chg, dis, s, Nb,
     cover, bal, cc) so callers can read solution values and duals."""
     import gurobipy as gp
@@ -107,6 +107,14 @@ def _build(inst: Instance, cols: list[Column], integer: bool, battery_allowed: b
                                       for r in range(R) if cols[r].e[t] > 1e-9) + chg[t]
                           <= float(inst.charge_cap), name=f"cc_{t}") for t in range(T)]
 
+    if integer and x_start:                    # MIP warm start (common-pool studies)
+        for r_, val in x_start.get("x", {}).items():
+            if 0 <= int(r_) < R:
+                x[int(r_)].Start = int(round(val))
+        for r_ in range(R):
+            if r_ not in x_start.get("x", {}):
+                x[r_].Start = 0
+        Nb.Start = int(round(x_start.get("nb", 0.0)))
     m.optimize()
     return m, x, g, chg, dis, s, Nb, cover, bal, cc
 
@@ -133,13 +141,14 @@ def solve_lp_gurobi(inst: Instance, cols: list[Column], battery_allowed: bool = 
 
 def solve_milp_gurobi(inst: Instance, cols: list[Column], time_limit: float = 120.0,
                       battery_allowed: bool = True, soc_mode: str = "cyclic",
-                      mip_gap: float | None = None) -> RMPSolution:
+                      mip_gap: float | None = None,
+                      x_start: dict | None = None) -> RMPSolution:
     from gurobipy import GRB
     n, T, R = inst.n_trips, inst.T, len(cols)
     m, x, g, chg, dis, s, Nb, cover, bal, cc = _build(inst, cols, integer=True,
                                                       battery_allowed=battery_allowed,
                                                       time_limit=time_limit, soc_mode=soc_mode,
-                                                      mip_gap=mip_gap)
+                                                      mip_gap=mip_gap, x_start=x_start)
     if m.SolCount == 0:                       # no feasible integer solution found (e.g. time-out)
         return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
                            np.zeros(n), np.zeros(T), True)

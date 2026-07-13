@@ -1,3 +1,72 @@
+# OVERNIGHT-14 — common-pool repair round (8–9 h)
+
+`cd ~/evspv2g_dp && git pull` first.
+
+Why: the overnight13 four-arm integer comparisons solved each arm over its own
+generated pool. The exact LP values respect every dominance relation; the
+incumbents do not (14 nesting violations in FOURARM, 42 adjacent-cap
+monotonicity violations in FOURCAPS — pool-and-time-limit artifacts, not
+economics). overnight14 re-solves the integer comparisons over arm-admissible
+UNION pools (C_CO = solar ∪ solar_bess; C_V2G = C_CO ∪ v2g_fleet ∪ v2g; caps
+studies also union across all six levels), restrictive→flexible and
+tight→loose with inherited MIP starts, so nesting and monotonicity hold by
+construction. Per-row verifications: union-pool LP == own priced-out LP,
+start acceptance, dominance; pool hashes and start provenance recorded.
+
+## Step 0 — blocking gates (scaglione; read output before releasing bulk)
+
+```bash
+JG=$(sbatch --parsable -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=GATE,OVERNIGHT13_SHARD=0/1 run_overnight13_unicorn.sbatch)
+JS=$(sbatch --parsable -p scaglione -N1 --export=ALL,OVERNIGHT14_STUDIES=SMOKE,OVERNIGHT14_SHARD=0/1 run_overnight14_unicorn.sbatch)
+echo "gates: overnight13_${JG}.out must say GATE PASS; overnight14_${JS}.out must say SMOKE PASS"
+```
+
+## Step 1 — core (release after BOTH gates pass)
+
+```bash
+DP="-p default_partition --requeue --time=24:00:00 -N1"
+
+# P1 the repaired factorial (the paper's principal treatment comparison)
+for i in $(seq 0 11); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=COMMON4,OVERNIGHT14_SHARD=$i/12 run_overnight14_unicorn.sbatch; done
+# P2 repaired generation-cap frontier (one base per shard; unions across caps)
+for i in $(seq 0 8); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=COMMONCAPS,OVERNIGHT14_SHARD=$i/9 run_overnight14_unicorn.sbatch; done
+# P3 charging-cap panel, common pools, utilization recorded (replaces legacy Fig 8b)
+for i in $(seq 0 8); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=CHARGECAPS2,OVERNIGHT14_SHARD=$i/9 run_overnight14_unicorn.sbatch; done
+# P4 integer diagnostics ladder (completes Table 5's promised column)
+for i in $(seq 0 23); do sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=DIAG2,OVERNIGHT13_SHARD=$i/24 run_overnight13_unicorn.sbatch; done
+# P5 lattice/Corollary-1 falsification test
+for i in $(seq 0 3); do sbatch $DP --export=ALL,OVERNIGHT13_STUDIES=ALIGN,OVERNIGHT13_SHARD=$i/4 run_overnight13_unicorn.sbatch; done
+# P6 CBC/Gurobi audit on eight matched pools (narrow claim)
+for i in $(seq 0 7); do sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES=AUDIT,OVERNIGHT13_SHARD=$i/8 run_overnight13_unicorn.sbatch; done
+```
+
+## Step 2 — spare capacity only
+
+```bash
+# PACK4 at finer sharding (6 cells/shard; 2 shards would risk 12 h worst case)
+for i in $(seq 0 7); do sbatch $DP --nice=200 --export=ALL,OVERNIGHT13_STUDIES=PACK4,OVERNIGHT13_SHARD=$i/8 run_overnight13_unicorn.sbatch; done
+```
+
+## Explicitly NOT queued this round
+
+- **FOURARMX unchanged**: its pv 1.5–2.5 window is NOT a common γ region
+  (γ = 2.6–5.9 / 0.86–1.98 / 0.43–0.99 at 20/60/120 tasks). If a numerical
+  break-even stays a headline, the replacement is a γ-matched design with the
+  charger premium inside the optimization.
+- **EXPORT2 tightening**: 27 of the 56 high-gap rows are already optimal on
+  their restricted pools, so longer MIP time closes nothing; the table gets
+  LP values or bound intervals and a combined-system-displacement relabel
+  instead (EXPORT4 four-arm only if marginal export stays central).
+- **SUN2**: still needs the max_trucks pricing dual + stage-1 persistence.
+
+## Claims discipline (additions)
+
+- Paired treatment claims from COMMON4/COMMONCAPS use the certified interval
+  [L_A − U_B, U_A − L_B] (LP bound of one arm vs incumbent of the other) and
+  say whether the sign is certified.
+- Rows with `lp_check_ok = false` or `start_accepted = false` are quarantined
+  as solver anomalies, not results.
+
 # Weekend run plan — FINAL v2 (48h+, unattended)
 
 `cd ~/evspv2g_dp && git pull` first. GATE needs networkx

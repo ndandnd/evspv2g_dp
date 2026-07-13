@@ -189,11 +189,17 @@ def reduced_cost(col: Column, sol: RMPSolution, inst: Instance) -> float:
 
 def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
                battery_allowed: bool = True, solver: str = "cbc",
-               soc_mode: str = "cyclic", mip_gap: float | None = None) -> RMPSolution:
+               soc_mode: str = "cyclic", mip_gap: float | None = None,
+               x_start: dict | None = None) -> RMPSolution:
+    """x_start (optional MIP warm start): {"x": {col_index: units}, "nb": count}.
+    A restrictive-arm or tighter-cap incumbent is always feasible for the
+    relaxation being solved, so the solver's final incumbent can only match or
+    improve it (the common-pool studies rely on this)."""
     if solver == "gurobi":
         from gurobi_master import solve_milp_gurobi
         return solve_milp_gurobi(inst, cols, time_limit, battery_allowed,
-                                 soc_mode=soc_mode, mip_gap=mip_gap)
+                                 soc_mode=soc_mode, mip_gap=mip_gap,
+                                 x_start=x_start)
     import pulp
     n, T, R = inst.n_trips, inst.T, len(cols)
     G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
@@ -244,6 +250,15 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
     kwargs = {"msg": 0, "timeLimit": time_limit}
     if mip_gap is not None:
         kwargs["gapRel"] = mip_gap
+    if x_start:
+        for r_, val in x_start.get("x", {}).items():
+            if 0 <= int(r_) < R:
+                x[int(r_)].setInitialValue(int(round(val)))
+        for r_ in range(R):
+            if r_ not in x_start.get("x", {}):
+                x[r_].setInitialValue(0)
+        Nb.setInitialValue(int(round(x_start.get("nb", 0.0))))
+        kwargs["warmStart"] = True
     st = p.solve(pulp.PULP_CBC_CMD(**kwargs))
     if pulp.value(p.objective) is None:
         return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
