@@ -165,24 +165,26 @@ caption("Table 8.2",
 
 # %% Figure 8.1 -- scalability + where the time goes
 if e20:
-    fig, ax = plt.subplots(1, 3, figsize=(15.5, 4.2), constrained_layout=True)
-    for data, c, lab in ((e20, "#2E75B6", "200 kWh/task"), (e15 or [], "#e08020", "150 kWh/task")):
+    # two panels (print readability): CG time for both families on the left,
+    # pricing share on the right
+    fig, ax = plt.subplots(1, 2, figsize=(11.5, 4.6), constrained_layout=True)
+    for data, c, lab in ((e20, "#2E75B6", "benchmark, 200 kWh/task (laptop)"),
+                         (e15 or [], "#e08020", "benchmark, 150 kWh/task (laptop)")):
         if data:
             xs = [r["trips"] for r in data]
             ax[0].plot(xs, [r["cg_s"] for r in data], "-o", color=c, label=lab)
-            ax[2].plot(xs, [r["pricing_pct"] for r in data], "-o", color=c, label=lab)
-    ax[0].set_xlabel("tasks"); ax[0].set_ylabel("column-generation time (s)")
-    ax[0].legend(); ax[0].set_title("benchmark family (laptop)")
+            ax[1].plot(xs, [r["pricing_pct"] for r in data], "-o", color=c, label=lab)
     wc1 = load(ARX, "overnight2_warmcold.json")
     if wc1:
         ns1 = sorted({r["n_tasks"] for r in wc1})
         tm1 = [float(np.mean([r["time_s"] for r in wc1
                               if r["n_tasks"] == n and r["start"] == "warm"])) for n in ns1]
-        ax[1].plot(ns1, tm1, "-s", color="#16a085", ms=4, lw=1.7)
-        ax[1].set_xlabel("tasks"); ax[1].set_ylabel("column-generation time (s)")
-        ax[1].set_title("random fleets, multi-station model (cluster)")
-    ax[2].set_xlabel("tasks"); ax[2].set_ylabel("pricing share of CG time (%)")
-    ax[2].set_ylim(0, 100); ax[2].legend(); ax[2].set_title("where the time goes")
+        ax[0].plot(ns1, tm1, "-s", color="#16a085", ms=4, lw=1.7,
+                   label="random fleets, multi-station (cluster)")
+    ax[0].set_xlabel("tasks"); ax[0].set_ylabel("column-generation time (s)")
+    ax[0].legend(); ax[0].set_title("(a) column-generation time")
+    ax[1].set_xlabel("tasks"); ax[1].set_ylabel("pricing share of CG time (%)")
+    ax[1].set_ylim(0, 100); ax[1].legend(); ax[1].set_title("(b) where the time goes")
     finish(fig, "fig_8_1_scalability.png")
     GALLERY.append("\n![fig 8.1](fig_8_1_scalability.png)\n")
     caption("Figure 8.1",
@@ -375,8 +377,8 @@ if tt:
         for a_ in ax:
             for xg in (2.5, 3.5):
                 a_.axvline(xg, ls=":", lw=0.9, color="#5f8f5f")
-        ax[0].text(3.0, 1.01, "measured heavy-duty EVs", ha="center",
-                   transform=ax[0].get_xaxis_transform(), fontsize=10, color="#4d774d")
+        ax[0].text(3.0, 0.965, "measured heavy-duty EVs", ha="center", va="top",
+                   transform=ax[0].get_xaxis_transform(), fontsize=10.5, color="#4d774d")
         eff_grid = np.linspace(1.0, 3.6, 50)
         CPRE = {1.0: "#2E75B6", 1.5: "#e08020", 2.0: "#c0392b"}
         for prem in prems:
@@ -391,7 +393,7 @@ if tt:
         ax[0].axhline(0, color="k", lw=0.9)
         ax[0].set_xlabel("kWh of diesel an ICE burns per kWh an EV uses\n(1x = equal-energy bookkeeping)")
         ax[0].set_ylabel("$ saved per day by electrifying")
-        ax[0].set_title("one fleet: value is an exact line; diamonds = break-even")
+        ax[0].set_title("(a) one fleet: an exact line; diamonds = break-even")
         ax[0].legend(loc="upper left", fontsize=10)
         if fleets84:
             CUSD = {0.0: "#2E75B6", 22.5: "#e08020", 45.0: "#c0392b"}
@@ -401,12 +403,12 @@ if tt:
                     ax[1].hist(v, bins=24, color=c, alpha=0.45,
                                label=f"{1 + pu / 45:.1f}x ICE: mean {np.mean(v):.2f}, "
                                      f"p95 {np.percentile(v, 95):.2f}")
-            ax[1].text(3.0, 1.01, "measured heavy-duty EVs", ha="center",
-                       transform=ax[1].get_xaxis_transform(), fontsize=10, color="#4d774d")
+            ax[1].text(3.0, 0.965, "measured heavy-duty EVs", ha="center", va="top",
+                       transform=ax[1].get_xaxis_transform(), fontsize=10.5, color="#4d774d")
             ax[1].set_xlim(1.0, 3.6)
             ax[1].set_xlabel(f"break-even efficiency across {len(fleets84)} randomized fleets")
             ax[1].set_ylabel("number of fleets")
-            ax[1].set_title("all fleets: the whole distribution stays left of reality")
+            ax[1].set_title("(b) all fleets break even left of reality")
             ax[1].legend(fontsize=10, loc="upper right")
         finish(fig, "fig_8_4_electrify.png")
         GALLERY.append("\n![fig 8.4](fig_8_4_electrify.png)\n")
@@ -448,17 +450,20 @@ for _p in _glob5.glob(os.path.join(ARX, "overnight2_highR_s*.json")):
                if "v2g_vs_solar_pct" in r]
 weather = [(r["ratio"], r["v2g_vs_solar_pct"]) for r in se if "v2g_vs_solar_pct" in r]
 if len(design) >= 10:
-    fig, ax = plt.subplots(figsize=(9, 5.2), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(8.4, 5.0), constrained_layout=True)
     ax.axhspan(-3, 2, color="#fdf2e3", zorder=0)
-    ax.text(0.985, 1.0, "below the computed enablement break-even (gamma* ~ 0.31-0.35; see text)", ha="right",
-            fontsize=10, color="#a07020", transform=ax.get_yaxis_transform())
+    # annotation INSIDE the shaded band, left side, print-size font (the gamma=1
+    # marker lives at the top of its own line, so the two can no longer collide)
+    ax.text(0.015, -2.55, "shaded: below the enablement break-even\n(gamma* ~ 0.31-0.35; see text)",
+            ha="left", va="bottom", fontsize=11, color="#a07020",
+            transform=ax.get_yaxis_transform())
     xs_a = np.array([p[0] for p in sorted(design)]); ys_a = np.array([p[1] for p in sorted(design)])
     ax.set_xscale("log")                       # the action spans R ~ 0.05 to ~70
     ax.scatter(xs_a, ys_a, color="#9aa7b5", s=16, alpha=0.8,
-               label=f"{len(design)} hypothetical bases (20-560 tasks, 50-250 kWh duties, PV sizes, profile shapes)")
+               label=f"{len(design)} hypothetical bases\n(20-560 tasks; varied duties, PV, profiles)")
     if weather:
         ax.scatter([p[0] for p in weather], [p[1] for p in weather], marker="^", s=34,
-                   color="#2E75B6", label=f"one base under {len(weather)} sampled real 2023 weather days")
+                   color="#2E75B6", label=f"one base, {len(weather)} real 2023 weather days")
     edges = np.geomspace(max(xs_a.min(), 0.02), xs_a.max(), 19)   # bins in log space
     ctr, med, lo_b, hi_b = [], [], [], []
     for a2, b2 in zip(edges, edges[1:]):
@@ -471,12 +476,14 @@ if len(design) >= 10:
     ax.plot(ctr, med, "-", color="#444444", lw=2, alpha=0.85, label="binned median")
 
     ax.axvline(1.0, ls=":", color="#888")
-    ax.text(1.02, 0.03, "gamma = 1: surplus equals fleet appetite", transform=ax.get_xaxis_transform(),
-            fontsize=10, color="#666")
-    ax.set_xlabel("gamma = daily leftover solar / daily fleet driving energy  ('solar per unit of fleet appetite')")
+    ax.text(1.06, 0.975, "gamma = 1: surplus equals fleet appetite",
+            transform=ax.get_xaxis_transform(), fontsize=11, color="#666",
+            rotation=90, ha="left", va="top")
+    ax.set_xlabel("gamma = daily leftover solar / daily fleet driving energy")
     ax.set_ylabel("% of total daily cost saved by enabling V2G (gross)")
-    ax.set_title("what is V2G worth, holding operations fixed? compute gamma, read the curve")
-    ax.legend(loc="upper left", fontsize=10)
+    ax.set_title("what is V2G worth, holding operations fixed? compute gamma, read the curve",
+                 fontsize=13)
+    ax.legend(loc="upper left", fontsize=11)
     finish(fig, "fig_8_5_collapse.png")
     GALLERY.append("\n![fig 8.5](fig_8_5_collapse.png)\n")
     _twin_txt = "(e.g. a 20-task and a 6x-larger 120-task base at similar gamma save 6.5% and 9.2%)"
@@ -582,7 +589,7 @@ if os.path.exists(tlp):
         print(f"gantt candidates available (edit GANTT_SEED to flip): {seeds_avail}; showing {pick}")
     tl = [v for v in tl if v.get("seed", 5) == pick]
     nlanes = [len(v["lanes"]) + (1 if v.get("battery_net") else 0) for v in tl]
-    fig, axes = plt.subplots(len(tl), 1, figsize=(11, 1.6 + 0.26 * sum(nlanes)),
+    fig, axes = plt.subplots(len(tl), 1, figsize=(10.5, 2.0 + 0.34 * sum(nlanes)),
                              gridspec_kw={"height_ratios": [n + 2 for n in nlanes]},
                              constrained_layout=True, sharex=True)
     axes = np.atleast_1d(axes)
@@ -613,15 +620,20 @@ if os.path.exists(tlp):
                   for i in range(len(truck_lanes))]
         if v.get("battery_net"):
             labels.append(f"Battery (x{v['batteries']})")
-        a_.set_yticks(range(len(labels))); a_.set_yticklabels(labels, fontsize=6.5)
+        a_.set_yticks(range(len(labels))); a_.set_yticklabels(labels, fontsize=9.5)
         a_.set_xlim(0, 24); a_.set_ylim(-0.7, len(labels) - 0.3)
         bat_txt = (f"battery \\${v['cb']:.0f}/day" if v.get("cb") else "no stationary storage")
         a_.set_title(f"truck \\${v['cv']:.0f}/day, " + bat_txt + ": "
                      f"{v['trucks']} trucks ({v['tasks_per_truck']} tasks/truck), "
-                     f"{v['batteries']} batteries" + (f" -- {v['tag']}" if v.get("tag") else ""),
-                     fontsize=10.5)
-    axes[-1].set_xlabel("hour of day   (slate = serving a task, green = free solar charge, "
-                        "black = paid charge, red = discharge)")
+                     f"{v['batteries']} batteries", fontsize=11.5)
+    axes[-1].set_xlabel("hour of day")
+    # proper color legend (was compressed into the x-axis label)
+    from matplotlib.patches import Patch
+    fig.legend(handles=[Patch(color="#9fb3c8", label="serving a task"),
+                        Patch(color="#2e9e3f", label="free solar charge"),
+                        Patch(color="#333333", label="paid charge"),
+                        Patch(color="#c0392b", label="V2G discharge")],
+               ncol=4, loc="outside lower center", fontsize=10.5, frameon=False)
     finish(fig, "fig_8_7_timeline.png")
     GALLERY.append("\n![fig 8.7](fig_8_7_timeline.png)\n")
     caption("Figure 8.7",
@@ -713,9 +725,12 @@ if md9:
     for r in md9:
         r["sol"] = _sol9(r)
         r["seed"] = r.get("seed", 0)
-    sols9 = [x for x in ("1x", "2x", "3x", "4x", "summer", "sum2x")
+    # 3x2 layout for print (coauthor request): three story-carrying solar levels
+    # (dead zone / separation / real summer profile doubled); the 3x/4x/summer
+    # interpolants told the same story at unreadable size
+    sols9 = [x for x in ("1x", "2x", "sum2x")
              if any(r["sol"] == x for r in md9)]
-    fig, ax = plt.subplots(2, len(sols9), figsize=(4.6 * len(sols9) + 0.8, 7.6),
+    fig, ax = plt.subplots(2, len(sols9), figsize=(3.8 * len(sols9) + 0.6, 7.4),
                            sharex=True, constrained_layout=True, squeeze=False)
     for j, sol in enumerate(sols9):
         for scen, (lab, c, ls) in NM9.items():
@@ -967,7 +982,7 @@ if sa13:
                 out.append((_lp13(r), _lp13(r2)))
         return out
 
-    fig, ax = plt.subplots(2, 2, figsize=(12.8, 8.6), constrained_layout=True)
+    fig, ax = plt.subplots(2, 2, figsize=(11.2, 8.4), constrained_layout=True)
     ax = ax.ravel()
     def _mean_lp(L, sol, scen, st):
         v = [_lp13(r) for (l, s, n, sd, st_, sc), r in _idx13.items()
@@ -980,7 +995,7 @@ if sa13:
                        label=f"{base_lab}, {'depot charger only' if st == 'depot' else 'chargers everywhere'}")
     ax[0].set_xlabel("number of task locations L")
     ax[0].set_ylabel("mean total daily cost (k$, LP bound; 2x solar)")
-    ax[0].set_title("(a) absolute costs: V2G below charge-only; chargers narrow the gap")
+    ax[0].set_title("(a) absolute costs: V2G below charge-only")
     ax[0].legend(fontsize=10.5)
     for st, c, lab in (("depot", "#888888", "charger at depot only"),
                        ("all", "#16a085", "charger at every location")):
@@ -991,7 +1006,7 @@ if sa13:
             b.append(float(np.mean(v)) if v else np.nan)
         ax[1].plot(LS13, b, "-o", color=c, ms=4, label=lab)
     ax[1].set_xlabel("number of task locations L"); ax[1].set_ylabel("stationary batteries bought (mean, 2x solar)")
-    ax[1].set_title("(b) distributed charging substitutes for stationary storage"); ax[1].legend(fontsize=10)
+    ax[1].set_title("(b) chargers substitute for storage"); ax[1].legend(fontsize=10)
     for sol, mk in (("1x", "-o"), ("2x", "-s"), ("summer", "--^"), ("sum2x", "--v")):
         vs = []
         for L in LS13:
@@ -1004,7 +1019,7 @@ if sa13:
             vs.append(float(np.mean(pp)) if pp else np.nan)
         ax[2].plot(LS13, vs, mk, ms=4, label=TIT9.get(sol, sol))
     ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
-    ax[2].set_title("(c) V2G value by solar regime, across map sizes"); ax[2].legend(fontsize=10)
+    ax[2].set_title("(c) V2G value by solar regime"); ax[2].legend(fontsize=10)
     # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
     NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", 12.25)]
     for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
@@ -1016,10 +1031,18 @@ if sa13:
                 xs_f.append(nch); ys_f.append(float(np.mean(v)) / 1000)
         ax[3].plot(xs_f, ys_f, "-o", color=c, ms=5,
                    label="EVSP-Solar" if scen == "solar" else "EVSP-V2G")
-    ax[3].set_xlabel("number of charging locations (depot + k); large maps, 2x solar")
+    ax[3].set_xlabel("charging locations (depot + k); large maps, 2x solar")
     ax[3].set_ylabel("mean total daily cost (k$, LP bound)")
-    ax[3].set_title("(d) charger build-out: concave gains, V2G dominant throughout")
+    ax[3].set_title("(d) charger build-out: concave gains")
     ax[3].legend(fontsize=10)
+    for a13 in ax:                       # print-size panel text (after all assignments)
+        a13.tick_params(labelsize=11)
+        a13.xaxis.label.set_size(12.5); a13.yaxis.label.set_size(12.5)
+        a13.title.set_size(13)
+        lg13 = a13.get_legend()
+        if lg13 is not None:
+            for t13 in lg13.get_texts():
+                t13.set_size(11.5)
     finish(fig, "fig_8_13_stations.png")
     GALLERY.append("\n![fig 8.13](fig_8_13_stations.png)\n")
     caption("Figure 8.13",
@@ -1084,7 +1107,7 @@ if md14:
         ax[0].plot(pts, med, "-", lw=1.9, color=col, label=sol)
     ax[0].axhline(0, color="k", lw=0.7)
     ax[0].set_xlabel("number of daily tasks (fleet size)")
-    ax[0].set_ylabel("extra fossil displaced by enabling V2G\nvs the charge-only fleet (MWh/day)")
+    ax[0].set_ylabel("extra fossil displaced (MWh/day)")
     ax[0].set_title("the V2G advantage: grows with sun, fades with fleet size")
     ax[0].legend(fontsize=10, title="solar level", ncol=2)
     xs14 = [sur / max(tr, 1e-9) for (_, sur, _, _, _, tr) in gap_pts if np.isfinite(sur)]
@@ -1106,7 +1129,7 @@ if md14:
     ax[1].set_xscale("log")
     ax[1].axhline(0, color="k", lw=0.7)
     ax[1].set_xlabel("gamma = daily solar surplus / fleet traction (log)")
-    ax[1].set_ylabel("extra fossil displaced by enabling V2G\nvs the charge-only fleet (MWh/day)")
+    ax[1].set_ylabel("extra fossil displaced (MWh/day)")
     ax[1].set_title("the fade-out boundary is a level set of gamma")
     ax[1].legend(fontsize=10)
     finish(fig, "fig_8_14_boundary.png")
@@ -1164,32 +1187,62 @@ if et15:
         "the high-solar value survives. The R-rule's boundary is therefore "
         "loss-robust; only the height of the curve moves.")
 
-# %% Figure 8.16 -- infrastructure caps: the feasibility cliff + matched charging-cap effect
+# %% Figure 8.16 -- infrastructure caps: the CORRECTED four-arm frontier + matched charging-cap effect
+# Panel (a) now comes from the overnight13 FOURCAPS study: Phase-I-corrected
+# initialization, 25 kWh lattice, four arms including charge-only + purchasable
+# storage. Infeasibility is claimed only from the true Phase-I certificate.
+fc16 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight13_fourcaps_s*.json")):
+    fc16 += json.load(open(_p))
 cp16 = []
 for _p in _glob.glob(os.path.join(ARX, "overnight4_caps*_s*.json")):
     cp16 += json.load(open(_p))
-if cp16:
+if fc16 and cp16:
     cidx16 = {(r["gen_m"], r["chg_c"], r["n_tasks"], r["seed"], r["scenario"]): r
               for r in cp16}
     fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.4), constrained_layout=True)
-    # (a) the cliff at a moderate charging cap: infeasible share vs generation cap
-    gms = sorted({r["gen_m"] for r in cp16 if r["chg_c"] == 0.7},
-                 key=lambda x: (x == float("inf"), x))
-    xlab16 = [("uncapped" if not np.isfinite(m) else f"{m:g}") for m in gms]
-    for scen, c, lab in (("solar", "#e08020", "charge-only fleet"),
-                         ("v2g", "#2E75B6", "V2G fleet")):
-        ys = []
-        for m in gms:
-            rows = [r for r in cp16 if r["gen_m"] == m and r["chg_c"] == 0.7
-                    and r["scenario"] == scen]
-            ys.append(100 * sum(1 for r in rows if not r.get("feasible", True))
-                      / max(len(rows), 1))
-        ax[0].plot(range(len(gms)), ys, "-o", ms=5, color=c, label=lab)
-    ax[0].set_xticks(range(len(gms))); ax[0].set_xticklabels(xlab16)
-    ax[0].set_xlabel("generation cap (x no-fleet peak deficit); charging cap fixed at 0.7x peak surplus")
-    ax[0].set_ylabel("% of instances INFEASIBLE")
-    ax[0].set_title("(a) the feasibility cliff: charge-only fails where V2G operates")
-    ax[0].legend(fontsize=10)
+    # (a) the corrected cliff at the 120-task scale: median cost by arm where
+    # feasible; outcome markers where no cost exists
+    GM16 = [1.0, 1.05, 1.1, 1.2, 1.3, None]
+    xl16 = [("uncapped" if m is None else f"{m:g}") for m in GM16]
+    ARM16 = (("solar", "#e08020", "charge-only, no storage"),
+             ("v2g_fleet", "#7d3c98", "V2G fleet, no storage"),
+             ("solar_bess", "#16a085", "charge-only + storage"),
+             ("v2g", "#2E75B6", "V2G + storage"))
+    N16 = 120
+    Y_CERT, Y_NRI = 13.1, 12.55           # marker bands above the cost range
+    XOFF16 = {"solar": -0.09, "v2g_fleet": 0.09}   # de-overlap the two storage-less arms
+    for scen, c, lab in ARM16:
+        xs_ok, ys_ok = [], []
+        xo = XOFF16.get(scen, 0.0)
+        for k, m in enumerate(GM16):
+            cell = [r for r in fc16 if r["n_tasks"] == N16 and r["scenario"] == scen
+                    and r["gen_m"] == m]
+            fea = [r["total"] for r in cell if r.get("outcome") == "feasible"]
+            ncert = sum(1 for r in cell
+                        if r.get("outcome") == "lp_certified_infeasible")
+            nnri = sum(1 for r in cell
+                       if r.get("outcome") in ("no_real_incumbent", "no_incumbent"))
+            if fea:
+                xs_ok.append(k); ys_ok.append(float(np.median(fea)) / 1000)
+            if ncert:
+                ax[0].scatter([k + xo], [Y_CERT], marker="x", s=75, color=c, lw=2.4, zorder=5)
+            if nnri and not fea:
+                ax[0].scatter([k + xo], [Y_NRI], marker="o", s=48, facecolors="none",
+                              edgecolors=c, lw=1.6, zorder=5)
+        ax[0].plot(xs_ok, ys_ok, "-o", ms=5, color=c, label=lab)
+    from matplotlib.lines import Line2D
+    ax[0].legend(handles=(ax[0].get_legend_handles_labels()[0]
+                          + [Line2D([], [], marker="x", ls="", ms=8, mew=2.2, color="#555",
+                                    label="Phase-I certified infeasible"),
+                             Line2D([], [], marker="o", ls="", ms=7, mfc="none", color="#555",
+                                    label="no incumbent within limit (diagnostic)")]),
+                 fontsize=9.5, loc="center left")
+    ax[0].set_xticks(range(len(GM16))); ax[0].set_xticklabels(xl16)
+    ax[0].set_ylim(9.9, 13.6)
+    ax[0].set_xlabel("generation cap (x no-fleet peak deficit); charging cap 0.7x peak surplus")
+    ax[0].set_ylabel("median total daily cost (k$), 120 tasks")
+    ax[0].set_title("(a) corrected cliff at scale: storage-less arms leave the map")
     # (b) charging-cap effect at uncapped generation, matched per fleet size
     ccs = sorted({r["chg_c"] for r in cp16 if not np.isfinite(r["gen_m"])},
                  key=lambda x: (x == float("inf"), x))
@@ -1215,16 +1268,17 @@ if cp16:
     finish(fig, "fig_8_16_caps.png")
     GALLERY.append("\n![fig 8.16](fig_8_16_caps.png)\n")
     caption("Figure 8.16",
-        "Infrastructure limits at pv = 2.5x, caps anchored to each instance's "
-        "no-fleet peak deficit and peak solar surplus. (a) With a moderate "
-        "charging cap, tightening the generation cap toward the no-fleet peak "
-        "makes the charge-only fleet infeasible in every instance (any charging "
-        "schedule pushes some block over the cap) while the V2G fleet keeps "
-        "operating by discharging into its own charging peaks. (b) On matched "
-        "feasible instances at uncapped generation, tighter charging caps "
-        "monotonically clip V2G's saving by limiting how much surplus the fleet "
-        "can absorb; gaps in a line mean the tighter cap left no feasible "
-        "charge-only counterpart at that fleet size.")
+        "CORRECTED infrastructure frontier (overnight13 FOURCAPS: Phase-I "
+        "initialization, 25 kWh lattice, four arms). (a) At 120 tasks the two "
+        "storage-less arms (charge-only AND the V2G fleet without stationary "
+        "storage) are Phase-I-certified infeasible at caps 1.0-1.1x and produce "
+        "no incumbent at 1.2x, while both storage arms operate at every cap at "
+        "nearly flat cost; the dividing ingredient is purchasable storage, not "
+        "V2G. At 20 tasks every arm stays feasible at every cap (economic-only "
+        "penalty ~6x vs the storage arms at this solar level); 60 tasks is the "
+        "transition (~2x, one feasible seed at the 1.0x cap). (b) LEGACY panel "
+        "(overnight4, 50 kWh): matched charging-cap value clipping; to be "
+        "refreshed by the CHARGECAPS study.")
 
 # %% Figure 8.17 -- pack size: capacity knob + substitution across workloads
 pk17 = []

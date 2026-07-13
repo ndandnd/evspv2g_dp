@@ -153,7 +153,7 @@ Read top to bottom: this is the narrative order of the computational study.
 
 ![fig 8.16](fig_8_16_caps.png)
 
-**Figure 8.16.** Infrastructure limits at pv = 2.5x, caps anchored to each instance's no-fleet peak deficit and peak solar surplus. (a) With a moderate charging cap, tightening the generation cap toward the no-fleet peak makes the charge-only fleet infeasible in every instance (any charging schedule pushes some block over the cap) while the V2G fleet keeps operating by discharging into its own charging peaks. (b) On matched feasible instances at uncapped generation, tighter charging caps monotonically clip V2G's saving by limiting how much surplus the fleet can absorb; gaps in a line mean the tighter cap left no feasible charge-only counterpart at that fleet size.
+**Figure 8.16.** CORRECTED infrastructure frontier (overnight13 FOURCAPS: Phase-I initialization, 25 kWh lattice, four arms). (a) At 120 tasks the two storage-less arms (charge-only AND the V2G fleet without stationary storage) are Phase-I-certified infeasible at caps 1.0-1.1x and produce no incumbent at 1.2x, while both storage arms operate at every cap at nearly flat cost; the dividing ingredient is purchasable storage, not V2G. At 20 tasks every arm stays feasible at every cap (economic-only penalty ~6x vs the storage arms at this solar level); 60 tasks is the transition (~2x, one feasible seed at the 1.0x cap). (b) LEGACY panel (overnight4, 50 kWh): matched charging-cap value clipping; to be refreshed by the CHARGECAPS study.
 
 
 ![fig 8.17](fig_8_17_pack.png)
