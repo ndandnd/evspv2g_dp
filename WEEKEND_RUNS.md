@@ -47,6 +47,34 @@ for i in $(seq 0 7); do sbatch -p scaglione -N1 --export=ALL,OVERNIGHT13_STUDIES
 for i in $(seq 0 7); do sbatch $DP --nice=200 --export=ALL,OVERNIGHT13_STUDIES=PACK4,OVERNIGHT13_SHARD=$i/8 run_overnight13_unicorn.sbatch; done
 ```
 
+## Extension block — if the window is 24 h+ (submit any time; independent
+## of the running jobs, distinct study names and checkpoint files)
+
+```bash
+DP="-p default_partition --requeue --time=48:00:00 -N1"
+
+# E1 gamma-matched conditional break-even (the FOURARMX replacement): 126
+#    bases, solar_bess baseline vs V2G+BESS at charger premiums $0/4/8 per
+#    truck-day INSIDE the optimization, common pools + premium recosting
+for i in $(seq 0 13); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=GAMMA4,OVERNIGHT14_SHARD=$i/14 run_overnight14_unicorn.sbatch; done
+# E2 four more seeds through the identical COMMON4 protocol (error bars for
+#    the decomposition): 108 bases
+for i in $(seq 0 11); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=COMMON4X,OVERNIGHT14_SHARD=$i/12 run_overnight14_unicorn.sbatch; done
+# E3 annual weather ladder with common pools (repairs the conditional
+#    V2G|BESS distribution; overnight13 W2's tl-60 gaps are the size of the
+#    effect): 1,825 day/pv groups x 3 arms
+for i in $(seq 0 11); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=W2COMMON,OVERNIGHT14_SHARD=$i/12 run_overnight14_unicorn.sbatch; done
+# E4 four-arm common-pool comparison under BOTH boundary conventions
+#    (integer confirmation of the periodic LP result): 18 bases x 2
+for i in $(seq 0 5); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=PERIODIC4,OVERNIGHT14_SHARD=$i/6 run_overnight14_unicorn.sbatch; done
+```
+
+Pool-sharing rules encoded in the runners: pools are NEVER shared across
+boundary conventions (a full-recharge column and a periodic column bake
+different boundary states); premium arms share pools with recosted truck
+columns (feasibility is cost-free); charge-only arms never see discharge
+columns.
+
 ## Explicitly NOT queued this round
 
 - **FOURARMX unchanged**: its pv 1.5–2.5 window is NOT a common γ region

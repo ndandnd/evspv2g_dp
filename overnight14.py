@@ -47,7 +47,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from recreate_arxiv import build_instance, BREAKS
 from colgen import column_generation, SCENARIOS, _col_key
-from master import solve_lp, solve_milp
+from master import Column, solve_lp, solve_milp
 from overnight3 import ckpt, save, rand_trips, CG_COST, CB_COST, RHO, CV, MILP_SOLVER
 from overnight13 import _phase1_certify
 
@@ -85,27 +85,30 @@ def _union(*pools):
     return out
 
 
-def _cg_pool(inst, scen, ph1_budget=600.0):
+def _cg_pool(inst, scen, ph1_budget=600.0, soc_mode="cyclic", cv=None):
     """CG to price-out (mirrors overnight13._solve13's LP phase) and RETURN the
     pool. Positive artificial mass triggers the true Phase-I; a certified cell
     is returned with outcome lp_certified_infeasible and its real columns."""
-    inst.c_g, inst.c_v, inst.c_b, inst.rho = CG_COST, CV, CB_COST, RHO
+    inst.c_g, inst.c_v, inst.c_b, inst.rho = CG_COST, (CV if cv is None else cv), CB_COST, RHO
     t0 = time.time()
     res = column_generation(inst, scenario=scen, start="warm", do_milp=False,
-                            enrich=25, max_iter=max(2000, 5 * inst.n_trips))
+                            enrich=25, max_iter=max(2000, 5 * inst.n_trips),
+                            soc_mode=soc_mode)
     prov = {"cg_converged": res.get("converged"), "cg_term": res.get("term_reason"),
             "cg_iters": res.get("iters"), "cg_s": round(time.time() - t0, 2),
             "lp_own": (None if not np.isfinite(res["lp_obj"]) else round(res["lp_obj"], 4))}
     outcome = "lp_ok"
     if not np.isfinite(res["lp_obj"]):
         return res["cols"], prov, "lp_unsolved"
-    lp = solve_lp(inst, res["cols"], battery_allowed=SCENARIOS[scen]["battery"])
+    lp = solve_lp(inst, res["cols"], battery_allowed=SCENARIOS[scen]["battery"],
+                  soc_mode=soc_mode)
     mass = float(sum(x for c, x in zip(res["cols"], lp.x)
                      if getattr(c, "kind", "") == "artificial")) \
         if lp.status == "optimal" else None
     prov["lp_artificial_mass"] = (None if mass is None else round(mass, 6))
     if mass is not None and mass > 1e-6:
-        ph1 = _phase1_certify(inst, scen, pool=res["cols"], budget_s=ph1_budget)
+        ph1 = _phase1_certify(inst, scen, soc_mode=soc_mode, pool=res["cols"],
+                              budget_s=ph1_budget)
         prov.update({k: ph1[k] for k in ("ph1_mass", "ph1_converged", "ph1_iters", "ph1_s")})
         if ph1["ph1_converged"] and ph1["ph1_mass"] is not None and ph1["ph1_mass"] > 1e-6:
             return res["cols"], prov, "lp_certified_infeasible"
@@ -114,7 +117,7 @@ def _cg_pool(inst, scen, ph1_budget=600.0):
                       + ph1["real_cols"])
             res = column_generation(inst, scenario=scen, start="warm", do_milp=False,
                                     enrich=25, max_iter=max(2000, 5 * inst.n_trips),
-                                    extra_cols=inject)
+                                    soc_mode=soc_mode, extra_cols=inject)
             prov.update({"ph1_resume": True, "cg_converged": res.get("converged"),
                          "lp_own": (None if not np.isfinite(res["lp_obj"])
                                     else round(res["lp_obj"], 4))})
@@ -133,12 +136,12 @@ def _start_from(inc, upool_keys):
     return {"x": xmap, "nb": inc.get("nb", 0.0)}
 
 
-def _milp_common(inst, scen, upool, tl, start=None):
+def _milp_common(inst, scen, upool, tl, start=None, soc_mode="cyclic"):
     """Final MILP over the union pool with an optional inherited start."""
     t0 = time.time()
     mip = solve_milp(inst, upool, time_limit=tl,
                      battery_allowed=SCENARIOS[scen]["battery"],
-                     solver=MILP_SOLVER, x_start=start)
+                     solver=MILP_SOLVER, x_start=start, soc_mode=soc_mode)
     row = {"milp_s": round(time.time() - t0, 2), "milp_status": mip.status,
            "solver_bound": getattr(mip, "solver_bound", None)}
     if mip.status == "milp_failed" or not np.isfinite(mip.obj):
@@ -169,7 +172,7 @@ def _milp_common(inst, scen, upool, tl, start=None):
     return row, inc
 
 
-def _solve_base_common4(sd, n, pv, tl=900.0, assert_hard=False):
+def _solve_base_common4(sd, n, pv, tl=900.0, assert_hard=False, soc_mode="cyclic"):
     """One physical base through the full common-pool four-arm protocol."""
     def fresh():
         fleet = rand_trips(3, n, sd, salt=50_000)
@@ -179,7 +182,7 @@ def _solve_base_common4(sd, n, pv, tl=900.0, assert_hard=False):
 
     pools, provs, outcomes = {}, {}, {}
     for arm in ARMS4:
-        pools[arm], provs[arm], outcomes[arm] = _cg_pool(fresh(), arm)
+        pools[arm], provs[arm], outcomes[arm] = _cg_pool(fresh(), arm, soc_mode=soc_mode)
     C_CO = _union(pools["solar"], pools["solar_bess"])
     C_V2G = _union(C_CO, pools["v2g_fleet"], pools["v2g"])
     upool = {a: (C_CO if a in CO_ARMS else C_V2G) for a in ARMS4}
@@ -189,11 +192,12 @@ def _solve_base_common4(sd, n, pv, tl=900.0, assert_hard=False):
     for arm in ARMS4:
         inst = fresh()
         inst.c_g, inst.c_v, inst.c_b, inst.rho = CG_COST, CV, CB_COST, RHO
-        row = {"pv": pv, "n_tasks": n, "seed": sd, "scenario": arm,
+        row = {"pv": pv, "n_tasks": n, "seed": sd, "scenario": arm, "soc_mode": soc_mode,
                "commit": COMMIT, "milp_solver": MILP_SOLVER, "soc_step": 0.25,
                "pool_own": len(pools[arm]), "pool_union": len(upool[arm]),
                "pool_hash": _pool_hash(upool[arm]), **provs[arm]}
-        lpu = solve_lp(inst, upool[arm], battery_allowed=SCENARIOS[arm]["battery"])
+        lpu = solve_lp(inst, upool[arm], battery_allowed=SCENARIOS[arm]["battery"],
+                       soc_mode=soc_mode)
         row["lp_union"] = (round(float(lpu.obj), 4) if lpu.status == "optimal" else None)
         lp_ok = (row["lp_union"] is not None and provs[arm].get("lp_own") is not None
                  and abs(row["lp_union"] - provs[arm]["lp_own"]) <= TOL_LP)
@@ -210,7 +214,7 @@ def _solve_base_common4(sd, n, pv, tl=900.0, assert_hard=False):
             src = best.get("_src")
         row["start_src"] = src
         row["start_obj"] = (round(best["obj"], 2) if cands and start else None)
-        mrow, inc = _milp_common(inst, arm, upool[arm], tl, start=start)
+        mrow, inc = _milp_common(inst, arm, upool[arm], tl, start=start, soc_mode=soc_mode)
         cp = mrow.pop("_charge_profile", None)
         row.update(mrow)
         row["start_accepted"] = (None if row["start_obj"] is None or row.get("total") is None
@@ -254,12 +258,14 @@ def smoke():
     print("SMOKE PASS", flush=True)
 
 
-def common4():
-    rows, path = ckpt(f"overnight14_common4_s{SH_I}of{SH_K}.json")
+def _run_common4(tag, seeds):
+    """Shared COMMON4 runner (the checkpoint name for tag='common4' is
+    unchanged from the original, so running jobs resume identically)."""
+    rows, path = ckpt(f"overnight14_{tag}_s{SH_I}of{SH_K}.json")
     done = {(r["pv"], r["n_tasks"], r["seed"]) for r in rows}
     PVS = [1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 3.5, 4.0]
-    bases = [(sd, n, pv) for sd in (0, 1, 2) for n in (20, 60, 120) for pv in PVS]
-    print(f"COMMON4: {len(bases)} bases, shard {SH_I}/{SH_K} ({len(rows)} rows done)", flush=True)
+    bases = [(sd, n, pv) for sd in seeds for n in (20, 60, 120) for pv in PVS]
+    print(f"{tag.upper()}: {len(bases)} bases, shard {SH_I}/{SH_K} ({len(rows)} rows done)", flush=True)
     for idx, (sd, n, pv) in enumerate(bases):
         if idx % SH_K != SH_I or (pv, n, sd) in done:
             continue
@@ -268,6 +274,272 @@ def common4():
         save(rows, path)
         print(f"  base pv{pv} n{n} sd{sd} done in {time.time()-t0:.0f}s "
               f"({len(rows)} rows)", flush=True)
+
+
+def common4():
+    _run_common4("common4", (0, 1, 2))
+
+
+def common4x():
+    """Breadth extension: four more seeds through the identical common-pool
+    protocol (error bars for the conditional decomposition)."""
+    _run_common4("common4x", (3, 4, 5, 6))
+
+
+def periodic4():
+    """Four-arm common-pool comparison under BOTH steady-state boundary
+    conventions on a small matched ladder. Pools are never shared across
+    conventions (a full-recharge column and a periodic column bake different
+    boundary states); the union is across arms within each convention."""
+    rows, path = ckpt(f"overnight14_periodic4_s{SH_I}of{SH_K}.json")
+    done = {(r["pv"], r["n_tasks"], r["seed"], r.get("soc_mode")) for r in rows}
+    bases = [(sd, n, pv) for n in (20, 60) for pv in (1.5, 2.0, 2.5)
+             for sd in (0, 1, 2)]
+    print(f"PERIODIC4: {len(bases)} bases x 2 conventions, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done)", flush=True)
+    for idx, (sd, n, pv) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        for mode in ("cyclic", "periodic"):
+            if (pv, n, sd, mode) in done:
+                continue
+            t0 = time.time()
+            rows += _solve_base_common4(sd, n, pv, tl=600.0, soc_mode=mode)
+            save(rows, path)
+            print(f"  base pv{pv} n{n} sd{sd} {mode} done in {time.time()-t0:.0f}s",
+                  flush=True)
+
+
+def _pv_for_gamma(n, sd, target):
+    """Bisect the pv scale so the endowment index gamma = surplus/traction hits
+    the target for this fleet (surplus is monotone nondecreasing in pv)."""
+    fleet = rand_trips(3, n, sd, salt=50_000)
+
+    def ratio(pv):
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+        surplus = float(np.maximum(-inst.Delta, 0.0).sum())
+        traction = float(sum(tr.energy for tr in inst.trips))
+        return surplus / max(traction, 1e-9)
+
+    lo, hi = 0.2, 14.0
+    if ratio(hi) < target:
+        return None                       # unreachable at sane pv
+    for _ in range(30):
+        mid = 0.5 * (lo + hi)
+        if ratio(mid) < target:
+            lo = mid
+        else:
+            hi = mid
+    return round(0.5 * (lo + hi), 4)
+
+
+def gamma4():
+    """Gamma-matched conditional break-even: solar_bess baseline vs V2G+BESS
+    with the bidirectional-charger premium INSIDE the optimization (a premium
+    can change fleet size and routes, so post-hoc premium x trucks is not
+    equivalent). Common pools across the four solves; premium arms recost
+    every truck column to cv + premium (column feasibility is cost-free, so
+    pools transfer exactly)."""
+    rows, path = ckpt(f"overnight14_gamma4_s{SH_I}of{SH_K}.json")
+    done = {(r["gamma_target"], r["n_tasks"], r["seed"], r["scenario"],
+             r.get("premium")) for r in rows}
+    GTS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+    PREMS = [0.0, 4.0, 8.0]
+    bases = [(sd, n, gt) for sd in (3, 4, 5, 6, 7, 8, 9)
+             for n in (20, 60, 120) for gt in GTS]
+    print(f"GAMMA4: {len(bases)} bases, shard {SH_I}/{SH_K} ({len(rows)} rows done)", flush=True)
+    for idx, (sd, n, gt) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        arms = [("solar_bess", 0.0)] + [("v2g", p) for p in PREMS]
+        if all((gt, n, sd, a, p) in done for a, p in arms):
+            continue
+        pv = _pv_for_gamma(n, sd, gt)
+        if pv is None:
+            rows.append({"gamma_target": gt, "n_tasks": n, "seed": sd,
+                         "scenario": "unreachable", "premium": None,
+                         "outcome": "gamma_unreachable", "commit": COMMIT})
+            save(rows, path); continue
+
+        def fresh():
+            fleet = rand_trips(3, n, sd, salt=50_000)
+            inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+            inst.soc_step = 0.25
+            return inst
+
+        pools, provs, outcomes = {}, {}, {}
+        for scen, p in arms:
+            pools[(scen, p)], provs[(scen, p)], outcomes[(scen, p)] = \
+                _cg_pool(fresh(), scen, cv=CV + p)
+        C_BESS = pools[("solar_bess", 0.0)]
+        C_V2G = _union(C_BESS, *[pools[("v2g", p)] for p in PREMS])
+        incs = {}
+        totals = {}
+        for scen, p in arms:
+            inst = fresh()
+            inst.c_g, inst.c_b, inst.rho = CG_COST, CB_COST, RHO
+            inst.c_v = CV + p
+            if scen == "solar_bess":
+                up = C_BESS
+            else:                          # premium recosting of every truck column
+                up = [(Column(c.kind, c.a, c.e, CV + p, c.label)
+                       if getattr(c, "kind", "") == "truck" else c) for c in C_V2G]
+            ukeys = {str(_col_key(c)): i for i, c in enumerate(up)}
+            row = {"gamma_target": gt, "pv_used": pv, "n_tasks": n, "seed": sd,
+                   "scenario": scen, "premium": p, "commit": COMMIT,
+                   "milp_solver": MILP_SOLVER, "soc_step": 0.25,
+                   "pool_own": len(pools[(scen, p)]), "pool_union": len(up),
+                   "pool_hash": _pool_hash(up), **provs[(scen, p)]}
+            lpu = solve_lp(inst, up, battery_allowed=SCENARIOS[scen]["battery"])
+            row["lp_union"] = (round(float(lpu.obj), 4)
+                               if lpu.status == "optimal" else None)
+            own = provs[(scen, p)].get("lp_own")
+            row["lp_check_ok"] = bool(
+                (row["lp_union"] is not None and own is not None
+                 and abs(row["lp_union"] - own) <= TOL_LP)
+                or not provs[(scen, p)].get("cg_converged"))
+            if outcomes[(scen, p)] == "lp_certified_infeasible":
+                row.update({"feasible": False,
+                            "outcome": "lp_certified_infeasible",
+                            "milp_status": "skipped"})
+                rows.append(row); save(rows, path); continue
+            # starts: lower-premium v2g and the bess baseline, obj adjusted by
+            # (premium delta) x (trucks in the start)
+            cands = []
+            if scen == "v2g":
+                for p2 in [q for q in PREMS if q < p]:
+                    if ("v2g", p2) in incs:
+                        c0 = incs[("v2g", p2)]
+                        cands.append({**c0, "obj": c0["obj"] + (p - p2) * c0["ntrucks"],
+                                      "_src": f"v2g@{p2:g}"})
+                if ("solar_bess", 0.0) in incs:
+                    c0 = incs[("solar_bess", 0.0)]
+                    cands.append({**c0, "obj": c0["obj"] + p * c0["ntrucks"],
+                                  "_src": "solar_bess"})
+            start, src, best = None, None, None
+            if cands:
+                best = min(cands, key=lambda c: c["obj"])
+                start = _start_from(best, ukeys)
+                src = best.get("_src")
+            row["start_src"] = src
+            row["start_obj"] = (round(best["obj"], 2) if best and start else None)
+            mrow, inc = _milp_common(inst, scen, up, 600.0, start=start)
+            mrow.pop("_charge_profile", None)
+            row.update(mrow)
+            row["start_accepted"] = (None if row["start_obj"] is None
+                                     or row.get("total") is None
+                                     else bool(row["total"] <= row["start_obj"]
+                                               + TOL_NEST))
+            if row.get("lp_union") is not None and row.get("total") is not None:
+                row["gap_union_pct"] = round((row["total"] - row["lp_union"])
+                                             / abs(row["total"]) * 100, 3)
+            if inc:
+                inc["ntrucks"] = int(sum(inc["xmap"].values()))
+                incs[(scen, p)] = inc
+            totals[(scen, p)] = row.get("total")
+            rows.append(row); save(rows, path)
+        # premium monotonicity: v2g cost must be nondecreasing in the premium
+        viol = []
+        for pa, pb in zip(PREMS, PREMS[1:]):
+            ta, tb = totals.get(("v2g", pa)), totals.get(("v2g", pb))
+            if ta is not None and tb is not None and tb < ta - TOL_NEST:
+                viol.append(f"v2g@{pb:g}<v2g@{pa:g}")
+        ta, tb = totals.get(("v2g", 0.0)), totals.get(("solar_bess", 0.0))
+        if ta is not None and tb is not None and ta > tb + TOL_NEST:
+            viol.append("v2g@0>solar_bess")
+        if viol:
+            print(f"  WARNING premium/dominance violation {viol} at "
+                  f"gt{gt} n{n} sd{sd}", flush=True)
+
+
+def w2common():
+    """Annual weather ladder with common pools: solar / solar_bess / v2g per
+    (day, pv), C_CO = solar u solar_bess, C_V2G = C_CO u v2g, inherited
+    starts. Repairs the conditional V2G|BESS annual distribution (the
+    overnight13 W2 incumbents at tl 60 carry gaps of the same order as the
+    1-3% conditional differences)."""
+    from profile_robustness import base_curves
+    from solar_ensemble import load_days
+    W2ARMS = ["solar", "solar_bess", "v2g"]
+    W2SRC = {"solar": [], "solar_bess": ["solar"], "v2g": ["solar_bess"]}
+    rows, path = ckpt(f"overnight14_w2common_s{SH_I}of{SH_K}.json")
+    done = {(r["date"], r["pv"], r["scenario"]) for r in rows}
+    days = load_days()
+    D, S = base_curves()
+    mean_daily = np.mean([d[1].sum() for d in days])
+    PVS = [1.0, 1.5, 2.0, 2.5, 3.0]
+    groups = [(k, pv) for k in range(len(days)) for pv in PVS]
+    print(f"W2COMMON: {len(groups)} day/pv groups, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done)", flush=True)
+    from recreate_arxiv import BREAKS2
+    for idx, (k, pv) in enumerate(groups):
+        if idx % SH_K != SH_I:
+            continue
+        date, ghi = days[k]
+        if all((date, pv, a) in done for a in W2ARMS):
+            continue
+        dh = np.round(D - ghi * (S.sum() * pv / mean_daily)).astype(int)
+
+        def fresh():
+            inst = build_instance(3, 2.0, BREAKS2, delta_hourly=dh)
+            inst.soc_step = 0.25
+            return inst
+
+        pools, provs, outcomes = {}, {}, {}
+        for a in W2ARMS:
+            pools[a], provs[a], outcomes[a] = _cg_pool(fresh(), a, ph1_budget=120.0)
+        C_CO = _union(pools["solar"], pools["solar_bess"])
+        C_V2G = _union(C_CO, pools["v2g"])
+        upool = {"solar": C_CO, "solar_bess": C_CO, "v2g": C_V2G}
+        ukeys = {a: {str(_col_key(c)): i for i, c in enumerate(upool[a])}
+                 for a in W2ARMS}
+        incs = {}
+        for a in W2ARMS:
+            if (date, pv, a) in done:
+                continue
+            inst = fresh()
+            inst.c_g, inst.c_v, inst.c_b, inst.rho = CG_COST, CV, CB_COST, RHO
+            row = {"date": date, "pv": pv, "scenario": a, "commit": COMMIT,
+                   "milp_solver": MILP_SOLVER, "soc_step": 0.25,
+                   "pool_own": len(pools[a]), "pool_union": len(upool[a]),
+                   **provs[a]}
+            lpu = solve_lp(inst, upool[a], battery_allowed=SCENARIOS[a]["battery"])
+            row["lp_union"] = (round(float(lpu.obj), 4)
+                               if lpu.status == "optimal" else None)
+            own = provs[a].get("lp_own")
+            row["lp_check_ok"] = bool(
+                (row["lp_union"] is not None and own is not None
+                 and abs(row["lp_union"] - own) <= TOL_LP)
+                or not provs[a].get("cg_converged"))
+            if outcomes[a] == "lp_certified_infeasible":
+                row.update({"feasible": False,
+                            "outcome": "lp_certified_infeasible",
+                            "milp_status": "skipped"})
+                rows.append(row); save(rows, path); continue
+            cands = [incs[s] for s in W2SRC[a] if s in incs]
+            start, src, best = None, None, None
+            if cands:
+                best = min(cands, key=lambda c: c["obj"])
+                start = _start_from(best, ukeys[a])
+                src = best.get("_src")
+            row["start_src"] = src
+            row["start_obj"] = (round(best["obj"], 2) if best and start else None)
+            mrow, inc = _milp_common(inst, a, upool[a], 120.0, start=start)
+            mrow.pop("_charge_profile", None)
+            row.update(mrow)
+            row["start_accepted"] = (None if row["start_obj"] is None
+                                     or row.get("total") is None
+                                     else bool(row["total"] <= row["start_obj"]
+                                               + TOL_NEST))
+            if row.get("lp_union") is not None and row.get("total") is not None:
+                row["gap_union_pct"] = round((row["total"] - row["lp_union"])
+                                             / abs(row["total"]) * 100, 3)
+            if inc:
+                inc["_src"] = a
+                incs[a] = inc
+            rows.append(row); save(rows, path)
+        if idx % 40 == 0:
+            print(f"  [{idx + 1}/{len(groups)}] ({len(rows)} rows)", flush=True)
 
 
 def _caps_common(study, sweep, set_caps, tl=300.0, want_util=False):
@@ -391,7 +663,8 @@ def chargecaps2():
 
 
 RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
-           "CHARGECAPS2": chargecaps2}
+           "CHARGECAPS2": chargecaps2, "COMMON4X": common4x, "GAMMA4": gamma4,
+           "PERIODIC4": periodic4, "W2COMMON": w2common}
 
 if __name__ == "__main__":
     t00 = time.time()
