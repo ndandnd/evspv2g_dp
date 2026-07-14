@@ -1390,16 +1390,19 @@ if s318:
         "available the energy layer is timetable-invariant and every scheduling "
         "effect flows through fleet size and its deadhead overhead.")
 
-# %% Figure 8.19 -- OUT3: fixed-asset contingency ladder, window-resolved fifths
+# %% Figure 8.19 -- OUT4: corrected fixed-asset contingency ladder (4 arms,
+# common recorder, stage-1 pool injection, persisted frozen portfolios)
 o19 = []
-for _p in _glob.glob(os.path.join(ARX, "overnight11_out3_s*.json")):
+for _p in _glob.glob(os.path.join(ARX, "overnight14_out4_s*.json")):
     o19 += json.load(open(_p))
+o19 = [r for r in o19 if r.get("kind") != "stage1"]
 if o19:
     DER19 = [1.0, 0.8, 0.6, 0.5, 0.4, 0.2, 0.0]
     XL19 = ["no\noutage", "-20%", "-40%", "-50%", "-60%", "-80%", "total\nloss"]
-    SC19 = (("solar", "#e08020", "charge-only"),
-            ("v2g_fleet", "#16a085", "V2G trucks only"),
-            ("v2g", "#2E75B6", "full V2G"))
+    SC19 = (("solar", "#e08020", "charge-only, no BESS"),
+            ("v2g_fleet", "#7d3c98", "V2G fleet, no BESS"),
+            ("solar_bess", "#16a085", "charge-only + BESS"),
+            ("v2g", "#2E75B6", "V2G + BESS"))
     fig, ax = plt.subplots(1, 2, figsize=(11.2, 4.2), constrained_layout=True)
     for a, wins, ttl in ((ax[0], ("eve4h", "eve8h"), "(a) evening windows (17-21h / 14-22h)"),
                          (ax[1], ("morn4h",), "(b) morning window (5-9h)")):
@@ -1408,22 +1411,27 @@ if o19:
             for d in DER19:
                 rows = [r for r in o19 if r["win"] in wins and abs(r["derate"] - d) < .01
                         and r["scenario"] == scen]
-                ys.append(100 * sum(1 for r in rows if r.get("feasible")) / max(len(rows), 1))
+                ys.append(100 * sum(1 for r in rows if r["outcome"] == "feasible")
+                          / max(len(rows), 1))
             a.plot(range(len(DER19)), ys, "-o", ms=5, color=c, label=lab)
         a.set_xticks(range(len(DER19))); a.set_xticklabels(XL19, fontsize=10)
-        a.set_ylabel("% of instances with a feasible schedule"); a.set_ylim(-4, 104)
-        a.set_title(ttl, fontsize=10); a.legend(fontsize=10)
+        a.set_ylabel("feasible re-dispatch found (% of cells)"); a.set_ylim(-4, 104)
+        a.set_title(ttl, fontsize=11); a.legend(fontsize=9.5)
     finish(fig, "fig_8_19_outage2.png")
     GALLERY.append("\n![fig 8.19](fig_8_19_outage2.png)\n")
     caption("Figure 8.19",
-        "Fixed-asset contingency ladder at fifths resolution, window-resolved "
-        "(12 instances per morning point, 24 per evening point: 2 fleet sizes x "
-        "2 solar levels x 3 task draws x windows). Evening outages need "
-        "bidirectionality: charge-only and trucks-only fleets die below -20% "
-        "derates, V2G holds 92% at -20% and half through total loss. Morning "
-        "outages before the solar day are survivable by ANY fleet down to -60% "
-        "(the base morning load is low and packs are full), and V2G extends "
-        "even that to -80%. (c) Survivors pay a few percent.")
+        "CORRECTED contingency ladder (OUT4: four arms, persisted frozen "
+        "portfolios, stage-1 pool injection, honest outcome classes; 12 cells "
+        "per point = 3 draws x 2 fleet sizes x 2 solar levels). Fractions are "
+        "constructive lower bounds (share of cells with a real feasible "
+        "incumbent; non-incumbent cells are UNRESOLVED, not certified "
+        "infeasible). Evening outages separate the arms by storage: "
+        "charge-only dies below -20%, the no-BESS V2G fleet extends to "
+        "-50/-60%, and both BESS arms carry 18-19 of 24 cells through total loss. "
+        "Morning outages before the solar day: the full stack survives even "
+        "total loss in 12/12. Ownership-corrected survivor costs (recorded "
+        "+ $45 per parked owned truck): median +0.0%, p90 +0.9%, max +8.3% "
+        "vs the same fleet's normal day.")
 
 # %% Figure 8.20 -- END3: the fuel floor (fixed daily budget, budgets to 1.4x)
 e20d = []
