@@ -678,7 +678,7 @@ if wx:
     ax.axhline(0, color="k", lw=0.7)
     ax.set_xlabel("PV sizing (multiple of the original installation; 1.0 = 14.7 MWh/day annual mean)")
     ax.set_ylabel("package saving vs charge-only (% of daily cost)")
-    ax.set_title("how much PV makes V2G worth it -- a real year of weather (2023)")
+    ax.set_title("how much PV makes the package worth it -- a real year of weather (2023)")
     ax.legend()
     finish(fig, "fig_8_8_pv_sizing.png")
     GALLERY.append("\n![fig 8.8](fig_8_8_pv_sizing.png)\n")

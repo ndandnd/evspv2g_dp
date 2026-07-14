@@ -168,7 +168,7 @@ Read top to bottom: this is the narrative order of the computational study.
 
 ![fig 8.19](fig_8_19_outage2.png)
 
-**Figure 8.19.** CORRECTED contingency ladder (OUT4: four arms, persisted frozen portfolios, stage-1 pool injection, honest outcome classes; 12 cells per point = 3 draws x 2 fleet sizes x 2 solar levels). Fractions are constructive lower bounds (share of cells with a real feasible incumbent; non-incumbent cells are UNRESOLVED, not certified infeasible). Evening outages separate the arms by storage: charge-only dies below -20%, the no-BESS V2G fleet extends to -50/-60%, and both BESS arms reach total loss in 9 of 12 cells. Morning outages before the solar day: the full stack survives even total loss in 12/12. Ownership-corrected survivor costs (recorded + $45 per parked owned truck): median +0.0%, p90 +0.9%, max +8.3% vs the same fleet's normal day.
+**Figure 8.19.** CORRECTED contingency ladder (OUT4: four arms, persisted frozen portfolios, stage-1 pool injection, honest outcome classes; 12 cells per point = 3 draws x 2 fleet sizes x 2 solar levels). Fractions are constructive lower bounds (share of cells with a real feasible incumbent; non-incumbent cells are UNRESOLVED, not certified infeasible). Evening outages separate the arms by storage: charge-only dies below -20%, the no-BESS V2G fleet extends to -50/-60%, and both BESS arms carry 18-19 of 24 cells through total loss. Morning outages before the solar day: the full stack survives even total loss in 12/12. Ownership-corrected survivor costs (recorded + $45 per parked owned truck): median +0.0%, p90 +0.9%, max +8.3% vs the same fleet's normal day.
 
 
 ![fig 8.20](fig_8_20_endurance.png)
