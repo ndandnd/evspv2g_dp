@@ -287,6 +287,11 @@ def common4x():
     _run_common4("common4x", (3, 4, 5, 6))
 
 
+def common4y():
+    """Final breadth: seeds 7-9 (brings the factorial to 10 seeds/cell)."""
+    _run_common4("common4y", (7, 8, 9))
+
+
 def periodic4():
     """Four-arm common-pool comparison under BOTH steady-state boundary
     conventions on a small matched ladder. Pools are never shared across
@@ -763,7 +768,7 @@ def gammapkg():
     for idx, (sd, n, gt) in enumerate(bases):
         if idx % SH_K != SH_I:
             continue
-        arms = [("solar", 0.0), ("v2g", 0.0), ("v2g", 8.0)]
+        arms = [("solar", 0.0), ("v2g", 0.0), ("v2g", 4.0), ("v2g", 8.0)]
         if all((gt, n, sd, a, p) in done for a, p in arms):
             continue
         pv = _pv_for_gamma(n, sd, gt)
@@ -787,7 +792,7 @@ def gammapkg():
             pools[(scen, p)], provs[(scen, p)], outcomes[(scen, p)] = \
                 _cg_pool(fresh(), scen, cv=CV + p)
         C_CO = pools[("solar", 0.0)]
-        C_V2G = _union(C_CO, pools[("v2g", 0.0)], pools[("v2g", 8.0)])
+        C_V2G = _union(C_CO, *[pools[k] for k in pools if k[0] == "v2g"])
         incs = {}
         for scen, p in arms:
             if (gt, n, sd, scen, p) in done:
@@ -1038,7 +1043,8 @@ RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CHARGECAPS2": chargecaps2, "COMMON4X": common4x, "GAMMA4": gamma4,
            "PERIODIC4": periodic4, "W2COMMON": w2common, "OUT4": out4,
            "GAMMAPKG": gammapkg, "W2CITIES": w2cities, "CLEANMISC": cleanmisc,
-           "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge}
+           "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge,
+           "COMMON4Y": common4y}
 
 if __name__ == "__main__":
     t00 = time.time()
