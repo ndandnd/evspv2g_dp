@@ -481,7 +481,7 @@ if len(design) >= 10:
             transform=ax.get_xaxis_transform(), fontsize=11, color="#666",
             rotation=90, ha="left", va="top")
     ax.set_xlabel("gamma = daily leftover solar / daily fleet driving energy")
-    ax.set_ylabel("% of total daily cost saved by enabling V2G (gross)")
+    ax.set_ylabel("package saving vs charge-only, % of daily cost (gross)")
     ax.set_title("what is V2G worth, holding operations fixed? compute gamma, read the curve",
                  fontsize=13)
     ax.legend(loc="upper left", fontsize=11)
@@ -1112,7 +1112,7 @@ if md14:
     ax[0].axhline(0, color="k", lw=0.7)
     ax[0].set_xlabel("number of daily tasks (fleet size)")
     ax[0].set_ylabel("extra fossil displaced (MWh/day)")
-    ax[0].set_title("the V2G advantage: grows with sun, fades with fleet size")
+    ax[0].set_title("the package advantage: grows with sun, fades with fleet size")
     ax[0].legend(fontsize=10, title="solar level", ncol=2)
     xs14 = [sur / max(tr, 1e-9) for (_, sur, _, _, _, tr) in gap_pts if np.isfinite(sur)]
     ys14 = [g for (_, sur, _, _, g, _) in gap_pts if np.isfinite(sur)]
