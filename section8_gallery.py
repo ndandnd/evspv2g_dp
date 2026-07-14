@@ -482,7 +482,7 @@ if len(design) >= 10:
             rotation=90, ha="left", va="top")
     ax.set_xlabel("gamma = daily leftover solar / daily fleet driving energy")
     ax.set_ylabel("package saving vs charge-only, % of daily cost (gross)")
-    ax.set_title("what is V2G worth, holding operations fixed? compute gamma, read the curve",
+    ax.set_title("what is the storage-capable package worth, holding operations fixed?",
                  fontsize=13)
     ax.legend(loc="upper left", fontsize=11)
     finish(fig, "fig_8_5_collapse.png")
@@ -850,7 +850,7 @@ if cp and "v2g" in cp:
     ax[0].axhline(cp["gen_cap"], ls="--", color="#c0392b", lw=1.2,
                   label=f"generation cap {cp['gen_cap']:.0f}")
     ax[0].set_xlabel("hour of day"); ax[0].set_ylabel("dispatched fossil generation (kWh/block)")
-    ax[0].set_title(f"same fleet, same tasks: V2G cuts daily fossil "
+    ax[0].set_title(f"same fleet, same tasks: the full stack cuts daily fossil "
                     f"{cp['solar']['fossil_mwh']:.1f} -> {cp['v2g']['fossil_mwh']:.1f} MWh")
     ax[0].legend(fontsize=10)
     ax[1].step(hrs, cp["solar"]["charge"], where="mid", color="#777777", lw=1.6,
@@ -1023,7 +1023,7 @@ if sa13:
             vs.append(float(np.mean(pp)) if pp else np.nan)
         ax[2].plot(LS13, vs, mk, ms=4.5, lw=1.9, color=C13c[sol], label=TIT9.get(sol, sol))
     ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("package saving vs charge-only (%)")
-    ax[2].set_title("(c) V2G value by solar regime"); ax[2].legend(fontsize=10, loc="center right")
+    ax[2].set_title("(c) package saving by solar regime"); ax[2].legend(fontsize=10, loc="center right")
     # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
     NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", 12.25)]
     for scen, c in (("solar", "#e08020"), ("v2g", "#2E75B6")):
@@ -1327,7 +1327,7 @@ if pk17:
         ax[1].axvline(700, ls=":", color="#888", lw=1)
         ax[1].set_xlabel("truck pack size (kWh)")
         ax[1].set_ylabel("stationary batteries bought (V2G, mean over draws)")
-        ax[1].set_title("pack x workload: the substitution at 8-120 tasks (2x solar)")
+        ax[1].set_title("pack x workload, co-scaled capacities (non-causal for substitution)")
         ax[1].legend(fontsize=10)
     finish(fig, "fig_8_17_pack.png")
     GALLERY.append("\n![fig 8.17](fig_8_17_pack.png)\n")
@@ -1353,7 +1353,7 @@ if s318:
               "siesta14": "siesta\n(14h)", "siesta10": "siesta\n(10h)",
               "midday6": "midday\n(6h)"}
     SC18 = [("solar", "#e08020", "charge-only"), ("v2g_fleet", "#16a085", "V2G trucks only"),
-            ("v2g", "#2E75B6", "full V2G")]
+            ("v2g", "#2E75B6", "V2G+BESS (full stack)")]
     fig, ax = plt.subplots(1, 2, figsize=(12.8, 4.4), constrained_layout=True)
     W = 0.25
     for k, (scen, c, lab) in enumerate(SC18):
@@ -1463,7 +1463,7 @@ if e20d:
         ax.annotate(f"{vsp_floor:.1f}", (k - 0.34, vsp_floor + 0.02), ha="center",
                     fontsize=10.5, color="#555")
         v = _floor20("v2g", pv, n)
-        ax.bar(k + 0.02, v, 0.30, color="#2E75B6", label="full V2G" if k == 0 else None)
+        ax.bar(k + 0.02, v, 0.30, color="#2E75B6", label="V2G+BESS (full stack)" if k == 0 else None)
         ax.annotate(f"{v:.2f}", (k + 0.02, v + 0.02), ha="center", fontsize=10.5, color="#2E75B6")
         s = _floor20("solar", pv, n)
         if np.isfinite(s):

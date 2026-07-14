@@ -119,7 +119,9 @@ def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None,
 
 ARTIFICIAL_COST = 1e6                    # Phase-I penalty. Artificials carry zero
                                          # energy, so the initial RMP is feasible under
-                                         # any caps. NOTE: positive artificial mass in
+                                         # any caps PROVIDED the no-fleet power balance
+                                         # is itself feasible (they cover tasks but
+                                         # cannot relax the balance). NOTE: positive artificial mass in
                                          # the priced-out ECONOMIC LP is only a trigger,
                                          # not a certificate -- a finite penalty can park
                                          # fractional mass on a feasible instance whose
