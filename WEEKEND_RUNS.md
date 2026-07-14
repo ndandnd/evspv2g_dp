@@ -108,13 +108,29 @@ mixed-provenance base; CLEANMISC reruns the one aborted CHARGECAPS2 cell,
 cross-starts the inconclusive AUDIT cell, and runs the finest positive-loss
 lattice check.
 
+Corrections after the queue review: OUT4 now runs FOUR arms with persisted
+stage-1 designs and stage-1 pool injection (an infeasible initial stage-2 LP
+can no longer masquerade as an outage result; outcomes are feasibility-
+existence classes and lp_unsolved is recorded as unresolved_lp); artificials
+no longer consume fleet-cap slots (master fix); GAMMAPKG records ACHIEVED
+gamma and uses the crossing-focused grid 0.10-0.50; CLEANCAPS spends 1,800 s
+only on previously unresolved cells and adds the (0, 20) provenance base;
+CLEANCHARGE repairs the aborted CHARGECAPS2 base on common pools with
+utilization; lp_check_ok now requires convergence AND equality.
+
 ```bash
 DP="-p default_partition --requeue --time=24:00:00 -N1"
-for i in $(seq 0 8);  do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=OUT4,OVERNIGHT14_SHARD=$i/9 run_overnight14_unicorn.sbatch; done
-for i in $(seq 0 13); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=W2CITIES,OVERNIGHT14_SHARD=$i/14 run_overnight14_unicorn.sbatch; done
+# 1. corrected four-arm OUT4 (least predictable workload: 18 shards)
+for i in $(seq 0 17); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=OUT4,OVERNIGHT14_SHARD=$i/18 run_overnight14_unicorn.sbatch; done
+# 2. gamma-matched package crossing, achieved-gamma recording
 for i in $(seq 0 13); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=GAMMAPKG,OVERNIGHT14_SHARD=$i/14 run_overnight14_unicorn.sbatch; done
-for i in $(seq 0 2);  do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=CLEANCAPS,OVERNIGHT14_SHARD=$i/3 run_overnight14_unicorn.sbatch; done
-sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=CLEANMISC,OVERNIGHT14_SHARD=0/1 run_overnight14_unicorn.sbatch
+# 3. targeted frontier repair + provenance base
+for i in $(seq 0 3);  do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=CLEANCAPS,OVERNIGHT14_SHARD=$i/4 run_overnight14_unicorn.sbatch; done
+# 4. charging-cap base repair + misc (audit cross-start, fine lattice cells)
+sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=CLEANCHARGE,OVERNIGHT14_SHARD=0/1 run_overnight14_unicorn.sbatch
+sbatch $DP --nice=200 --export=ALL,OVERNIGHT14_STUDIES=CLEANMISC,OVERNIGHT14_SHARD=0/1 run_overnight14_unicorn.sbatch
+# 5. climates breadth at lower priority
+for i in $(seq 0 13); do sbatch $DP --nice=200 --export=ALL,OVERNIGHT14_STUDIES=W2CITIES,OVERNIGHT14_SHARD=$i/14 run_overnight14_unicorn.sbatch; done
 ```
 
 Gates already validated this cycle (GATE + SMOKE both passed on cluster at the

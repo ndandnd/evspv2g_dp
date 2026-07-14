@@ -150,7 +150,7 @@ def _phase1_certify(inst, scen, soc_mode="cyclic", pool=None, budget_s=600.0,
 
 
 def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None,
-             want_profile=False):
+             want_profile=False, extra_cols=None):
     """Full-status solve: CG + restricted MILP.
     Outcome classes (never conflated):
       feasible                 artificial-free incumbent (feasible=True)
@@ -175,7 +175,7 @@ def _solve13(inst, scen, tl=300.0, soc_mode="cyclic", c_b=None, rho=None,
     t0 = time.time()
     res = column_generation(inst, scenario=scen, start="warm", do_milp=False,
                             enrich=25, max_iter=max(2000, 5 * inst.n_trips),
-                            soc_mode=soc_mode)
+                            soc_mode=soc_mode, extra_cols=extra_cols)
     cg_s = time.time() - t0
     out = {"cg_converged": res.get("converged"), "cg_term": res.get("term_reason"),
            "cg_s": round(cg_s, 2), "cg_iters": res.get("iters"),

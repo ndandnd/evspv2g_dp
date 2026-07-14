@@ -39,6 +39,7 @@ Per-base atomic checkpointing; requeue-safe.
 """
 from __future__ import annotations
 import hashlib
+import json
 import os
 import sys
 import time
@@ -542,13 +543,15 @@ def w2common():
             print(f"  [{idx + 1}/{len(groups)}] ({len(rows)} rows)", flush=True)
 
 
-def _caps_common(study, sweep, set_caps, tl=300.0, want_util=False):
+def _caps_common(study, sweep, set_caps, tl=300.0, want_util=False,
+                 bases=None, tl_fn=None):
     """Shared skeleton for COMMONCAPS / CHARGECAPS2: pools unioned across arms
     AND sweep levels per base; arms restrictive->flexible, levels tight->loose;
     inheritance from (same arm, tighter level) and (restrictive arm, same level)."""
     rows, path = ckpt(f"overnight14_{study.lower()}_s{SH_I}of{SH_K}.json")
     done = {(r["seed"], r["n_tasks"], r["level"], r["scenario"]) for r in rows}
-    bases = [(sd, n) for sd in (0, 1, 2) for n in (20, 60, 120)]
+    if bases is None:
+        bases = [(sd, n) for sd in (0, 1, 2) for n in (20, 60, 120)]
     print(f"{study}: {len(bases)} bases x {len(sweep)} levels x 4 arms, "
           f"shard {SH_I}/{SH_K} ({len(rows)} rows done)", flush=True)
     for bidx, (sd, n) in enumerate(bases):
@@ -595,10 +598,10 @@ def _caps_common(study, sweep, set_caps, tl=300.0, want_util=False):
                                    if lpu.status == "optimal" else None)
                 own = provs[(lv, arm)].get("lp_own")
                 row["lp_check_ok"] = bool(
-                    (row["lp_union"] is not None and own is not None
-                     and abs(row["lp_union"] - own) <= TOL_LP)
-                    or not provs[(lv, arm)].get("cg_converged")
-                    or outcomes[(lv, arm)] == "lp_certified_infeasible")
+                    provs[(lv, arm)].get("cg_converged")
+                    and row["lp_union"] is not None and own is not None
+                    and abs(row["lp_union"] - own) <= TOL_LP) \
+                    or outcomes[(lv, arm)] == "lp_certified_infeasible"
                 if outcomes[(lv, arm)] == "lp_certified_infeasible":
                     row.update({"feasible": False,
                                 "outcome": "lp_certified_infeasible",
@@ -619,7 +622,8 @@ def _caps_common(study, sweep, set_caps, tl=300.0, want_util=False):
                     src = best.get("_src")
                 row["start_src"] = src
                 row["start_obj"] = (round(best["obj"], 2) if best and start else None)
-                mrow, inc = _milp_common(inst, arm, upool[arm], tl, start=start)
+                tl_cell = tl if tl_fn is None else tl_fn(sd, n, lvkey, arm)
+                mrow, inc = _milp_common(inst, arm, upool[arm], tl_cell, start=start)
                 cp = mrow.pop("_charge_profile", None)
                 row.update(mrow)
                 row["start_accepted"] = (None if row["start_obj"] is None
@@ -665,22 +669,30 @@ def chargecaps2():
 
 
 def out4():
-    """Outage ladder on the corrected recorder (replaces legacy OUT3 for the
-    paper): stage 1 sizes assets at a flat 1.5x cap and freezes them
-    (max_trucks + nb_fixed); stage 2 derates a window. Full outcome classes,
-    Phase-I certificates, honest statuses. Stage 1 runs once per
-    (seed, n, pv, arm) and is reused across windows.
-    NOTE: the fleet-cap dual is absent from pricing; a reported price-out
-    remains valid (the omitted dual only understates reduced costs), and
-    non-convergence is recorded honestly in cg_converged."""
+    """Outage ladder, corrected protocol (four factorial arms):
+    stage 1 sizes assets at a flat 1.5x cap; the design is PERSISTED, and on
+    requeue the saved truck/battery counts are reused (never re-solved), so
+    one base has exactly one frozen portfolio.
+    The stage-1 column pool is regenerated deterministically and INJECTED into
+    every stage-2 solve, so the initial stage-2 master contains
+    discharge-capable columns and an infeasible initial LP cannot masquerade
+    as an outage result; artificials no longer consume fleet-cap slots
+    (master fix).
+    Stage-2 outcomes are feasibility-EXISTENCE classes only: lp_unsolved
+    means UNRESOLVED (an elastic energy-balance Phase-I is future work), and
+    no infeasibility certificates are claimed.
+    Ownership accounting: stage1_trucks, deployed trucks, and cv are recorded,
+    so owned cost = recorded + cv x (stage1_trucks - deployed)."""
     from overnight13 import _solve13
     rows, path = ckpt(f"overnight14_out4_s{SH_I}of{SH_K}.json")
     done = {(r["derate"], r["win"], r["pv"], r["n_tasks"], r["seed"], r["scenario"])
             for r in rows if r.get("kind") != "stage1"}
+    s1saved = {(r["pv"], r["n_tasks"], r["seed"], r["scenario"]): r
+               for r in rows if r.get("kind") == "stage1"}
     DER = [1.0, 0.8, 0.6, 0.5, 0.4, 0.2, 0.0]
     WINS = {"eve4h": (34, 42), "eve8h": (28, 44), "morn4h": (10, 18)}
     bases = [(sd, n, pv, scen) for sd in (0, 1, 2) for n in (20, 60)
-             for pv in (1.5, 2.5) for scen in ("solar", "v2g_fleet", "v2g")]
+             for pv in (1.5, 2.5) for scen in ARMS4]
     print(f"OUT4: {len(bases)} stage-1 bases x {len(WINS)} windows x {len(DER)} derates, "
           f"shard {SH_I}/{SH_K} ({len(rows)} rows done)", flush=True)
     for idx, (sd, n, pv, scen) in enumerate(bases):
@@ -689,14 +701,29 @@ def out4():
         if all((round(d, 3), w, pv, n, sd, scen) in done for w in WINS for d in DER):
             continue
         fleet = rand_trips(3, n, sd, salt=50_000)
-        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
-        inst.soc_step = 0.25
-        base_cap = 1.5 * float(np.maximum(inst.Delta, 0.0).max())
-        inst.gen_cap = np.full(inst.T, base_cap)
-        s1 = _solve13(inst, scen, tl=300.0)
-        rows.append({"kind": "stage1", "pv": pv, "n_tasks": n, "seed": sd,
-                     "scenario": scen, **s1})
-        save(rows, path)
+
+        def fresh():
+            inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+            inst.soc_step = 0.25
+            return inst
+
+        inst1 = fresh()
+        base_cap = 1.5 * float(np.maximum(inst1.Delta, 0.0).max())
+        inst1.gen_cap = np.full(inst1.T, base_cap)
+        pool1, prov1, out1 = _cg_pool(inst1, scen)
+        inject = [c for c in pool1 if getattr(c, "kind", "") != "artificial"]
+        key1 = (pv, n, sd, scen)
+        if key1 in s1saved:                       # PERSISTED design: never re-solve
+            s1 = s1saved[key1]
+        else:
+            inst1b = fresh()
+            inst1b.gen_cap = np.full(inst1b.T, base_cap)
+            inst1b.c_g, inst1b.c_v, inst1b.c_b, inst1b.rho = CG_COST, CV, CB_COST, RHO
+            mrow, inc = _milp_common(inst1b, scen, pool1, 300.0)
+            mrow.pop("_charge_profile", None)
+            s1 = {"kind": "stage1", "pv": pv, "n_tasks": n, "seed": sd,
+                  "scenario": scen, "cv": CV, "commit": COMMIT, **prov1, **mrow}
+            rows.append(s1); save(rows, path)
         if s1.get("outcome") != "feasible":
             print(f"  stage1 {scen} n{n} pv{pv} sd{sd}: {s1.get('outcome')} -- skip",
                   flush=True)
@@ -705,14 +732,15 @@ def out4():
             for d in DER:
                 if (round(d, 3), w, pv, n, sd, scen) in done:
                     continue
-                inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
-                inst.soc_step = 0.25
+                inst = fresh()
                 caps = np.full(inst.T, base_cap); caps[a:b] = d * base_cap
                 inst.gen_cap = caps
                 inst.max_trucks = s1["trucks"]; inst.nb_fixed = float(s1["batteries"])
-                r2 = _solve13(inst, scen, tl=180.0)
+                r2 = _solve13(inst, scen, tl=180.0, extra_cols=inject)
+                if r2.get("outcome") == "lp_unsolved":
+                    r2["outcome"] = "unresolved_lp"   # NOT an infeasibility claim
                 rows.append({"derate": round(d, 3), "win": w, "pv": pv, "n_tasks": n,
-                             "seed": sd, "scenario": scen,
+                             "seed": sd, "scenario": scen, "cv": CV,
                              "stage1_trucks": s1["trucks"],
                              "stage1_batteries": s1["batteries"],
                              "stage1_total": s1.get("total"), **r2})
@@ -728,7 +756,7 @@ def gammapkg():
     rows, path = ckpt(f"overnight14_gammapkg_s{SH_I}of{SH_K}.json")
     done = {(r["gamma_target"], r["n_tasks"], r["seed"], r["scenario"],
              r.get("premium")) for r in rows}
-    GTS = [0.2, 0.3, 0.35, 0.5, 0.75, 1.0]
+    GTS = [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.50]
     bases = [(sd, n, gt) for sd in (3, 4, 5, 6, 7, 8, 9)
              for n in (20, 60, 120) for gt in GTS]
     print(f"GAMMAPKG: {len(bases)} bases, shard {SH_I}/{SH_K} ({len(rows)} done)", flush=True)
@@ -751,6 +779,9 @@ def gammapkg():
             inst.soc_step = 0.25
             return inst
 
+        _i0 = fresh()                     # ACHIEVED gamma (surplus is a step
+        g_ach = round(float(np.maximum(-_i0.Delta, 0).sum())
+                      / max(float(sum(t.energy for t in _i0.trips)), 1e-9), 4)
         pools, provs, outcomes = {}, {}, {}
         for scen, p in arms:
             pools[(scen, p)], provs[(scen, p)], outcomes[(scen, p)] = \
@@ -770,7 +801,8 @@ def gammapkg():
                 up = [(Column(c.kind, c.a, c.e, CV + p, c.label)
                        if getattr(c, "kind", "") == "truck" else c) for c in C_V2G]
             ukeys = {str(_col_key(c)): i for i, c in enumerate(up)}
-            row = {"gamma_target": gt, "pv_used": pv, "n_tasks": n, "seed": sd,
+            row = {"gamma_target": gt, "gamma_achieved": g_ach, "pv_used": pv,
+                   "n_tasks": n, "seed": sd,
                    "scenario": scen, "premium": p, "commit": COMMIT,
                    "milp_solver": MILP_SOLVER, "soc_step": 0.25,
                    "pool_own": len(pools[(scen, p)]), "pool_union": len(up),
@@ -780,9 +812,9 @@ def gammapkg():
                                if lpu.status == "optimal" else None)
             own = provs[(scen, p)].get("lp_own")
             row["lp_check_ok"] = bool(
-                (row["lp_union"] is not None and own is not None
-                 and abs(row["lp_union"] - own) <= TOL_LP)
-                or not provs[(scen, p)].get("cg_converged"))
+                provs[(scen, p)].get("cg_converged")
+                and row["lp_union"] is not None and own is not None
+                and abs(row["lp_union"] - own) <= TOL_LP)
             if outcomes[(scen, p)] == "lp_certified_infeasible":
                 row.update({"feasible": False, "outcome": "lp_certified_infeasible",
                             "milp_status": "skipped"})
@@ -875,10 +907,10 @@ def w2cities():
                                if lpu.status == "optimal" else None)
             own = provs[a].get("lp_own")
             row["lp_check_ok"] = bool(
-                (row["lp_union"] is not None and own is not None
-                 and abs(row["lp_union"] - own) <= TOL_LP)
-                or not provs[a].get("cg_converged")
-                or outcomes[a] == "lp_certified_infeasible")
+                provs[a].get("cg_converged")
+                and row["lp_union"] is not None and own is not None
+                and abs(row["lp_union"] - own) <= TOL_LP) \
+                or outcomes[a] == "lp_certified_infeasible"
             if outcomes[a] == "lp_certified_infeasible":
                 row.update({"feasible": False, "outcome": "lp_certified_infeasible",
                             "milp_status": "skipped"})
@@ -909,17 +941,7 @@ def cleanmisc():
     from overnight13 import _solve13
     rows, path = ckpt(f"overnight14_cleanmisc_s{SH_I}of{SH_K}.json")
     done = {r.get("tag") for r in rows}
-    # (a) chargecaps2 sd2 n120 cap 0.35 v2g
-    if "cc2_sd2_n120" not in done:
-        fleet = rand_trips(3, 120, 2, salt=50_000)
-        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.5)
-        peak_sur = float(np.maximum(-inst.Delta, 0.0).max())
-        inst.gen_cap = float("inf"); inst.charge_cap = 0.35 * peak_sur
-        inst.soc_step = 0.25
-        r = _solve13(inst, "v2g", tl=1800.0)
-        rows.append({"tag": "cc2_sd2_n120", "seed": 2, "n_tasks": 120,
-                     "level": 0.35, "scenario": "v2g", **r})
-        save(rows, path); print("  (a) done", flush=True)
+    # (a) superseded by the CLEANCHARGE study (full common-pool base repair)
     # (b) AUDIT ms_L4_n200 cross-start, longer limit
     if "audit_ms_L4_n200" not in done:
         from overnight3 import POOL
@@ -962,12 +984,22 @@ def cleanmisc():
             save(rows, path); print(f"  (c) {tag} done", flush=True)
 
 
+def _prior_outcomes(pattern):
+    import glob as _g
+    out = {}
+    for f in _g.glob(os.path.join(ROOT if (ROOT := os.path.dirname(os.path.abspath(__file__))) else ".", "results", "arxiv", pattern)):
+        for r in json.load(open(f)):
+            if "level" in r and "scenario" in r:
+                out[(r["seed"], r["n_tasks"], r["level"], r["scenario"])] = r.get("outcome")
+    return out
+
+
 def cleancaps():
-    """COMMONCAPS n=120 bases rerun at tl 1800 (resolve the six
-    no-real-incumbent cells; also repairs the mixed-provenance base)."""
-    global SH_I, SH_K
-    rows, path = ckpt(f"overnight14_cleancaps_s{SH_I}of{SH_K}.json")
-    # reuse the caps skeleton but only n=120 bases, longer tl
+    """Targeted COMMONCAPS repair: full common pools regenerated per base, but
+    the long 1,800 s MILP budget is spent ONLY on cells whose overnight14
+    outcome was no_real_incumbent; previously resolved cells re-solve at 120 s
+    with inherited starts (fast, and re-anchors the inheritance chain).
+    Bases: the three n=120 frontier bases plus the (0, 20) provenance base."""
     GENM = [1.0, 1.05, 1.1, 1.2, 1.3, float("inf")]
 
     def set_caps(inst, m):
@@ -975,79 +1007,38 @@ def cleancaps():
         peak_sur = float(np.maximum(-inst.Delta, 0.0).max())
         inst.gen_cap = m * peak_def if np.isfinite(m) else float("inf")
         inst.charge_cap = 0.7 * peak_sur
-    done = {(r["seed"], r["n_tasks"], r["level"], r["scenario"]) for r in rows}
-    bases = [(sd, 120) for sd in (0, 1, 2)]
-    print(f"CLEANCAPS: {len(bases)} bases, shard {SH_I}/{SH_K}", flush=True)
-    for bidx, (sd, n) in enumerate(bases):
-        if bidx % SH_K != SH_I:
-            continue
-        if all((sd, n, (lv if np.isfinite(lv) else None), a) in done
-               for lv in GENM for a in ARMS4):
-            continue
+    prior = _prior_outcomes("overnight14_commoncaps_s*.json")
 
-        def fresh(lv):
-            fleet = rand_trips(3, n, sd, salt=50_000)
-            inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.5)
-            set_caps(inst, lv)
-            inst.soc_step = 0.25
-            return inst
+    def tl_fn(sd, n, lvkey, arm):
+        return 1800.0 if prior.get((sd, n, lvkey, arm)) == "no_real_incumbent" else 120.0
+    _caps_common("CLEANCAPS", GENM, set_caps, tl=120.0,
+                 bases=[(0, 20), (0, 120), (1, 120), (2, 120)], tl_fn=tl_fn)
 
-        pools, provs, outcomes = {}, {}, {}
-        for lv in GENM:
-            for arm in ARMS4:
-                pools[(lv, arm)], provs[(lv, arm)], outcomes[(lv, arm)] = \
-                    _cg_pool(fresh(lv), arm, ph1_budget=300.0)
-        C_CO = _union(*[pools[(lv, a)] for lv in GENM for a in CO_ARMS])
-        C_V2G = _union(C_CO, *[pools[(lv, a)] for lv in GENM
-                               for a in ("v2g_fleet", "v2g")])
-        upool = {a: (C_CO if a in CO_ARMS else C_V2G) for a in ARMS4}
-        ukeys = {a: {str(_col_key(c)): i for i, c in enumerate(upool[a])}
-                 for a in ARMS4}
-        incs = {}
-        for arm in ARMS4:
-            for lv in GENM:
-                lvkey = (lv if np.isfinite(lv) else None)
-                if (sd, n, lvkey, arm) in done:
-                    continue
-                inst = fresh(lv)
-                inst.c_g, inst.c_v, inst.c_b, inst.rho = CG_COST, CV, CB_COST, RHO
-                row = {"seed": sd, "n_tasks": n, "level": lvkey, "scenario": arm,
-                       "pv": 2.5, "commit": COMMIT, "milp_solver": MILP_SOLVER,
-                       "soc_step": 0.25, **provs[(lv, arm)]}
-                if outcomes[(lv, arm)] == "lp_certified_infeasible":
-                    row.update({"feasible": False,
-                                "outcome": "lp_certified_infeasible",
-                                "milp_status": "skipped"})
-                    rows.append(row); save(rows, path); continue
-                cands = []
-                tighter = [l2 for l2 in GENM if l2 < lv]
-                if tighter and (arm, max(tighter)) in incs:
-                    cands.append(incs[(arm, max(tighter))])
-                for src_arm in START_SOURCES[arm]:
-                    if (src_arm, lv) in incs:
-                        cands.append(incs[(src_arm, lv)])
-                start, src, best = None, None, None
-                if cands:
-                    best = min(cands, key=lambda c: c["obj"])
-                    start = _start_from(best, ukeys[arm])
-                    src = best.get("_src")
-                row["start_src"] = src
-                row["start_obj"] = (round(best["obj"], 2) if best and start else None)
-                mrow, inc = _milp_common(inst, arm, upool[arm], 1800.0, start=start)
-                mrow.pop("_charge_profile", None)
-                row.update(mrow)
-                if inc:
-                    inc["_src"] = f"{arm}@{lvkey}"
-                    incs[(arm, lv)] = inc
-                rows.append(row); save(rows, path)
-        print(f"  base sd{sd} n{n} complete", flush=True)
+
+def cleancharge():
+    """Targeted CHARGECAPS2 repair for the (seed 2, n 120) base whose 0.35x
+    v2g cell aborted (lp_infeasible in CG): full common-pool base rerun,
+    1,800 s only where previously unresolved, utilization recorded."""
+    CCS = [0.35, 0.5, 0.7, 1.0, 1.4, float("inf")]
+
+    def set_caps(inst, c):
+        peak_sur = float(np.maximum(-inst.Delta, 0.0).max())
+        inst.gen_cap = float("inf")
+        inst.charge_cap = c * peak_sur if np.isfinite(c) else float("inf")
+    prior = _prior_outcomes("overnight14_chargecaps2_s*.json")
+
+    def tl_fn(sd, n, lvkey, arm):
+        return 1800.0 if prior.get((sd, n, lvkey, arm)) in ("no_real_incumbent",
+                                                            "no_incumbent") else 120.0
+    _caps_common("CLEANCHARGE", CCS, set_caps, tl=120.0, want_util=True,
+                 bases=[(2, 120)], tl_fn=tl_fn)
 
 
 RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CHARGECAPS2": chargecaps2, "COMMON4X": common4x, "GAMMA4": gamma4,
            "PERIODIC4": periodic4, "W2COMMON": w2common, "OUT4": out4,
            "GAMMAPKG": gammapkg, "W2CITIES": w2cities, "CLEANMISC": cleanmisc,
-           "CLEANCAPS": cleancaps}
+           "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge}
 
 if __name__ == "__main__":
     t00 = time.time()

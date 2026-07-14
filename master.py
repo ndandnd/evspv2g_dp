@@ -133,8 +133,11 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
         k = -extra
         if np.isfinite(_fb):                            # daily fossil-fuel stock
             Aub[k, oG:oG + T] = 1.0; bub[k] = float(_fb); k += 1
-        if np.isfinite(_mt):                            # truck-count cap (two-stage)
-            Aub[k, oX:oX + R] = 1.0; bub[k] = float(_mt)
+        if np.isfinite(_mt):                            # truck-count cap (two-stage);
+            for r, col in enumerate(cols):              # ONLY real trucks count (an
+                if getattr(col, "kind", "") == "truck":  # artificial must not consume
+                    Aub[k, oX + r] = 1.0                 # a fleet slot)
+            bub[k] = float(_mt)
     _nbf = getattr(inst, "nb_fixed", -1.0)
     if _nbf is not None and _nbf >= 0:                  # fix battery count (two-stage)
         Aeq = np.vstack([Aeq, np.zeros((1, nvar))]); beq = np.append(beq, float(_nbf))
@@ -237,7 +240,8 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
         p += pulp.lpSum(g[t] for t in range(T)) <= float(_fb)
     _mt = getattr(inst, "max_trucks", float("inf"))
     if np.isfinite(_mt):                      # truck-count cap (two-stage studies)
-        p += pulp.lpSum(x[r] for r in range(R)) <= float(_mt)
+        p += pulp.lpSum(x[r] for r in range(R)
+                        if getattr(cols[r], "kind", "") == "truck") <= float(_mt)
     _nbf = getattr(inst, "nb_fixed", -1.0)
     if _nbf is not None and _nbf >= 0:        # fixed battery count (two-stage studies)
         p += Nb == float(_nbf)
