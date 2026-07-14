@@ -41,7 +41,8 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({
     "font.size": 12, "axes.titlesize": 12, "axes.labelsize": 11.5,
     "legend.fontsize": 10.5, "xtick.labelsize": 10.5, "ytick.labelsize": 10.5,
-})
+    "pdf.fonttype": 42, "ps.fonttype": 42,   # TrueType/Type42 embedding (Springer:
+})                                            # no Type 3 fonts in vector figures
 
 
 def finish(fig, fname: str):
