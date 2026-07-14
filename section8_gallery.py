@@ -677,7 +677,7 @@ if wx:
     ax.plot(pvs, mean_, "-o", color="#2E75B6", label="annual mean")
     ax.axhline(0, color="k", lw=0.7)
     ax.set_xlabel("PV sizing (multiple of the original installation; 1.0 = 14.7 MWh/day annual mean)")
-    ax.set_ylabel("V2G savings vs charge-only (% of daily cost)")
+    ax.set_ylabel("package saving vs charge-only (% of daily cost)")
     ax.set_title("how much PV makes V2G worth it -- a real year of weather (2023)")
     ax.legend()
     finish(fig, "fig_8_8_pv_sizing.png")
@@ -838,7 +838,7 @@ if cp and "v2g" in cp:
     ax[0].step(hrs, cp["solar"]["gen"], where="mid", color="#777777", lw=1.8,
                label=f"conventional charging, no storage ({cp['solar']['fossil_mwh']:.1f} MWh)")
     ax[0].step(hrs, cp["v2g"]["gen"], where="mid", color="#2E75B6", lw=1.9,
-               label=f"full V2G technology ({cp['v2g']['fossil_mwh']:.1f} MWh)")
+               label=f"storage-capable stack, V2G+BESS ({cp['v2g']['fossil_mwh']:.1f} MWh)")
     _gs = np.array(cp["solar"]["gen"]); _gv = np.array(cp["v2g"]["gen"])
     ax[0].fill_between(hrs, _gv, _gs, where=_gs >= _gv, step="mid", color="#2E75B6",
                        alpha=0.10,
@@ -860,7 +860,7 @@ if cp and "v2g" in cp:
     ax[1].axhline(cp["charge_cap"], ls="--", color="#c0392b", lw=1.2,
                   label=f"charging cap {cp['charge_cap']:.0f}")
     ax[1].set_xlabel("hour of day"); ax[1].set_ylabel("total charging draw (kWh/block)")
-    ax[1].set_title("charging concentrates in the midday surplus, under the station cap")
+    ax[1].set_title("charging concentrates under the station cap")
     ax[1].legend(fontsize=10)
     finish(fig, "fig_8_11_caps.png")
     GALLERY.append("\n![fig 8.11](fig_8_11_caps.png)\n")
@@ -1022,7 +1022,7 @@ if sa13:
                         pp.append(100 * (_lp13(r) - _lp13(r2)) / _lp13(r))
             vs.append(float(np.mean(pp)) if pp else np.nan)
         ax[2].plot(LS13, vs, mk, ms=4.5, lw=1.9, color=C13c[sol], label=TIT9.get(sol, sol))
-    ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("V2G saving vs charge-only (%)")
+    ax[2].set_xlabel("number of task locations L"); ax[2].set_ylabel("package saving vs charge-only (%)")
     ax[2].set_title("(c) V2G value by solar regime"); ax[2].legend(fontsize=10, loc="center right")
     # charger build-out frontier: depot -> +2 -> +5 -> everywhere (large maps)
     NARMS = [("depot", 1), ("sub2", 3), ("sub5", 6), ("all", 12.25)]
@@ -1175,7 +1175,7 @@ if et15:
     ax.axvspan(0.05, 0.15, color="#eef4ea", zorder=0)
     ax.text(0.10, 0.97, "typical round-trip loss", ha="center", va="top", fontsize=10,
             color="#4d774d", transform=ax.get_xaxis_transform())
-    ax.set_xlabel("round-trip loss eta"); ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
+    ax.set_xlabel("round-trip loss eta"); ax.set_ylabel("package saving vs charge-only (% of daily cost)")
     ax.set_title("losses rescale V2G's value; they do not move the dead zone")
     ax.legend(fontsize=10)
     finish(fig, "fig_8_15_eta.png")
@@ -1516,7 +1516,7 @@ if w21:
                     fmt="o", ms=7, capsize=5, color=c, label=f"{pv:g}x panels")
     ax.set_xticks(range(len(CITIES21))); ax.set_xticklabels([lab for _, lab in CITIES21], fontsize=10.5)
     ax.axhline(0, color="#888", lw=0.7)
-    ax.set_ylabel("V2G saving vs charge-only (% of daily cost)")
+    ax.set_ylabel("package saving vs charge-only (% of daily cost)")
     ax.set_title("same array, five skies: annual mean and 10th-90th percentile days (2023)")
     ax.legend(fontsize=10)
     finish(fig, "fig_8_21_wcities.png")
