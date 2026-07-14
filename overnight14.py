@@ -753,12 +753,14 @@ def out4():
         print(f"  base {scen} n{n} pv{pv} sd{sd} complete ({len(rows)} rows)", flush=True)
 
 
-def gammapkg():
+def gammapkg(tag="gammapkg"):
     """Fixed-base PACKAGE crossing surface: solar (charge-only, no BESS) vs the
-    full stack, gamma-matched at 0.2-1.0 across fleet sizes, charger premium
-    $0/$8 inside the optimization on the V2G side. Answers where the
-    fixed-base package break-even actually sits, per scale."""
-    rows, path = ckpt(f"overnight14_gammapkg_s{SH_I}of{SH_K}.json")
+    full stack, gamma-matched across fleet sizes, charger premiums $0/$4/$8
+    inside the optimization on the V2G side. GAMMAPKG4 (fresh tag) re-solves
+    ALL arms per base over the shared expanded pool with inherited starts --
+    the incremental \$4 top-up on the old checkpoint is NOT matched (skipped
+    cells inherit nothing and saw a smaller pool)."""
+    rows, path = ckpt(f"overnight14_{tag}_s{SH_I}of{SH_K}.json")
     done = {(r["gamma_target"], r["n_tasks"], r["seed"], r["scenario"],
              r.get("premium")) for r in rows}
     GTS = [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.50]
@@ -1039,12 +1041,57 @@ def cleancharge():
                  bases=[(2, 120)], tl_fn=tl_fn)
 
 
+def charge035():
+    """Dedicated Phase-I certification for the quarantined CHARGECAPS2 cell
+    (seed 2, n 120, charge cap 0.35x, full V2G+BESS): seed Phase-I with the
+    union of the other arms' pools at this cell and price it out. A strictly
+    positive priced-out Phase-I mass certifies the coupled lattice LP
+    infeasible, closing the quarantine with a certificate instead of an
+    abort."""
+    from overnight13 import _phase1_certify
+    rows, path = ckpt(f"overnight14_charge035_s{SH_I}of{SH_K}.json")
+    if any(r.get("tag") == "charge035" for r in rows):
+        print("already done", flush=True); return
+    sd, n = 2, 120
+
+    def fresh():
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=2.5)
+        peak_sur = float(np.maximum(-inst.Delta, 0.0).max())
+        inst.gen_cap = float("inf"); inst.charge_cap = 0.35 * peak_sur
+        inst.soc_step = 0.25
+        return inst
+
+    pools = []
+    for arm in ("solar", "solar_bess", "v2g_fleet"):
+        p, prov, outc = _cg_pool(fresh(), arm, ph1_budget=300.0)
+        pools.append(p)
+        print(f"  seed pool {arm}: {len(p)} cols ({outc})", flush=True)
+    seed_pool = _union(*pools)
+    inst = fresh()
+    inst.c_g, inst.c_v, inst.c_b, inst.rho = CG_COST, CV, CB_COST, RHO
+    t0 = time.time()
+    ph1 = _phase1_certify(inst, "v2g", pool=seed_pool, budget_s=1800.0)
+    verdict = ("lp_certified_infeasible"
+               if ph1["ph1_converged"] and (ph1["ph1_mass"] or 0) > 1e-6
+               else ("feasible_lp" if ph1["ph1_converged"] else "unresolved"))
+    rows.append({"tag": "charge035", "seed": sd, "n_tasks": n, "level": 0.35,
+                 "scenario": "v2g", "seed_pool": len(seed_pool),
+                 "verdict": verdict, "commit": COMMIT, "soc_step": 0.25,
+                 "s": round(time.time() - t0, 1),
+                 **{k: ph1[k] for k in ("ph1_mass", "ph1_converged", "ph1_iters", "ph1_s")}})
+    save(rows, path)
+    print(f"CHARGE035: {verdict} (mass {ph1['ph1_mass']}, converged {ph1['ph1_converged']})",
+          flush=True)
+
+
 RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CHARGECAPS2": chargecaps2, "COMMON4X": common4x, "GAMMA4": gamma4,
            "PERIODIC4": periodic4, "W2COMMON": w2common, "OUT4": out4,
            "GAMMAPKG": gammapkg, "W2CITIES": w2cities, "CLEANMISC": cleanmisc,
            "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge,
-           "COMMON4Y": common4y}
+           "COMMON4Y": common4y, "GAMMAPKG4": (lambda: gammapkg("gammapkg4")),
+           "CHARGE035": charge035}
 
 if __name__ == "__main__":
     t00 = time.time()
