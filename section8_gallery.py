@@ -180,7 +180,7 @@ if e20:
         tm1 = [float(np.mean([r["time_s"] for r in wc1
                               if r["n_tasks"] == n and r["start"] == "warm"])) for n in ns1]
         ax[0].plot(ns1, tm1, "-s", color="#16a085", ms=4, lw=1.7,
-                   label="random fleets, multi-station (cluster)")
+                   label="random fleets (cluster)")
     ax[0].set_xlabel("tasks"); ax[0].set_ylabel("column-generation time (s)")
     ax[0].legend(); ax[0].set_title("(a) column-generation time")
     ax[1].set_xlabel("tasks"); ax[1].set_ylabel("pricing share of CG time (%)")
@@ -1195,14 +1195,14 @@ if et15:
 # initialization, 25 kWh lattice, four arms including charge-only + purchasable
 # storage. Infeasibility is claimed only from the true Phase-I certificate.
 fc16 = []
-for _p in _glob.glob(os.path.join(ARX, "overnight13_fourcaps_s*.json")):
+for _p in _glob.glob(os.path.join(ARX, "overnight14_commoncaps_s*.json")):
     fc16 += json.load(open(_p))
-cp16 = []
-for _p in _glob.glob(os.path.join(ARX, "overnight4_caps*_s*.json")):
-    cp16 += json.load(open(_p))
-if fc16 and cp16:
-    cidx16 = {(r["gen_m"], r["chg_c"], r["n_tasks"], r["seed"], r["scenario"]): r
-              for r in cp16}
+cc16 = []
+for _p in _glob.glob(os.path.join(ARX, "overnight14_chargecaps2_s*.json")):
+    cc16 += json.load(open(_p))
+if fc16 and cc16:
+    for r in fc16:                       # COMMONCAPS stores the cap in "level"
+        r["gen_m"] = r["level"]
     fig, ax = plt.subplots(1, 2, figsize=(12.5, 4.4), constrained_layout=True)
     # (a) the corrected cliff at the 120-task scale: median cost by arm where
     # feasible; outcome markers where no cost exists
@@ -1246,26 +1246,28 @@ if fc16 and cp16:
     ax[0].set_xlabel("generation cap (x no-fleet peak deficit); charging cap 0.7x peak surplus")
     ax[0].set_ylabel("median total daily cost (k$), 120 tasks")
     ax[0].set_title("(a) corrected cliff at scale: no-BESS arms leave the map")
-    # (b) charging-cap effect at uncapped generation, matched per fleet size
-    ccs = sorted({r["chg_c"] for r in cp16 if not np.isfinite(r["gen_m"])},
-                 key=lambda x: (x == float("inf"), x))
-    xl = [("uncapped" if not np.isfinite(c) else f"{c:g}") for c in ccs]
-    NCOL = {20: "#2E75B6", 60: "#16a085", 120: "#7d3c98", 200: "#c0392b"}
-    for n in sorted({r["n_tasks"] for r in cp16}):
+    # (b) charging-cap effect at uncapped generation (CHARGECAPS2, common
+    # pools + inherited incumbents), matched feasible pairs per fleet size
+    ci16 = {(r["level"], r["n_tasks"], r["seed"], r["scenario"]): r for r in cc16}
+    ccs = [0.35, 0.5, 0.7, 1.0, 1.4, None]
+    xl = [("uncapped" if c is None else f"{c:g}") for c in ccs]
+    NCOL = {20: "#2E75B6", 60: "#16a085", 120: "#7d3c98"}
+    for n in (20, 60, 120):
         ys = []
         for c in ccs:
             v = []
-            for sd in range(6):
-                s = cidx16.get((float("inf"), c, n, sd, "solar"))
-                w = cidx16.get((float("inf"), c, n, sd, "v2g"))
-                if s and w and s.get("feasible", True) and w.get("feasible", True):
+            for sd in range(3):
+                s = ci16.get((c, n, sd, "solar"))
+                w = ci16.get((c, n, sd, "v2g"))
+                if s and w and s.get("outcome") == "feasible" \
+                   and w.get("outcome") == "feasible":
                     v.append(100 * (s["total"] - w["total"]) / s["total"])
             ys.append(float(np.mean(v)) if v else np.nan)
         ax[1].plot(range(len(ccs)), ys, "-o", ms=5, color=NCOL.get(n, "#555"),
                    label=f"{n} tasks")
     ax[1].set_xticks(range(len(ccs))); ax[1].set_xticklabels(xl)
     ax[1].set_xlabel("charging cap (x peak solar surplus); generation uncapped")
-    ax[1].set_ylabel("V2G saving vs charge-only (%), matched instances")
+    ax[1].set_ylabel("V2G saving vs charge-only (%), matched pairs")
     ax[1].set_title("(b) tight charging caps clip V2G's value")
     ax[1].legend(fontsize=10, title="fleet size")
     finish(fig, "fig_8_16_caps.png")
