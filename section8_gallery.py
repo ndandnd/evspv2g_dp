@@ -1267,23 +1267,22 @@ if fc16 and cc16:
                    label=f"{n} tasks")
     ax[1].set_xticks(range(len(ccs))); ax[1].set_xticklabels(xl)
     ax[1].set_xlabel("charging cap (x peak solar surplus); generation uncapped")
-    ax[1].set_ylabel("V2G saving vs charge-only (%), matched pairs")
-    ax[1].set_title("(b) tight charging caps clip V2G's value")
+    ax[1].set_ylabel("package saving vs charge-only (%), matched pairs")
+    ax[1].set_title("(b) tight charging caps clip the package's value")
     ax[1].legend(fontsize=10, title="fleet size")
     finish(fig, "fig_8_16_caps.png")
     GALLERY.append("\n![fig 8.16](fig_8_16_caps.png)\n")
     caption("Figure 8.16",
-        "CORRECTED infrastructure frontier (overnight13 FOURCAPS: Phase-I "
-        "initialization, 25 kWh lattice, four arms). (a) At 120 tasks the two "
-        "storage-less arms (charge-only AND the V2G fleet without stationary "
-        "storage) are Phase-I-certified infeasible at caps 1.0-1.1x and produce "
-        "no incumbent at 1.2x, while both storage arms operate at every cap at "
-        "nearly flat cost; the dividing ingredient is purchasable storage, not "
-        "V2G. At 20 tasks every arm stays feasible at every cap (economic-only "
-        "penalty ~6x vs the storage arms at this solar level); 60 tasks is the "
-        "transition (~2x, one feasible seed at the 1.0x cap). (b) LEGACY panel "
-        "(overnight4, 50 kWh): matched charging-cap value clipping; to be "
-        "refreshed by the CHARGECAPS study.")
+    "REPAIRED infrastructure frontier (overnight14: common pools across arms "
+    "and cap levels, inherited incumbents, Phase-I certificates, 25 kWh). "
+    "(a) At 120 tasks both no-BESS arms are certified infeasible at 1.0x "
+    "(3/3 seeds) and 1.05x (2/3), split at 1.1x, and feasible from 1.2x at a "
+    "10-15% premium over the flat BESS arms; at 20/60 tasks everything is "
+    "feasible (6.0x / 2.0x no-BESS penalties). (b) CHARGECAPS2 panel: "
+    "tighter station caps monotonically clip the storage-capable PACKAGE "
+    "saving (charge-only vs full stack) on matched feasible pairs; at 0.35x "
+    "the cap turns existential for every arm, storage included (7 certified "
+    "cells), because the station cap meters grid-to-storage charging.")
 
 # %% Figure 8.17 -- pack size: capacity knob + substitution across workloads
 pk17 = []
