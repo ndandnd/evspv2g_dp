@@ -95,6 +95,32 @@ columns.
 - Rows with `lp_check_ok = false` or `start_accepted = false` are quarantined
   as solver anomalies, not results.
 
+# OVERNIGHT-15 bundle — pre-Andrea caveat removal (one night)
+
+`cd ~/evspv2g_dp && git pull` first. Each study closes a visible caveat in the
+draft: OUT4 removes the outage ladder's "preliminary" label (corrected
+recorder, Phase-I certificates, honest statuses); W2CITIES removes the
+climates paragraph's "legacy" label (common pools, 25 kWh); GAMMAPKG answers
+"where does the fixed-base package crossing actually sit, per scale" (solar vs
+full stack, gamma-matched 0.2--1.0, premium $0/$8 in the objective); CLEANCAPS
+re-attacks the six unresolved n=120 frontier cells at tl 1800 and repairs the
+mixed-provenance base; CLEANMISC reruns the one aborted CHARGECAPS2 cell,
+cross-starts the inconclusive AUDIT cell, and runs the finest positive-loss
+lattice check.
+
+```bash
+DP="-p default_partition --requeue --time=24:00:00 -N1"
+for i in $(seq 0 8);  do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=OUT4,OVERNIGHT14_SHARD=$i/9 run_overnight14_unicorn.sbatch; done
+for i in $(seq 0 13); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=W2CITIES,OVERNIGHT14_SHARD=$i/14 run_overnight14_unicorn.sbatch; done
+for i in $(seq 0 13); do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=GAMMAPKG,OVERNIGHT14_SHARD=$i/14 run_overnight14_unicorn.sbatch; done
+for i in $(seq 0 2);  do sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=CLEANCAPS,OVERNIGHT14_SHARD=$i/3 run_overnight14_unicorn.sbatch; done
+sbatch $DP --export=ALL,OVERNIGHT14_STUDIES=CLEANMISC,OVERNIGHT14_SHARD=0/1 run_overnight14_unicorn.sbatch
+```
+
+Gates already validated this cycle (GATE + SMOKE both passed on cluster at the
+current code lineage; the new studies reuse the same validated helpers), so no
+blocking gate is required tonight; the checks are enforced per row regardless.
+
 # Weekend run plan — FINAL v2 (48h+, unattended)
 
 `cd ~/evspv2g_dp && git pull` first. GATE needs networkx
