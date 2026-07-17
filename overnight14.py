@@ -316,6 +316,33 @@ def periodic4():
                   flush=True)
 
 
+def boundaryladder():
+    """Pinned steady-state boundary levels s0 = sT = c for fixed c (Anna's
+    cheap comparison points between full recharge, c = G, and the free-level
+    periodic convention). Same 18-base ladder and common-pool protocol as
+    PERIODIC4; each pin costs one cyclic-style solve. Full-recharge and
+    free-periodic rows come from the existing PERIODIC4 data at analysis."""
+    rows, path = ckpt(f"overnight14_boundaryladder_s{SH_I}of{SH_K}.json")
+    done = {(r["pv"], r["n_tasks"], r["seed"], r.get("soc_mode")) for r in rows}
+    bases = [(sd, n, pv) for n in (20, 60) for pv in (1.5, 2.0, 2.5)
+             for sd in (0, 1, 2)]
+    PINS = ("pin0", "pin1.75", "pin3.5", "pin5.25")   # model units (100 kWh each):
+                                                      # 0, G/4, G/2, 3G/4 = 0/175/350/525 kWh
+    print(f"BOUNDARYLADDER: {len(bases)} bases x {len(PINS)} pins, shard "
+          f"{SH_I}/{SH_K} ({len(rows)} rows done)", flush=True)
+    for idx, (sd, n, pv) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        for mode in PINS:
+            if (pv, n, sd, mode) in done:
+                continue
+            t0 = time.time()
+            rows += _solve_base_common4(sd, n, pv, tl=600.0, soc_mode=mode)
+            save(rows, path)
+            print(f"  base pv{pv} n{n} sd{sd} {mode} done in {time.time()-t0:.0f}s",
+                  flush=True)
+
+
 def _pv_for_gamma(n, sd, target):
     """Bisect the pv scale so the endowment index gamma = surplus/traction hits
     the target for this fleet (surplus is monotone nondecreasing in pv)."""
@@ -753,6 +780,177 @@ def out4():
         print(f"  base {scen} n{n} pv{pv} sd{sd} complete ({len(rows)} rows)", flush=True)
 
 
+def _gamma_cell(rows, path, sd, n, gt, arms, duration=2.0, tl=600.0):
+    """One gamma-matched base solved across `arms` [(scenario, premium), ...] on
+    SYMMETRIC common pools: charge-only arms receive, in addition to their own
+    pools, every discharge-free truck column harvested from the V2G pools
+    (recosted without the premium). This repairs the one-directional pool
+    expansion of gammapkg, which gave only the flexible arms the union."""
+    pv = _pv_for_gamma(n, sd, gt)
+    if pv is None:
+        rows.append({"gamma_target": gt, "n_tasks": n, "seed": sd,
+                     "duration": duration, "scenario": "unreachable",
+                     "premium": None, "outcome": "gamma_unreachable",
+                     "commit": COMMIT})
+        save(rows, path)
+        return
+
+    def fresh():
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv,
+                              duration=duration)
+        inst.soc_step = 0.25
+        return inst
+
+    _i0 = fresh()
+    g_ach = round(float(np.maximum(-_i0.Delta, 0).sum())
+                  / max(float(sum(t.energy for t in _i0.trips)), 1e-9), 4)
+    pools, provs, outcomes = {}, {}, {}
+    for scen, p in arms:
+        pools[(scen, p)], provs[(scen, p)], outcomes[(scen, p)] = \
+            _cg_pool(fresh(), scen, cv=CV + p)
+    co_pools = [pools[k] for k in pools if k[0] in ("solar", "solar_bess")]
+    v2g_pools = [pools[k] for k in pools if k[0] in ("v2g", "v2g_fleet")]
+    harvest = [c for P in v2g_pools for c in P
+               if getattr(c, "kind", "") == "truck"
+               and float(np.min(c.e)) >= -1e-9]
+    C_CO = _union(*(co_pools + [harvest])) if co_pools else _union(*[harvest])
+    C_ALL = _union(C_CO, *v2g_pools) if v2g_pools else C_CO
+    incs = {}
+    for scen, p in arms:
+        inst = fresh()
+        inst.c_g, inst.c_b, inst.rho = CG_COST, CB_COST, RHO
+        inst.c_v = CV + p
+        base_set = C_CO if scen in ("solar", "solar_bess") else C_ALL
+        up = [(Column(c.kind, c.a, c.e, CV + p, c.label)
+               if getattr(c, "kind", "") == "truck" else c) for c in base_set]
+        ukeys = {str(_col_key(c)): i for i, c in enumerate(up)}
+        row = {"gamma_target": gt, "gamma_achieved": g_ach, "pv_used": pv,
+               "n_tasks": n, "seed": sd, "duration": duration,
+               "scenario": scen, "premium": p, "commit": COMMIT,
+               "milp_solver": MILP_SOLVER, "soc_step": 0.25,
+               "pool_own": len(pools[(scen, p)]), "pool_union": len(up),
+               "pool_harvest": len(harvest),
+               **provs[(scen, p)]}
+        lpu = solve_lp(inst, up, battery_allowed=SCENARIOS[scen]["battery"])
+        row["lp_union"] = (round(float(lpu.obj), 4)
+                           if lpu.status == "optimal" else None)
+        own = provs[(scen, p)].get("lp_own")
+        row["lp_check_ok"] = bool(
+            provs[(scen, p)].get("cg_converged")
+            and row["lp_union"] is not None and own is not None
+            and row["lp_union"] <= own + TOL_LP)
+        if outcomes[(scen, p)] == "lp_certified_infeasible":
+            row.update({"feasible": False, "outcome": "lp_certified_infeasible",
+                        "milp_status": "skipped"})
+            rows.append(row); save(rows, path); continue
+        cands = []
+        for (s0, p0), c0 in incs.items():
+            adm = (s0 in ("solar", "solar_bess")) or scen in ("v2g", "v2g_fleet")
+            if s0 == "v2g_fleet" and scen == "solar_bess":
+                adm = False
+            if s0 in ("v2g", "v2g_fleet") and scen in ("solar", "solar_bess"):
+                adm = False
+            if adm:
+                cands.append({**c0, "obj": c0["obj"] + (p - p0) * c0["ntrucks"],
+                              "_src": f"{s0}@{p0:g}"})
+        start, src, best = None, None, None
+        if cands:
+            best = min(cands, key=lambda c: c["obj"])
+            start = _start_from(best, ukeys)
+            src = best.get("_src")
+        row["start_src"] = src
+        row["start_obj"] = (round(best["obj"], 2) if best and start else None)
+        mrow, inc = _milp_common(inst, scen, up, tl, start=start)
+        cp = mrow.get("_charge_profile")
+        if cp is not None:
+            try:
+                arr = np.asarray(cp, dtype=float)
+                surplus = np.asarray(_i0.Delta) < 0
+                row["chg_units"] = round(float(np.maximum(arr, 0).sum()), 2)
+                row["dis_units"] = round(float(np.maximum(-arr, 0).sum()), 2)
+                row["chg_in_surplus_units"] = round(
+                    float(np.maximum(arr, 0)[surplus[:len(arr)]].sum()), 2)
+            except Exception:
+                pass
+        mrow.pop("_charge_profile", None)
+        row.update(mrow)
+        if inc is not None:
+            incs[(scen, p)] = {**inc, "ntrucks": mrow.get("trucks", 0)}
+        rows.append(row)
+        save(rows, path)
+
+
+def gammadense():
+    """Dense co-scaled break-even grid at the 60-task calibration (repairs the
+    coarse five-point legacy interpolation behind the 0.31-0.35 sentence):
+    gamma targets 0.10-0.80 in steps of 0.05, five seeds, premiums $0/$4/$8
+    inside the optimization, symmetric common pools."""
+    rows, path = ckpt(f"overnight14_gammadense_s{SH_I}of{SH_K}.json")
+    done = {(r["gamma_target"], r["seed"], r["scenario"], r.get("premium"))
+            for r in rows}
+    GTS = [round(0.10 + 0.05 * i, 2) for i in range(15)]
+    bases = [(sd, gt) for sd in (0, 1, 2, 3, 4) for gt in GTS]
+    ARMS = [("solar", 0.0), ("v2g", 0.0), ("v2g", 4.0), ("v2g", 8.0)]
+    print(f"GAMMADENSE: {len(bases)} bases, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done)", flush=True)
+    for idx, (sd, gt) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        if all((gt, sd, a, p) in done for a, p in ARMS):
+            continue
+        t0 = time.time()
+        _gamma_cell(rows, path, sd, 60, gt, ARMS)
+        print(f"  gt{gt} sd{sd} done in {time.time()-t0:.0f}s", flush=True)
+
+
+def gammapkg5():
+    """GAMMAPKG4 rerun with the symmetric pool repair (the charge-only baseline
+    previously solved on its own pool only). Same grid: seeds 3-9, fleet sizes
+    20/60/120, gamma targets 0.10-0.50, premiums $0/$4/$8."""
+    rows, path = ckpt(f"overnight14_gammapkg5_s{SH_I}of{SH_K}.json")
+    done = {(r["gamma_target"], r["n_tasks"], r["seed"], r["scenario"],
+             r.get("premium")) for r in rows}
+    GTS = [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.50]
+    bases = [(sd, n, gt) for sd in (3, 4, 5, 6, 7, 8, 9)
+             for n in (20, 60, 120) for gt in GTS]
+    ARMS = [("solar", 0.0), ("v2g", 0.0), ("v2g", 4.0), ("v2g", 8.0)]
+    print(f"GAMMAPKG5: {len(bases)} bases, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done)", flush=True)
+    for idx, (sd, n, gt) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        if all((gt, n, sd, a, p) in done for a, p in ARMS):
+            continue
+        t0 = time.time()
+        _gamma_cell(rows, path, sd, n, gt, ARMS)
+        print(f"  n{n} gt{gt} sd{sd} done in {time.time()-t0:.0f}s", flush=True)
+
+
+def durladder():
+    """Anna's mechanism test: hold per-task energy and gamma fixed, vary task
+    DURATION (1h/2h/4h). Full configuration set plus an $8-premium arm, with
+    charge/discharge diagnostics recorded from the incumbent profile."""
+    rows, path = ckpt(f"overnight14_durladder_s{SH_I}of{SH_K}.json")
+    done = {(r["gamma_target"], r["seed"], r.get("duration"), r["scenario"],
+             r.get("premium")) for r in rows}
+    GTS = (0.2, 0.35, 0.5, 0.8, 1.25, 2.0)
+    DURS = (1.0, 2.0, 4.0)
+    bases = [(sd, du, gt) for sd in (0, 1, 2, 3, 4) for du in DURS for gt in GTS]
+    ARMS = [("solar", 0.0), ("solar_bess", 0.0), ("v2g_fleet", 0.0),
+            ("v2g", 0.0), ("v2g", 8.0)]
+    print(f"DURLADDER: {len(bases)} bases, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done)", flush=True)
+    for idx, (sd, du, gt) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        if all((gt, sd, du, a, p) in done for a, p in ARMS):
+            continue
+        t0 = time.time()
+        _gamma_cell(rows, path, sd, 60, gt, ARMS, duration=du)
+        print(f"  dur{du} gt{gt} sd{sd} done in {time.time()-t0:.0f}s", flush=True)
+
+
 def gammapkg(tag="gammapkg"):
     """Fixed-base PACKAGE crossing surface: solar (charge-only, no BESS) vs the
     full stack, gamma-matched across fleet sizes, charger premiums $0/$4/$8
@@ -1085,12 +1283,97 @@ def charge035():
           flush=True)
 
 
+def benchxl():
+    """Extend the exp5 benchmark scalability ladder past 450 tasks (the paper's
+    benchmark curves stop at 450 while the random-fleet family reaches 1,000):
+    locations 9-15 give 360/450/550/660/780/910/1050 trips at both task
+    energies (eps=2.0 -> 200 kWh/task, eps=1.5 -> 150 kWh/task). Points 9-10
+    repeat the laptop rows on cluster hardware (cross-hardware calibration:
+    gap_pct and cols should reproduce; wall-clocks give the cluster/laptop
+    time ratio so the two curve segments can be related honestly).
+    Protocol matches recreate_arxiv.exp5_scalability: v2g scenario, warm
+    start, enrich=25, cyclic SoC, HiGHS master LP, CBC final integer master
+    (the benchmark family's solver in the paper), 3-day MIP budget in place
+    of exp5's 300 s. Rows record host/cpu so hardware claims in the paper
+    are self-documenting."""
+    import platform
+    import socket
+
+    from colgen import summarize
+    from recreate_arxiv import ENRICH, GAL_PER_UNIT, SCAL, UNIT_KWH
+
+    def _cpu_model():
+        try:
+            for line in open("/proc/cpuinfo"):
+                if "model name" in line:
+                    return line.split(":", 1)[1].strip()
+        except OSError:
+            pass
+        try:
+            return subprocess.check_output(
+                ["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+        except Exception:
+            return platform.processor() or platform.machine()
+
+    rows, path = ckpt(f"overnight14_benchxl_s{SH_I}of{SH_K}.json")
+    done = {(r["eps"], r["points"]) for r in rows}
+    PTS = [int(x) for x in os.environ.get("OVERNIGHT14_BENCHXL_PTS",
+                                          "9,10,11,12,13,14,15").split(",")]
+    TL = float(os.environ.get("OVERNIGHT14_BENCHXL_TL", "259200"))
+    cells = [(eps, p) for eps in (2.0, 1.5) for p in PTS]
+    meta = {"host": socket.gethostname(), "machine": platform.machine(),
+            "cpu": _cpu_model(), "ncpu": os.cpu_count(), "commit": COMMIT}
+    print(f"BENCHXL: {len(cells)} cells, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done) on {meta['host']}", flush=True)
+    for idx, (eps, pts) in enumerate(cells):
+        if idx % SH_K != SH_I or (eps, pts) in done:
+            continue
+        inst = build_instance(pts, eps, SCAL)
+        t0 = time.time()
+        res = column_generation(inst, scenario="v2g", start="warm", do_milp=False,
+                                enrich=ENRICH, max_iter=max(2000, 5 * inst.n_trips),
+                                soc_mode="cyclic")
+        cg_s = time.time() - t0
+        row = {"eps": eps, "points": pts, "trips": inst.n_trips,
+               "scenario": "v2g", "cg_iters": res["iters"], "cols": res["n_cols"],
+               "cg_s": round(cg_s, 2), "pricing_s": round(res["pricing_time"], 2),
+               "pricing_pct": (round(100 * res["pricing_time"] / cg_s, 1)
+                               if cg_s > 0 else 0.0),
+               "lp_obj": round(res["lp_obj"], 2), "milp_tl": TL, **meta}
+        if res["lp_obj"] == float("inf"):
+            row["feasible"] = False
+            rows.append(row)
+            save(rows, path)
+            raise SystemExit(f"BENCHXL eps{eps} pts{pts}: LP infeasible -- the "
+                             "benchmark ladder must be feasible; investigate")
+        row["feasible"] = True
+        t1 = time.time()
+        mip = solve_milp(inst, res["cols"], time_limit=TL,
+                         battery_allowed=SCENARIOS["v2g"]["battery"],
+                         solver="cbc", soc_mode="cyclic")
+        row["milp_s"] = round(time.time() - t1, 2)
+        res["mip"] = mip
+        s = summarize(inst, res)
+        row.update({"mip_obj": round(mip.obj, 2),
+                    "gap_pct": round((mip.obj - res["lp_obj"]) / abs(mip.obj) * 100, 3),
+                    "trucks": s["trucks"], "batteries": s["batteries"],
+                    "fuel_kwh": round(s["fuel_kwh"] * UNIT_KWH, 1),
+                    "fuel_gal": round(s["fuel_kwh"] * GAL_PER_UNIT, 2)})
+        rows.append(row)
+        save(rows, path)
+        print(f"  eps{eps} pts{pts} ({inst.n_trips} trips): cg {cg_s:.0f}s, "
+              f"milp {row['milp_s']:.0f}s, gap {row['gap_pct']}%", flush=True)
+
+
 RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CHARGECAPS2": chargecaps2, "COMMON4X": common4x, "GAMMA4": gamma4,
-           "PERIODIC4": periodic4, "W2COMMON": w2common, "OUT4": out4,
+           "PERIODIC4": periodic4, "BOUNDARYLADDER": boundaryladder,
+           "W2COMMON": w2common, "OUT4": out4,
            "GAMMAPKG": gammapkg, "W2CITIES": w2cities, "CLEANMISC": cleanmisc,
            "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge,
            "COMMON4Y": common4y, "GAMMAPKG4": (lambda: gammapkg("gammapkg4")),
+           "GAMMADENSE": gammadense, "GAMMAPKG5": gammapkg5,
+           "DURLADDER": durladder, "BENCHXL": benchxl,
            "CHARGE035": charge035}
 
 if __name__ == "__main__":
