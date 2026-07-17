@@ -140,7 +140,11 @@ def initial_columns(inst: Instance, start: str, caps: dict,
                     soc_mode: str = "cyclic") -> list[Column]:
     base = []
     for tr in inst.trips:
-        c = single_trip_column(inst, tr, ice=caps["ice"], free_start=(soc_mode == "free"))
+        # the single-trip constructor assumes a full-charge start and a
+        # restore-to-full ending, which is boundary-infeasible under a pinned
+        # level c < G; pinned runs initialize from artificials + DP covers only
+        c = None if soc_mode.startswith("pin") else \
+            single_trip_column(inst, tr, ice=caps["ice"], free_start=(soc_mode == "free"))
         if c is not None:
             base.append(c)
         base.append(artificial_column(inst, tr))   # Phase-I coverage for EVERY task:

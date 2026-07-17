@@ -316,6 +316,33 @@ def periodic4():
                   flush=True)
 
 
+def boundaryladder():
+    """Pinned steady-state boundary levels s0 = sT = c for fixed c (Anna's
+    cheap comparison points between full recharge, c = G, and the free-level
+    periodic convention). Same 18-base ladder and common-pool protocol as
+    PERIODIC4; each pin costs one cyclic-style solve. Full-recharge and
+    free-periodic rows come from the existing PERIODIC4 data at analysis."""
+    rows, path = ckpt(f"overnight14_boundaryladder_s{SH_I}of{SH_K}.json")
+    done = {(r["pv"], r["n_tasks"], r["seed"], r.get("soc_mode")) for r in rows}
+    bases = [(sd, n, pv) for n in (20, 60) for pv in (1.5, 2.0, 2.5)
+             for sd in (0, 1, 2)]
+    PINS = ("pin0", "pin1.75", "pin3.5", "pin5.25")   # model units (100 kWh each):
+                                                      # 0, G/4, G/2, 3G/4 = 0/175/350/525 kWh
+    print(f"BOUNDARYLADDER: {len(bases)} bases x {len(PINS)} pins, shard "
+          f"{SH_I}/{SH_K} ({len(rows)} rows done)", flush=True)
+    for idx, (sd, n, pv) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        for mode in PINS:
+            if (pv, n, sd, mode) in done:
+                continue
+            t0 = time.time()
+            rows += _solve_base_common4(sd, n, pv, tl=600.0, soc_mode=mode)
+            save(rows, path)
+            print(f"  base pv{pv} n{n} sd{sd} {mode} done in {time.time()-t0:.0f}s",
+                  flush=True)
+
+
 def _pv_for_gamma(n, sd, target):
     """Bisect the pv scale so the endowment index gamma = surplus/traction hits
     the target for this fleet (surplus is monotone nondecreasing in pv)."""
@@ -1087,7 +1114,8 @@ def charge035():
 
 RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CHARGECAPS2": chargecaps2, "COMMON4X": common4x, "GAMMA4": gamma4,
-           "PERIODIC4": periodic4, "W2COMMON": w2common, "OUT4": out4,
+           "PERIODIC4": periodic4, "BOUNDARYLADDER": boundaryladder,
+           "W2COMMON": w2common, "OUT4": out4,
            "GAMMAPKG": gammapkg, "W2CITIES": w2cities, "CLEANMISC": cleanmisc,
            "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge,
            "COMMON4Y": common4y, "GAMMAPKG4": (lambda: gammapkg("gammapkg4")),
