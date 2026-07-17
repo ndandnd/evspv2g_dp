@@ -1283,6 +1283,88 @@ def charge035():
           flush=True)
 
 
+def benchxl():
+    """Extend the exp5 benchmark scalability ladder past 450 tasks (the paper's
+    benchmark curves stop at 450 while the random-fleet family reaches 1,000):
+    locations 9-15 give 360/450/550/660/780/910/1050 trips at both task
+    energies (eps=2.0 -> 200 kWh/task, eps=1.5 -> 150 kWh/task). Points 9-10
+    repeat the laptop rows on cluster hardware (cross-hardware calibration:
+    gap_pct and cols should reproduce; wall-clocks give the cluster/laptop
+    time ratio so the two curve segments can be related honestly).
+    Protocol matches recreate_arxiv.exp5_scalability: v2g scenario, warm
+    start, enrich=25, cyclic SoC, HiGHS master LP, CBC final integer master
+    (the benchmark family's solver in the paper), 3-day MIP budget in place
+    of exp5's 300 s. Rows record host/cpu so hardware claims in the paper
+    are self-documenting."""
+    import platform
+    import socket
+
+    from colgen import summarize
+    from recreate_arxiv import ENRICH, GAL_PER_UNIT, SCAL, UNIT_KWH
+
+    def _cpu_model():
+        try:
+            for line in open("/proc/cpuinfo"):
+                if "model name" in line:
+                    return line.split(":", 1)[1].strip()
+        except OSError:
+            pass
+        try:
+            return subprocess.check_output(
+                ["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+        except Exception:
+            return platform.processor() or platform.machine()
+
+    rows, path = ckpt(f"overnight14_benchxl_s{SH_I}of{SH_K}.json")
+    done = {(r["eps"], r["points"]) for r in rows}
+    PTS = [int(x) for x in os.environ.get("OVERNIGHT14_BENCHXL_PTS",
+                                          "9,10,11,12,13,14,15").split(",")]
+    TL = float(os.environ.get("OVERNIGHT14_BENCHXL_TL", "259200"))
+    cells = [(eps, p) for eps in (2.0, 1.5) for p in PTS]
+    meta = {"host": socket.gethostname(), "machine": platform.machine(),
+            "cpu": _cpu_model(), "ncpu": os.cpu_count(), "commit": COMMIT}
+    print(f"BENCHXL: {len(cells)} cells, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done) on {meta['host']}", flush=True)
+    for idx, (eps, pts) in enumerate(cells):
+        if idx % SH_K != SH_I or (eps, pts) in done:
+            continue
+        inst = build_instance(pts, eps, SCAL)
+        t0 = time.time()
+        res = column_generation(inst, scenario="v2g", start="warm", do_milp=False,
+                                enrich=ENRICH, max_iter=max(2000, 5 * inst.n_trips),
+                                soc_mode="cyclic")
+        cg_s = time.time() - t0
+        row = {"eps": eps, "points": pts, "trips": inst.n_trips,
+               "scenario": "v2g", "cg_iters": res["iters"], "cols": res["n_cols"],
+               "cg_s": round(cg_s, 2), "pricing_s": round(res["pricing_time"], 2),
+               "pricing_pct": (round(100 * res["pricing_time"] / cg_s, 1)
+                               if cg_s > 0 else 0.0),
+               "lp_obj": round(res["lp_obj"], 2), "milp_tl": TL, **meta}
+        if res["lp_obj"] == float("inf"):
+            row["feasible"] = False
+            rows.append(row)
+            save(rows, path)
+            raise SystemExit(f"BENCHXL eps{eps} pts{pts}: LP infeasible -- the "
+                             "benchmark ladder must be feasible; investigate")
+        row["feasible"] = True
+        t1 = time.time()
+        mip = solve_milp(inst, res["cols"], time_limit=TL,
+                         battery_allowed=SCENARIOS["v2g"]["battery"],
+                         solver="cbc", soc_mode="cyclic")
+        row["milp_s"] = round(time.time() - t1, 2)
+        res["mip"] = mip
+        s = summarize(inst, res)
+        row.update({"mip_obj": round(mip.obj, 2),
+                    "gap_pct": round((mip.obj - res["lp_obj"]) / abs(mip.obj) * 100, 3),
+                    "trucks": s["trucks"], "batteries": s["batteries"],
+                    "fuel_kwh": round(s["fuel_kwh"] * UNIT_KWH, 1),
+                    "fuel_gal": round(s["fuel_kwh"] * GAL_PER_UNIT, 2)})
+        rows.append(row)
+        save(rows, path)
+        print(f"  eps{eps} pts{pts} ({inst.n_trips} trips): cg {cg_s:.0f}s, "
+              f"milp {row['milp_s']:.0f}s, gap {row['gap_pct']}%", flush=True)
+
+
 RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CHARGECAPS2": chargecaps2, "COMMON4X": common4x, "GAMMA4": gamma4,
            "PERIODIC4": periodic4, "BOUNDARYLADDER": boundaryladder,
@@ -1291,7 +1373,7 @@ RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge,
            "COMMON4Y": common4y, "GAMMAPKG4": (lambda: gammapkg("gammapkg4")),
            "GAMMADENSE": gammadense, "GAMMAPKG5": gammapkg5,
-           "DURLADDER": durladder,
+           "DURLADDER": durladder, "BENCHXL": benchxl,
            "CHARGE035": charge035}
 
 if __name__ == "__main__":
