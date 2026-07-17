@@ -259,3 +259,14 @@ for i in $(seq 0 31); do sbatch $DPN --export=ALL,OVERNIGHT13_STUDIES=HOLDOUT22,
 - Rows with positive `lp_artificial_mass` after a `ph1_resume` carry a
   penalized `lp_obj` (a lower bound on the true economic LP value); quote their
   MILP incumbents, not their LP objective.
+
+## BOUNDARYLADDER (Anna's pinned-boundary comparison; added post-Andrea-pass)
+# Pinned steady state s0 = sT = c on the PERIODIC4 ladder (18 bases x 4 arms),
+# pins {0, G/4, G/2, 3G/4} = {0,175,350,525} kWh -> 288 solves. Endpoints
+# (full recharge c=G, free-level periodic) come from existing PERIODIC4 rows.
+# Inner MILP tl stays 600 s to match PERIODIC4 (comparability); outer Slurm
+# limit is generous because --requeue + per-row checkpoints make it safe.
+DP7="-p default_partition --requeue --time=7-00:00:00 -N1"
+for i in $(seq 0 11); do
+  sbatch $DP7 --export=ALL,OVERNIGHT14_STUDIES=BOUNDARYLADDER,OVERNIGHT14_SHARD=$i/12 run_overnight14_unicorn.sbatch
+done
