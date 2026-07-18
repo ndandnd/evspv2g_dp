@@ -1451,6 +1451,7 @@ def benchxl():
             return platform.processor() or platform.machine()
 
     rows, path = ckpt(f"overnight14_benchxl_s{SH_I}of{SH_K}.json")
+    rows = [r for r in rows if "mip_obj" in r or r.get("feasible") is False]
     done = {(r["eps"], r["points"]) for r in rows}
     PTS = [int(x) for x in os.environ.get("OVERNIGHT14_BENCHXL_PTS",
                                           "9,10,11,12,13,14,15").split(",")]
@@ -1463,6 +1464,7 @@ def benchxl():
     for idx, (eps, pts) in enumerate(cells):
         if idx % SH_K != SH_I or (eps, pts) in done:
             continue
+        print(f"  starting eps{eps} pts{pts}", flush=True)
         inst = build_instance(pts, eps, SCAL)
         t0 = time.time()
         res = column_generation(inst, scenario="v2g", start="warm", do_milp=False,
@@ -1482,10 +1484,15 @@ def benchxl():
             raise SystemExit(f"BENCHXL eps{eps} pts{pts}: LP infeasible -- the "
                              "benchmark ladder must be feasible; investigate")
         row["feasible"] = True
+        rows.append(row)
+        save(rows, path)
+        print(f"  eps{eps} pts{pts} ({inst.n_trips} trips): cg {cg_s:.0f}s, "
+              f"{res['n_cols']} cols; starting CBC (tl {TL:.0f}s)", flush=True)
         t1 = time.time()
         mip = solve_milp(inst, res["cols"], time_limit=TL,
                          battery_allowed=SCENARIOS["v2g"]["battery"],
                          solver="cbc", soc_mode="cyclic")
+        rows.pop()
         row["milp_s"] = round(time.time() - t1, 2)
         res["mip"] = mip
         s = summarize(inst, res)
