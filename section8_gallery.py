@@ -175,6 +175,25 @@ if e20:
             xs = [r["trips"] for r in data]
             ax[0].plot(xs, [r["cg_s"] for r in data], "-o", color=c, label=lab)
             ax[1].plot(xs, [r["pricing_pct"] for r in data], "-o", color=c, label=lab)
+    import glob as _g81
+    bxl = []
+    for _p in _g81.glob(os.path.join(ARX, "overnight14_benchxl_s*.json")):
+        bxl += json.load(open(_p))
+    best_bx = {}
+    for r in bxl:                        # a provisional CG-only row may coexist
+        k = (r["eps"], r["points"])      # with nothing else for its cell; keep
+        if k not in best_bx or "mip_obj" in r:   # the full row when both exist
+            best_bx[k] = r
+    for eps, c, lab in ((2.0, "#2E75B6", "benchmark, 200 kWh/task (cluster)"),
+                        (1.5, "#e08020", "benchmark, 150 kWh/task (cluster)")):
+        sub = sorted((r for r in best_bx.values() if r["eps"] == eps),
+                     key=lambda r: r["trips"])
+        if sub:
+            xs = [r["trips"] for r in sub]
+            ax[0].plot(xs, [r["cg_s"] for r in sub], "--s", color=c,
+                       mfc="none", ms=5, lw=1.6, label=lab)
+            ax[1].plot(xs, [r["pricing_pct"] for r in sub], "--s", color=c,
+                       mfc="none", ms=5, lw=1.6, label=lab)
     wc1 = load(ARX, "overnight2_warmcold.json")
     if wc1:
         ns1 = sorted({r["n_tasks"] for r in wc1})
@@ -282,7 +301,7 @@ if rf:
         return (r["g_units"] - r["baseline_units"]) / 10.0
     fig, ax = plt.subplots(figsize=(8.5, 4.6), constrained_layout=True)
     W = 0.2
-    NAMES = {"vsp": "VSP (ICE)", "ev": "EVSP (flat tariff)", "solar": "EVSP-Solar", "v2g": "EVSP-V2G"}
+    NAMES = {"vsp": "VSP (ICE)", "ev": "EVSP (flat tariff)", "solar": "solar-aware charge-only", "v2g": "V2G (full stack)"}
     COLS = {"vsp": "#888888", "ev": "#7d3c98", "solar": "#e08020", "v2g": "#2E75B6"}
     tbl_rows = []
     for i2, reg in enumerate(("vsp", "ev", "solar", "v2g")):
@@ -309,7 +328,7 @@ if rf:
         labels.append(f"{r0['surplus_mwh']} MWh/day\nsurplus")
     ax.set_xticks(range(len(pvs))); ax.set_xticklabels(labels)
     ax.set_ylabel("fleet-attributable fossil energy (MWh/day)\n(negative = fleet REDUCES base fossil)")
-    ax.set_title("fossil energy by regime as solar grows (cyclic model, ICE at 3.3x thermal)")
+    ax.set_title("fossil energy by regime as solar grows (full-recharge convention, ICE at 3.3x thermal)")
     ax.legend(loc="upper right")
     finish(fig, "fig_8_2_regime_fuel.png")
     GALLERY.append("\n![fig 8.2](fig_8_2_regime_fuel.png)\n")
@@ -702,7 +721,7 @@ md9 = []
 for _p in _glob.glob(os.path.join(ARX, "overnight2_modes_s*.json")):
     md9 += json.load(open(_p))
 NM9 = {"vsp": ("VSP (ICE, 3.3x thermal)", "#888888", "-"), "ev": ("EVSP (flat tariff)", "#7d3c98", "-"),
-       "solar": ("EVSP-Solar", "#e08020", "--"), "v2g": ("EVSP-V2G", "#2E75B6", "-")}
+       "solar": ("charge-only", "#e08020", "--"), "v2g": ("full stack (V2G+BESS)", "#2E75B6", "-")}
 TIT9 = {"1x": "1x solar", "2x": "2x solar", "3x": "3x solar", "4x": "4x solar",
         "summer": "summer day (1x panels, longer daylight)",
         "sum2x": "summer day, 2x panels"}
@@ -890,9 +909,9 @@ if vs12:
     NS12 = sorted({_ns[0], _ns[len(_ns) // 2], _ns[-1]})
     SH12 = [s for s in ("std", "summer") if any(r["shape"] == s for r in vs12)]
     PV12 = sorted({r["pv"] for r in vs12})
-    SC12 = [("solar", "EVSP-Solar (charge-only)", "#e08020", "--"),
+    SC12 = [("solar", "charge-only (no batteries)", "#e08020", "--"),
             ("v2g_fleet", "V2G trucks only (no stationary)", "#16a085", "-"),
-            ("v2g", "EVSP-V2G (trucks + batteries)", "#2E75B6", "-")]
+            ("v2g", "full V2G stack (trucks + batteries)", "#2E75B6", "-")]
 
     def _m12(n, sh, pv, scen, key="fossil_mwh"):
         v = [r[key] for r in vs12 if r["n_tasks"] == n and r["shape"] == sh
@@ -991,14 +1010,14 @@ if sa13:
         v = [_lp13(r) for (l, s, n, sd, st_, sc), r in _idx13.items()
              if (l, s, st_, sc) == (L, sol, st, scen)]
         return float(np.mean(v)) if v else np.nan
-    for scen, c, base_lab in (("solar", "#e08020", "EVSP-Solar"), ("v2g", "#2E75B6", "EVSP-V2G")):
+    for scen, c, base_lab in (("solar", "#e08020", "charge-only"), ("v2g", "#2E75B6", "full stack")):
         for st, ls in (("depot", "--"), ("all", "-")):
             ys = [_mean_lp(L, "2x", scen, st) / 1000 for L in LS13]
             ax[0].plot(LS13, ys, ls, marker="o", ms=4, color=c,
                        label=f"{base_lab}, {'depot charger only' if st == 'depot' else 'chargers everywhere'}")
     ax[0].set_xlabel("number of task locations L")
     ax[0].set_ylabel("mean total daily cost (k$, LP bound; 2x solar)")
-    ax[0].set_title("(a) absolute costs: V2G below charge-only")
+    ax[0].set_title("(a) absolute costs: full stack below charge-only")
     ax[0].legend(fontsize=10.5)
     for st, c, lab in (("depot", "#888888", "charger at depot only"),
                        ("all", "#16a085", "charger at every location")):
@@ -1034,7 +1053,7 @@ if sa13:
             if v:
                 xs_f.append(nch); ys_f.append(float(np.mean(v)) / 1000)
         ax[3].plot(xs_f, ys_f, "-o", color=c, ms=5,
-                   label="EVSP-Solar" if scen == "solar" else "EVSP-V2G")
+                   label="charge-only" if scen == "solar" else "full stack (V2G+BESS)")
     ax[3].set_xlabel("charging locations (depot + k); large maps, 2x solar")
     ax[3].set_ylabel("mean total daily cost (k$, LP bound)")
     ax[3].set_title("(d) charger build-out: concave gains")
@@ -1110,9 +1129,9 @@ if md14:
                else _cm14.viridis(0.05 + 0.9 * k14 / max(len(SOLS14) - 2, 1)))
         ax[0].plot(pts, med, "-", lw=1.9, color=col, label=sol)
     ax[0].axhline(0, color="k", lw=0.7)
-    ax[0].set_xlabel("number of daily tasks (fleet size)")
+    ax[0].set_xlabel("workload (number of daily tasks)")
     ax[0].set_ylabel("extra fossil displaced (MWh/day)")
-    ax[0].set_title("the package advantage: grows with sun, fades with fleet size")
+    ax[0].set_title("the package advantage: grows with sun, fades with workload")
     ax[0].legend(fontsize=10, title="solar level", ncol=2)
     xs14 = [sur / max(tr, 1e-9) for (_, sur, _, _, _, tr) in gap_pts if np.isfinite(sur)]
     ys14 = [g for (_, sur, _, _, g, _) in gap_pts if np.isfinite(sur)]
@@ -1246,7 +1265,7 @@ if fc16 and cc16:
     ax[0].set_ylim(9.9, 13.6)
     ax[0].set_xlabel("generation cap (x no-fleet peak deficit); charging cap 0.7x peak surplus")
     ax[0].set_ylabel("median total daily cost (k$), 120 tasks")
-    ax[0].set_title("(a) corrected cliff at scale: no-BESS arms leave the map")
+    ax[0].set_title("(a) the cliff at scale: no-BESS arms leave the map")
     # (b) charging-cap effect at uncapped generation (CHARGECAPS2, common
     # pools + inherited incumbents), matched feasible pairs per fleet size
     ci16 = {(r["level"], r["n_tasks"], r["seed"], r["scenario"]): r for r in cc16}
@@ -1268,7 +1287,7 @@ if fc16 and cc16:
                    label=f"{n} tasks")
     ax[1].set_xticks(range(len(ccs))); ax[1].set_xticklabels(xl)
     ax[1].set_xlabel("charging cap (x peak solar surplus); generation uncapped")
-    ax[1].set_ylabel("package saving vs charge-only (%), matched pairs")
+    ax[1].set_ylabel("package saving (%)")
     ax[1].set_title("(b) tight charging caps clip the package's value")
     ax[1].legend(fontsize=10, title="fleet size")
     finish(fig, "fig_8_16_caps.png")
@@ -1445,7 +1464,8 @@ if e20d:
         idx20[(r["scenario"], r["pv"], r["n_tasks"], r["seed"])].append(r)
     fig, ax = plt.subplots(figsize=(8.2, 4.4), constrained_layout=True)
     cells20 = [(1.5, 20), (1.5, 60), (2.5, 20), (2.5, 60)]
-    xt = [f"{pv}x solar\n{n} tasks" for pv, n in cells20]
+    xpos20 = [0.0, 1.0, 2.6, 3.6]                     # two solar groups, task ticks inside
+    xt = ["20 tasks", "60 tasks", "20 tasks", "60 tasks"]
     CEN = 1.55                                        # censored bars drawn AT this level, hatched
     ICE20 = 3.3                                       # measured drivetrain disadvantage
 
@@ -1455,31 +1475,38 @@ if e20d:
         return float(np.nanmean(fmins)) if np.isfinite(np.nanmean(fmins)) else np.nan
 
     for k, (pv, n) in enumerate(cells20):
+        x = xpos20[k]
         rr0 = next(r for r in idx20[("v2g", pv, n, 0)])
         _base = rr0["budget_units"] / rr0["frac"]
         vsp_floor = 1.0 + ICE20 * rr0["traction_mwh"] * 10 / _base
-        ax.bar(k - 0.34, vsp_floor, 0.30, color="#888888",
+        ax.bar(x - 0.28, vsp_floor, 0.26, color="#888888",
                label="ICE fleet (analytic floor)" if k == 0 else None)
-        ax.annotate(f"{vsp_floor:.1f}", (k - 0.34, vsp_floor + 0.02), ha="center",
+        ax.annotate(f"{vsp_floor:.1f}", (x - 0.28, vsp_floor + 0.02), ha="center",
                     fontsize=10.5, color="#555")
         v = _floor20("v2g", pv, n)
-        ax.bar(k + 0.02, v, 0.30, color="#2E75B6", label="V2G+BESS (full stack)" if k == 0 else None)
-        ax.annotate(f"{v:.2f}", (k + 0.02, v + 0.02), ha="center", fontsize=10.5, color="#2E75B6")
+        ax.bar(x, v, 0.26, color="#2E75B6", label="V2G+BESS (full stack)" if k == 0 else None)
+        ax.annotate(f"{v:.2f}", (x, v + 0.02), ha="center", fontsize=10.5, color="#2E75B6")
         s = _floor20("solar", pv, n)
         if np.isfinite(s):
-            ax.bar(k + 0.34, s, 0.30, color="#e08020",
+            ax.bar(x + 0.28, s, 0.26, color="#e08020",
                    label="charge-only" if k == 0 else None)
-            ax.annotate(f"{s:.2f}", (k + 0.34, s + 0.02), ha="center", fontsize=10.5, color="#b06010")
+            ax.annotate(f"{s:.2f}", (x + 0.28, s + 0.02), ha="center", fontsize=10.5, color="#b06010")
         else:
-            ax.bar(k + 0.34, CEN, 0.30, color="#e08020")
-            ax.annotate("$\\geq$ 1.4", (k + 0.34, CEN + 0.02), ha="center", fontsize=10.5, color="#b06010")
+            ax.bar(x + 0.28, CEN, 0.26, color="#e08020")
+            ax.annotate("$\\geq$ 1.4", (x + 0.28, CEN + 0.02), ha="center", fontsize=10.5, color="#b06010")
     ax.axhline(1.0, ls=":", color="#888", lw=1)
     ax.text(0.01, 1.01, "no-fleet baseline burn", fontsize=10, color="#666",
             transform=ax.get_yaxis_transform())
-    ax.set_xticks(range(len(cells20))); ax.set_xticklabels(xt)
-    ax.set_ylabel("minimum feasible daily fuel (fraction of no-fleet baseline)")
+    ax.set_xticks(xpos20); ax.set_xticklabels(xt)
+    ax.axvline(1.8, color="#cccccc", lw=1)
+    ax.text(0.5, -0.135, "1.5x solar", ha="center", fontsize=12.5,
+            transform=ax.get_xaxis_transform(), clip_on=False)
+    ax.text(3.1, -0.135, "2.5x solar", ha="center", fontsize=12.5,
+            transform=ax.get_xaxis_transform(), clip_on=False)
+    ax.set_xlim(-0.72, 4.32)
+    ax.set_ylabel("lowest tested feasible budget\n(x no-fleet baseline)")
     ax.set_ylim(0, 4.25)
-    ax.set_title("the fuel floor: V2G fleets run the base on less fuel than no fleet at all")
+    ax.set_title("the fuel floor: a V2G+BESS fleet runs the base on less fuel than no fleet at all")
     ax.legend(fontsize=10.5, loc="upper right")
     finish(fig, "fig_8_20_endurance.png")
     GALLERY.append("\n![fig 8.20](fig_8_20_endurance.png)\n")
