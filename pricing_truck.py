@@ -47,14 +47,14 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                                         nu=nu, soc_mode="periodic", s0_idx=s0)
         return sorted(out, key=lambda cr: cr[1])
     if soc_mode.startswith("pin"):
-        # pinned steady state s0 = sT = c for a FIXED level c (kWh embedded in
-        # the mode string, e.g. "pin350"): one core sweep, i.e. the single-level
+        # pinned steady state s0 = sT = c for a FIXED level c (model units in
+        # the mode string, e.g. "pin3.5"): one core sweep, i.e. the single-level
         # special case of the periodic loop above (cheap boundary comparison)
         st = step or getattr(inst, "soc_step", 5.0)
         kwh = float(soc_mode[3:])
         s0 = int(round(kwh / st))
         if abs(s0 * st - kwh) > 1e-6 or not (0 <= kwh <= inst.G):
-            raise ValueError(f"pinned level {kwh} kWh not on the {st} kWh SoC grid")
+            raise ValueError(f"pinned level {kwh} not on the {st} SoC grid")
         return _price_truck_dp_core(inst, alpha, mu, step=step, tol=tol,
                                     allow_charge=allow_charge,
                                     allow_discharge=allow_discharge, ice=ice,
