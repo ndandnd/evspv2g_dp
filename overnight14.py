@@ -780,7 +780,8 @@ def out4():
         print(f"  base {scen} n{n} pv{pv} sd{sd} complete ({len(rows)} rows)", flush=True)
 
 
-def _gamma_cell(rows, path, sd, n, gt, arms, duration=2.0, tl=600.0):
+def _gamma_cell(rows, path, sd, n, gt, arms, duration=2.0, tl=600.0,
+                end_anchor=False):
     """One gamma-matched base solved across `arms` [(scenario, premium), ...] on
     SYMMETRIC common pools: charge-only arms receive, in addition to their own
     pools, every discharge-free truck column harvested from the V2G pools
@@ -789,7 +790,7 @@ def _gamma_cell(rows, path, sd, n, gt, arms, duration=2.0, tl=600.0):
     pv = _pv_for_gamma(n, sd, gt)
     if pv is None:
         rows.append({"gamma_target": gt, "n_tasks": n, "seed": sd,
-                     "duration": duration, "scenario": "unreachable",
+                     "duration": duration, "end_anchor": end_anchor, "scenario": "unreachable",
                      "premium": None, "outcome": "gamma_unreachable",
                      "commit": COMMIT})
         save(rows, path)
@@ -797,6 +798,8 @@ def _gamma_cell(rows, path, sd, n, gt, arms, duration=2.0, tl=600.0):
 
     def fresh():
         fleet = rand_trips(3, n, sd, salt=50_000)
+        if end_anchor:
+            fleet = [(t[0], t[1], t[2] + 2.0 - duration) for t in fleet]
         inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv,
                               duration=duration)
         inst.soc_step = 0.25
@@ -826,7 +829,7 @@ def _gamma_cell(rows, path, sd, n, gt, arms, duration=2.0, tl=600.0):
                if getattr(c, "kind", "") == "truck" else c) for c in base_set]
         ukeys = {str(_col_key(c)): i for i, c in enumerate(up)}
         row = {"gamma_target": gt, "gamma_achieved": g_ach, "pv_used": pv,
-               "n_tasks": n, "seed": sd, "duration": duration,
+               "n_tasks": n, "seed": sd, "duration": duration, "end_anchor": end_anchor,
                "scenario": scen, "premium": p, "commit": COMMIT,
                "milp_solver": MILP_SOLVER, "soc_step": 0.25,
                "pool_own": len(pools[(scen, p)]), "pool_union": len(up),
@@ -1283,6 +1286,138 @@ def charge035():
           flush=True)
 
 
+def durladder2():
+    """DURLADDER repair: the 4h leg of durladder was certified infeasible in
+    every cell (unshifted starts push 4h tasks against the horizon/recharge
+    boundary). Here every task keeps its 2h-baseline END block and duration
+    extends BACKWARD (start = end - duration): the deadline structure is held
+    fixed and only occupation length varies. 1h starts shift +1h, 2h
+    reproduces durladder's baseline exactly, 4h starts 2h earlier."""
+    rows, path = ckpt(f"overnight14_durladder2_s{SH_I}of{SH_K}.json")
+    done = {(r["gamma_target"], r["seed"], r.get("duration"), r["scenario"],
+             r.get("premium")) for r in rows}
+    GTS = (0.2, 0.35, 0.5, 0.8, 1.25, 2.0)
+    DURS = (1.0, 2.0, 4.0)
+    bases = [(sd, du, gt) for sd in (0, 1, 2, 3, 4) for du in DURS for gt in GTS]
+    ARMS = [("solar", 0.0), ("solar_bess", 0.0), ("v2g_fleet", 0.0),
+            ("v2g", 0.0), ("v2g", 8.0)]
+    print(f"DURLADDER2: {len(bases)} bases, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done)", flush=True)
+    for idx, (sd, du, gt) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        if all((gt, sd, du, a, p) in done for a, p in ARMS):
+            continue
+        t0 = time.time()
+        _gamma_cell(rows, path, sd, 60, gt, ARMS, duration=du, end_anchor=True)
+        print(f"  dur{du} gt{gt} sd{sd} done in {time.time()-t0:.0f}s", flush=True)
+
+
+def gamma5():
+    """Symmetric-pool rerun of GAMMA4's fixed-base grid ABOVE 0.5 (GAMMA4's
+    pools were one-directional, biasing v2g arms up, so its conditional
+    crossing locations are suspect). Completes the symmetric surface started
+    by GAMMAPKG5 (which covers 0.10-0.50): seeds 3-9, fleet sizes 20/60/120,
+    gamma 0.5-2.0, all four configurations plus $4/$8 premium arms."""
+    rows, path = ckpt(f"overnight14_gamma5_s{SH_I}of{SH_K}.json")
+    done = {(r["gamma_target"], r["n_tasks"], r["seed"], r["scenario"],
+             r.get("premium")) for r in rows}
+    GTS = (0.5, 0.75, 1.0, 1.5, 2.0)
+    bases = [(sd, n, gt) for sd in (3, 4, 5, 6, 7, 8, 9)
+             for n in (20, 60, 120) for gt in GTS]
+    ARMS = [("solar", 0.0), ("solar_bess", 0.0), ("v2g_fleet", 0.0),
+            ("v2g", 0.0), ("v2g", 4.0), ("v2g", 8.0)]
+    print(f"GAMMA5: {len(bases)} bases, shard {SH_I}/{SH_K} "
+          f"({len(rows)} rows done)", flush=True)
+    for idx, (sd, n, gt) in enumerate(bases):
+        if idx % SH_K != SH_I:
+            continue
+        if all((gt, n, sd, a, p) in done for a, p in ARMS):
+            continue
+        t0 = time.time()
+        _gamma_cell(rows, path, sd, n, gt, ARMS)
+        print(f"  n{n} gt{gt} sd{sd} done in {time.time()-t0:.0f}s", flush=True)
+
+
+def boundaryfill():
+    """Fill the (tasks x solar) plane gaps in figs 8.9/8.14: the 4x curve
+    stops at 200 tasks and the fractional-pv boundary curves stop at 280,
+    because the old MODESX2 study never ran. Part (a) = MODESX2 verbatim
+    (4x to 400 for seeds 0-1, seed 2 for 3x/sum2x at 240-400, all four
+    scenarios), written glob-compatible with overnight3_modes_s*. Part (b)
+    = boundary-study tail (pv 1.25/1.5/1.75/2.5/3.5 at 320-400 plus pv 4.0
+    at 240-400, seeds 0-2, solar/v2g), written glob-compatible with
+    overnight5_boundary_s*; pv 4.0 pools with the modes '4x' label since
+    sol_kwargs('4x') is exactly pv_scale=4.0 on the same fleet family.
+    Protocol identical to overnight5.boundary/modesx2: warm CG + MILP
+    tl=120s, full-recharge boundary, module MILP solver."""
+    from overnight3 import sol_kwargs, solve
+    from overnight5 import _base_stats
+    NT = [240, 280, 320, 360, 400]
+    rows, path = ckpt(f"overnight3_modes_sXF{SH_I}of{SH_K}.json")
+    done = {(r["n_tasks"], r["sol"], r["seed"], r["scenario"]) for r in rows}
+    cells = ([(sd, n, "4x", scen) for sd in (0, 1) for n in NT
+              for scen in ("vsp", "ev", "solar", "v2g")]
+             + [(2, n, sol, scen) for n in NT for sol in ("3x", "sum2x")
+                for scen in ("vsp", "ev", "solar", "v2g")])
+    print(f"BOUNDARYFILL/modes: {len(cells)} cells, shard {SH_I}/{SH_K} "
+          f"({len(rows)} done)", flush=True)
+    for idx, (sd, n, sol, scen) in enumerate(cells):
+        if idx % SH_K != SH_I or (n, sol, sd, scen) in done:
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, **sol_kwargs(sol))
+        traction = float(sum(tr.energy for tr in inst.trips))
+        t0 = time.time()
+        r = solve(inst, scen, tl=120.0)
+        if r is None:
+            print(f"  n={n} {sol} seed={sd} {scen}: no incumbent, skipped",
+                  flush=True)
+            continue
+        fleet_paid = 0.0
+        if scen == "ev":
+            fleet_paid = sum((c.fixed_cost - inst.c_v) / inst.c_g * round(x)
+                             for c, x in zip(r["cols"], r["mip"].x) if x > 0.5)
+        rows.append({"n_tasks": n, "sol": sol, "seed": sd, "scenario": scen,
+                     "g_units": round(r["g_units"], 2),
+                     "traction_units": round(traction, 2),
+                     "fleet_paid_units": round(fleet_paid, 2),
+                     "trucks": r["trucks"], "batteries": r["batteries"],
+                     "gap_pct": round(r["gap"], 3)})
+        save(rows, path)
+        print(f"  n={n} {sol} seed={sd} {scen}: {time.time() - t0:.0f}s "
+              f"({len(rows)} rows)", flush=True)
+    rows2, path2 = ckpt(f"overnight5_boundary_sF{SH_I}of{SH_K}.json")
+    done2 = {(r["pv"], r["n_tasks"], r["seed"], r["scenario"]) for r in rows2}
+    PVN = ([(pv, n) for pv in (1.25, 1.5, 1.75, 2.5, 3.5)
+            for n in (320, 360, 400)] + [(4.0, n) for n in NT])
+    cells2 = [(sd, pv, n) for sd in (0, 1, 2) for (pv, n) in PVN]
+    print(f"BOUNDARYFILL/boundary: {len(cells2)} cells x 2, shard {SH_I}/{SH_K} "
+          f"({len(rows2)} rows done)", flush=True)
+    for idx, (sd, pv, n) in enumerate(cells2):
+        if idx % SH_K != SH_I:
+            continue
+        fleet = rand_trips(3, n, sd, salt=50_000)
+        inst0 = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+        base = {"pv": pv, "n_tasks": n, "seed": sd, **_base_stats(inst0)}
+        for scen in ("solar", "v2g"):
+            if (pv, n, sd, scen) in done2:
+                continue
+            inst = build_instance(3, 2.0, BREAKS, trip_list=fleet, pv_scale=pv)
+            r = solve(inst, scen, tl=120.0)
+            if r is None:
+                print(f"  pv{pv} n={n} seed={sd} {scen}: no incumbent, skipped",
+                      flush=True)
+                continue
+            rows2.append({**base, "scenario": scen, "total": round(r["total"], 1),
+                          "g_units": round(r["g_units"], 2), "trucks": r["trucks"],
+                          "batteries": r["batteries"],
+                          "gap_pct": round(r["gap"], 3)})
+            save(rows2, path2)
+            print(f"  pv{pv} n={n} seed={sd} {scen} done ({len(rows2)} rows)",
+                  flush=True)
+
+
 def benchxl():
     """Extend the exp5 benchmark scalability ladder past 450 tasks (the paper's
     benchmark curves stop at 450 while the random-fleet family reaches 1,000):
@@ -1316,6 +1451,7 @@ def benchxl():
             return platform.processor() or platform.machine()
 
     rows, path = ckpt(f"overnight14_benchxl_s{SH_I}of{SH_K}.json")
+    rows = [r for r in rows if "mip_obj" in r or r.get("feasible") is False]
     done = {(r["eps"], r["points"]) for r in rows}
     PTS = [int(x) for x in os.environ.get("OVERNIGHT14_BENCHXL_PTS",
                                           "9,10,11,12,13,14,15").split(",")]
@@ -1328,6 +1464,7 @@ def benchxl():
     for idx, (eps, pts) in enumerate(cells):
         if idx % SH_K != SH_I or (eps, pts) in done:
             continue
+        print(f"  starting eps{eps} pts{pts}", flush=True)
         inst = build_instance(pts, eps, SCAL)
         t0 = time.time()
         res = column_generation(inst, scenario="v2g", start="warm", do_milp=False,
@@ -1347,10 +1484,15 @@ def benchxl():
             raise SystemExit(f"BENCHXL eps{eps} pts{pts}: LP infeasible -- the "
                              "benchmark ladder must be feasible; investigate")
         row["feasible"] = True
+        rows.append(row)
+        save(rows, path)
+        print(f"  eps{eps} pts{pts} ({inst.n_trips} trips): cg {cg_s:.0f}s, "
+              f"{res['n_cols']} cols; starting CBC (tl {TL:.0f}s)", flush=True)
         t1 = time.time()
         mip = solve_milp(inst, res["cols"], time_limit=TL,
                          battery_allowed=SCENARIOS["v2g"]["battery"],
                          solver="cbc", soc_mode="cyclic")
+        rows.pop()
         row["milp_s"] = round(time.time() - t1, 2)
         res["mip"] = mip
         s = summarize(inst, res)
@@ -1373,7 +1515,8 @@ RUNNERS = {"SMOKE": smoke, "COMMON4": common4, "COMMONCAPS": commoncaps,
            "CLEANCAPS": cleancaps, "CLEANCHARGE": cleancharge,
            "COMMON4Y": common4y, "GAMMAPKG4": (lambda: gammapkg("gammapkg4")),
            "GAMMADENSE": gammadense, "GAMMAPKG5": gammapkg5,
-           "DURLADDER": durladder, "BENCHXL": benchxl,
+           "DURLADDER": durladder, "DURLADDER2": durladder2,
+           "GAMMA5": gamma5, "BENCHXL": benchxl, "BOUNDARYFILL": boundaryfill,
            "CHARGE035": charge035}
 
 if __name__ == "__main__":

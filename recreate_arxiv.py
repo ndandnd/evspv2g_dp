@@ -93,7 +93,8 @@ SCAL    = [(4, 9)]             # single window: n(n-1)*5 trips -> 10..450 at 2..
 # E.. extend the same pattern for the scalability instances).
 _COORDS = [(.25, .25), (-.25, .25), (.25, -.25), (-.25, -.25),
            (.75, .25), (-.75, .25), (.75, -.25), (-.75, -.25),
-           (.25, .75), (-.25, .75), (.25, -.75), (-.25, -.75)]
+           (.25, .75), (-.25, .75), (.25, -.75), (-.25, -.75),
+           (.75, .75), (-.75, .75), (.75, -.75), (-.75, -.75)]
 
 
 def load_delta_units(solar_mult: float, pv_scale: float = 1.0) -> np.ndarray:
