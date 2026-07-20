@@ -1147,7 +1147,7 @@ if md14:
             l14.append(np.percentile(ys14[mm], 10)); h14.append(np.percentile(ys14[mm], 90))
     ax[1].fill_between(c14, l14, h14, color="#444444", alpha=0.12, label="80% band per bin")
     ax[1].plot(c14, m14, "-", color="#444444", lw=2, label="binned median")
-    ax[1].axvspan(0.31, 0.35, color="#fdf2e3", zorder=0)
+    ax[1].axvspan(0.40, 0.50, color="#fdf2e3", zorder=0)   # GAMMADENSE $8 straddle band
     ax[1].axvline(1.0, ls=":", color="#888")
     ax[1].set_xscale("log")
     ax[1].axhline(0, color="k", lw=0.7)
