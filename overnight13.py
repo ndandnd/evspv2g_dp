@@ -1,5 +1,5 @@
 """
-Overnight-13: the correction round, finalized for the 48h+ weekend.
+Overnight-13: corrected computational experiment bundle.
 Every study records honest solver status, CG convergence, Phase-I artificial
 counts, git commit, solver names, lattice step, and SoC boundary.
 Headline studies run at delta = 25 kWh (exact lattice for the lossless family,
@@ -33,13 +33,13 @@ boundary can legitimately park fractional artificial mass.
   SPINE25   : one-factor spine, 456 solves (4 arms), 25 kWh.
   ETA125    : loss sweep at 12.5 kWh, 192 solves (4 arms).
   HOLDOUT22 : 2023-design vs 2022-test commitment study.
-  SUN2      : DEFERRED this weekend: needs the max_trucks dual in pricing,
+  SUN2      : Excluded from this bundle: it needs the max_trucks dual in pricing,
               stage-1 persistence, and sunk-cost accounting before its rows are
               publication-grade. Do not launch.
   CHARGECAPS: charging-cap panel, corrected: 4 arms, generation uncapped,
               25 kWh, peak-utilization recorded. 216 cells. Replaces fig (b).
   PACK4     : fresh tight-gap pack x workload cells (G x {120,200} x 6 draws,
-              25 kWh, tl 1800). Replaces the legacy-schema PACK3.
+              25 kWh, tl 1800). Replaces the earlier PACK3 schema.
 
 Run: OVERNIGHT13_STUDIES="..." OVERNIGHT13_SHARD="i/K" python3 overnight13.py
 All studies checkpoint per row (atomic) and skip done cells: preemption/requeue
@@ -574,7 +574,7 @@ def gate():
       - HETEROGENEOUS duals (perturbed), so parallel same-transition trips
         carry distinct weights and the min-edge comparator logic is exercised
         (identity seeds gave near-homogeneous duals and masked overwrites);
-      - both lattice steps: 50 kWh and the weekend's 25 kWh;
+      - both SoC steps: 50 kWh and 25 kWh;
       - rc_master is ALWAYS recomputed from the column via the master formula
         with the same (alpha, mu, nu), including synthetic nu (previously
         rc_master := rc_dp made that half of the replay tautological);
@@ -862,7 +862,7 @@ def chargecaps():
 
 
 def pack4():
-    """Fresh tight-gap pack x workload cells (replaces the legacy-schema PACK3):
+    """Fresh tight-gap pack x workload cells (replaces the earlier PACK3 schema):
     G x n in {120,200}, six draws, v2g, 25 kWh, tl 1800."""
     rows, path = ckpt(f"overnight13_pack4_s{SH_I}of{SH_K}.json")
     done = {(r["G"], r["n_tasks"], r["seed"]) for r in rows}

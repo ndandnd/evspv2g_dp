@@ -317,7 +317,7 @@ def periodic4():
 
 
 def boundaryladder():
-    """Pinned steady-state boundary levels s0 = sT = c for fixed c (Anna's
+    """Pinned steady-state boundary levels s0 = sT = c for fixed c (the
     cheap comparison points between full recharge, c = G, and the free-level
     periodic convention). Same 18-base ladder and common-pool protocol as
     PERIODIC4; each pin costs one cyclic-style solve. Full-recharge and
@@ -886,7 +886,7 @@ def _gamma_cell(rows, path, sd, n, gt, arms, duration=2.0, tl=600.0,
 
 def gammadense():
     """Dense co-scaled break-even grid at the 60-task calibration (repairs the
-    coarse five-point legacy interpolation behind the 0.31-0.35 sentence):
+    coarse five-point interpolation behind the earlier 0.31-0.35 estimate):
     gamma targets 0.10-0.80 in steps of 0.05, five seeds, premiums $0/$4/$8
     inside the optimization, symmetric common pools."""
     rows, path = ckpt(f"overnight14_gammadense_s{SH_I}of{SH_K}.json")
@@ -931,7 +931,7 @@ def gammapkg5():
 
 
 def durladder():
-    """Anna's mechanism test: hold per-task energy and gamma fixed, vary task
+    """Task-duration mechanism test: hold per-task energy and gamma fixed, vary task
     DURATION (1h/2h/4h). Full configuration set plus an $8-premium arm, with
     charge/discharge diagnostics recorded from the incumbent profile."""
     rows, path = ckpt(f"overnight14_durladder_s{SH_I}of{SH_K}.json")
@@ -1058,7 +1058,7 @@ def gammapkg(tag="gammapkg"):
 
 
 def w2cities():
-    """Four-climate annual replay on COMMON pools (replaces the legacy-labeled
+    """Four-climate annual replay on COMMON pools (replaces the earlier
     package paragraph): solar / solar_bess / v2g per (city, day, pv)."""
     from profile_robustness import base_curves
     from overnight13 import _days

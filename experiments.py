@@ -1,5 +1,5 @@
 """
-Experiment driver: produces the deterministic figures/tables for the rewrite.
+Experiment driver for a small deterministic example of the EVSP-V2G model.
   (A) regime comparison (VSP / EVSP-Solar / EVSP-V2G): fuel and fleet vs #trips
   (B) submodular saturation: fossil fuel and batteries vs available solar (V2G)
   (C) column generation: warm vs cold iterations, and solve time vs instance size

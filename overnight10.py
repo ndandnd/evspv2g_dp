@@ -15,7 +15,7 @@ Overnight-10: the siesta stress test and the stochastic-deployment study.
            setting deadhead energy = 0 and truck cost = 0 collapses the fuel
            spread across ALL families to ~0. If confirmed, this becomes a
            Remark; if refuted, the story is wrong.
-  STOCH  : Anna's request. Net demand made stochastic via the 365 real 2023
+  STOCH  : Net demand made stochastic via the 365 observed 2023
            days. First stage (committed day-ahead): truck routes WITH their
            charging plans, and the battery count -- solved on a candidate
            design day (annual mean or one of 12 monthly means). Recourse:
