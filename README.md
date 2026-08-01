@@ -18,8 +18,8 @@ generated routes. The code does not implement branch-and-price.
 - `master.py` and `gurobi_master.py`: restricted master LP and MIP models.
 - `pricing_truck.py` and `pricing_battery.py`: pricing routines.
 - `colgen.py`: column generation and solution summaries.
-- `experiments.py`: a small deterministic example that exercises the main
-  workflow.
+- `smoke_test.py`: a small deterministic check of column generation and the
+  final restricted master MIP.
 - `overnight13.py` and `overnight14.py`: drivers for the principal
   experiment families reported in the manuscript.
 - `data/`: demand and solar input profiles.
@@ -44,15 +44,15 @@ drivers that select the Gurobi backend.
 
 ## Quick verification
 
-Run the small deterministic example with:
+Run the small deterministic check with:
 
 ```bash
-python3 experiments.py
+python3 smoke_test.py
 ```
 
-The command writes JSON summaries and figures to `results/`. It is intended as
-a functional check of the model and column generation workflow, not as a
-rerun of the full computational study.
+The command checks that column generation prices out and that the final MIP
+finds an artificial-free schedule. It is a functional check, not a rerun of
+the computational study.
 
 The full experiment drivers are substantially more expensive. Their selected
 saved outputs are included under `results/`.

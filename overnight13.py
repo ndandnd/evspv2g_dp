@@ -24,7 +24,7 @@ boundary can legitimately park fractional artificial mass.
   DIAG2     : corrected integer diagnostics on the U6 maps, 24 cells, tl 1800.
               Stays at 50 kWh BY DESIGN (multi-station energies divide no lattice)
               and is labeled a coarse-lattice scalability study. Shard 24 ways:
-              one hard cell per scaglione job.
+              one hard cell per cluster job.
   AUDIT     : CBC vs Gurobi on identical column pools, 8 matched cells.
   PERIODIC  : full-recharge vs periodic boundary, 32 cells, 25 kWh.
   W2        : weather year on repaired BREAKS2, 3 arms x 5 pv x 365d, 25 kWh.
