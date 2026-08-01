@@ -2,7 +2,7 @@
 when the surplus window is NARROW and fully occupied by the tasks, and
 stationary storage is priced out?
 
-Construction (Nathan's spec):
+Construction:
 - Net demand: 10 units/h (1,000 kW) all day, EXCEPT hours 11:00 and 12:00
   which have 4 units/h of net SURPLUS (-4). Total surplus = 800 kWh, exactly
   a 2-hour spike.
