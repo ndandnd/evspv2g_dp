@@ -19,6 +19,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 from scipy.optimize import linprog
+from scipy import sparse
+from time import perf_counter
 from instance import Instance
 
 
@@ -50,6 +52,18 @@ class RMPSolution:
     charge: np.ndarray = None
     discharge: np.ndarray = None
     nu: np.ndarray = None            # charge-congestion-cap dual (>=0)
+    fleet_dual: float = 0.0          # native marginal for sum(truck x) <= max_trucks
+    native_status: int | str | None = None
+    native_solution_status: int | str | None = None
+    message: str = ""
+    termination_reason: str = ""
+    has_incumbent: bool = False
+    solver_bound: float | None = None
+    gap: float | None = None
+    validation_max_violation: float | None = None
+    soc: np.ndarray = None
+    vector: np.ndarray = None
+    timings: dict = None
 
 
 # Coverage sense: False = set partitioning (== 1, the revised model); True = set
@@ -69,6 +83,17 @@ def _layout(inst: Instance, R: int):
 
 def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
               soc_mode: str = "cyclic"):
+    if soc_mode not in ("cyclic", "free", "periodic"):
+        if not isinstance(soc_mode, str) or not soc_mode.startswith("pin"):
+            raise ValueError("unknown SoC boundary mode")
+        try:
+            level = float(soc_mode[3:])
+        except ValueError as exc:
+            raise ValueError("invalid pinned truck SoC") from exc
+        if not np.isfinite(level) or not 0 <= level <= inst.G:
+            raise ValueError("pinned truck SoC must lie within battery capacity")
+    # periodic/pin affect truck pricing; stationary BESS stays cyclic, matching
+    # the reference formulation. Pricing separately validates the pin's grid.
     n, T, R = inst.n_trips, inst.T, len(cols)
     T, oX, oG, oC, oD, oS, oNb, nvar = _layout(inst, R)
     n_slack = n if COVERING else 0   # covering: zero-cost surplus slack per trip (>= 1)
@@ -148,7 +173,7 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
         for t in range(T):
             for r, col in enumerate(cols):
                 ce = col.e[t] if col.e[t] > 0 else 0.0
-                if ce > 1e-9:
+                if ce > 0.0:
                     Aub[base + t, oX + r] = ce
             Aub[base + t, oC + t] = 1.0                  # battery charge counts too
             bub[base + t] = inst.charge_cap
@@ -161,32 +186,149 @@ def _build_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
     return c, Aub, bub, Aeq, beq, bounds, (oX, oG, oC, oD, oS, oNb), n, T, R, cc_start
 
 
+@dataclass
+class CanonicalRMP:
+    """Common matrix contract. Equalities precede <= rows in `matrix`."""
+    c: np.ndarray
+    Aub: sparse.csr_matrix
+    bub: np.ndarray
+    Aeq: sparse.csr_matrix
+    beq: np.ndarray
+    bounds: list
+    off: tuple
+    n: int
+    T: int
+    R: int
+    cc_start: int | None
+    fleet_row: int | None
+
+    @property
+    def matrix(self):
+        return sparse.vstack((self.Aeq, self.Aub), format="csr")
+
+    @property
+    def integer_indices(self):
+        return list(range(self.R)) + [self.off[-1]]
+
+
+def canonical_model(inst, cols, battery_allowed=True, soc_mode="cyclic"):
+    """Reference matrix for all backends; the dense legacy builder stays callable.
+
+    The persistent adapter builds this only for its static zero-column block.
+    Cold backends intentionally retain the same reference implementation.
+    """
+    for col in cols:
+        if np.shape(col.a) != (inst.n_trips,) or np.shape(col.e) != (inst.T,):
+            raise ValueError("column dimensions do not match instance")
+        if not (np.all(np.isfinite(col.a)) and np.all(np.isfinite(col.e))
+                and np.isfinite(col.fixed_cost)):
+            raise ValueError("column coefficients/cost must be finite")
+    c, au, bu, ae, be, bounds, off, n, T, R, cc = _build_lp(
+        inst, cols, battery_allowed, soc_mode)
+    if not all(np.all(np.isfinite(a)) for a in (c, au, bu, ae, be)):
+        raise ValueError("master coefficients and right-hand sides must be finite")
+    fleet_row = len(bu) - 1 if np.isfinite(inst.max_trucks) else None
+    return CanonicalRMP(c, sparse.csr_matrix(au), bu, sparse.csr_matrix(ae),
+                        be, bounds, off, n, T, R, cc, fleet_row)
+
+
+def validate_vector(model, vector, integer=False, objective=None, tolerance=1e-6):
+    """Reject populated infeasible solver vectors; no missing value is silently zero.
+
+    Absolute residuals are intentional: units agree with the physical model.
+    Objective verification has a separate floating summation tolerance.
+    """
+    if vector is None:
+        return False, float("inf"), "no primal vector"
+    z = np.asarray(vector, dtype=float)
+    if z.shape != model.c.shape or not np.all(np.isfinite(z)):
+        return False, float("inf"), "missing/nonfinite primal values"
+    residuals = [0.0]
+    if model.Aeq.shape[0]:
+        residuals.append(float(np.max(np.abs(model.Aeq @ z - model.beq))))
+    if model.Aub.shape[0]:
+        residuals.append(float(np.max(model.Aub @ z - model.bub)))
+    for j, (lb, ub) in enumerate(model.bounds):
+        if lb is not None:
+            residuals.append(float(lb - z[j]))
+        if ub is not None:
+            residuals.append(float(z[j] - ub))
+    if integer:
+        v = z[model.integer_indices]
+        residuals.append(float(np.max(np.abs(v - np.rint(v)), initial=0)))
+    worst = max(residuals)
+    if worst > tolerance:
+        return False, worst, "primal/integrality residual exceeds tolerance"
+    value = float(model.c @ z)
+    if objective is not None and (not np.isfinite(objective) or
+            abs(value - objective) > max(1e-5, 1e-9 * max(abs(value), abs(objective)))):
+        return False, worst, "reported objective does not match primal vector"
+    return True, worst, "verified primal vector"
+
+
+def solution_from_vector(model, vector, integer=False, status="optimal", **metadata):
+    """Construct only from a validated vector; callers gate native incumbent status."""
+    valid, residual, reason = validate_vector(model, vector, integer,
+                                               metadata.pop("objective", None))
+    metadata["validation_max_violation"] = residual
+    if not valid:
+        metadata["message"] = (metadata.get("message", "") + "; " + reason).strip("; ")
+        return empty_solution(model, "invalid_incumbent", integer, **metadata)
+    z = np.asarray(vector, dtype=float).copy()
+    ox, og, oc, od, os, onb = model.off
+    sol = RMPSolution(status, float(model.c @ z), z[ox:ox + model.R],
+        z[og:og + model.T], np.zeros(model.n), np.zeros(model.T), integer,
+        float(z[onb]), z[oc:oc + model.T], z[od:od + model.T], np.zeros(model.T),
+        has_incumbent=True, soc=z[os:os + model.T + 1], vector=z, **metadata)
+    return sol
+
+
+def empty_solution(model, status, integer=False, **metadata):
+    return RMPSolution(status, np.inf, np.zeros(model.R), np.zeros(model.T),
+        np.zeros(model.n), np.zeros(model.T), integer, charge=np.zeros(model.T),
+        discharge=np.zeros(model.T), nu=np.zeros(model.T), **metadata)
+
+
 def solve_lp(inst: Instance, cols: list[Column], battery_allowed: bool = True,
              solver: str = "highs", soc_mode: str = "cyclic") -> RMPSolution:
     if solver == "gurobi":
         from gurobi_master import solve_lp_gurobi
         return solve_lp_gurobi(inst, cols, battery_allowed, soc_mode=soc_mode)
-    c, Aub, bub, Aeq, beq, bounds, off, n, T, R, cc_start = _build_lp(inst, cols, battery_allowed,
-                                                                      soc_mode=soc_mode)
-    oX, oG, oC, oD, oS, oNb = off
-    res = linprog(c, A_ub=Aub, b_ub=bub, A_eq=Aeq, b_eq=beq, bounds=bounds, method="highs")
-    if not res.success:
-        return RMPSolution("infeasible", np.inf, np.zeros(R), np.zeros(T),
-                           np.zeros(n), np.zeros(T), False, nu=np.zeros(T))
-    x = res.x[oX:oX + R]; g = res.x[oG:oG + T]
-    chg = res.x[oC:oC + T]; dis = res.x[oD:oD + T]; nb = res.x[oNb]
-    alpha = res.eqlin.marginals[:n]              # coverage shadow prices
-    mu = -res.ineqlin.marginals[:T]              # generation price
-    nu = np.zeros(T)                             # charge-congestion price (>=0)
-    if cc_start is not None:
-        nu = -res.ineqlin.marginals[cc_start:cc_start + T]
-    return RMPSolution("optimal", res.fun, x, g, alpha, mu, False, nb, chg, dis, nu)
+    if solver != "highs":
+        raise ValueError("solve_lp solver must be 'highs' or 'gurobi'; use a session for persistent LP")
+    started = perf_counter()
+    model = canonical_model(inst, cols, battery_allowed, soc_mode)
+    built = perf_counter()
+    res = linprog(model.c, A_ub=model.Aub, b_ub=model.bub, A_eq=model.Aeq,
+                  b_eq=model.beq, bounds=model.bounds, method="highs")
+    solved = perf_counter()
+    reason = {0:"optimal", 1:"limit", 2:"infeasible", 3:"unbounded", 4:"numerical_error"}.get(
+        res.status, "solver_error")
+    meta = dict(native_status=int(res.status), message=str(res.message), termination_reason=reason,
+                timings=dict(build_seconds=built-started, solve_seconds=solved-built,
+                             rows=model.Aeq.shape[0]+model.Aub.shape[0], columns=len(model.c)))
+    if res.x is None or reason in ("infeasible", "unbounded", "numerical_error", "solver_error"):
+        return empty_solution(model, reason, **meta)
+    sol = solution_from_vector(model, res.x, status="optimal" if res.success else "feasible",
+                               objective=res.fun, **meta)
+    if sol.status == "optimal":
+        sol.alpha = np.asarray(res.eqlin.marginals[:model.n])
+        sol.mu = -np.asarray(res.ineqlin.marginals[:model.T])
+        if model.cc_start is not None:
+            sol.nu = -np.asarray(res.ineqlin.marginals[model.cc_start:model.cc_start + model.T])
+        if model.fleet_row is not None:
+            sol.fleet_dual = float(res.ineqlin.marginals[model.fleet_row])
+        sol.solver_bound = sol.obj
+        sol.gap = 0.0
+    return sol
 
 
 def reduced_cost(col: Column, sol: RMPSolution, inst: Instance) -> float:
     rc = col.cost(inst.eps_pen) - float(col.a @ sol.alpha) + float(col.e @ sol.mu)
     if sol.nu is not None:
-        rc += float(np.maximum(col.e, 0.0) @ sol.nu)   # charger-capacity price on charging
+        rc += float(np.maximum(col.e, 0.0) @ sol.nu)
+    if col.kind == "truck":
+        rc -= sol.fleet_dual
     return rc
 
 
@@ -194,100 +336,68 @@ def solve_milp(inst: Instance, cols: list[Column], time_limit: float = 120.0,
                battery_allowed: bool = True, solver: str = "cbc",
                soc_mode: str = "cyclic", mip_gap: float | None = None,
                x_start: dict | None = None) -> RMPSolution:
-    """x_start (optional MIP warm start): {"x": {col_index: units}, "nb": count}.
-    A restrictive-arm or tighter-cap incumbent is always feasible for the
-    relaxation being solved, so the solver's final incumbent can only match or
-    improve it (the common-pool studies rely on this)."""
+    """Return a verified incumbent only when both native status and residuals permit it.
+
+    A finite-pool MIP bound is explicitly a statement about this restricted pool.
+    `x_start` is a hint, not a certificate of feasibility for this model.
+    """
     if solver == "gurobi":
         from gurobi_master import solve_milp_gurobi
         return solve_milp_gurobi(inst, cols, time_limit, battery_allowed,
-                                 soc_mode=soc_mode, mip_gap=mip_gap,
-                                 x_start=x_start)
+                                 soc_mode=soc_mode, mip_gap=mip_gap, x_start=x_start)
+    if solver != "cbc":
+        raise ValueError("MILP solver must be 'cbc' or 'gurobi'")
     import pulp
-    n, T, R = inst.n_trips, inst.T, len(cols)
-    G, rho, eta, eps = inst.G, inst.rho, inst.eta, inst.eps_pen
-    if not battery_allowed:
-        G = 0.0; rho = 0.0          # no stationary battery (forces N_b dispatch to 0)
+    model = canonical_model(inst, cols, battery_allowed, soc_mode)
     p = pulp.LpProblem("rmp", pulp.LpMinimize)
-    x = [pulp.LpVariable(f"x_{r}", lowBound=0, cat="Integer") for r in range(R)]
-    Nb = pulp.LpVariable("Nb", lowBound=0, cat="Integer")
-    g = [pulp.LpVariable(f"g_{t}", lowBound=0) for t in range(T)]
-    chg = [pulp.LpVariable(f"c_{t}", lowBound=0) for t in range(T)]
-    dis = [pulp.LpVariable(f"d_{t}", lowBound=0) for t in range(T)]
-    s = [pulp.LpVariable(f"s_{t}", lowBound=0) for t in range(T + 1)]
-    deg = getattr(inst, "deg_cost", 0.0)
-    p += (pulp.lpSum(inst.c_g * g[t] for t in range(T))
-          + pulp.lpSum(cols[r].cost(eps) * x[r] for r in range(R))
-          + inst.c_b * Nb
-          + pulp.lpSum(eps * chg[t] + (eps + deg) * dis[t] for t in range(T)))
-    for i in range(n):
-        cov = pulp.lpSum(cols[r].a[i] * x[r] for r in range(R) if cols[r].a[i] > 0.5)
-        p += (cov >= 1) if COVERING else (cov == 1)
-    for t in range(T):
-        p += (g[t] - pulp.lpSum(cols[r].e[t] * x[r] for r in range(R) if abs(cols[r].e[t]) > 1e-9)
-              - chg[t] + dis[t] >= inst.Delta[t])
-        p += s[t + 1] == s[t] + (1 - eta) * chg[t] - dis[t]
-        p += chg[t] <= rho * Nb
-        p += dis[t] <= rho * Nb
-        _cap_t = np.broadcast_to(np.asarray(inst.gen_cap, dtype=float), (T,))[t]
-        if np.isfinite(_cap_t):
-            p += g[t] <= float(_cap_t)                        # generation capacity (per block)
-        if np.isfinite(inst.charge_cap):                      # charging-congestion cap
-            p += (pulp.lpSum((cols[r].e[t] if cols[r].e[t] > 0 else 0.0) * x[r]
-                             for r in range(R) if cols[r].e[t] > 1e-9) + chg[t] <= inst.charge_cap)
-    _fb = getattr(inst, "fuel_budget", float("inf"))
-    if np.isfinite(_fb):                      # daily fossil-fuel stock (endurance studies)
-        p += pulp.lpSum(g[t] for t in range(T)) <= float(_fb)
-    _mt = getattr(inst, "max_trucks", float("inf"))
-    if np.isfinite(_mt):                      # truck-count cap (two-stage studies)
-        p += pulp.lpSum(x[r] for r in range(R)
-                        if getattr(cols[r], "kind", "") == "truck") <= float(_mt)
-    _nbf = getattr(inst, "nb_fixed", -1.0)
-    if _nbf is not None and _nbf >= 0:        # fixed battery count (two-stage studies)
-        p += Nb == float(_nbf)
-    if soc_mode == "free":
-        p += s[0] == G * Nb                   # original arXiv: battery starts FULL, free
-    else:
-        p += s[T] == s[0]                     # cyclic battery (no free energy)
-    for t in range(T + 1):
-        p += s[t] <= G * Nb
+    integers = set(model.integer_indices)
+    v = [pulp.LpVariable(f"v_{j}", lowBound=lb, upBound=ub,
+         cat="Integer" if j in integers else "Continuous") for j, (lb, ub) in enumerate(model.bounds)]
+    p += pulp.lpSum(float(c) * v[j] for j, c in enumerate(model.c) if c)
+    for matrix, rhs, eq in ((model.Aeq, model.beq, True), (model.Aub, model.bub, False)):
+        for k in range(matrix.shape[0]):
+            a, b = matrix.indptr[k:k+2]
+            expr = pulp.lpSum(float(c) * v[int(j)] for j, c in zip(matrix.indices[a:b], matrix.data[a:b]))
+            p += expr == float(rhs[k]) if eq else expr <= float(rhs[k])
     kwargs = {"msg": 0, "timeLimit": time_limit}
     if mip_gap is not None:
         kwargs["gapRel"] = mip_gap
     if x_start:
-        for r_, val in x_start.get("x", {}).items():
-            if 0 <= int(r_) < R:
-                x[int(r_)].setInitialValue(int(round(val)))
-        for r_ in range(R):
-            if r_ not in x_start.get("x", {}):
-                x[r_].setInitialValue(0)
-        Nb.setInitialValue(int(round(x_start.get("nb", 0.0))))
+        start = {int(k): value for k, value in x_start.get("x", {}).items()}
+        for j in range(model.R):
+            v[j].setInitialValue(int(round(start.get(j, 0))))
+        v[model.off[-1]].setInitialValue(int(round(x_start.get("nb", 0))))
         kwargs["warmStart"] = True
-    st = p.solve(pulp.PULP_CBC_CMD(**kwargs))
-    if pulp.value(p.objective) is None:
-        return RMPSolution("milp_failed", np.inf, np.zeros(R), np.zeros(T),
-                           np.zeros(n), np.zeros(T), True)
-    # honest status: CBC at a time limit returns an incumbent, not a proven optimum
+    try:
+        st = p.solve(pulp.PULP_CBC_CMD(**kwargs))
+    except pulp.PulpSolverError as exc:
+        return empty_solution(model, "solver_error", True, message=str(exc), termination_reason="solver_error")
     sol_st = getattr(p, "sol_status", None)
-    status = "optimal" if (st == pulp.LpStatusOptimal
-                           and sol_st in (None, pulp.LpSolutionOptimal)) else "feasible"
-    xv = np.array([v.value() or 0.0 for v in x])
-    gv = np.array([v.value() or 0.0 for v in g])
-    cv = np.array([v.value() or 0.0 for v in chg]); dv = np.array([v.value() or 0.0 for v in dis])
-    return RMPSolution(status, pulp.value(p.objective), xv, gv, np.zeros(n), np.zeros(T),
-                       True, Nb.value() or 0.0, cv, dv)
-
-
-if __name__ == "__main__":
-    from instance import make_instance
-    inst = make_instance(n_trips=4, n_locations=2, eps=2.0, seed=3)
-    T = inst.T
-    cols = [Column("truck", np.eye(inst.n_trips)[i], np.zeros(T), inst.c_v, f"t{i}")
-            for i in range(inst.n_trips)]
-    sol = solve_lp(inst, cols)
-    print("status", sol.status, "obj", round(sol.obj, 2), "Nb", round(sol.nb, 2))
-    print("alpha", np.round(sol.alpha, 1), " mu in", (round(sol.mu.min(), 3), round(sol.mu.max(), 3)))
-    rcs = [reduced_cost(c, sol, inst) for c in cols]
-    print("basis reduced costs (expect ~0):", np.round(rcs, 6))
-    print("battery in LP: Nb=%.2f, charge sum=%.0f, discharge sum=%.0f"
-          % (sol.nb, sol.charge.sum(), sol.discharge.sum()))
+    native_name = pulp.LpStatus.get(st, "Unknown")
+    solution_name = pulp.LpSolution.get(sol_st, "Unknown")
+    reason = {-1:"infeasible", -2:"unbounded", -3:"undefined", 0:"not_solved"}.get(st, "stopped")
+    optimal = st == pulp.LpStatusOptimal and sol_st == pulp.LpSolutionOptimal
+    feasible = (st not in (pulp.LpStatusInfeasible, pulp.LpStatusUnbounded, pulp.LpStatusUndefined)
+                and sol_st in (pulp.LpSolutionOptimal, pulp.LpSolutionIntegerFeasible))
+    if optimal:
+        reason = "optimal"
+    elif feasible:
+        reason = "stopped_with_incumbent"  # PuLP does not expose CBC's exact stop reason.
+    meta = dict(native_status=st, native_solution_status=sol_st,
+                message=f"CBC/PuLP problem: {native_name}; solution: {solution_name}",
+                termination_reason=reason)
+    if not feasible:
+        return empty_solution(model, reason, True, **meta)
+    values = [var.value() for var in v]
+    # PuLP may omit variables absent from every row/objective. Give only these
+    # unconstrained zero-cost variables their known feasible lower bound.
+    used = np.asarray(abs(model.matrix).sum(axis=0)).ravel() + np.abs(model.c)
+    for j, val in enumerate(values):
+        if val is None and used[j] == 0:
+            values[j] = model.bounds[j][0] or 0.0
+    sol = solution_from_vector(model, values, True,
+        status="optimal" if optimal else "feasible", objective=pulp.value(p.objective), **meta)
+    # PuLP does not expose CBC's best bound/gap. Even a native 'Optimal'
+    # classification can mean the configured relative gap was reached; do not
+    # manufacture a zero gap or set the bound equal to the incumbent.
+    return sol
