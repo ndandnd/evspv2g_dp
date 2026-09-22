@@ -1,0 +1,39 @@
+{
+  "checks": {
+    "cross_year_nesting_not_asserted": true,
+    "cross_year_reversal_allowed": true,
+    "journal_resume": {
+      "complete_days": 2,
+      "partial_days": 1
+    },
+    "policy14_365_day_old_replay": {
+      "days": 365,
+      "max_cost_error": 1.8189894035458565e-12,
+      "max_primal_residual": 7.105427357601002e-15,
+      "max_shortage_error": 0.0,
+      "mean_total_cost": 3604.1165581171017,
+      "source_hashes": "verified"
+    },
+    "policy17_365_day_old_replay": {
+      "days": 365,
+      "max_cost_error": 1.8189894035458565e-12,
+      "max_primal_residual": 7.105427357601002e-15,
+      "max_shortage_error": 0.0,
+      "mean_total_cost": 3677.946854747917,
+      "source_hashes": "verified"
+    },
+    "positive_shortage_cost_conditioning": {
+      "max_residual": 0.0,
+      "shortage": 293.0,
+      "total_cost": null
+    },
+    "terminal_state_tamper_rejected": true,
+    "truck_dynamics_tamper_rejected": true,
+    "weather_dependent_truck_arrays_rejected": true
+  },
+  "code_hashes": {
+    "evaluate.py": "10c2a4730069409633df58471f50fb66a2934b91b8d3b7b371b01e9debd489c8",
+    "validate.py": "b0793f0a6d983835c13b70d7274a4c1a7a2e276e9634999e6bc1f1907464f492"
+  },
+  "elapsed_seconds": 1.7080257502384484
+}

@@ -1,0 +1,1666 @@
+{
+  "results": [
+    {
+      "case": 0,
+      "policy": 0,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "failures": 2,
+      "annual_baseline_failures": 34,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.08767123287671233,
+      "paired_failure_reduction_block95": [
+        0.0273972602739726,
+        0.15616438356164383
+      ],
+      "mean_deficit": 0.008497268705944293,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        3.064213470232179
+      ],
+      "mean_deficit_reduction": 0.5241325093092789,
+      "paired_deficit_reduction_block95": [
+        0.13199029264889423,
+        0.9780702258158935
+      ],
+      "seconds": 80.87285700207576,
+      "journal_sha256": "f6787f4115a78876f722cc0a7b89440930e798ab480426b93d605b1b2de8c437",
+      "jointly_feasible_days": 331,
+      "conditional_mean_savings": -10.50659383828959,
+      "conditional_savings_block95": [
+        -54.00138912271323,
+        29.54257705967774
+      ],
+      "conditional_cost_quantiles": [
+        1025.3703854110797,
+        1864.3306349449585,
+        8195.293802971468,
+        10805.962695452827
+      ]
+    },
+    {
+      "case": 1,
+      "policy": 0,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "failures": 2,
+      "annual_baseline_failures": 34,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.08767123287671233,
+      "paired_failure_reduction_block95": [
+        0.0273972602739726,
+        0.15616438356164383
+      ],
+      "mean_deficit": 0.005388870554750545,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.9516685887696532
+      ],
+      "mean_deficit_reduction": 0.5272409074604727,
+      "paired_deficit_reduction_block95": [
+        0.1361666519859081,
+        0.9790802368579274
+      ],
+      "seconds": 82.20003437600099,
+      "journal_sha256": "f49f2973a0e63ca472dbb582167895723163d7689fa0887cda4c048bdbcb641c",
+      "jointly_feasible_days": 331,
+      "conditional_mean_savings": 1.604891553020717,
+      "conditional_savings_block95": [
+        -29.24499906062158,
+        31.978265202029505
+      ],
+      "conditional_cost_quantiles": [
+        1025.2657372738202,
+        1894.58445105504,
+        8195.293802971468,
+        10805.933296808304
+      ]
+    },
+    {
+      "case": 2,
+      "policy": 1,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "failures": 10,
+      "annual_baseline_failures": 13,
+      "failure_rate": 0.0273972602739726,
+      "failure_block95": [
+        0.005479452054794521,
+        0.0547945205479452
+      ],
+      "failure_reduction": 0.00821917808219178,
+      "paired_failure_reduction_block95": [
+        0.0,
+        0.019178082191780823
+      ],
+      "mean_deficit": 0.022408613301371557,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.9699220576349374,
+        1.658692820473524
+      ],
+      "mean_deficit_reduction": 0.12544210511310983,
+      "paired_deficit_reduction_block95": [
+        0.032911091893040145,
+        0.2379241319863032
+      ],
+      "seconds": 118.02642688876949,
+      "journal_sha256": "c6ed4687eb977ddfb82f70cd931f8cba1b1bc9f4628c9d3d6193d38648642dba",
+      "jointly_feasible_days": 352,
+      "conditional_mean_savings": 69.23974941967634,
+      "conditional_savings_block95": [
+        41.04334144589238,
+        100.28912180140851
+      ],
+      "conditional_cost_quantiles": [
+        5178.28271652236,
+        6482.640709524174,
+        8069.375865154321,
+        9020.22232936812
+      ]
+    },
+    {
+      "case": 3,
+      "policy": 1,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "failures": 4,
+      "annual_baseline_failures": 13,
+      "failure_rate": 0.010958904109589041,
+      "failure_block95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "failure_reduction": 0.024657534246575342,
+      "paired_failure_reduction_block95": [
+        0.005479452054794521,
+        0.04657534246575343
+      ],
+      "mean_deficit": 0.012171095341293283,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.20944409886561366,
+        1.6648733377031597
+      ],
+      "mean_deficit_reduction": 0.13567962307318807,
+      "paired_deficit_reduction_block95": [
+        0.033165178602932166,
+        0.2590173947879215
+      ],
+      "seconds": 85.25417476473376,
+      "journal_sha256": "5a58208de8cc4ca70863e538d82f59867ba86054d35300f1a982cf25004fbc08",
+      "jointly_feasible_days": 352,
+      "conditional_mean_savings": 88.26520777939025,
+      "conditional_savings_block95": [
+        59.0110876871717,
+        118.09403938029726
+      ],
+      "conditional_cost_quantiles": [
+        5113.200819860547,
+        6510.79793885526,
+        8273.822536871787,
+        9709.602264126843
+      ]
+    },
+    {
+      "case": 4,
+      "policy": 2,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "failures": 2,
+      "annual_baseline_failures": 31,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.07945205479452055,
+      "paired_failure_reduction_block95": [
+        0.024657534246575342,
+        0.13972602739726028
+      ],
+      "mean_deficit": 0.004210646746220945,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.1179947896712594
+      ],
+      "mean_deficit_reduction": 0.4690549509143782,
+      "paired_deficit_reduction_block95": [
+        0.11421656950656135,
+        0.8899275046367079
+      ],
+      "seconds": 87.69089836976491,
+      "journal_sha256": "616d820113a84c4694cf6fd3882fe8adbd23726ff269c49161b4d6605869824c",
+      "jointly_feasible_days": 334,
+      "conditional_mean_savings": -21.036010092007437,
+      "conditional_savings_block95": [
+        -60.6141831286367,
+        12.762366399557964
+      ],
+      "conditional_cost_quantiles": [
+        1008.2883086864354,
+        2289.0977345286447,
+        8123.293802971468,
+        10733.964546055673
+      ]
+    },
+    {
+      "case": 5,
+      "policy": 2,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "failures": 2,
+      "annual_baseline_failures": 31,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.07945205479452055,
+      "paired_failure_reduction_block95": [
+        0.024657534246575342,
+        0.13972602739726028
+      ],
+      "mean_deficit": 0.005388870554750545,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.9516685887696532
+      ],
+      "mean_deficit_reduction": 0.46787672710584854,
+      "paired_deficit_reduction_block95": [
+        0.11418711391134811,
+        0.8898436589123998
+      ],
+      "seconds": 83.2460439875722,
+      "journal_sha256": "105c66b2d70e92357cef87b095d274839d6546b27fa2fc5bf30e28f1be4626e2",
+      "jointly_feasible_days": 334,
+      "conditional_mean_savings": -9.821571274180709,
+      "conditional_savings_block95": [
+        -37.66936510929861,
+        15.123093920352485
+      ],
+      "conditional_cost_quantiles": [
+        1010.5254054606288,
+        2309.4914719178605,
+        8123.293802971468,
+        10733.935147411148
+      ]
+    },
+    {
+      "case": 6,
+      "policy": 3,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "failures": 3,
+      "annual_baseline_failures": 38,
+      "failure_rate": 0.00821917808219178,
+      "failure_block95": [
+        0.0,
+        0.021917808219178082
+      ],
+      "failure_reduction": 0.0958904109589041,
+      "paired_failure_reduction_block95": [
+        0.03287671232876712,
+        0.16445205479452016
+      ],
+      "mean_deficit": 0.020420867345492717,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        5.438474701810803
+      ],
+      "mean_deficit_reduction": 0.5189517204895854,
+      "paired_deficit_reduction_block95": [
+        0.12009321614642071,
+        0.968998857747739
+      ],
+      "seconds": 93.77284693461843,
+      "journal_sha256": "949fed6cdf47cdec47ba4b8ec4efa3cff1568d57e0ed8c423068323587fc4d49",
+      "jointly_feasible_days": 327,
+      "conditional_mean_savings": -45.05813765211374,
+      "conditional_savings_block95": [
+        -88.27435555800554,
+        -9.550530408457812
+      ],
+      "conditional_cost_quantiles": [
+        1025.1953854110795,
+        1717.607783113889,
+        8236.523237497557,
+        10847.122945104933
+      ]
+    },
+    {
+      "case": 7,
+      "policy": 3,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "failures": 2,
+      "annual_baseline_failures": 38,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.0136986301369863
+      ],
+      "failure_reduction": 0.09863013698630137,
+      "paired_failure_reduction_block95": [
+        0.03561643835616438,
+        0.16719178082191744
+      ],
+      "mean_deficit": 8.482609922988012e-05,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.016538760085255788
+      ],
+      "mean_deficit_reduction": 0.5392877617358482,
+      "paired_deficit_reduction_block95": [
+        0.14936721240789153,
+        0.9876428721242729
+      ],
+      "seconds": 90.68297369778156,
+      "journal_sha256": "87cdb238056f331121bd6e2de1aefc43d606fc7fae81c38ff5421e6d3f154dff",
+      "jointly_feasible_days": 327,
+      "conditional_mean_savings": -36.98520316185193,
+      "conditional_savings_block95": [
+        -67.55265603108265,
+        -9.381624273251266
+      ],
+      "conditional_cost_quantiles": [
+        1025.09073727382,
+        1795.2356546084993,
+        8234.972090904068,
+        10845.65958257061
+      ]
+    },
+    {
+      "case": 8,
+      "policy": 4,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "failures": 12,
+      "annual_baseline_failures": 14,
+      "failure_rate": 0.03287671232876712,
+      "failure_block95": [
+        0.00821917808219178,
+        0.06027397260273973
+      ],
+      "failure_reduction": 0.005479452054794521,
+      "paired_failure_reduction_block95": [
+        0.0,
+        0.0136986301369863
+      ],
+      "mean_deficit": 0.04211236905233232,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.4621448758097935,
+        2.6185579649069037
+      ],
+      "mean_deficit_reduction": 0.10905311136537556,
+      "paired_deficit_reduction_block95": [
+        0.024272138403427863,
+        0.2128090049817476
+      ],
+      "seconds": 80.25283912313171,
+      "journal_sha256": "2eb9850789f5c7e75a4f2585bf61b15a57f779d36058dace565ae985b0615091",
+      "jointly_feasible_days": 351,
+      "conditional_mean_savings": 21.43125125962739,
+      "conditional_savings_block95": [
+        -11.288306841449211,
+        58.215825992212096
+      ],
+      "conditional_cost_quantiles": [
+        5177.622410798661,
+        6463.813033484025,
+        7875.098280443224,
+        8566.037550946288
+      ]
+    },
+    {
+      "case": 9,
+      "policy": 4,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "failures": 8,
+      "annual_baseline_failures": 14,
+      "failure_rate": 0.021917808219178082,
+      "failure_block95": [
+        0.005479452054794521,
+        0.0410958904109589
+      ],
+      "failure_reduction": 0.01643835616438356,
+      "paired_failure_reduction_block95": [
+        0.0027397260273972603,
+        0.03561643835616438
+      ],
+      "mean_deficit": 0.021358346827128748,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.6118610566116027,
+        2.8131940287801527
+      ],
+      "mean_deficit_reduction": 0.12980713359057913,
+      "paired_deficit_reduction_block95": [
+        0.028783183324015617,
+        0.2523359433978917
+      ],
+      "seconds": 91.95564837707207,
+      "journal_sha256": "b28110ff848785a6fc3aa405a17920ef8d81fe7c62a11a45e880f42e8a209362",
+      "jointly_feasible_days": 351,
+      "conditional_mean_savings": 41.59248561510287,
+      "conditional_savings_block95": [
+        12.624876484633008,
+        74.93741996782585
+      ],
+      "conditional_cost_quantiles": [
+        5111.410918703547,
+        6496.064968201671,
+        8033.145592952798,
+        9276.383729437508
+      ]
+    },
+    {
+      "case": 10,
+      "policy": 5,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "failures": 3,
+      "annual_baseline_failures": 35,
+      "failure_rate": 0.00821917808219178,
+      "failure_block95": [
+        0.0,
+        0.021917808219178082
+      ],
+      "failure_reduction": 0.08767123287671233,
+      "paired_failure_reduction_block95": [
+        0.0273972602739726,
+        0.15342465753424658
+      ],
+      "mean_deficit": 0.01131231218307934,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.7774908691542937
+      ],
+      "mean_deficit_reduction": 0.4635027075025995,
+      "paired_deficit_reduction_block95": [
+        0.1009837102004814,
+        0.869503471103351
+      ],
+      "seconds": 90.44578191800974,
+      "journal_sha256": "8e8a32ebb1b48937cfc67c745102471a41e47d40e3bedb33e6ea3e168bbcbf70",
+      "jointly_feasible_days": 330,
+      "conditional_mean_savings": -61.14372574878491,
+      "conditional_savings_block95": [
+        -107.7898537366387,
+        -22.311112471663726
+      ],
+      "conditional_cost_quantiles": [
+        1061.1953854110795,
+        1699.7744322006388,
+        8272.523237497559,
+        10883.119861299714
+      ]
+    },
+    {
+      "case": 11,
+      "policy": 5,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "failures": 2,
+      "annual_baseline_failures": 35,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.0136986301369863
+      ],
+      "failure_reduction": 0.09041095890410959,
+      "paired_failure_reduction_block95": [
+        0.030136986301369864,
+        0.15616438356164383
+      ],
+      "mean_deficit": 8.482609922988012e-05,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.016538760085255788
+      ],
+      "mean_deficit_reduction": 0.4747301935864489,
+      "paired_deficit_reduction_block95": [
+        0.11507971494372687,
+        0.8823167770330018
+      ],
+      "seconds": 92.29018551041372,
+      "journal_sha256": "54c8cdc7272efb00ac723490a642f2a1c768ca94ef26c7d0bc6a23d46035b210",
+      "jointly_feasible_days": 330,
+      "conditional_mean_savings": -53.33379613491541,
+      "conditional_savings_block95": [
+        -87.60720941091316,
+        -22.42931939307596
+      ],
+      "conditional_cost_quantiles": [
+        1061.09073727382,
+        1636.4422075586758,
+        8270.971602230526,
+        10881.656577837319
+      ]
+    },
+    {
+      "case": 12,
+      "policy": 6,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "failures": 3,
+      "annual_baseline_failures": 35,
+      "failure_rate": 0.00821917808219178,
+      "failure_block95": [
+        0.0,
+        0.021917808219178082
+      ],
+      "failure_reduction": 0.08767123287671233,
+      "paired_failure_reduction_block95": [
+        0.030136986301369864,
+        0.15342465753424658
+      ],
+      "mean_deficit": 0.0050674225351962495,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.5642134702321489
+      ],
+      "mean_deficit_reduction": 0.4681936407539221,
+      "paired_deficit_reduction_block95": [
+        0.10693124181950049,
+        0.8853969610439372
+      ],
+      "seconds": 137.98402888490818,
+      "journal_sha256": "f2d55da37a042ed9efabdd247a1f1ba33ad165bf10f265515c8c1221c7f45328",
+      "jointly_feasible_days": 330,
+      "conditional_mean_savings": -37.659486239117534,
+      "conditional_savings_block95": [
+        -83.09859389621171,
+        0.5671308774140431
+      ],
+      "conditional_cost_quantiles": [
+        1061.3703854110797,
+        1696.8666134222813,
+        8232.748237497557,
+        10843.344861299714
+      ]
+    },
+    {
+      "case": 13,
+      "policy": 6,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "failures": 3,
+      "annual_baseline_failures": 35,
+      "failure_rate": 0.00821917808219178,
+      "failure_block95": [
+        0.0,
+        0.021917808219178082
+      ],
+      "failure_reduction": 0.08767123287671233,
+      "paired_failure_reduction_block95": [
+        0.030136986301369864,
+        0.15342465753424658
+      ],
+      "mean_deficit": 0.0049044205715029,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.7583055847990074
+      ],
+      "mean_deficit_reduction": 0.4683566427176155,
+      "paired_deficit_reduction_block95": [
+        0.10715374917795312,
+        0.8855092430261855
+      ],
+      "seconds": 134.9106909239199,
+      "journal_sha256": "788229dd7ce284ee9ceca688255eedc87414e6cf5c4df0b19d5f98d310510c5b",
+      "jointly_feasible_days": 330,
+      "conditional_mean_savings": -28.32370243279616,
+      "conditional_savings_block95": [
+        -60.8280746584136,
+        0.7969580729498391
+      ],
+      "conditional_cost_quantiles": [
+        1061.2656610583717,
+        1726.5420426914966,
+        8232.748237497557,
+        10843.31468900665
+      ]
+    },
+    {
+      "case": 14,
+      "policy": 7,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "failures": 11,
+      "annual_baseline_failures": 12,
+      "failure_rate": 0.030136986301369864,
+      "failure_block95": [
+        0.00821917808219178,
+        0.057534246575342465
+      ],
+      "failure_reduction": 0.0027397260273972603,
+      "paired_failure_reduction_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "mean_deficit": 0.03783816119859909,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.247662149235881,
+        3.4185579649069027
+      ],
+      "mean_deficit_reduction": 0.10528406845262163,
+      "paired_deficit_reduction_block95": [
+        0.021203017307301817,
+        0.20677967727850177
+      ],
+      "seconds": 95.12649427959695,
+      "journal_sha256": "9b3635ce65ee20035d9eb97b424d0008683fa3831d90d11ebca0190d4e92a9ec",
+      "jointly_feasible_days": 353,
+      "conditional_mean_savings": 63.94233335539849,
+      "conditional_savings_block95": [
+        30.909295242327506,
+        95.48496165743494
+      ],
+      "conditional_cost_quantiles": [
+        5112.933713891656,
+        6528.596424603478,
+        7946.978010897385,
+        8896.288912954547
+      ]
+    },
+    {
+      "case": 15,
+      "policy": 7,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "failures": 8,
+      "annual_baseline_failures": 12,
+      "failure_rate": 0.021917808219178082,
+      "failure_block95": [
+        0.005479452054794521,
+        0.0410958904109589
+      ],
+      "failure_reduction": 0.010958904109589041,
+      "paired_failure_reduction_block95": [
+        0.0027397260273972603,
+        0.021917808219178082
+      ],
+      "mean_deficit": 0.011527831800071286,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.42708693409237597,
+        1.0685579649069048
+      ],
+      "mean_deficit_reduction": 0.13159439785114943,
+      "paired_deficit_reduction_block95": [
+        0.031193865585441464,
+        0.2524662796551967
+      ],
+      "seconds": 88.31283723353408,
+      "journal_sha256": "aa7cebfe0ca1e6643a0456041f321b7705af7bbead01699348513494f1a9aa81",
+      "jointly_feasible_days": 353,
+      "conditional_mean_savings": 73.83608961428685,
+      "conditional_savings_block95": [
+        43.74666534544271,
+        103.53654213132339
+      ],
+      "conditional_cost_quantiles": [
+        5102.013937629302,
+        6546.59596199525,
+        8023.947819366646,
+        9220.149682016705
+      ]
+    },
+    {
+      "case": 16,
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "failures": 2,
+      "annual_baseline_failures": 34,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.08767123287671233,
+      "paired_failure_reduction_block95": [
+        0.0273972602739726,
+        0.15616438356164383
+      ],
+      "mean_deficit": 0.02443006344271456,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        5.852759686358636
+      ],
+      "mean_deficit_reduction": 0.5134088467127025,
+      "paired_deficit_reduction_block95": [
+        0.11163661508469216,
+        0.9694124065966695
+      ],
+      "seconds": 89.7454869239591,
+      "journal_sha256": "da549b1b28e10a2dd4df1723a9e3f15d154716501a331bc668b3eada70aceaae",
+      "jointly_feasible_days": 331,
+      "conditional_mean_savings": -5.412234262846506,
+      "conditional_savings_block95": [
+        -44.50814661539228,
+        33.540479131263034
+      ],
+      "conditional_cost_quantiles": [
+        989.2174047965673,
+        2078.9115214670637,
+        8159.293802971468,
+        10769.962695452827
+      ]
+    },
+    {
+      "case": 17,
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "failures": 2,
+      "annual_baseline_failures": 34,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.08767123287671233,
+      "paired_failure_reduction_block95": [
+        0.0273972602739726,
+        0.15616438356164383
+      ],
+      "mean_deficit": 0.005388870554750545,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.9516685887696532
+      ],
+      "mean_deficit_reduction": 0.5324500396006665,
+      "paired_deficit_reduction_block95": [
+        0.13391845345075268,
+        0.9792420225048954
+      ],
+      "seconds": 96.74854243197478,
+      "journal_sha256": "ccfb45c270b31277f61791b95e55f08838e0f68883f9ca163040c79461214340",
+      "jointly_feasible_days": 331,
+      "conditional_mean_savings": 8.68421040335778,
+      "conditional_savings_block95": [
+        -19.93075015770743,
+        37.375417398294026
+      ],
+      "conditional_cost_quantiles": [
+        989.2227185656272,
+        2081.704957221825,
+        8159.293802971468,
+        10769.933296808302
+      ]
+    },
+    {
+      "case": 18,
+      "policy": 18,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "failures": 2,
+      "annual_baseline_failures": 18,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.043835616438356165,
+      "paired_failure_reduction_block95": [
+        0.010958904109589041,
+        0.08493150684931507
+      ],
+      "mean_deficit": 0.0030178166511497296,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.064213470232163
+      ],
+      "mean_deficit_reduction": 0.3388612919669887,
+      "paired_deficit_reduction_block95": [
+        0.06161068869615398,
+        0.6833674080329039
+      ],
+      "seconds": 86.17795089096762,
+      "journal_sha256": "d6ed58322d111e4a3c414f30ed9953feee3f605b408b3b8b78411d51b9c3a277",
+      "jointly_feasible_days": 346,
+      "conditional_mean_savings": -19.240510779253526,
+      "conditional_savings_block95": [
+        -59.05086684204058,
+        15.785478204064425
+      ],
+      "conditional_cost_quantiles": [
+        953.1953854110797,
+        1752.2056349449588,
+        8163.077933065319,
+        10773.751110844303
+      ]
+    },
+    {
+      "case": 19,
+      "policy": 18,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "failures": 0,
+      "annual_baseline_failures": 18,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "failure_reduction": 0.049315068493150684,
+      "paired_failure_reduction_block95": [
+        0.01643835616438356,
+        0.08767123287671233
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_deficit_reduction": 0.3418791086181384,
+      "paired_deficit_reduction_block95": [
+        0.06446041189306782,
+        0.6836089411612799
+      ],
+      "seconds": 88.78447210183367,
+      "journal_sha256": "3ea3550e38e071fde8500716fd4f760873664df774cd277029a2b56c692de8a6",
+      "jointly_feasible_days": 347,
+      "conditional_mean_savings": -8.905318732839845,
+      "conditional_savings_block95": [
+        -36.47817771592875,
+        18.14238351475793
+      ],
+      "conditional_cost_quantiles": [
+        953.0908897047171,
+        1815.2559302172297,
+        8240.854005802299,
+        10770.909588738226
+      ]
+    },
+    {
+      "case": 20,
+      "policy": 19,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "failures": 8,
+      "annual_baseline_failures": 17,
+      "failure_rate": 0.021917808219178082,
+      "failure_block95": [
+        0.005479452054794521,
+        0.0410958904109589
+      ],
+      "failure_reduction": 0.024657534246575342,
+      "paired_failure_reduction_block95": [
+        0.005479452054794521,
+        0.04657534246575343
+      ],
+      "mean_deficit": 0.03997589997810355,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.3751926066720912,
+        3.4185579649069027
+      ],
+      "mean_deficit_reduction": 0.10822619024119409,
+      "paired_deficit_reduction_block95": [
+        0.018619871080559413,
+        0.21365298494336038
+      ],
+      "seconds": 96.03213681583293,
+      "journal_sha256": "8c0af50e0a056d567f6f0e2be5625f7377170dd566e9e000061ae08f309c4cf9",
+      "jointly_feasible_days": 348,
+      "conditional_mean_savings": 47.178417777627395,
+      "conditional_savings_block95": [
+        17.984970583001765,
+        81.5935811568576
+      ],
+      "conditional_cost_quantiles": [
+        5102.013937629301,
+        6496.064968201671,
+        8128.902364174294,
+        9255.07491379971
+      ]
+    },
+    {
+      "case": 21,
+      "policy": 19,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "failures": 8,
+      "annual_baseline_failures": 17,
+      "failure_rate": 0.021917808219178082,
+      "failure_block95": [
+        0.005479452054794521,
+        0.0410958904109589
+      ],
+      "failure_reduction": 0.024657534246575342,
+      "paired_failure_reduction_block95": [
+        0.005479452054794521,
+        0.04657534246575343
+      ],
+      "mean_deficit": 0.016909375803962703,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.5566502639723867,
+        2.8131940287801527
+      ],
+      "mean_deficit_reduction": 0.13129271441533494,
+      "paired_deficit_reduction_block95": [
+        0.028697556635550476,
+        0.2534262073735543
+      ],
+      "seconds": 97.31134455511346,
+      "journal_sha256": "f978c4cc39229bdbbfd922a3e80fdb2766d32b47efbe3730f9b3924e93353b32",
+      "jointly_feasible_days": 348,
+      "conditional_mean_savings": 51.084047680198275,
+      "conditional_savings_block95": [
+        21.160080162417298,
+        85.99486635625762
+      ],
+      "conditional_cost_quantiles": [
+        5102.013937629301,
+        6496.064968201671,
+        8066.646440620043,
+        9255.07491379971
+      ]
+    },
+    {
+      "case": 22,
+      "policy": 20,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "failures": 1,
+      "annual_baseline_failures": 18,
+      "failure_rate": 0.0027397260273972603,
+      "failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "failure_reduction": 0.04657534246575343,
+      "paired_failure_reduction_block95": [
+        0.013630136986301373,
+        0.08493150684931507
+      ],
+      "mean_deficit": 0.0029156533431018167,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.064213470232163
+      ],
+      "mean_deficit_reduction": 0.27552164317330335,
+      "paired_deficit_reduction_block95": [
+        0.021138608493759252,
+        0.5929889565470541
+      ],
+      "seconds": 97.664196992293,
+      "journal_sha256": "8f155cb15eb677d9a87ba9d4487db8bbfecdc1f6209b90a513a678c0b3260d03",
+      "jointly_feasible_days": 347,
+      "conditional_mean_savings": -10.574781741815567,
+      "conditional_savings_block95": [
+        -47.949057273226586,
+        24.028925718100503
+      ],
+      "conditional_cost_quantiles": [
+        884.0507726386232,
+        2191.097618317881,
+        8219.95329971638,
+        10700.418635238062
+      ]
+    },
+    {
+      "case": 23,
+      "policy": 20,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "failures": 0,
+      "annual_baseline_failures": 18,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "failure_reduction": 0.049315068493150684,
+      "paired_failure_reduction_block95": [
+        0.0136986301369863,
+        0.08773972602739688
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_deficit_reduction": 0.2784372965164052,
+      "paired_deficit_reduction_block95": [
+        0.026969915179962885,
+        0.5959046098901559
+      ],
+      "seconds": 98.03578217118047,
+      "journal_sha256": "547cbc204b58e3ec80cfce29d5e8cb9d6cd10ff53a8889e9298dca56e88d2457",
+      "jointly_feasible_days": 347,
+      "conditional_mean_savings": 2.714156655346041,
+      "conditional_savings_block95": [
+        -24.841956966591045,
+        30.519586803911643
+      ],
+      "conditional_cost_quantiles": [
+        884.0513319827348,
+        2213.2299572218258,
+        8215.488925512791,
+        10698.95349184465
+      ]
+    },
+    {
+      "case": 24,
+      "policy": 21,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "failures": 2,
+      "annual_baseline_failures": 19,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.04657534246575343,
+      "paired_failure_reduction_block95": [
+        0.00821917808219178,
+        0.08767123287671233
+      ],
+      "mean_deficit": 0.00301781665114971,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.064213470232156
+      ],
+      "mean_deficit_reduction": 0.34524755534049983,
+      "paired_deficit_reduction_block95": [
+        0.06427316745440893,
+        0.6945034185347339
+      ],
+      "seconds": 97.22570254653692,
+      "journal_sha256": "e26e4283717d591acf809f2568faef0844f561619915aa9deb7d4953ea360617",
+      "jointly_feasible_days": 345,
+      "conditional_mean_savings": -28.60568484296391,
+      "conditional_savings_block95": [
+        -66.94352283185188,
+        4.758218470587506
+      ],
+      "conditional_cost_quantiles": [
+        953.2078854110796,
+        1752.2181349449588,
+        8163.100526377906,
+        10773.762699512581
+      ]
+    },
+    {
+      "case": 25,
+      "policy": 21,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "failures": 0,
+      "annual_baseline_failures": 19,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "failure_reduction": 0.052054794520547946,
+      "paired_failure_reduction_block95": [
+        0.01643835616438356,
+        0.09315068493150686
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_deficit_reduction": 0.3482653719916496,
+      "paired_deficit_reduction_block95": [
+        0.06714761216009286,
+        0.6961128108589805
+      ],
+      "seconds": 95.060287412256,
+      "journal_sha256": "a2ae2243990c67fc2c7ac937d4e8f886e2179001098431bad1b730d10759cc40",
+      "jointly_feasible_days": 346,
+      "conditional_mean_savings": -19.125088174281604,
+      "conditional_savings_block95": [
+        -45.66842544261399,
+        5.799806977065876
+      ],
+      "conditional_cost_quantiles": [
+        953.1033897047171,
+        1815.2684302172297,
+        8240.885663498782,
+        10770.928448569015
+      ]
+    },
+    {
+      "case": 26,
+      "policy": 22,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "failures": 11,
+      "annual_baseline_failures": 17,
+      "failure_rate": 0.030136986301369864,
+      "failure_block95": [
+        0.00821917808219178,
+        0.057534246575342465
+      ],
+      "failure_reduction": 0.01643835616438356,
+      "paired_failure_reduction_block95": [
+        0.0027397260273972603,
+        0.03287671232876712
+      ],
+      "mean_deficit": 0.041907321807953334,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.3751926066720912,
+        3.4185579649069027
+      ],
+      "mean_deficit_reduction": 0.10249922658019296,
+      "paired_deficit_reduction_block95": [
+        0.018613382437971553,
+        0.20426599877742593
+      ],
+      "seconds": 93.71843802579679,
+      "journal_sha256": "82081e6b2368b31258e03e90dbdb85e2021f46ad429cd03ad55f83d2a077099f",
+      "jointly_feasible_days": 348,
+      "conditional_mean_savings": 45.65170985525086,
+      "conditional_savings_block95": [
+        16.398918568102594,
+        80.46116625829033
+      ],
+      "conditional_cost_quantiles": [
+        5100.335905294614,
+        6511.916627078384,
+        8008.717178760248,
+        8963.234798194508
+      ]
+    },
+    {
+      "case": 27,
+      "policy": 22,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "failures": 7,
+      "annual_baseline_failures": 17,
+      "failure_rate": 0.019178082191780823,
+      "failure_block95": [
+        0.005479452054794521,
+        0.038356164383561646
+      ],
+      "failure_reduction": 0.0273972602739726,
+      "paired_failure_reduction_block95": [
+        0.00821917808219178,
+        0.049315068493150684
+      ],
+      "mean_deficit": 0.0163380242243614,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.5566502639723867,
+        2.8131940287801527
+      ],
+      "mean_deficit_reduction": 0.1280685241637849,
+      "paired_deficit_reduction_block95": [
+        0.02840903318707362,
+        0.24896804634447714
+      ],
+      "seconds": 96.9568295024801,
+      "journal_sha256": "4f7853ba5a1aecc7cc159f0ec332bf2717bfcf775e9e91dc1bcbdf25c8d11cfe",
+      "jointly_feasible_days": 348,
+      "conditional_mean_savings": 49.0666879777306,
+      "conditional_savings_block95": [
+        19.299489700262143,
+        83.44433534097743
+      ],
+      "conditional_cost_quantiles": [
+        5102.573281740863,
+        6516.913096697572,
+        8103.239506842262,
+        9218.69512681021
+      ]
+    },
+    {
+      "case": 28,
+      "policy": 23,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "failures": 2,
+      "annual_baseline_failures": 22,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "failure_reduction": 0.0547945205479452,
+      "paired_failure_reduction_block95": [
+        0.0136986301369863,
+        0.09863013698630137
+      ],
+      "mean_deficit": 0.007100559833935517,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.564213470232163
+      ],
+      "mean_deficit_reduction": 0.3832249387632423,
+      "paired_deficit_reduction_block95": [
+        0.0735608949295856,
+        0.7580525892625644
+      ],
+      "seconds": 95.91064860508777,
+      "journal_sha256": "46e035fdaf8614bfa35a1cbee68aa57958ded7e81b3e223974faf3ad49bd0a5d",
+      "jointly_feasible_days": 343,
+      "conditional_mean_savings": -59.15364217387579,
+      "conditional_savings_block95": [
+        -103.89349624418449,
+        -22.51206737855457
+      ],
+      "conditional_cost_quantiles": [
+        989.2078854110796,
+        1654.2417870278127,
+        8199.081302971468,
+        10809.759570909162
+      ]
+    },
+    {
+      "case": 29,
+      "policy": 23,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "failures": 0,
+      "annual_baseline_failures": 22,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "failure_reduction": 0.06027397260273973,
+      "paired_failure_reduction_block95": [
+        0.021917808219178082,
+        0.10410958904109589
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_deficit_reduction": 0.39032549859717786,
+      "paired_deficit_reduction_block95": [
+        0.07966811838278191,
+        0.7626453134856602
+      ],
+      "seconds": 97.41840028832667,
+      "journal_sha256": "13b9823222f6b05b63038f6bc481d4c7a1a5611384de2b8260b7c1cae0ca79a8",
+      "jointly_feasible_days": 343,
+      "conditional_mean_savings": -52.54053057141978,
+      "conditional_savings_block95": [
+        -86.32758117390853,
+        -23.06878955402822
+      ],
+      "conditional_cost_quantiles": [
+        989.1033897047171,
+        1654.2417870278127,
+        8276.949933787055,
+        10806.930624360757
+      ]
+    },
+    {
+      "case": 30,
+      "policy": 24,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "failures": 1,
+      "annual_baseline_failures": 14,
+      "failure_rate": 0.0027397260273972603,
+      "failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "failure_reduction": 0.03561643835616438,
+      "paired_failure_reduction_block95": [
+        0.00821917808219178,
+        0.0684931506849315
+      ],
+      "mean_deficit": 0.0029156533431017972,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.064213470232156
+      ],
+      "mean_deficit_reduction": 0.33562637828623815,
+      "paired_deficit_reduction_block95": [
+        0.058174170246755634,
+        0.6790967007199358
+      ],
+      "seconds": 96.49673420516774,
+      "journal_sha256": "ccf8bd0601ef9b439d3341f9e14ea4ee9e9933e69b6b075e4411aaaffb0ca273",
+      "jointly_feasible_days": 351,
+      "conditional_mean_savings": -8.483931642337655,
+      "conditional_savings_block95": [
+        -48.37459760746022,
+        28.088453662857848
+      ],
+      "conditional_cost_quantiles": [
+        953.1953854110795,
+        1763.5780119020258,
+        8161.614368445377,
+        10772.366443426656
+      ]
+    },
+    {
+      "case": 31,
+      "policy": 24,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "failures": 0,
+      "annual_baseline_failures": 14,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "failure_reduction": 0.038356164383561646,
+      "paired_failure_reduction_block95": [
+        0.010958904109589041,
+        0.06856164383561605
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_deficit_reduction": 0.33854203162933993,
+      "paired_deficit_reduction_block95": [
+        0.06188670080390609,
+        0.6796125059434895
+      ],
+      "seconds": 97.59534881380387,
+      "journal_sha256": "b4ef06aa8945d7af24caeba14e6f829b3c449eeee01ed3aed0c2e443bf289162",
+      "jointly_feasible_days": 351,
+      "conditional_mean_savings": 0.042841025056082525,
+      "conditional_savings_block95": [
+        -29.43099186225823,
+        29.17950414965321
+      ],
+      "conditional_cost_quantiles": [
+        953.090889704717,
+        1821.219162121206,
+        8240.928054001846,
+        10770.908245478164
+      ]
+    },
+    {
+      "case": 32,
+      "policy": 25,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "failures": 9,
+      "annual_baseline_failures": 17,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.005479452054794521,
+        0.049315068493150684
+      ],
+      "failure_reduction": 0.021917808219178082,
+      "paired_failure_reduction_block95": [
+        0.0027397260273972603,
+        0.043835616438356165
+      ],
+      "mean_deficit": 0.043186715442761675,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.3960099559791472,
+        3.4185579649069027
+      ],
+      "mean_deficit_reduction": 0.13347526290771364,
+      "paired_deficit_reduction_block95": [
+        0.03334571707925934,
+        0.249574332254377
+      ],
+      "seconds": 95.09268074599095,
+      "journal_sha256": "749c39ff0bb632d0a7892ef9040ba143582649bcfac8d3a3b08075d345266967",
+      "jointly_feasible_days": 348,
+      "conditional_mean_savings": 62.47482455836946,
+      "conditional_savings_block95": [
+        26.7051852573724,
+        102.23426429419168
+      ],
+      "conditional_cost_quantiles": [
+        5101.454593517738,
+        6516.913096697572,
+        8196.268112117847,
+        9011.833297640029
+      ]
+    },
+    {
+      "case": 33,
+      "policy": 25,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "failures": 9,
+      "annual_baseline_failures": 17,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.00821917808219178,
+        0.04657534246575343
+      ],
+      "failure_reduction": 0.021917808219178082,
+      "paired_failure_reduction_block95": [
+        0.005479452054794521,
+        0.0410958904109589
+      ],
+      "mean_deficit": 0.01938346111333052,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.5857814679386445,
+        2.8131940287801527
+      ],
+      "mean_deficit_reduction": 0.15727851723714484,
+      "paired_deficit_reduction_block95": [
+        0.04086869848644979,
+        0.29083614998013885
+      ],
+      "seconds": 97.37146583385766,
+      "journal_sha256": "8499625cd2c435ac49e2d8d5eaa8fbd0262bc046ba2edbe4ae922222c0522257",
+      "jointly_feasible_days": 348,
+      "conditional_mean_savings": 65.87122928001354,
+      "conditional_savings_block95": [
+        29.867678164574446,
+        106.9536182571192
+      ],
+      "conditional_cost_quantiles": [
+        5101.454593517738,
+        6516.913096697572,
+        8184.364788148073,
+        9089.220156849886
+      ]
+    },
+    {
+      "case": 34,
+      "policy": 26,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "failures": 1,
+      "annual_baseline_failures": 20,
+      "failure_rate": 0.0027397260273972603,
+      "failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "failure_reduction": 0.052054794520547946,
+      "paired_failure_reduction_block95": [
+        0.0136986301369863,
+        0.0958904109589041
+      ],
+      "mean_deficit": 0.0029156533431017972,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.064213470232156
+      ],
+      "mean_deficit_reduction": 0.33423556479690225,
+      "paired_deficit_reduction_block95": [
+        0.05779720915733046,
+        0.6766212233251415
+      ],
+      "seconds": 72.98465988994576,
+      "journal_sha256": "c7463605d6d403c2fa55f9df28a5f69e0bbf3251261a34d80c4cde7dd3fe2328",
+      "jointly_feasible_days": 345,
+      "conditional_mean_savings": -1.2863067595816338,
+      "conditional_savings_block95": [
+        -33.7637193656831,
+        32.17712001236637
+      ],
+      "conditional_cost_quantiles": [
+        917.0851735499195,
+        1962.6865083567934,
+        8136.757448970045,
+        10736.449594143696
+      ]
+    },
+    {
+      "case": 35,
+      "policy": 26,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "failures": 0,
+      "annual_baseline_failures": 20,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "failure_reduction": 0.0547945205479452,
+      "paired_failure_reduction_block95": [
+        0.019178082191780823,
+        0.0958904109589041
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_deficit_reduction": 0.3371512181400041,
+      "paired_deficit_reduction_block95": [
+        0.06273828227092193,
+        0.6775974302079392
+      ],
+      "seconds": 77.35870044841431,
+      "journal_sha256": "8e9eac5e93c50e3faa4ffdb976a9b5f9f02dfd8c5f18ed01bf2af7b09ad6b737",
+      "jointly_feasible_days": 345,
+      "conditional_mean_savings": 7.077461741635278,
+      "conditional_savings_block95": [
+        -19.395689292318686,
+        34.64308202307854
+      ],
+      "conditional_cost_quantiles": [
+        917.0825166653897,
+        1976.0578311222857,
+        8205.014173277097,
+        10734.984942882886
+      ]
+    }
+  ],
+  "bootstrap": {
+    "block_days": 14,
+    "replicates": 2000,
+    "seed": 7291
+  },
+  "scope": "2022 reused development; annual climatology baseline; conditional costs are not unconditional policy costs"
+}

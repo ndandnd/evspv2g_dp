@@ -1,0 +1,4105 @@
+{
+  "results": [
+    {
+      "case": 0,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 0,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 6,
+      "oracle_failures": 0,
+      "failure_rate": 0.01639344262295082,
+      "failure_block95": [
+        0.0,
+        0.035587431693988696
+      ],
+      "additional_failure_rate": 0.01639344262295082,
+      "additional_failure_block95": [
+        0.0,
+        0.035587431693988696
+      ],
+      "mean_deficit": 0.0888123895262031,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        3.181270574048397,
+        11.549831430541628
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 9.112261238539115e-07,
+      "native_evaluation_seconds": 81.07412640820257,
+      "journal_sha256": "ce04143367aed5fe66e090c12ab752e31783fb7be31812e2ec6d7dab04edbd4a",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 1,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 0,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 2,
+      "oracle_failures": 0,
+      "failure_rate": 0.00546448087431694,
+      "failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "additional_failure_rate": 0.00546448087431694,
+      "additional_failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "mean_deficit": 0.021682384672890853,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        6.058225423339115
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 9.112261238539115e-07,
+      "native_evaluation_seconds": 79.76759802387096,
+      "journal_sha256": "276a2ac1f5137c7f450e63c4815ac890a26795623c5569085da0c53b58efa768",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.01092896174863388,
+      "paired_failure_reduction95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "jointly_feasible_days": 360,
+      "conditional_mean_savings": 37.0654476362811,
+      "conditional_savings95": [
+        17.206612654465147,
+        62.19203873876207
+      ]
+    },
+    {
+      "case": 2,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 1,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 13,
+      "oracle_failures": 0,
+      "failure_rate": 0.03551912568306011,
+      "failure_block95": [
+        0.01366120218579235,
+        0.060109289617486336
+      ],
+      "additional_failure_rate": 0.03551912568306011,
+      "additional_failure_block95": [
+        0.01366120218579235,
+        0.060109289617486336
+      ],
+      "mean_deficit": 0.06921844853239048,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.955228891124414,
+        4.257574132250401
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 116.70557461446151,
+      "journal_sha256": "177e0dc7315882c707feecd6c9a18c9741fa66c1a343d087c9f9f5ab3ae10987",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 3,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 1,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.02459016393442623,
+      "failure_block95": [
+        0.00819672131147541,
+        0.04371584699453552
+      ],
+      "additional_failure_rate": 0.02459016393442623,
+      "additional_failure_block95": [
+        0.00819672131147541,
+        0.04371584699453552
+      ],
+      "mean_deficit": 0.03875143476227571,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.3279738931856881,
+        3.3367251551605204
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 86.42799641983584,
+      "journal_sha256": "dd246d2863c2e6e0ae66d81173473f5378e20b0bcef906a993347098ae31a8ca",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.01092896174863388,
+      "paired_failure_reduction95": [
+        0.00273224043715847,
+        0.02185792349726776
+      ],
+      "jointly_feasible_days": 353,
+      "conditional_mean_savings": 14.623447667434112,
+      "conditional_savings95": [
+        6.1306575640216225,
+        23.187922779429805
+      ]
+    },
+    {
+      "case": 4,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 2,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 5,
+      "oracle_failures": 0,
+      "failure_rate": 0.01366120218579235,
+      "failure_block95": [
+        0.0,
+        0.030054644808743168
+      ],
+      "additional_failure_rate": 0.01366120218579235,
+      "additional_failure_block95": [
+        0.0,
+        0.030054644808743168
+      ],
+      "mean_deficit": 0.07078749168602212,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.7997012361760796,
+        10.144364416519776
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.8633612296871577e-08,
+      "native_evaluation_seconds": 87.74872014764696,
+      "journal_sha256": "61467f4863695c084cbe8d51a4dd07bdd9898c6e22f14e1f36a00f5a4527ead7",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 5,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 2,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 2,
+      "oracle_failures": 0,
+      "failure_rate": 0.00546448087431694,
+      "failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "additional_failure_rate": 0.00546448087431694,
+      "additional_failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "mean_deficit": 0.027405152394142623,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        8.152758409317263
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.8633612296871577e-08,
+      "native_evaluation_seconds": 91.31357070826925,
+      "journal_sha256": "9a50c4b35d473a3e774ba09e562d689a1ded45249a530ae12fa008c17c1d70da",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00819672131147541,
+      "paired_failure_reduction95": [
+        0.0,
+        0.01639344262295082
+      ],
+      "jointly_feasible_days": 361,
+      "conditional_mean_savings": 40.87219193645986,
+      "conditional_savings95": [
+        18.49352860084205,
+        67.89910606396003
+      ]
+    },
+    {
+      "case": 6,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 3,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 6,
+      "oracle_failures": 0,
+      "failure_rate": 0.01639344262295082,
+      "failure_block95": [
+        0.0,
+        0.03825136612021858
+      ],
+      "additional_failure_rate": 0.01639344262295082,
+      "additional_failure_block95": [
+        0.0,
+        0.03825136612021858
+      ],
+      "mean_deficit": 0.0532046186308907,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.7957284699950291,
+        8.34423415830202
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 104.0901755222585,
+      "journal_sha256": "7a6e920169c8f1cce20285cbdf52f17db3caa59e68a295daee83e9796069b6e5",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 7,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 3,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 2,
+      "oracle_failures": 0,
+      "failure_rate": 0.00546448087431694,
+      "failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "additional_failure_rate": 0.00546448087431694,
+      "additional_failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "mean_deficit": 0.01189183560938093,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.4748844660944833
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 93.05419515352696,
+      "journal_sha256": "1f495ec19f2d42fdd1d532a4719ed5d3a147e1d5e9a6824f9641a7a843980c04",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.01092896174863388,
+      "paired_failure_reduction95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "jointly_feasible_days": 360,
+      "conditional_mean_savings": 29.745731500838357,
+      "conditional_savings95": [
+        13.091981101114412,
+        51.205024188046686
+      ]
+    },
+    {
+      "case": 8,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 4,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 17,
+      "oracle_failures": 0,
+      "failure_rate": 0.04644808743169399,
+      "failure_block95": [
+        0.01639344262295082,
+        0.07923497267759563
+      ],
+      "additional_failure_rate": 0.04644808743169399,
+      "additional_failure_block95": [
+        0.01639344262295082,
+        0.07923497267759563
+      ],
+      "mean_deficit": 0.07730397877866577,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.9642933306309667,
+        4.872852654968966
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 90.75181603711098,
+      "journal_sha256": "20c0f478d138f3705f38b8d6fb07adb51859ac52762e82bf572c7529e0d7efc4",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 9,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 4,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 13,
+      "oracle_failures": 0,
+      "failure_rate": 0.03551912568306011,
+      "failure_block95": [
+        0.013592896174863391,
+        0.060177595628414925
+      ],
+      "additional_failure_rate": 0.03551912568306011,
+      "additional_failure_block95": [
+        0.013592896174863391,
+        0.060177595628414925
+      ],
+      "mean_deficit": 0.03957922463885654,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.2213756009064787,
+        3.3367251551605204
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 90.07477847253904,
+      "journal_sha256": "707608178a798fee8e89fa3ea4177e97266f26671183db338a1b6074cec2edae",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.01092896174863388,
+      "paired_failure_reduction95": [
+        0.00273224043715847,
+        0.02185792349726776
+      ],
+      "jointly_feasible_days": 349,
+      "conditional_mean_savings": 15.828605693109974,
+      "conditional_savings95": [
+        7.020125340465139,
+        24.705645904154792
+      ]
+    },
+    {
+      "case": 10,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 5,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 6,
+      "oracle_failures": 0,
+      "failure_rate": 0.01639344262295082,
+      "failure_block95": [
+        0.0,
+        0.035587431693988696
+      ],
+      "additional_failure_rate": 0.01639344262295082,
+      "additional_failure_block95": [
+        0.0,
+        0.035587431693988696
+      ],
+      "mean_deficit": 0.0547069102372318,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.26141757975122565,
+        10.933250325645522
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 91.51559448428452,
+      "journal_sha256": "3269a14f97542569a9d4cd19e31b8a23c09c91ab3d7ecef188be4d8a61935865",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 11,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 5,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 2,
+      "oracle_failures": 0,
+      "failure_rate": 0.00546448087431694,
+      "failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "additional_failure_rate": 0.00546448087431694,
+      "additional_failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "mean_deficit": 0.01189183560938093,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.4748844660944833
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 84.07728992181364,
+      "journal_sha256": "3fd4158ba7f622eb6e03995e41c982d2ad9819a81c6e2bc022297b5b083584a7",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.01092896174863388,
+      "paired_failure_reduction95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "jointly_feasible_days": 360,
+      "conditional_mean_savings": 29.15795130838003,
+      "conditional_savings95": [
+        12.27667479992499,
+        51.778547795977495
+      ]
+    },
+    {
+      "case": 12,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 6,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 7,
+      "oracle_failures": 0,
+      "failure_rate": 0.01912568306010929,
+      "failure_block95": [
+        0.00273224043715847,
+        0.040983606557377046
+      ],
+      "additional_failure_rate": 0.01912568306010929,
+      "additional_failure_block95": [
+        0.00273224043715847,
+        0.040983606557377046
+      ],
+      "mean_deficit": 0.08709687837061379,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.3720054931022005,
+        11.653865604168216
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.826914593201208e-07,
+      "native_evaluation_seconds": 83.4913545314921,
+      "journal_sha256": "2cafb0d51d3e1a4cb578b74cbf82a3d24d2f6da73fd77755dda5732f3082b188",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 13,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 6,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 2,
+      "oracle_failures": 0,
+      "failure_rate": 0.00546448087431694,
+      "failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "additional_failure_rate": 0.00546448087431694,
+      "additional_failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "mean_deficit": 0.026748051813947103,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        7.912259596965702
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.826914593201208e-07,
+      "native_evaluation_seconds": 84.38813710131217,
+      "journal_sha256": "2b4561a83e63aa72c600977f270a2a209acbe1167dcaf8ad65fff1bfe3b55b43",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.01366120218579235,
+      "paired_failure_reduction95": [
+        0.00273224043715847,
+        0.0273224043715847
+      ],
+      "jointly_feasible_days": 359,
+      "conditional_mean_savings": 32.601849638576844,
+      "conditional_savings95": [
+        14.69514226857794,
+        56.20784440078032
+      ]
+    },
+    {
+      "case": 14,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 7,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 10,
+      "oracle_failures": 0,
+      "failure_rate": 0.0273224043715847,
+      "failure_block95": [
+        0.00819672131147541,
+        0.04918032786885246
+      ],
+      "additional_failure_rate": 0.0273224043715847,
+      "additional_failure_block95": [
+        0.00819672131147541,
+        0.04918032786885246
+      ],
+      "mean_deficit": 0.06554415137144586,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.955228891124414,
+        4.257574132250401
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 81.36722848098725,
+      "journal_sha256": "cc6b06cf130ccabb0ebaac4d3dc6eacb7351cb905db18b8d4f7bb49499690bcc",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 15,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 7,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 10,
+      "oracle_failures": 0,
+      "failure_rate": 0.0273224043715847,
+      "failure_block95": [
+        0.00819672131147541,
+        0.04918032786885246
+      ],
+      "additional_failure_rate": 0.0273224043715847,
+      "additional_failure_block95": [
+        0.00819672131147541,
+        0.04918032786885246
+      ],
+      "mean_deficit": 0.04145218880566078,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.6340616291798609,
+        3.3367251551605204
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 82.48903092683759,
+      "journal_sha256": "ab64b579f4877500b5a4a76d225d734041aa3143a1390af8c48d269707e56164",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.0,
+      "paired_failure_reduction95": [
+        0.0,
+        0.0
+      ],
+      "jointly_feasible_days": 356,
+      "conditional_mean_savings": 9.532410568655987,
+      "conditional_savings95": [
+        2.9057606512539054,
+        17.64118227780506
+      ]
+    },
+    {
+      "case": 16,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 8,
+      "oracle_failures": 0,
+      "failure_rate": 0.02185792349726776,
+      "failure_block95": [
+        0.00273224043715847,
+        0.04644808743169399
+      ],
+      "additional_failure_rate": 0.02185792349726776,
+      "additional_failure_block95": [
+        0.00273224043715847,
+        0.04644808743169399
+      ],
+      "mean_deficit": 0.08754802139041262,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.5239686431618216,
+        11.429764002758388
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 83.48517657839693,
+      "journal_sha256": "7200e46f5ecc4415501037a44f1d528e3131f6858e17c1014ccb2b422ea843d0",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 17,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 1,
+      "oracle_failures": 0,
+      "failure_rate": 0.00273224043715847,
+      "failure_block95": [
+        0.0,
+        0.00819672131147541
+      ],
+      "additional_failure_rate": 0.00273224043715847,
+      "additional_failure_block95": [
+        0.0,
+        0.00819672131147541
+      ],
+      "mean_deficit": 0.016224475397693647,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        5.9381579955558745
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 83.4458193591563,
+      "journal_sha256": "f3eaa2cf78477d0c6ce2b51d860f007712faf2ccaa73e0532b52d0606e3b6dc8",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.01912568306010929,
+      "paired_failure_reduction95": [
+        0.00273224043715847,
+        0.040983606557377046
+      ],
+      "jointly_feasible_days": 358,
+      "conditional_mean_savings": 41.29172523247977,
+      "conditional_savings95": [
+        20.403723319497722,
+        67.35080892166486
+      ]
+    },
+    {
+      "case": 18,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 9,
+      "arm": "v2g_fleet",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 9,
+      "oracle_failures": 9,
+      "failure_rate": 0.02459016393442623,
+      "failure_block95": [
+        0.00819672131147541,
+        0.040983606557377046
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.15169785787827728,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.854263849513443,
+        14.943218910428305
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.014453670321678191,
+      "native_evaluation_seconds": 66.36257771844976,
+      "journal_sha256": "8afcaa63b76d31bacfcea2505fc0d445d03097054548f298bbfdb3a1f1e88ba0",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 19,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 10,
+      "arm": "v2g_fleet",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 64.79404803342186,
+      "journal_sha256": "273d8934faf9f86dc041a2952b90516f1b517d1801021eeadd2395aed765bfb5",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 7478.757885165092,
+      "mean_cost_block95": [
+        7119.173213607565,
+        7839.090131704835
+      ],
+      "cost_quantiles": [
+        6030.009888131178,
+        7410.596816335913,
+        9119.935947436978,
+        10342.82346563482
+      ]
+    },
+    {
+      "case": 20,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 11,
+      "arm": "v2g_fleet",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 9,
+      "oracle_failures": 9,
+      "failure_rate": 0.02459016393442623,
+      "failure_block95": [
+        0.00819672131147541,
+        0.040983606557377046
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.16902304871221874,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        6.263513523867934,
+        14.90843230403799
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.022502631011055277,
+      "native_evaluation_seconds": 64.61485166777857,
+      "journal_sha256": "0d1b3fd13bbac889867267c4e4ea0c48335cb40b4209cd26d21a32ff4947aedb",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 21,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 12,
+      "arm": "v2g_fleet",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 12,
+      "oracle_failures": 12,
+      "failure_rate": 0.03278688524590164,
+      "failure_block95": [
+        0.01092896174863388,
+        0.05737704918032787
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.2482080597638602,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        9.496284959007012,
+        16.80603785150562
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.01721993404200377,
+      "native_evaluation_seconds": 64.27790662576444,
+      "journal_sha256": "46e33510e996fd593b2034dab86ae852463ab9a7bc0bb223a1789246e792938a",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 22,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 13,
+      "arm": "v2g_fleet",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 1.9515374105551207e-05,
+      "native_evaluation_seconds": 65.42017898894846,
+      "journal_sha256": "6cd938645fbff69a88775a00a674888f9b71eb199f9e0fad61312b876f04c93c",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 7239.6162393968925,
+      "mean_cost_block95": [
+        6867.369456913043,
+        7613.085154901976
+      ],
+      "cost_quantiles": [
+        5730.297388131177,
+        7146.505341544709,
+        9015.375543061833,
+        10414.501816910584
+      ]
+    },
+    {
+      "case": 23,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 14,
+      "arm": "v2g_fleet",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 13,
+      "oracle_failures": 13,
+      "failure_rate": 0.03551912568306011,
+      "failure_block95": [
+        0.01366120218579235,
+        0.060109289617486336
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.22198740711617665,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        9.457578729599263,
+        17.028825377365706
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.01846235829087414,
+      "native_evaluation_seconds": 64.4418831099756,
+      "journal_sha256": "88211218e5465753d523cd2cfbea3f1c9ae03d81447eb1b4ae8c89395d970d3e",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 24,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 15,
+      "arm": "v2g_fleet",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 10,
+      "oracle_failures": 10,
+      "failure_rate": 0.0273224043715847,
+      "failure_block95": [
+        0.01092896174863388,
+        0.04644808743169399
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.13098719902124184,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.090818136541274,
+        14.933744540648208
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.024079592011738392,
+      "native_evaluation_seconds": 64.10538887046278,
+      "journal_sha256": "f6ca28b01c3cdaa693698590989ece20edd2a4bee974f4ff0d0fe9dea780473f",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 25,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 16,
+      "arm": "v2g_fleet",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 64.14939569914714,
+      "journal_sha256": "b0d1a2c2bdd889d7f5826fcbd58a4ab22a28e6cec868c38ea2c115e32d138716",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 7542.797602407201,
+      "mean_cost_block95": [
+        7161.728220279586,
+        7924.799060955906
+      ],
+      "cost_quantiles": [
+        6030.009888131178,
+        7411.4971304880855,
+        9393.190487318978,
+        10385.468052256532
+      ]
+    },
+    {
+      "case": 26,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 17,
+      "arm": "v2g_fleet",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 19,
+      "oracle_failures": 19,
+      "failure_rate": 0.05191256830601093,
+      "failure_block95": [
+        0.02185792349726776,
+        0.08469945355191257
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.15960712974279528,
+      "deficit_quantiles": [
+        0.0,
+        0.031624013485555214,
+        4.9988543023523295,
+        16.752432763772873
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.029998982680243452,
+      "native_evaluation_seconds": 77.63260478945449,
+      "journal_sha256": "8ec2ba3781a698d53a52ebba0b8f0a86992044198ee82ee58882ecd3c6e674fd",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 27,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 18,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 3,
+      "oracle_failures": 0,
+      "failure_rate": 0.00819672131147541,
+      "failure_block95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "additional_failure_rate": 0.00819672131147541,
+      "additional_failure_block95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "mean_deficit": 0.010383771761268043,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.9489362245549398
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.9762201531212942e-06,
+      "native_evaluation_seconds": 96.703912996687,
+      "journal_sha256": "a979a0ea8f07c07ce60336ba92955aeeae9c1667d4db985d95d0949eb2504581",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 28,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 18,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.9762201531212942e-06,
+      "native_evaluation_seconds": 98.28157634171657,
+      "journal_sha256": "b005ee7820cf50f28d67114919ed037060e0db982153d23291af57cd35c53f93",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 3545.116509117484,
+      "mean_cost_block95": [
+        2638.4579304342433,
+        4442.057868990169
+      ],
+      "cost_quantiles": [
+        953.1640919854732,
+        2521.931225576583,
+        8867.546181710211,
+        10825.800943079073
+      ],
+      "failure_reduction_vs_monthly": 0.00819672131147541,
+      "paired_failure_reduction95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "jointly_feasible_days": 363,
+      "conditional_mean_savings": 34.14589089141003,
+      "conditional_savings95": [
+        15.819816414398158,
+        57.608288063659565
+      ]
+    },
+    {
+      "case": 29,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 19,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.02459016393442623,
+      "failure_block95": [
+        0.00819672131147541,
+        0.04644808743169399
+      ],
+      "additional_failure_rate": 0.02459016393442623,
+      "additional_failure_block95": [
+        0.00819672131147541,
+        0.04644808743169399
+      ],
+      "mean_deficit": 0.05501486574729682,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.4621760784614515,
+        4.257574132250401
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 93.90667552081868,
+      "journal_sha256": "c522960b11ea5431bbd614d3de9db2870fd8bc1735c3c8fb4767339988126909",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 30,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 19,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 8,
+      "oracle_failures": 0,
+      "failure_rate": 0.02185792349726776,
+      "failure_block95": [
+        0.00546448087431694,
+        0.040983606557377046
+      ],
+      "additional_failure_rate": 0.02185792349726776,
+      "additional_failure_block95": [
+        0.00546448087431694,
+        0.040983606557377046
+      ],
+      "mean_deficit": 0.040491166906015404,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.885603794713594,
+        3.3367251551605204
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 95.23349107895046,
+      "journal_sha256": "570110a59973b70a6e17592db8a25434681a78b94ab302dcd847d78970981287",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00273224043715847,
+      "paired_failure_reduction95": [
+        -0.00546448087431694,
+        0.01092896174863388
+      ],
+      "jointly_feasible_days": 356,
+      "conditional_mean_savings": 3.556180826078545,
+      "conditional_savings95": [
+        1.3492914126226219,
+        6.190508846315874
+      ]
+    },
+    {
+      "case": 31,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 20,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 4,
+      "oracle_failures": 0,
+      "failure_rate": 0.01092896174863388,
+      "failure_block95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "additional_failure_rate": 0.01092896174863388,
+      "additional_failure_block95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "mean_deficit": 0.020127904314531528,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.020882180164997367,
+        6.44893622455495
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 1.172205313069005e-07,
+      "native_evaluation_seconds": 94.73977474099956,
+      "journal_sha256": "eab9963d0bac01e0a33510ee2e235edd832e933bf28ec82eebc231d771641ab9",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 32,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 20,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 1,
+      "oracle_failures": 0,
+      "failure_rate": 0.00273224043715847,
+      "failure_block95": [
+        0.0,
+        0.00819672131147541
+      ],
+      "additional_failure_rate": 0.00273224043715847,
+      "additional_failure_block95": [
+        0.0,
+        0.00819672131147541
+      ],
+      "mean_deficit": 1.8276345886435896e-05,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.006689142594435538
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 1.172205313069005e-07,
+      "native_evaluation_seconds": 97.40201405319385,
+      "journal_sha256": "06735ff53475c3cc62ce338a9aaadbf49b1d82578886fca0977f14e30ef49c13",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00819672131147541,
+      "paired_failure_reduction95": [
+        0.0,
+        0.01639344262295082
+      ],
+      "jointly_feasible_days": 362,
+      "conditional_mean_savings": 40.79437811330914,
+      "conditional_savings95": [
+        20.472715719509672,
+        65.59182344397729
+      ]
+    },
+    {
+      "case": 33,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 21,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 4,
+      "oracle_failures": 0,
+      "failure_rate": 0.01092896174863388,
+      "failure_block95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "additional_failure_rate": 0.01092896174863388,
+      "additional_failure_block95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "mean_deficit": 0.010546786438590416,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.020882180164994883,
+        2.948936224554947
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 4.764065588226973e-06,
+      "native_evaluation_seconds": 95.211106213741,
+      "journal_sha256": "58963e51b74db7cf13c07ac599aa037191294cf055c71215a90ff69ff170a6ed",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 34,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 21,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 4.764065588226973e-06,
+      "native_evaluation_seconds": 93.12601906526834,
+      "journal_sha256": "4b9543429a84e05df6a35867b1afe05ce3a8132009ec26ce71f4fdcc7c0cb0d7",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 3544.340230554605,
+      "mean_cost_block95": [
+        2634.809091335169,
+        4441.600027089468
+      ],
+      "cost_quantiles": [
+        953.176591985473,
+        2512.7938686999614,
+        8867.575491712414,
+        10825.824369580503
+      ],
+      "failure_reduction_vs_monthly": 0.01092896174863388,
+      "paired_failure_reduction95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "jointly_feasible_days": 362,
+      "conditional_mean_savings": 33.448013874273265,
+      "conditional_savings95": [
+        14.427283402453837,
+        58.17507431275054
+      ]
+    },
+    {
+      "case": 35,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 22,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.02459016393442623,
+      "failure_block95": [
+        0.00819672131147541,
+        0.04644808743169399
+      ],
+      "additional_failure_rate": 0.02459016393442623,
+      "additional_failure_block95": [
+        0.00819672131147541,
+        0.04644808743169399
+      ],
+      "mean_deficit": 0.05636126160862215,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.4621760784614515,
+        4.257574132250401
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 89.78263297025114,
+      "journal_sha256": "eaa4074043c8087ac9565589fe5e617f76b863232ac048773860d7e9e4866df1",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 36,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 22,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 7,
+      "oracle_failures": 0,
+      "failure_rate": 0.01912568306010929,
+      "failure_block95": [
+        0.00273224043715847,
+        0.03825136612021858
+      ],
+      "additional_failure_rate": 0.01912568306010929,
+      "additional_failure_block95": [
+        0.00273224043715847,
+        0.03825136612021858
+      ],
+      "mean_deficit": 0.0384814948693568,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.885603794713594,
+        3.3367251551605204
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 90.22572876233608,
+      "journal_sha256": "1e3be5dc28a018d90f1e6d9667d0986a3dc680b92f6a53f3f2c8f3b148d1d6fd",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00546448087431694,
+      "paired_failure_reduction95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "jointly_feasible_days": 357,
+      "conditional_mean_savings": 3.6446188967486064,
+      "conditional_savings95": [
+        1.7214463026855458,
+        5.972356961296843
+      ]
+    },
+    {
+      "case": 37,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 23,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 3,
+      "oracle_failures": 0,
+      "failure_rate": 0.00819672131147541,
+      "failure_block95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "additional_failure_rate": 0.00819672131147541,
+      "additional_failure_block95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "mean_deficit": 0.013134288544312953,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.9489362245549398
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 3.7982516406628986e-06,
+      "native_evaluation_seconds": 92.1720306694042,
+      "journal_sha256": "fe1efb0181daa009dfc37510158405f695e3dc479236daaa4203fc7385629ee0",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 38,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 23,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 3.7982516406628986e-06,
+      "native_evaluation_seconds": 94.86761527974159,
+      "journal_sha256": "bc0b12e864d21a642ee12b44671a7d04dea4398a2deef0dca2350e0561a7e275",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 3545.019158543558,
+      "mean_cost_block95": [
+        2635.036652152819,
+        4438.118862715614
+      ],
+      "cost_quantiles": [
+        989.176591985473,
+        2562.937475576583,
+        8903.598623050759,
+        10861.839404950431
+      ],
+      "failure_reduction_vs_monthly": 0.00819672131147541,
+      "paired_failure_reduction95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "jointly_feasible_days": 363,
+      "conditional_mean_savings": 29.611373249983153,
+      "conditional_savings95": [
+        12.442376287824024,
+        51.61086017806395
+      ]
+    },
+    {
+      "case": 39,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 3,
+      "oracle_failures": 0,
+      "failure_rate": 0.00819672131147541,
+      "failure_block95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "additional_failure_rate": 0.00819672131147541,
+      "additional_failure_block95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "mean_deficit": 0.019946613291322697,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        6.448936224554943
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.5393866768101281e-06,
+      "native_evaluation_seconds": 91.99712292966433,
+      "journal_sha256": "ae89d36d5f651013d4eb7b20ae3d21b1fb7f1a6ad6cd06d24b85b9206e90f811",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 40,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.5393866768101281e-06,
+      "native_evaluation_seconds": 93.93669907748699,
+      "journal_sha256": "3f16f89d1a6dd58ade31831b0bcd74c2f6751f8600a5a0b5255ea798f7d0558c",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 3549.4118273473127,
+      "mean_cost_block95": [
+        2642.9809659100374,
+        4444.758603228605
+      ],
+      "cost_quantiles": [
+        953.1640919854731,
+        2521.9312255765835,
+        8867.558681710214,
+        10825.809068079074
+      ],
+      "failure_reduction_vs_monthly": 0.00819672131147541,
+      "paired_failure_reduction95": [
+        0.0,
+        0.02185792349726776
+      ],
+      "jointly_feasible_days": 363,
+      "conditional_mean_savings": 32.281289345635884,
+      "conditional_savings95": [
+        14.832249368563625,
+        53.33453108412142
+      ]
+    },
+    {
+      "case": 41,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 25,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 12,
+      "oracle_failures": 0,
+      "failure_rate": 0.03278688524590164,
+      "failure_block95": [
+        0.01366120218579235,
+        0.0546448087431694
+      ],
+      "additional_failure_rate": 0.03278688524590164,
+      "additional_failure_block95": [
+        0.01366120218579235,
+        0.0546448087431694
+      ],
+      "mean_deficit": 0.07564349242486221,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.9642933306309667,
+        4.872852654968966
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 93.74929337762296,
+      "journal_sha256": "bea764e9339c219b5aab089483df6a6b1b9066db68a74fb8125ed239ebf3ac07",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 42,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 25,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 11,
+      "oracle_failures": 0,
+      "failure_rate": 0.030054644808743168,
+      "failure_block95": [
+        0.01092896174863388,
+        0.0546448087431694
+      ],
+      "additional_failure_rate": 0.030054644808743168,
+      "additional_failure_block95": [
+        0.01092896174863388,
+        0.0546448087431694
+      ],
+      "mean_deficit": 0.04249954058738023,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.5833376049610894,
+        3.3367251551605204
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 95.05781531590037,
+      "journal_sha256": "1d3af33c80f13784c471b950d0a445eab7e0952be33351dab524da493d349500",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00273224043715847,
+      "paired_failure_reduction95": [
+        0.0,
+        0.00819672131147541
+      ],
+      "jointly_feasible_days": 354,
+      "conditional_mean_savings": 5.175156126448704,
+      "conditional_savings95": [
+        2.978327849815425,
+        7.80008215793963
+      ]
+    },
+    {
+      "case": 43,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 26,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 4,
+      "oracle_failures": 0,
+      "failure_rate": 0.01092896174863388,
+      "failure_block95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "additional_failure_rate": 0.01092896174863388,
+      "additional_failure_block95": [
+        0.0,
+        0.02459016393442623
+      ],
+      "mean_deficit": 0.02305089146358761,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0275298827676049,
+        6.448936224554943
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.945694521058218e-06,
+      "native_evaluation_seconds": 94.40029737027362,
+      "journal_sha256": "a1c86fca34f9cbba9cf2e82beee486496cedf04bb392605874b13675ea445574",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 44,
+      "year": 2024,
+      "source": "weather_saa_method_union",
+      "policy": 26,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 2,
+      "oracle_failures": 0,
+      "failure_rate": 0.00546448087431694,
+      "failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "additional_failure_rate": 0.00546448087431694,
+      "additional_failure_block95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "mean_deficit": 0.0005012030890937738,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.10478352270088376
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.945694521058218e-06,
+      "native_evaluation_seconds": 95.68166662869044,
+      "journal_sha256": "6ab58b44f95425d1e9fa0666cb385f305d4df81893af4d772597ac2b7ff7b771",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00546448087431694,
+      "paired_failure_reduction95": [
+        0.0,
+        0.01366120218579235
+      ],
+      "jointly_feasible_days": 362,
+      "conditional_mean_savings": 32.10137410837441,
+      "conditional_savings95": [
+        15.390887744970243,
+        51.62108917464067
+      ]
+    },
+    {
+      "case": 45,
+      "year": 2024,
+      "source": "weather_saa_capped_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 8,
+      "oracle_failures": 0,
+      "failure_rate": 0.02185792349726776,
+      "failure_block95": [
+        0.00273224043715847,
+        0.04644808743169399
+      ],
+      "additional_failure_rate": 0.02185792349726776,
+      "additional_failure_block95": [
+        0.00273224043715847,
+        0.04644808743169399
+      ],
+      "mean_deficit": 0.0961733306392845,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        3.7777952793254603,
+        10.078009347942666
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.927371175890017e-09,
+      "native_evaluation_seconds": 122.33793256850913,
+      "journal_sha256": "ed33438add6591f163c3476ff2c9530980096de426359a5a3f526c1385f5b64d",
+      "baseline_scope": "secondary unmatched-pool deterministic"
+    },
+    {
+      "case": 46,
+      "year": 2024,
+      "source": "weather_saa_capped_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 1,
+      "oracle_failures": 0,
+      "failure_rate": 0.00273224043715847,
+      "failure_block95": [
+        0.0,
+        0.00819672131147541
+      ],
+      "additional_failure_rate": 0.00273224043715847,
+      "additional_failure_block95": [
+        0.0,
+        0.00819672131147541
+      ],
+      "mean_deficit": 0.012531156668688953,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        4.586403340740157
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.927371175890017e-09,
+      "native_evaluation_seconds": 95.77552590239793,
+      "journal_sha256": "ba12feaa1e9e0478730d98b65448ebeec112b3d02a1587776849a4157e58210a",
+      "baseline_scope": "secondary unmatched-pool deterministic",
+      "failure_reduction_vs_monthly": 0.01912568306010929,
+      "paired_failure_reduction95": [
+        0.00273224043715847,
+        0.040983606557377046
+      ],
+      "jointly_feasible_days": 358,
+      "conditional_mean_savings": 35.499778304741255,
+      "conditional_savings95": [
+        17.860625321935057,
+        56.490748090763574
+      ]
+    },
+    {
+      "case": 47,
+      "year": 2024,
+      "source": "weather_saa_capped_union",
+      "policy": 16,
+      "arm": "v2g_fleet",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 111,
+      "oracle_failures": 111,
+      "failure_rate": 0.30327868852459017,
+      "failure_block95": [
+        0.14754098360655737,
+        0.4645491803278685
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.7492080564142432,
+      "deficit_quantiles": [
+        0.0,
+        2.829196996398742,
+        12.648988583250445,
+        26.536399509616103
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.0013840077559287977,
+      "native_evaluation_seconds": 67.09980354714207,
+      "journal_sha256": "76fd8a7a25ce32bd08340891fee0a4de69b9da9d15dd3ac12990ef9b723f1fe2",
+      "baseline_scope": "secondary unmatched-pool deterministic"
+    },
+    {
+      "case": 48,
+      "year": 2024,
+      "source": "weather_saa_capped_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 94.43564566038549,
+      "journal_sha256": "4cddd737b128569ebea902267cbf96aefba8cad59415297ec006913d5a43be30",
+      "baseline_scope": "secondary unmatched-pool deterministic",
+      "mean_cost": 3883.417058372356,
+      "mean_cost_block95": [
+        3101.1054489791964,
+        4643.700946403344
+      ],
+      "cost_quantiles": [
+        1548.9403584201898,
+        2975.192443818418,
+        8795.57619920362,
+        10753.679324747083
+      ]
+    },
+    {
+      "case": 49,
+      "year": 2024,
+      "source": "weather_saa_capped_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 366,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 95.86417154059745,
+      "journal_sha256": "1df8711ed5cd80bcb66bb3b1de79ee97f142162993418f6b55fa9a41d28c926b",
+      "baseline_scope": "secondary unmatched-pool deterministic",
+      "mean_cost": 3857.973863872427,
+      "mean_cost_block95": [
+        3061.1599496028507,
+        4625.409209631767
+      ],
+      "cost_quantiles": [
+        1552.8072601201923,
+        2818.860993410466,
+        8795.57619920362,
+        10753.641354221198
+      ],
+      "failure_reduction_vs_monthly": 0.0,
+      "paired_failure_reduction95": [
+        0.0,
+        0.0
+      ],
+      "jointly_feasible_days": 366,
+      "conditional_mean_savings": 25.44319449992865,
+      "conditional_savings95": [
+        10.402745138852842,
+        42.28784878632166
+      ]
+    },
+    {
+      "case": 50,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 0,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 10,
+      "oracle_failures": 0,
+      "failure_rate": 0.0273972602739726,
+      "failure_block95": [
+        0.005479452054794521,
+        0.06027397260273973
+      ],
+      "additional_failure_rate": 0.0273972602739726,
+      "additional_failure_block95": [
+        0.005479452054794521,
+        0.06027397260273973
+      ],
+      "mean_deficit": 0.13263281839101648,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        6.598136457223655,
+        8.534261742395222
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 9.112261238539115e-07,
+      "native_evaluation_seconds": 93.69317899621092,
+      "journal_sha256": "45ae3786eade77abfe7b98727bc1c8af2170b75547d2cd1061912b63620e1d65",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 51,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 0,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 6,
+      "oracle_failures": 0,
+      "failure_rate": 0.01643835616438356,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.03561643835616438
+      ],
+      "additional_failure_rate": 0.01643835616438356,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.03561643835616438
+      ],
+      "mean_deficit": 0.030311657230824855,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.4729590562409325,
+        3.600052751761927
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 9.112261238539115e-07,
+      "native_evaluation_seconds": 94.12987331766635,
+      "journal_sha256": "7a1d11330bd534e00636325f083b0339fb8131d75632998198358aef506952c8",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "jointly_feasible_days": 355,
+      "conditional_mean_savings": 33.94983812515678,
+      "conditional_savings95": [
+        7.214808482440013,
+        67.48905272203905
+      ]
+    },
+    {
+      "case": 52,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 1,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 13,
+      "oracle_failures": 0,
+      "failure_rate": 0.03561643835616438,
+      "failure_block95": [
+        0.00821917808219178,
+        0.0684931506849315
+      ],
+      "additional_failure_rate": 0.03561643835616438,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.0684931506849315
+      ],
+      "mean_deficit": 0.05743384606966794,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.3261003754501615,
+        4.089770898781701
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 91.55259815510362,
+      "journal_sha256": "89d6f7ff5680cbe9181a9ea91940f4dd95bc073577b46cbf21f701cb53c2a96f",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 53,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 1,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 11,
+      "oracle_failures": 0,
+      "failure_rate": 0.030136986301369864,
+      "failure_block95": [
+        0.00821917808219178,
+        0.06027397260273973
+      ],
+      "additional_failure_rate": 0.030136986301369864,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.06027397260273973
+      ],
+      "mean_deficit": 0.03652101923787265,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.0869153131824063,
+        3.5193292124044913
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 92.65929746045731,
+      "journal_sha256": "a0e59a56eb86d84ff033e0c245648fdf40b4904e9daa5199233c35c8e8edc6c8",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.005479452054794521,
+      "paired_failure_reduction95": [
+        0.0,
+        0.0136986301369863
+      ],
+      "jointly_feasible_days": 352,
+      "conditional_mean_savings": 18.063495847521338,
+      "conditional_savings95": [
+        9.129359358604232,
+        27.955594088866704
+      ]
+    },
+    {
+      "case": 54,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 2,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "additional_failure_rate": 0.024657534246575342,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "mean_deficit": 0.1153140804157605,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.838743697800912,
+        7.6031105019761185
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.8633612296871577e-08,
+      "native_evaluation_seconds": 80.71721054473892,
+      "journal_sha256": "99048d292bdeb2509626de1e916c9e1ae74ad0e674f39c091f6d5ddf57b353e4",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 55,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 2,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 5,
+      "oracle_failures": 0,
+      "failure_rate": 0.0136986301369863,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.030136986301369864
+      ],
+      "additional_failure_rate": 0.0136986301369863,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.030136986301369864
+      ],
+      "mean_deficit": 0.02156186789223201,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.2970331020402302,
+        3.600052751761927
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.8633612296871577e-08,
+      "native_evaluation_seconds": 79.70509364432655,
+      "journal_sha256": "f448876271850cedb6a09e29ebb9bde432e0cef4c2fe7fe42fbc6a99f9dd22d2",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "jointly_feasible_days": 356,
+      "conditional_mean_savings": 30.96955059581543,
+      "conditional_savings95": [
+        2.4573155769834174,
+        67.19179208358686
+      ]
+    },
+    {
+      "case": 56,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 3,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 8,
+      "oracle_failures": 0,
+      "failure_rate": 0.021917808219178082,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.046643835616437986
+      ],
+      "additional_failure_rate": 0.021917808219178082,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.046643835616437986
+      ],
+      "mean_deficit": 0.10434779645664449,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.374945878987562,
+        7.353110501976124
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 79.37474603718147,
+      "journal_sha256": "d80c4c852998ad9dde3cbb78915e91b8c3c1638d40a3dd48687939aa1d968ee3",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 57,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 3,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 4,
+      "oracle_failures": 0,
+      "failure_rate": 0.010958904109589041,
+      "failure_block95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "additional_failure_rate": 0.010958904109589041,
+      "additional_failure_block95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "mean_deficit": 0.01801381634271545,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.005036936147068594,
+        3.600052751761927
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 118.20165454503149,
+      "journal_sha256": "b7f12f57c025f75356f0b45cfd080643c7b38af8824b831c106d651a9eb283e0",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "jointly_feasible_days": 357,
+      "conditional_mean_savings": 29.40272078438089,
+      "conditional_savings95": [
+        4.565150831024393,
+        61.55175612304468
+      ]
+    },
+    {
+      "case": 58,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 4,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 14,
+      "oracle_failures": 0,
+      "failure_rate": 0.038356164383561646,
+      "failure_block95": [
+        0.010958904109589041,
+        0.07671232876712329
+      ],
+      "additional_failure_rate": 0.038356164383561646,
+      "additional_failure_block95": [
+        0.010958904109589041,
+        0.07671232876712329
+      ],
+      "mean_deficit": 0.06282901847414404,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.3261003754501615,
+        4.089770898781701
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 114.65814411314204,
+      "journal_sha256": "d8b798312fa949b9d28d08f7a89730be919e36459818d9495e95c6cbde036cc3",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 59,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 4,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 12,
+      "oracle_failures": 0,
+      "failure_rate": 0.03287671232876712,
+      "failure_block95": [
+        0.00821917808219178,
+        0.06575342465753424
+      ],
+      "additional_failure_rate": 0.03287671232876712,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.06575342465753424
+      ],
+      "mean_deficit": 0.03871889220079494,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.0869153131824063,
+        3.5193292124044913
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 89.32494591223076,
+      "journal_sha256": "e8f3e4afbeaea94d304a46d78741af018f2e43418d49a2330db7a3b18318be42",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.005479452054794521,
+      "paired_failure_reduction95": [
+        0.0,
+        0.0136986301369863
+      ],
+      "jointly_feasible_days": 351,
+      "conditional_mean_savings": 18.34511958672509,
+      "conditional_savings95": [
+        8.863216703725877,
+        29.348426537293637
+      ]
+    },
+    {
+      "case": 60,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 5,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 8,
+      "oracle_failures": 0,
+      "failure_rate": 0.021917808219178082,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.046643835616437986
+      ],
+      "additional_failure_rate": 0.021917808219178082,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.046643835616437986
+      ],
+      "mean_deficit": 0.10169964554004605,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.374945878987562,
+        6.5983334610374325
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 90.7499825085979,
+      "journal_sha256": "93fd7437bd984fd7eb58694408a0d7e6a5085815aff2c072583566430451cd70",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 61,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 5,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 5,
+      "oracle_failures": 0,
+      "failure_rate": 0.0136986301369863,
+      "failure_block95": [
+        0.0,
+        0.030205479452054422
+      ],
+      "additional_failure_rate": 0.0136986301369863,
+      "additional_failure_block95": [
+        0.0,
+        0.030205479452054422
+      ],
+      "mean_deficit": 0.027372412088420957,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.4729590562409325,
+        3.6000527517619414
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 90.70846598409116,
+      "journal_sha256": "685d1a4293b5a611c9384686e3206dfe62c9b9bbbd74e3473a3f6505e74324cd",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00821917808219178,
+      "paired_failure_reduction95": [
+        0.0,
+        0.019178082191780823
+      ],
+      "jointly_feasible_days": 357,
+      "conditional_mean_savings": 30.90007541917215,
+      "conditional_savings95": [
+        5.969960004592566,
+        62.69238248441069
+      ]
+    },
+    {
+      "case": 62,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 6,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "additional_failure_rate": 0.024657534246575342,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "mean_deficit": 0.1276627553891437,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.967248251071282,
+        8.534261742395229
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.826914593201208e-07,
+      "native_evaluation_seconds": 87.2856618835358,
+      "journal_sha256": "945066ca70519169705897ec824c222b93b78ba893da2cbb0e1dbb5726a320c7",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 63,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 6,
+      "arm": "solar_bess",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 6,
+      "oracle_failures": 0,
+      "failure_rate": 0.01643835616438356,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.03561643835616438
+      ],
+      "additional_failure_rate": 0.01643835616438356,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.03561643835616438
+      ],
+      "mean_deficit": 0.030596682364048382,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.4729590562409325,
+        3.600052751761927
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.826914593201208e-07,
+      "native_evaluation_seconds": 84.64003007870633,
+      "journal_sha256": "14f01cbb1f35c0b31e6f783881ffb4fd07fff995621bd3cd290ecd7d0f13ce2d",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00821917808219178,
+      "paired_failure_reduction95": [
+        0.0,
+        0.019178082191780823
+      ],
+      "jointly_feasible_days": 356,
+      "conditional_mean_savings": 31.060143435940507,
+      "conditional_savings95": [
+        5.955911292616181,
+        63.15603718873809
+      ]
+    },
+    {
+      "case": 64,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 7,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 13,
+      "oracle_failures": 0,
+      "failure_rate": 0.03561643835616438,
+      "failure_block95": [
+        0.00821917808219178,
+        0.07123287671232877
+      ],
+      "additional_failure_rate": 0.03561643835616438,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.07123287671232877
+      ],
+      "mean_deficit": 0.06398390006938684,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.3261003754501615,
+        4.089770898781701
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 82.12308038154151,
+      "journal_sha256": "8db21fe6a9a10a30c8b50c1fb04596e9d3a97074131345549a4e9db91baeb266",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 65,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 7,
+      "arm": "solar_bess",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 12,
+      "oracle_failures": 0,
+      "failure_rate": 0.03287671232876712,
+      "failure_block95": [
+        0.00821917808219178,
+        0.06575342465753424
+      ],
+      "additional_failure_rate": 0.03287671232876712,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.06575342465753424
+      ],
+      "mean_deficit": 0.0379504072267194,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.9944819869916194,
+        3.5193292124044913
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 81.48603285232093,
+      "journal_sha256": "aece7aba7b6856af44512a2d87f3f8c21ca9c0717386c9546cf2b2002406c84d",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.0027397260273972603,
+      "paired_failure_reduction95": [
+        0.0,
+        0.010958904109589041
+      ],
+      "jointly_feasible_days": 352,
+      "conditional_mean_savings": 7.768226346306005,
+      "conditional_savings95": [
+        0.5580510794737137,
+        15.87600771184415
+      ]
+    },
+    {
+      "case": 66,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "additional_failure_rate": 0.024657534246575342,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "mean_deficit": 0.13550076736714198,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        6.598136457223655,
+        8.534261742395222
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 84.74366266932338,
+      "journal_sha256": "d7355f09b642f51c1505335c9ea49597d0d116f59cb699841c1bc8be55f0569c",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 67,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 5,
+      "oracle_failures": 0,
+      "failure_rate": 0.0136986301369863,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.030136986301369864
+      ],
+      "additional_failure_rate": 0.0136986301369863,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.030136986301369864
+      ],
+      "mean_deficit": 0.02448084454112471,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.7419563575237804,
+        3.600052751761927
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 84.32836662896443,
+      "journal_sha256": "36b3e21d0689ab99d9ae0dc055e6548b1676e0916bfe8329d48c8d44eb5d2494",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "jointly_feasible_days": 356,
+      "conditional_mean_savings": 33.233965084497655,
+      "conditional_savings95": [
+        7.700075804438377,
+        66.05785050522823
+      ]
+    },
+    {
+      "case": 68,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 9,
+      "arm": "v2g_fleet",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 13,
+      "oracle_failures": 13,
+      "failure_rate": 0.03561643835616438,
+      "failure_block95": [
+        0.010890410958904114,
+        0.0684931506849315
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.21939763184052427,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.763470691901018,
+        24.047643858708128
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.014453670321678191,
+      "native_evaluation_seconds": 64.39948252274189,
+      "journal_sha256": "7de4db39e830ab6ea32a533143f37c635729878b2f58f7e6b7bae9ff3b96baff",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 69,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 10,
+      "arm": "v2g_fleet",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 63.817464305320755,
+      "journal_sha256": "3a5b0e2aead30c3f9dd8b55c5dec4605a19e85b6ec917e7f98379ba2bb271a6a",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 7468.489444098652,
+      "mean_cost_block95": [
+        7110.058587595765,
+        7844.7187329370645
+      ],
+      "cost_quantiles": [
+        6089.188495134473,
+        7359.791514060226,
+        9080.192096391082,
+        10682.6283847981
+      ]
+    },
+    {
+      "case": 70,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 11,
+      "arm": "v2g_fleet",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 13,
+      "oracle_failures": 13,
+      "failure_rate": 0.03561643835616438,
+      "failure_block95": [
+        0.010890410958904114,
+        0.0684931506849315
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.22781398160850508,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        5.917584093172937,
+        24.532690981533968
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.022502631011055277,
+      "native_evaluation_seconds": 66.369545761263,
+      "journal_sha256": "d96e66ea81958c42690f2bf107ba67acdbdaef07ad7facaeba449ea2648eb7cb",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 71,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 12,
+      "arm": "v2g_fleet",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 13,
+      "oracle_failures": 13,
+      "failure_rate": 0.03561643835616438,
+      "failure_block95": [
+        0.010890410958904114,
+        0.0684931506849315
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.30701274137393536,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        9.117652900160907,
+        27.3776415600337
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.01721993404200377,
+      "native_evaluation_seconds": 63.807164574740455,
+      "journal_sha256": "0b42a69b991bff6aec3e474eb3752398c8b4c22195ac61eca21b7ac88cca5482",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 72,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 13,
+      "arm": "v2g_fleet",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 2,
+      "oracle_failures": 2,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.01643835616438356
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.004940491622433791,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        1.2652133936096828
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 1.9515374105551207e-05,
+      "native_evaluation_seconds": 63.936055712169036,
+      "journal_sha256": "99e2c0390582a3f1970cb7838de8c94dab4a3fba86932a674abeb2f72041305b",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 73,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 14,
+      "arm": "v2g_fleet",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 15,
+      "oracle_failures": 15,
+      "failure_rate": 0.0410958904109589,
+      "failure_block95": [
+        0.010958904109589041,
+        0.0821917808219178
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.29848457526479344,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        9.374543406635526,
+        26.115381963067946
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.01846235829087414,
+      "native_evaluation_seconds": 64.08753360016271,
+      "journal_sha256": "8cd4f11138b71549b256523d024c3f54d54015c93d96613076f96b9241f786cd",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 74,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 15,
+      "arm": "v2g_fleet",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 12,
+      "oracle_failures": 12,
+      "failure_rate": 0.03287671232876712,
+      "failure_block95": [
+        0.00821917808219178,
+        0.06575342465753424
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.20477728573782703,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        4.32807646923607,
+        24.365381963067946
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.024079592011738392,
+      "native_evaluation_seconds": 64.48383867624216,
+      "journal_sha256": "c17f0cc5d7e39ac768dce9863257d436dac9c3d98ee71a60589c112310e4d8c0",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 75,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 16,
+      "arm": "v2g_fleet",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 64.14970815181732,
+      "journal_sha256": "aefb7afd19f49d83de4e5a4d6becdc14b946e4e8d359a10b3a9137bb4158b22a",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 7525.314376424207,
+      "mean_cost_block95": [
+        7141.739035690332,
+        7919.816007958242
+      ],
+      "cost_quantiles": [
+        6089.188495134473,
+        7365.19493142288,
+        9283.875185809515,
+        10682.6283847981
+      ]
+    },
+    {
+      "case": 76,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 17,
+      "arm": "v2g_fleet",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 17,
+      "oracle_failures": 17,
+      "failure_rate": 0.04657534246575343,
+      "failure_block95": [
+        0.0136986301369863,
+        0.09041095890410959
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.27021911930330195,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        7.259805072408237,
+        26.30180829055243
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.029998982680243452,
+      "native_evaluation_seconds": 64.35210489365272,
+      "journal_sha256": "5bf1c16cc99bbb39d37e604552090429862672f6826fe9e631991a17179eca70",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 77,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 18,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 3,
+      "oracle_failures": 0,
+      "failure_rate": 0.00821917808219178,
+      "failure_block95": [
+        0.0,
+        0.021917808219178082
+      ],
+      "additional_failure_rate": 0.00821917808219178,
+      "additional_failure_block95": [
+        0.0,
+        0.021917808219178082
+      ],
+      "mean_deficit": 0.033724168932469795,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        5.603110501976117
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.9762201531212942e-06,
+      "native_evaluation_seconds": 83.07936972612515,
+      "journal_sha256": "90660aeebef43269a7c51dc02e1d8f4c2a3ba9d995e4f420d61eefa4804a8201",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 78,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 18,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 1,
+      "oracle_failures": 0,
+      "failure_rate": 0.0027397260273972603,
+      "failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "additional_failure_rate": 0.0027397260273972603,
+      "additional_failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "mean_deficit": 0.007337484533545055,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.6781818547439453
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.9762201531212942e-06,
+      "native_evaluation_seconds": 99.76426984835416,
+      "journal_sha256": "bdef0515533193ab6f0bd0576422f9c64ce9f2516505eab23f68cbcb01b87863",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.005479452054794521,
+      "paired_failure_reduction95": [
+        -0.005479452054794521,
+        0.019178082191780823
+      ],
+      "jointly_feasible_days": 361,
+      "conditional_mean_savings": 31.702776691471197,
+      "conditional_savings95": [
+        5.977290694799044,
+        64.89470605488596
+      ]
+    },
+    {
+      "case": 79,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 19,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 10,
+      "oracle_failures": 0,
+      "failure_rate": 0.0273972602739726,
+      "failure_block95": [
+        0.00821917808219178,
+        0.052054794520547946
+      ],
+      "additional_failure_rate": 0.0273972602739726,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.052054794520547946
+      ],
+      "mean_deficit": 0.057452882055474275,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.5236073864071678,
+        4.089770898781701
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 92.00674675428309,
+      "journal_sha256": "73ff9a444166c836a3ed63b19e890a266e8bd768b4d1435244817536204cfd97",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 80,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 19,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.00821917808219178,
+        0.04657534246575343
+      ],
+      "additional_failure_rate": 0.024657534246575342,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.04657534246575343
+      ],
+      "mean_deficit": 0.03154229509655744,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.8393168584937388,
+        3.5193292124044913
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 94.48110567731783,
+      "journal_sha256": "b30c5533a6b15b337ef363eb4083a3ca259f939be56d2a9feeb0314579092c09",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.0027397260273972603,
+      "paired_failure_reduction95": [
+        -0.0027397260273972603,
+        0.010958904109589041
+      ],
+      "jointly_feasible_days": 354,
+      "conditional_mean_savings": 3.3333553073258617,
+      "conditional_savings95": [
+        1.2014943226196768,
+        6.009015290531738
+      ]
+    },
+    {
+      "case": 81,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 20,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 5,
+      "oracle_failures": 0,
+      "failure_rate": 0.0136986301369863,
+      "failure_block95": [
+        0.0,
+        0.03287671232876712
+      ],
+      "additional_failure_rate": 0.0136986301369863,
+      "additional_failure_block95": [
+        0.0,
+        0.03287671232876712
+      ],
+      "mean_deficit": 0.03962075135821378,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.4019882145664404,
+        5.191645595484383
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 1.172205313069005e-07,
+      "native_evaluation_seconds": 93.6504033873789,
+      "journal_sha256": "7929264ca3cb97e9533faf7dea03abe156e423263b0b829ed9092be2034f9438",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 82,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 20,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 1,
+      "oracle_failures": 0,
+      "failure_rate": 0.0027397260273972603,
+      "failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "additional_failure_rate": 0.0027397260273972603,
+      "additional_failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "mean_deficit": 0.007337484533545055,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.6781818547439453
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 1.172205313069005e-07,
+      "native_evaluation_seconds": 96.24146826984361,
+      "journal_sha256": "749eed3c7cf1534b1627850515d51c28eae72a42f14e19699d2f2b843ad41f30",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        -0.0027397260273972603,
+        0.03287671232876712
+      ],
+      "jointly_feasible_days": 359,
+      "conditional_mean_savings": 32.57061247949076,
+      "conditional_savings95": [
+        5.828489127136106,
+        67.02809468452013
+      ]
+    },
+    {
+      "case": 83,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 21,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 4,
+      "oracle_failures": 0,
+      "failure_rate": 0.010958904109589041,
+      "failure_block95": [
+        0.0,
+        0.0273972602739726
+      ],
+      "additional_failure_rate": 0.010958904109589041,
+      "additional_failure_block95": [
+        0.0,
+        0.0273972602739726
+      ],
+      "mean_deficit": 0.04214740772625697,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.7998439966286398,
+        5.60311050197611
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 4.764065588226973e-06,
+      "native_evaluation_seconds": 92.96511753485538,
+      "journal_sha256": "9d506c502cd1504a8ddd5d3d0e66a08f6082e420bfd10131f9d871d3cec7d711",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 84,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 21,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 1,
+      "oracle_failures": 0,
+      "failure_rate": 0.0027397260273972603,
+      "failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "additional_failure_rate": 0.0027397260273972603,
+      "additional_failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "mean_deficit": 0.007337484533545094,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.6781818547439595
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 4.764065588226973e-06,
+      "native_evaluation_seconds": 95.43107601208612,
+      "journal_sha256": "dbd6d8d7d7e6a201bc34749c8a232b757a7b7c25425189ab02adba2ffd58b02f",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.00821917808219178,
+      "paired_failure_reduction95": [
+        -0.005479452054794521,
+        0.024657534246575342
+      ],
+      "jointly_feasible_days": 360,
+      "conditional_mean_savings": 31.224253899844946,
+      "conditional_savings95": [
+        4.857427000552507,
+        65.25393996184461
+      ]
+    },
+    {
+      "case": 85,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 22,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 10,
+      "oracle_failures": 0,
+      "failure_rate": 0.0273972602739726,
+      "failure_block95": [
+        0.00821917808219178,
+        0.052054794520547946
+      ],
+      "additional_failure_rate": 0.0273972602739726,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.052054794520547946
+      ],
+      "mean_deficit": 0.05932614190323223,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.5236073864071678,
+        4.089770898781701
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 90.97375149000436,
+      "journal_sha256": "6463b3768f33bcd3c8b01b7e39c69963ff1c006e3016bd49b05f94260fc2de7c",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 86,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 22,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 10,
+      "oracle_failures": 0,
+      "failure_rate": 0.0273972602739726,
+      "failure_block95": [
+        0.00821917808219178,
+        0.052123287671232504
+      ],
+      "additional_failure_rate": 0.0273972602739726,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.052123287671232504
+      ],
+      "mean_deficit": 0.0320178699152628,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.8393168584937388,
+        3.5193292124044913
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 91.26627992629074,
+      "journal_sha256": "b0397127d754d742d48af5bb28eb7cce064fb24de52bcf864849896faf831d80",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.0,
+      "paired_failure_reduction95": [
+        -0.0027397260273972603,
+        0.0027397260273972603
+      ],
+      "jointly_feasible_days": 354,
+      "conditional_mean_savings": 3.1280932431344333,
+      "conditional_savings95": [
+        1.293275481138625,
+        5.431741108864389
+      ]
+    },
+    {
+      "case": 87,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 23,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 4,
+      "oracle_failures": 0,
+      "failure_rate": 0.010958904109589041,
+      "failure_block95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "additional_failure_rate": 0.010958904109589041,
+      "additional_failure_block95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "mean_deficit": 0.03739115743354965,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.12184228904189709,
+        6.103110501976117
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 3.7982516406628986e-06,
+      "native_evaluation_seconds": 90.62839254597202,
+      "journal_sha256": "0db07bbb75bf311be00eaa525537db98f9758fd8aef6b07b02921468d0215334",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 88,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 23,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 29,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 3.7982516406628986e-06,
+      "native_evaluation_seconds": 91.38963616988622,
+      "journal_sha256": "21ad9c34422e7c39ce69ec5859b6fdf777c7db14f46ba2b3836b6af292bdeff3",
+      "baseline_scope": "primary same-pool methods",
+      "mean_cost": 3416.2885393939746,
+      "mean_cost_block95": [
+        2559.0772104800885,
+        4348.568939777252
+      ],
+      "cost_quantiles": [
+        989.2952855696718,
+        2231.1980087732736,
+        7911.967168024449,
+        11425.115696973164
+      ],
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        0.0,
+        0.024657534246575342
+      ],
+      "jointly_feasible_days": 361,
+      "conditional_mean_savings": 29.586849971740502,
+      "conditional_savings95": [
+        5.437154772049493,
+        60.68462577679536
+      ]
+    },
+    {
+      "case": 89,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 5,
+      "oracle_failures": 0,
+      "failure_rate": 0.0136986301369863,
+      "failure_block95": [
+        0.0,
+        0.03287671232876712
+      ],
+      "additional_failure_rate": 0.0136986301369863,
+      "additional_failure_block95": [
+        0.0,
+        0.03287671232876712
+      ],
+      "mean_deficit": 0.055018683120602305,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.495583991009636,
+        5.191645595484383
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.5393866768101281e-06,
+      "native_evaluation_seconds": 103.2751723350957,
+      "journal_sha256": "ef58657a2a329e716ce522958f3afd65f9e9461c9423b314f2e4f19dd2e1e124",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 90,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "saa",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 1,
+      "oracle_failures": 0,
+      "failure_rate": 0.0027397260273972603,
+      "failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "additional_failure_rate": 0.0027397260273972603,
+      "additional_failure_block95": [
+        0.0,
+        0.00821917808219178
+      ],
+      "mean_deficit": 0.007337484533545075,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.6781818547439524
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 1.5393866768101281e-06,
+      "native_evaluation_seconds": 92.45895023876801,
+      "journal_sha256": "24aabd1a423251018e42ac7fd116bbb532b2df2568f639c4be1d5f3fc8fea504",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        -0.0027397260273972603,
+        0.03287671232876712
+      ],
+      "jointly_feasible_days": 359,
+      "conditional_mean_savings": 28.949596172292125,
+      "conditional_savings95": [
+        5.421047902453416,
+        58.338105926440115
+      ]
+    },
+    {
+      "case": 91,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 25,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 13,
+      "oracle_failures": 0,
+      "failure_rate": 0.03561643835616438,
+      "failure_block95": [
+        0.00821917808219178,
+        0.07123287671232877
+      ],
+      "additional_failure_rate": 0.03561643835616438,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.07123287671232877
+      ],
+      "mean_deficit": 0.07328021179902913,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.5236073864071678,
+        4.375611064286257
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 93.56349219661206,
+      "journal_sha256": "330a064bf8e280265d33042567a1918947687a93ea2149f998184d37800df1d4",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 92,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 25,
+      "arm": "v2g",
+      "method": "minimax",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 13,
+      "oracle_failures": 0,
+      "failure_rate": 0.03561643835616438,
+      "failure_block95": [
+        0.00821917808219178,
+        0.07123287671232877
+      ],
+      "additional_failure_rate": 0.03561643835616438,
+      "additional_failure_block95": [
+        0.00821917808219178,
+        0.07123287671232877
+      ],
+      "mean_deficit": 0.039164655916955095,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        1.0883966148177053,
+        3.5193292124044913
+      ],
+      "max_replay_residual": 8.881784197001252e-16,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 91.28576434683055,
+      "journal_sha256": "a4ae9899f684869a966114fac96dc30d4dc1cfc4899c84b9fa311c055e730e70",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.0,
+      "paired_failure_reduction95": [
+        0.0,
+        0.0
+      ],
+      "jointly_feasible_days": 352,
+      "conditional_mean_savings": 3.642210974308408,
+      "conditional_savings95": [
+        1.7939584741041177,
+        5.845075485424659
+      ]
+    },
+    {
+      "case": 93,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 26,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 6,
+      "oracle_failures": 0,
+      "failure_rate": 0.01643835616438356,
+      "failure_block95": [
+        0.0,
+        0.03561643835616438
+      ],
+      "additional_failure_rate": 0.01643835616438356,
+      "additional_failure_block95": [
+        0.0,
+        0.03561643835616438
+      ],
+      "mean_deficit": 0.060644445515135086,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        2.495583991009636,
+        5.60311050197611
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.945694521058218e-06,
+      "native_evaluation_seconds": 91.40089139109477,
+      "journal_sha256": "ba858f1455bf7f5d56fd1359364af63a5a67a71f70657ce8aceba2c5d0fe197e",
+      "baseline_scope": "primary same-pool methods"
+    },
+    {
+      "case": 94,
+      "year": 2025,
+      "source": "weather_saa_method_union",
+      "policy": 26,
+      "arm": "v2g",
+      "method": "reduced",
+      "seed": 47,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 2,
+      "oracle_failures": 0,
+      "failure_rate": 0.005479452054794521,
+      "failure_block95": [
+        0.0,
+        0.0136986301369863
+      ],
+      "additional_failure_rate": 0.005479452054794521,
+      "additional_failure_block95": [
+        0.0,
+        0.0136986301369863
+      ],
+      "mean_deficit": 0.0103880144357307,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        2.6781818547439524
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 2.945694521058218e-06,
+      "native_evaluation_seconds": 93.84560961881652,
+      "journal_sha256": "9ef2b7d714f613ab92d92b9eb111b48862aea1a0f91f343fe833e333440d6968",
+      "baseline_scope": "primary same-pool methods",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        0.0,
+        0.0273972602739726
+      ],
+      "jointly_feasible_days": 359,
+      "conditional_mean_savings": 23.808237179467408,
+      "conditional_savings95": [
+        4.167686689485149,
+        49.01550747678294
+      ]
+    },
+    {
+      "case": 95,
+      "year": 2025,
+      "source": "weather_saa_capped_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 9,
+      "oracle_failures": 0,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "additional_failure_rate": 0.024657534246575342,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.052054794520547946
+      ],
+      "mean_deficit": 0.13340459070898875,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        6.104520490746407,
+        8.534261742395229
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.927371175890017e-09,
+      "native_evaluation_seconds": 91.17112349695526,
+      "journal_sha256": "fb92d7e1ef96724cb04bba49de1fa6c46378aa68d3e83f50c0f99a3717787e6b",
+      "baseline_scope": "secondary unmatched-pool deterministic"
+    },
+    {
+      "case": 96,
+      "year": 2025,
+      "source": "weather_saa_capped_union",
+      "policy": 8,
+      "arm": "solar_bess",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 5,
+      "oracle_failures": 0,
+      "failure_rate": 0.0136986301369863,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.030136986301369864
+      ],
+      "additional_failure_rate": 0.0136986301369863,
+      "additional_failure_block95": [
+        0.0027397260273972603,
+        0.030136986301369864
+      ],
+      "mean_deficit": 0.01625001603349469,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.040548421282551914,
+        3.600052751761927
+      ],
+      "max_replay_residual": 1.4210854715202004e-14,
+      "pool_gap": 7.927371175890017e-09,
+      "native_evaluation_seconds": 92.24189076013863,
+      "journal_sha256": "63ffc9a555f93451ad7cb3e8530645b60133c79fb88ffe114952688a9c9efedd",
+      "baseline_scope": "secondary unmatched-pool deterministic",
+      "failure_reduction_vs_monthly": 0.010958904109589041,
+      "paired_failure_reduction95": [
+        0.0,
+        0.030136986301369864
+      ],
+      "jointly_feasible_days": 356,
+      "conditional_mean_savings": 27.49415882067809,
+      "conditional_savings95": [
+        3.3716466737671413,
+        59.016835377903476
+      ]
+    },
+    {
+      "case": 97,
+      "year": 2025,
+      "source": "weather_saa_capped_union",
+      "policy": 16,
+      "arm": "v2g_fleet",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 106,
+      "oracle_failures": 106,
+      "failure_rate": 0.29041095890410956,
+      "failure_block95": [
+        0.13965753424657534,
+        0.4521232876712325
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.835521982779884,
+      "deficit_quantiles": [
+        0.0,
+        2.2279020764692348,
+        16.002729446019472,
+        34.14347942686383
+      ],
+      "max_replay_residual": 0.0,
+      "pool_gap": 0.0013840077559287977,
+      "native_evaluation_seconds": 70.88039832026698,
+      "journal_sha256": "e87f1dada7d1959b2a82698eedd7bc377721db8539e44d347f305d1ee2f55870",
+      "baseline_scope": "secondary unmatched-pool deterministic"
+    },
+    {
+      "case": 98,
+      "year": 2025,
+      "source": "weather_saa_capped_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly",
+      "days": 365,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 90.89415446156636,
+      "journal_sha256": "87ee553bef58fe3ceeb0b5bb3eea0106df98a524e31faf5e5c333477df4b9529",
+      "baseline_scope": "secondary unmatched-pool deterministic",
+      "mean_cost": 3765.4809418286886,
+      "mean_cost_block95": [
+        3035.1444761808816,
+        4555.621273318663
+      ],
+      "cost_quantiles": [
+        1538.5569108534478,
+        2613.2892953450564,
+        7803.630592023598,
+        11316.281304565959
+      ]
+    },
+    {
+      "case": 99,
+      "year": 2025,
+      "source": "weather_saa_capped_union",
+      "policy": 24,
+      "arm": "v2g",
+      "method": "mean",
+      "seed": 11,
+      "forecast": "monthly_current_solar",
+      "days": 365,
+      "failures": 0,
+      "oracle_failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "additional_failure_rate": 0.0,
+      "additional_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_deficit": 0.0,
+      "deficit_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_replay_residual": 7.105427357601002e-15,
+      "pool_gap": 0.0,
+      "native_evaluation_seconds": 93.93076010607183,
+      "journal_sha256": "db45290b388a504690f3b39e43ff24ce805dd7d483981070be4c1abbcf41c511",
+      "baseline_scope": "secondary unmatched-pool deterministic",
+      "mean_cost": 3749.2374245576852,
+      "mean_cost_block95": [
+        3002.027367073159,
+        4541.889378696022
+      ],
+      "cost_quantiles": [
+        1551.033993263423,
+        2518.5874971266553,
+        7803.630592023598,
+        11316.281304565959
+      ],
+      "failure_reduction_vs_monthly": 0.0,
+      "paired_failure_reduction95": [
+        0.0,
+        0.0
+      ],
+      "jointly_feasible_days": 365,
+      "conditional_mean_savings": 16.243517271002958,
+      "conditional_savings95": [
+        -3.196091580157799,
+        41.260288949519065
+      ]
+    }
+  ],
+  "validation": "all100caseidentities,source/data/codehashes,dailyhashchains,36550dailyphysicaltrajectories;300predeterminedoracleLPchecks",
+  "bootstrap": {
+    "block_days": 14,
+    "replicates": 2000,
+    "seed": 7291
+  },
+  "scope": "frozen new-year benchmark; fixedUTC-7 endpointlabel,current-slot observation; secondarymeanunmatchedpools; no populationzero-risk claim"
+}

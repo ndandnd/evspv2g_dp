@@ -1,0 +1,957 @@
+{
+  "campaign": "snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16",
+  "state": "validated_complete",
+  "errors": [],
+  "warnings": [],
+  "bootstrap": {
+    "replicates": 2000,
+    "block_calendar_days": 14,
+    "seed": 7291,
+    "scope": "Descriptive paired circular blocks; retain all dates, condition costs inside each replicate"
+  },
+  "scope": "Fixed reconstructed routes and assets within pairs; both full-day foresight; empty-cyclic BESS; 2022 development; no investment or causal optimum",
+  "manifest_sha256": "5fa223935ce243f15972230b6239ae0f7cd0051e21e7a3ee33a61c443c3b3add",
+  "cases": [
+    {
+      "case": 0,
+      "policy": 10,
+      "bess_units": 0,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "3a512d768ec6b04ad4fc7bfbee33775396f4824fd0a7f5026ebe4b249d0a0b84",
+      "journal_hash": "a766501a39ae9fe94e1dd66b02aa06dc3da448a2434fcf54c266291341c60e6f",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 265,
+        "fixed_failures": 100,
+        "fixed_mean_shortage": 0.9096924709490579,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4140.496765139807,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4808.808551835093,
+        "adaptive_mean_cost_joint": 4074.989680961321,
+        "mean_saving_joint": 65.50708417848651,
+        "saving_pct_joint": 1.582106879783412,
+        "saving_ci_calendar_blocks": [
+          33.14804781840027,
+          105.08494697377799
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.9096924709490579,
+        "shortage_reduction_ci": [
+          0.35355952674596874,
+          1.521882885686604
+        ],
+        "failed_day_rate_reduction": 0.273972602739726,
+        "failed_day_rate_reduction_ci": [
+          0.1232876712328767,
+          0.4383561643835616
+        ]
+      }
+    },
+    {
+      "case": 1,
+      "policy": 10,
+      "bess_units": 1,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "f0d46470d912dbf19971859dae4791d70f182d7074120dba147e025430b9356c",
+      "journal_hash": "9364361db7342fe8f636f56a75c7a2d9476133ae705c21d7990c46a018bd0e93",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 334,
+        "fixed_failures": 31,
+        "fixed_mean_shortage": 0.0948422888919443,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4332.697162952271,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4643.453235583681,
+        "adaptive_mean_cost_joint": 4296.5036436857245,
+        "mean_saving_joint": 36.19351926654696,
+        "saving_pct_joint": 0.8353576976491228,
+        "saving_ci_calendar_blocks": [
+          16.093785081264148,
+          62.15571768066895
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0948422888919443,
+        "shortage_reduction_ci": [
+          0.02743093795363389,
+          0.1734858502943664
+        ],
+        "failed_day_rate_reduction": 0.08493150684931507,
+        "failed_day_rate_reduction_ci": [
+          0.019178082191780823,
+          0.16712328767123288
+        ]
+      }
+    },
+    {
+      "case": 2,
+      "policy": 10,
+      "bess_units": 2,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "8af0fd493cd49a574ca0b7a9c89e7748e6b7cda1ddb02499a5608059254cb6c0",
+      "journal_hash": "6772ef869ce09e03470829f758d9cd4083ef47d808ad62dfb18f9bbc0f22c64e",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 364,
+        "fixed_failures": 1,
+        "fixed_mean_shortage": 0.007498947752914541,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4489.791180286173,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4482.950086306298,
+        "adaptive_mean_cost_joint": 4470.764809384733,
+        "mean_saving_joint": 19.02637090143958,
+        "saving_pct_joint": 0.4237696172815518,
+        "saving_ci_calendar_blocks": [
+          8.170394324478835,
+          33.90473801978473
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.007498947752914541,
+        "shortage_reduction_ci": [
+          0.0,
+          0.022496843258743623
+        ],
+        "failed_day_rate_reduction": 0.0027397260273972603,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.00821917808219178
+        ]
+      }
+    },
+    {
+      "case": 3,
+      "policy": 10,
+      "bess_units": 5,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "c75b437b284fb38ef5048e1ceb4aac6c12a06054398f57c0055d6a358acf2561",
+      "journal_hash": "e0522c3fec1b683c4e02b3acefa6374b537582b3663f6e27f1baa3a449a54e13",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4038.2469573023845,
+        "fixed_mean_cost_joint": 4038.2469573023845,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4032.3014061232893,
+        "adaptive_mean_cost_joint": 4032.3014061232893,
+        "mean_saving_joint": 5.945551179095088,
+        "saving_pct_joint": 0.1472309950817573,
+        "saving_ci_calendar_blocks": [
+          1.97729797891238,
+          11.660326839700039
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 4,
+      "policy": 10,
+      "bess_units": 10,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "c7effd94f9f008e0f8f8d9b40a5a9f055210c026bd9a4154169430e645974deb",
+      "journal_hash": "c6c864a33e675938e8da6620970863fad436176481bcdff95fedb694c68f511d",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3438.9559316133864,
+        "fixed_mean_cost_joint": 3438.9559316133864,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3436.661649740792,
+        "adaptive_mean_cost_joint": 3436.661649740792,
+        "mean_saving_joint": 2.2942818725938694,
+        "saving_pct_joint": 0.06671448888027788,
+        "saving_ci_calendar_blocks": [
+          1.1527293117360093,
+          3.937453113211345
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 5,
+      "policy": 10,
+      "bess_units": 20,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "594a90dcfc8165cc21124c027530c2b6275815ed87d47dd4abfa9b90878ac75b",
+      "journal_hash": "04cbd2e641f66b04c501c926e6e43429ee49fd3c878b6fcde63e0d9eb68560f0",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3662.43522465554,
+        "fixed_mean_cost_joint": 3662.43522465554,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3661.202961496675,
+        "adaptive_mean_cost_joint": 3661.202961496675,
+        "mean_saving_joint": 1.2322631588646775,
+        "saving_pct_joint": 0.03364600554759503,
+        "saving_ci_calendar_blocks": [
+          0.8428639530217629,
+          1.720503426604802
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 6,
+      "policy": 11,
+      "bess_units": 0,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "976b4b5f69b27383d9f0bf01ead2584e6a765b48034b19f2a4ccdb33edd1b500",
+      "journal_hash": "af38b968bef22099d3ac4c5f9df1f682f9b6a471442986183efeaecf819ffedc",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 359,
+        "fixed_failures": 6,
+        "fixed_mean_shortage": 0.038068389238005124,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4879.7246043484,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4790.115447076423,
+        "adaptive_mean_cost_joint": 4693.996336195745,
+        "mean_saving_joint": 185.72826815265506,
+        "saving_pct_joint": 3.806121927191335,
+        "saving_ci_calendar_blocks": [
+          156.50189478599677,
+          220.19111779488168
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.038068389238005124,
+        "shortage_reduction_ci": [
+          0.006871955437204725,
+          0.07813604426470222
+        ],
+        "failed_day_rate_reduction": 0.01643835616438356,
+        "failed_day_rate_reduction_ci": [
+          0.0027397260273972603,
+          0.03287671232876712
+        ]
+      }
+    },
+    {
+      "case": 7,
+      "policy": 11,
+      "bess_units": 1,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "4b53d3643311af6cc0e71e2c69209a0ed73fd9d6d77cd7391f48805352e23d48",
+      "journal_hash": "282bd586a6233bc200ca0a8d738833a0056fd470f3d9b5013ad2a7a596f6baca",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4705.176901713824,
+        "fixed_mean_cost_joint": 4705.176901713824,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4615.913207868378,
+        "adaptive_mean_cost_joint": 4615.913207868378,
+        "mean_saving_joint": 89.26369384544563,
+        "saving_pct_joint": 1.8971378910946373,
+        "saving_ci_calendar_blocks": [
+          64.0100433523571,
+          118.04586421761877
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 8,
+      "policy": 11,
+      "bess_units": 2,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "7cfbdf9d22aa6651d016dc492b370c7f14c81472c951928a76541793474cb9be",
+      "journal_hash": "2c4e9136cff4d6bc6ef8c1ba18d6b07dd918d0149c44bf72a6216c4ef3f9e471",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4526.312875787611,
+        "fixed_mean_cost_joint": 4526.312875787611,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4450.587744130233,
+        "adaptive_mean_cost_joint": 4450.587744130233,
+        "mean_saving_joint": 75.72513165737826,
+        "saving_pct_joint": 1.6729981717006592,
+        "saving_ci_calendar_blocks": [
+          51.13369687846175,
+          102.15851575792583
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 9,
+      "policy": 11,
+      "bess_units": 5,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "6c40a132d2f4c7bf63008ad2c3fe3c074de0f695b05086b7ee4cfe3ad143f5cf",
+      "journal_hash": "e12c0f78e3fd06ab24af754e0ef14d4748272b74f2fa812234fc1bd31a9fd694",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4045.765839658012,
+        "fixed_mean_cost_joint": 4045.765839658012,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3983.9147078122332,
+        "adaptive_mean_cost_joint": 3983.9147078122332,
+        "mean_saving_joint": 61.85113184577891,
+        "saving_pct_joint": 1.528786743896359,
+        "saving_ci_calendar_blocks": [
+          36.81922462017647,
+          88.6301838243934
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 10,
+      "policy": 11,
+      "bess_units": 10,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "65425a86ad02cc0349f32629c7a90aacc0251b83f99021eed95142a5149c41c6",
+      "journal_hash": "eca9d38f6b7b8b8695a00d6f4309c4ef4992d1e297d76156952d6c2f568eeeb5",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3398.7293909735567,
+        "fixed_mean_cost_joint": 3398.7293909735567,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3372.7748346591775,
+        "adaptive_mean_cost_joint": 3372.7748346591775,
+        "mean_saving_joint": 25.954556314378696,
+        "saving_pct_joint": 0.7636546876403151,
+        "saving_ci_calendar_blocks": [
+          13.723122542914929,
+          40.784230697186935
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 11,
+      "policy": 11,
+      "bess_units": 20,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "580cd279387f5f8cc68790cbae47572aab203ee5ee2bca281b64524e563a1b85",
+      "journal_hash": "f5a3698a325c35cf5b59468d1782197403cd2340368600a417c87f55cdd4d8c4",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3605.3764449126343,
+        "fixed_mean_cost_joint": 3605.3764449126343,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3602.3856106769704,
+        "adaptive_mean_cost_joint": 3602.3856106769704,
+        "mean_saving_joint": 2.9908342356637823,
+        "saving_pct_joint": 0.08295483928963918,
+        "saving_ci_calendar_blocks": [
+          1.9432071184309672,
+          4.417345817071387
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 12,
+      "policy": 14,
+      "bess_units": 0,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "7a692eebeba438a9d2b7824853ec9f6aae80d9013da9726f466896993affa207",
+      "journal_hash": "ebd34d5453b8adaf5568c9b1e0bb9274ea1a824379957dd7f1028d3142d665b0",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 357,
+        "fixed_failures": 8,
+        "fixed_mean_shortage": 0.08363144376697099,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4854.86788550337,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4790.115447076422,
+        "adaptive_mean_cost_joint": 4661.050203492772,
+        "mean_saving_joint": 193.81768201059714,
+        "saving_pct_joint": 3.992233909996531,
+        "saving_ci_calendar_blocks": [
+          156.31896840463256,
+          237.56957197250892
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.08363144376697099,
+        "shortage_reduction_ci": [
+          0.0091513383218417,
+          0.1843688805665443
+        ],
+        "failed_day_rate_reduction": 0.021917808219178082,
+        "failed_day_rate_reduction_ci": [
+          0.005479452054794521,
+          0.043835616438356165
+        ]
+      }
+    },
+    {
+      "case": 13,
+      "policy": 14,
+      "bess_units": 1,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "e96ff0786f9c4b4c3bfcb6fe65b2dd99a8340d5fb2cf7aa834d8626df7a6e85e",
+      "journal_hash": "0c9c916e767beaf47b55a1dcec48993607fa7c6bd232afae68de55322557c875",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 363,
+        "fixed_failures": 2,
+        "fixed_mean_shortage": 0.01467650093468929,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4658.317359918589,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4615.913207868378,
+        "adaptive_mean_cost_joint": 4578.81846728229,
+        "mean_saving_joint": 79.49889263629883,
+        "saving_pct_joint": 1.7066010426925526,
+        "saving_ci_calendar_blocks": [
+          57.08414797189457,
+          105.32881218310754
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.01467650093468929,
+        "shortage_reduction_ci": [
+          0.0,
+          0.03784058955226226
+        ],
+        "failed_day_rate_reduction": 0.005479452054794521,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0136986301369863
+        ]
+      }
+    },
+    {
+      "case": 14,
+      "policy": 14,
+      "bess_units": 2,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "063540e876e9c35be834a55a5713a8b0960b85113c47a8ee113e509979e1d8e4",
+      "journal_hash": "5d8a56b5ab2da7099147691c4030ef35ab85bf24aae2a5d99c85bca384c46321",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4514.338757875059,
+        "fixed_mean_cost_joint": 4514.338757875059,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4450.587744130233,
+        "adaptive_mean_cost_joint": 4450.587744130233,
+        "mean_saving_joint": 63.7510137448262,
+        "saving_pct_joint": 1.4121894072219427,
+        "saving_ci_calendar_blocks": [
+          44.865630392335056,
+          84.73714499397943
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 15,
+      "policy": 14,
+      "bess_units": 5,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "871657c4c3bae7a48a08518b9db358c585424dd47a8c2b9247c8d0e0b7377c34",
+      "journal_hash": "a42fdb342a7dabb8180303d68dc946bb6e9fe7f92c9b3c7a2e4b13ab92b03174",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4030.049742088204,
+        "fixed_mean_cost_joint": 4030.049742088204,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3983.9147078122332,
+        "adaptive_mean_cost_joint": 3983.9147078122332,
+        "mean_saving_joint": 46.13503427597095,
+        "saving_pct_joint": 1.14477580249582,
+        "saving_ci_calendar_blocks": [
+          28.27944568255248,
+          65.58481330847596
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 16,
+      "policy": 14,
+      "bess_units": 10,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "daefaa025272985df8bf72398552b74f97e1f956a533daf2c9c14180b8d0f3d4",
+      "journal_hash": "d1b2c2150cdc936e00eabce3325e95919e0b45a07d39d1fffb3e4d577425020a",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3383.6188229962954,
+        "fixed_mean_cost_joint": 3383.6188229962954,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3372.7748346591775,
+        "adaptive_mean_cost_joint": 3372.7748346591775,
+        "mean_saving_joint": 10.843988337117617,
+        "saving_pct_joint": 0.32048492765845715,
+        "saving_ci_calendar_blocks": [
+          5.084368542135118,
+          17.7273860964204
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 17,
+      "policy": 14,
+      "bess_units": 20,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "85804400150de1da9fe5eb1574f781c425e8ad0c4b0e9424fea4a3ecd24a83c4",
+      "journal_hash": "7e5f0d0a0f39d9cdcabe8a6554e4af8206fb5a08940de985f65d7b42a05588ae",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3604.1165581171017,
+        "fixed_mean_cost_joint": 3604.1165581171017,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3602.3856106769704,
+        "adaptive_mean_cost_joint": 3602.3856106769704,
+        "mean_saving_joint": 1.7309474401313103,
+        "saving_pct_joint": 0.048026955072607555,
+        "saving_ci_calendar_blocks": [
+          1.3805936318752363,
+          2.174357515716939
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 18,
+      "policy": 17,
+      "bess_units": 0,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "1eb1dfaeef15f39fe974ea7a8d12ff4f46d801eb1faa6c8e62c905d5dc1c37c1",
+      "journal_hash": "2058d31c41ceea64c0874031f775ab7723cb7dc2f5c360d82fbc88aeff4d3db9",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 356,
+        "fixed_failures": 9,
+        "fixed_mean_shortage": 0.05438819048138854,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4885.577706011162,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4790.115447076422,
+        "adaptive_mean_cost_joint": 4653.136493766018,
+        "mean_saving_joint": 232.44121224514373,
+        "saving_pct_joint": 4.757701672806279,
+        "saving_ci_calendar_blocks": [
+          202.4044426193916,
+          264.16670899750784
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.05438819048138854,
+        "shortage_reduction_ci": [
+          0.0062729880563395565,
+          0.11111586499958521
+        ],
+        "failed_day_rate_reduction": 0.024657534246575342,
+        "failed_day_rate_reduction_ci": [
+          0.005479452054794521,
+          0.04657534246575343
+        ]
+      }
+    },
+    {
+      "case": 19,
+      "policy": 17,
+      "bess_units": 1,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "4b64614ac8236f87ca4c5fe3a482dc3db50393300ac076e4bfd955d1b2215392",
+      "journal_hash": "12c1ace1733095220137e4855582edc9c8310daee48064e84263a639e7c081c8",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 364,
+        "fixed_failures": 1,
+        "fixed_mean_shortage": 0.0010237603164823296,
+        "fixed_mean_cost_all": null,
+        "fixed_mean_cost_joint": 4763.404196669068,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4615.913207868378,
+        "adaptive_mean_cost_joint": 4604.425473516391,
+        "mean_saving_joint": 158.97872315267674,
+        "saving_pct_joint": 3.337502269151265,
+        "saving_ci_calendar_blocks": [
+          125.20376167591344,
+          194.03167863403536
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0010237603164823296,
+        "shortage_reduction_ci": [
+          0.0,
+          0.003071280949446989
+        ],
+        "failed_day_rate_reduction": 0.0027397260273972603,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.00821917808219178
+        ]
+      }
+    },
+    {
+      "case": 20,
+      "policy": 17,
+      "bess_units": 2,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "4ef0b2267a288679661fc33629369e872efdb2b39cdebcdfd9cb1e2f2b198382",
+      "journal_hash": "c9e75d8ba043067343f1d755ef1b43f8963dba33f06671b4a684d828c053d3d5",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4589.588167781716,
+        "fixed_mean_cost_joint": 4589.588167781716,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 4450.587744130233,
+        "adaptive_mean_cost_joint": 4450.587744130233,
+        "mean_saving_joint": 139.00042365148366,
+        "saving_pct_joint": 3.0286034077577524,
+        "saving_ci_calendar_blocks": [
+          102.45511355741729,
+          177.34175140255692
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 21,
+      "policy": 17,
+      "bess_units": 5,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "d14d32183c704ddd20e25cda3c4871acc7c2bd1e83f1e0fcf7f6d7b75a8f5c57",
+      "journal_hash": "678ae8da3d457bacc1848a3a892bc7a52bff061c2e3a03ff6f0db4a91f52da8a",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 4105.760402544602,
+        "fixed_mean_cost_joint": 4105.760402544602,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3983.9147078122332,
+        "adaptive_mean_cost_joint": 3983.9147078122332,
+        "mean_saving_joint": 121.84569473236807,
+        "saving_pct_joint": 2.9676766977647433,
+        "saving_ci_calendar_blocks": [
+          83.27548575111275,
+          162.73052334974753
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 22,
+      "policy": 17,
+      "bess_units": 10,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "8c2a20a40af983ad68091c5166acd93a1c00b51d3883e3270159b60ba4252cb9",
+      "journal_hash": "f6b700c18dcef832da188edbb5ee5d98a5fbfc71e0d9393a5b9574d41322b6f0",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3461.0680485392922,
+        "fixed_mean_cost_joint": 3461.0680485392922,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3372.7748346591775,
+        "adaptive_mean_cost_joint": 3372.7748346591775,
+        "mean_saving_joint": 88.2932138801139,
+        "saving_pct_joint": 2.551039524269889,
+        "saving_ci_calendar_blocks": [
+          58.753901617068884,
+          119.03296624049129
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": 23,
+      "policy": 17,
+      "bess_units": 20,
+      "state": "complete",
+      "days": 365,
+      "identity_sha256": "0217d9090bb2c1fb354ff101db3a38ef382d369c05d4da000319db7cff1fe406",
+      "journal_hash": "cde9d5e443d29a9570e66260da7f09a2952f4eadc37dbc1234f7b1bc72755f56",
+      "reported_state": "complete",
+      "statistics": {
+        "days": 365,
+        "jointly_feasible_days": 365,
+        "fixed_failures": 0,
+        "fixed_mean_shortage": 0.0,
+        "fixed_mean_cost_all": 3677.946854747917,
+        "fixed_mean_cost_joint": 3677.946854747917,
+        "adaptive_failures": 0,
+        "adaptive_mean_shortage": 0.0,
+        "adaptive_mean_cost_all": 3602.3856106769704,
+        "adaptive_mean_cost_joint": 3602.3856106769704,
+        "mean_saving_joint": 75.5612440709464,
+        "saving_pct_joint": 2.0544408893076653,
+        "saving_ci_calendar_blocks": [
+          49.86883584766399,
+          101.61509433665704
+        ],
+        "bootstrap_replicates_without_joint_days": 0,
+        "mean_shortage_reduction": 0.0,
+        "shortage_reduction_ci": [
+          0.0,
+          0.0
+        ],
+        "failed_day_rate_reduction": 0.0,
+        "failed_day_rate_reduction_ci": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  ],
+  "complete_cases": 24,
+  "total_cases": 24,
+  "observed_days": 8760,
+  "nb0_reference_days_compared": 1460,
+  "adjacent_capacity_day_pairs_compared": 7300
+}

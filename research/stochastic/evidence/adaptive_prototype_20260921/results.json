@@ -1,0 +1,2268 @@
+{
+  "numpy_version": "1.26.4",
+  "scipy_version": "1.13.1",
+  "solver": "SciPy linprog / HiGHS",
+  "scope": "Synthetic fixed-skeleton energy LP; fixed assets and duties",
+  "observation": "At the start of slot 2, before controls, a weather signal reveals sunny/dark. No weather signal in slots 0/1.",
+  "spill": "Excess supply is passively discarded; no controllable generation or storage action uses unavailable information.",
+  "solutions": {
+    "open_loop": {
+      "mode": "open_loop",
+      "truck_mode": "open_loop",
+      "success": true,
+      "fixed_truck_profiles": null,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "coverage": {
+        "A": 1,
+        "B": 1
+      },
+      "variables": 106,
+      "equalities": 65,
+      "inequalities": 20,
+      "nonanticipativity_equalities": 35,
+      "operating_cost": 10.100000000000001,
+      "fixed_asset_cost": 6.7,
+      "total_cost": 16.8,
+      "maximum_primal_residual": 0.0,
+      "primal_dual_gap": 3.552713678800501e-15,
+      "maximum_simultaneous_flow": 0.0,
+      "scenarios": {
+        "sunny": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            -4.0,
+            -4.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0,
+              1.0
+            ],
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0,
+              1.0
+            ]
+          ],
+          "truck_discharge": [
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ],
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            -0.0,
+            -0.0,
+            -0.0,
+            -0.0,
+            -0.0
+          ],
+          "bess_discharge": [
+            -0.0,
+            -0.0,
+            -0.0,
+            -0.0,
+            -0.0
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "generation": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            6.0,
+            6.0,
+            0.0
+          ],
+          "operating_cost": 10.1
+        },
+        "dark": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "truck_discharge": [
+            [
+              -0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bess_discharge": [
+            -0.0,
+            0.0,
+            -0.0,
+            0.0,
+            0.0
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "generation": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "operating_cost": 10.1
+        }
+      }
+    },
+    "tree": {
+      "mode": "tree",
+      "truck_mode": "tree",
+      "success": true,
+      "fixed_truck_profiles": null,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "coverage": {
+        "A": 1,
+        "B": 1
+      },
+      "variables": 106,
+      "equalities": 44,
+      "inequalities": 20,
+      "nonanticipativity_equalities": 14,
+      "operating_cost": 7.1,
+      "fixed_asset_cost": 6.7,
+      "total_cost": 13.8,
+      "maximum_primal_residual": 0.0,
+      "primal_dual_gap": 1.7763568394002505e-15,
+      "maximum_simultaneous_flow": 0.0,
+      "scenarios": {
+        "sunny": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            -4.0,
+            -4.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              -0.0,
+              0.0,
+              0.0,
+              1.0,
+              -0.0
+            ],
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              1.0,
+              -0.0
+            ]
+          ],
+          "truck_discharge": [
+            [
+              -0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              2.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              2.0,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            -0.0,
+            -0.0,
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "bess_discharge": [
+            -0.0,
+            -0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "generation": [
+            2.0,
+            2.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            4.0,
+            2.0,
+            0.0
+          ],
+          "operating_cost": 4.1
+        },
+        "dark": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              -0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "truck_discharge": [
+            [
+              -0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            0.0,
+            -0.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "bess_discharge": [
+            -0.0,
+            0.0,
+            -0.0,
+            0.0,
+            0.0
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "generation": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "operating_cost": 10.1
+        }
+      }
+    },
+    "perfect_information": {
+      "mode": "perfect_information",
+      "truck_mode": "perfect_information",
+      "success": true,
+      "fixed_truck_profiles": null,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "coverage": {
+        "A": 1,
+        "B": 1
+      },
+      "variables": 106,
+      "equalities": 30,
+      "inequalities": 20,
+      "nonanticipativity_equalities": 0,
+      "operating_cost": 5.987499999999999,
+      "fixed_asset_cost": 6.7,
+      "total_cost": 12.6875,
+      "maximum_primal_residual": 0.0,
+      "primal_dual_gap": 1.7763568394002505e-15,
+      "maximum_simultaneous_flow": 0.0,
+      "scenarios": {
+        "sunny": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            -4.0,
+            -4.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              -0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              -0.0
+            ]
+          ],
+          "truck_discharge": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              1.0,
+              -0.0,
+              1.0,
+              2.0,
+              2.0
+            ],
+            [
+              2.0,
+              1.0,
+              -0.0,
+              1.0,
+              2.0,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            -0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          "bess_discharge": [
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.0,
+            -0.0,
+            0.5,
+            0.5
+          ],
+          "generation": [
+            0.0,
+            1.5,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            2.0,
+            1.5,
+            0.0
+          ],
+          "operating_cost": 1.875
+        },
+        "dark": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "truck_discharge": [
+            [
+              -0.0,
+              0.0,
+              0.0,
+              -0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "bess_discharge": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "generation": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "operating_cost": 10.1
+        }
+      }
+    },
+    "committed_trucks_causal_dispatch": {
+      "mode": "tree",
+      "truck_mode": "open_loop",
+      "success": true,
+      "fixed_truck_profiles": null,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "coverage": {
+        "A": 1,
+        "B": 1
+      },
+      "variables": 106,
+      "equalities": 56,
+      "inequalities": 20,
+      "nonanticipativity_equalities": 26,
+      "operating_cost": 7.655000000000001,
+      "fixed_asset_cost": 6.7,
+      "total_cost": 14.355,
+      "maximum_primal_residual": 0.0,
+      "primal_dual_gap": 3.552713678800501e-15,
+      "maximum_simultaneous_flow": 0.0,
+      "scenarios": {
+        "sunny": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            -4.0,
+            -4.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "sunny",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0,
+              1.0
+            ],
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              0.5,
+              0.5
+            ]
+          ],
+          "truck_discharge": [
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ],
+            [
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.5,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            -0.0,
+            -0.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          "bess_discharge": [
+            -0.0,
+            -0.0,
+            0.0,
+            0.0,
+            0.5
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            1.0,
+            0.5
+          ],
+          "generation": [
+            2.0,
+            2.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            4.0,
+            3.0,
+            0.0
+          ],
+          "operating_cost": 5.155
+        },
+        "dark": {
+          "probability": 0.5,
+          "delta": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            0.0
+          ],
+          "observation_history": [
+            [
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none"
+            ],
+            [
+              "no_signal",
+              "no_signal",
+              "dark",
+              "none",
+              "none"
+            ]
+          ],
+          "truck_charge": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.5,
+              0.5
+            ]
+          ],
+          "truck_discharge": [
+            [
+              -0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "truck_soc": [
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.5,
+              2.0
+            ]
+          ],
+          "bess_charge": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5
+          ],
+          "bess_discharge": [
+            0.0,
+            0.0,
+            -0.0,
+            0.5,
+            0.0
+          ],
+          "bess_soc": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "generation": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+          ],
+          "passive_spill": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "operating_cost": 10.155000000000001
+        }
+      }
+    }
+  },
+  "counterexample": {
+    "route_task_incidence": {
+      "A": [
+        1,
+        0
+      ],
+      "B": [
+        0,
+        1
+      ]
+    },
+    "class_probabilities": [
+      0.5,
+      0.5
+    ],
+    "unweighted_energy_costs": [
+      [
+        0.0,
+        10.0
+      ],
+      [
+        10.0,
+        0.0
+      ]
+    ],
+    "coverage_duals": [
+      2.0,
+      2.0
+    ],
+    "feasible_common_duty_reduced_costs": [
+      3.0,
+      3.0
+    ],
+    "common_duty_optimum": 3.0,
+    "independent_suffix_optimum_with_split_rewards": -2.0,
+    "independent_suffix_routes": [
+      "A",
+      "B"
+    ],
+    "common_incidence_preserved": false,
+    "one_required_task_correct_reward": -2.0,
+    "one_required_task_wrong_reward_in_two_suffixes": -4.0,
+    "scope": "Finite exact counterexample to independent unrestricted suffix minimization; no pricing algorithm claim."
+  },
+  "oracle_gap_counterexample": {
+    "scope": "Synthetic counterexample, not an estimate for the campaign instance",
+    "solutions": {
+      "fixed_profile_tree": {
+        "mode": "tree",
+        "truck_mode": "tree",
+        "success": true,
+        "fixed_truck_profiles": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "solver_status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+        "coverage": {
+          "A": 1,
+          "B": 1
+        },
+        "variables": 106,
+        "equalities": 44,
+        "inequalities": 20,
+        "nonanticipativity_equalities": 14,
+        "operating_cost": 6.155000000000002,
+        "fixed_asset_cost": 6.7,
+        "total_cost": 12.855000000000002,
+        "maximum_primal_residual": 0.0,
+        "primal_dual_gap": 4.440892098500626e-15,
+        "maximum_simultaneous_flow": 0.0,
+        "scenarios": {
+          "late_small_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              3.0,
+              0.0,
+              -1.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              -0.0,
+              -0.0,
+              0.0,
+              -0.0,
+              1.0
+            ],
+            "bess_discharge": [
+              -0.0,
+              -0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "bess_soc": [
+              3.0,
+              3.0,
+              3.0,
+              2.0,
+              2.0,
+              3.0
+            ],
+            "generation": [
+              1.0,
+              2.0,
+              2.0,
+              2.0,
+              0.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "operating_cost": 7.21
+          },
+          "early_large_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              -2.0,
+              -4.0,
+              2.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              0.0,
+              -0.0,
+              0.0,
+              -0.0,
+              -0.0
+            ],
+            "bess_discharge": [
+              -0.0,
+              0.0,
+              -0.0,
+              0.0,
+              0.0
+            ],
+            "bess_soc": [
+              3.0,
+              3.0,
+              3.0,
+              3.0,
+              3.0,
+              3.0
+            ],
+            "generation": [
+              1.0,
+              2.0,
+              0.0,
+              0.0,
+              2.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              2.0,
+              2.0,
+              0.0
+            ],
+            "operating_cost": 5.1
+          }
+        }
+      },
+      "adaptive_tree": {
+        "mode": "tree",
+        "truck_mode": "tree",
+        "success": true,
+        "fixed_truck_profiles": null,
+        "solver_status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+        "coverage": {
+          "A": 1,
+          "B": 1
+        },
+        "variables": 106,
+        "equalities": 44,
+        "inequalities": 20,
+        "nonanticipativity_equalities": 14,
+        "operating_cost": 5.375000000000001,
+        "fixed_asset_cost": 6.7,
+        "total_cost": 12.075000000000001,
+        "maximum_primal_residual": 0.0,
+        "primal_dual_gap": 8.881784197001252e-16,
+        "maximum_simultaneous_flow": 0.0,
+        "scenarios": {
+          "late_small_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              3.0,
+              0.0,
+              -1.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                -0.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0
+              ],
+              [
+                -0.0,
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                -0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                -0.0,
+                1.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              -0.0,
+              -0.0,
+              0.0,
+              1.0,
+              1.0
+            ],
+            "bess_discharge": [
+              1.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "bess_soc": [
+              3.0,
+              2.0,
+              1.0,
+              1.0,
+              2.0,
+              3.0
+            ],
+            "generation": [
+              -0.0,
+              1.0,
+              2.0,
+              2.0,
+              2.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "operating_cost": 7.430000000000001
+          },
+          "early_large_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              -2.0,
+              -4.0,
+              2.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0
+              ],
+              [
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0
+            ],
+            "bess_discharge": [
+              1.0,
+              1.0,
+              0.0,
+              0.0,
+              -0.0
+            ],
+            "bess_soc": [
+              3.0,
+              2.0,
+              1.0,
+              2.0,
+              3.0,
+              3.0
+            ],
+            "generation": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              2.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0
+            ],
+            "operating_cost": 3.32
+          }
+        }
+      },
+      "fixed_profile_perfect_information": {
+        "mode": "perfect_information",
+        "truck_mode": "perfect_information",
+        "success": true,
+        "fixed_truck_profiles": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "solver_status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+        "coverage": {
+          "A": 1,
+          "B": 1
+        },
+        "variables": 106,
+        "equalities": 30,
+        "inequalities": 20,
+        "nonanticipativity_equalities": 0,
+        "operating_cost": 5.265000000000003,
+        "fixed_asset_cost": 6.7,
+        "total_cost": 11.965000000000003,
+        "maximum_primal_residual": 0.0,
+        "primal_dual_gap": 2.6645352591003757e-15,
+        "maximum_simultaneous_flow": 0.0,
+        "scenarios": {
+          "late_small_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              3.0,
+              0.0,
+              -1.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              0.0,
+              -0.0,
+              0.0,
+              -0.0,
+              1.0
+            ],
+            "bess_discharge": [
+              -0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "bess_soc": [
+              3.0,
+              3.0,
+              3.0,
+              2.0,
+              2.0,
+              3.0
+            ],
+            "generation": [
+              1.0,
+              2.0,
+              2.0,
+              2.0,
+              0.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "operating_cost": 7.21
+          },
+          "early_large_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              -2.0,
+              -4.0,
+              2.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                -0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              -0.0
+            ],
+            "bess_discharge": [
+              1.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "bess_soc": [
+              3.0,
+              2.0,
+              1.0,
+              2.0,
+              3.0,
+              3.0
+            ],
+            "generation": [
+              -0.0,
+              1.0,
+              0.0,
+              0.0,
+              2.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0
+            ],
+            "operating_cost": 3.32
+          }
+        }
+      },
+      "adaptive_perfect_information": {
+        "mode": "perfect_information",
+        "truck_mode": "perfect_information",
+        "success": true,
+        "fixed_truck_profiles": null,
+        "solver_status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+        "coverage": {
+          "A": 1,
+          "B": 1
+        },
+        "variables": 106,
+        "equalities": 30,
+        "inequalities": 20,
+        "nonanticipativity_equalities": 0,
+        "operating_cost": 5.265000000000003,
+        "fixed_asset_cost": 6.7,
+        "total_cost": 11.965000000000003,
+        "maximum_primal_residual": 0.0,
+        "primal_dual_gap": 3.552713678800501e-15,
+        "maximum_simultaneous_flow": 0.0,
+        "scenarios": {
+          "late_small_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              3.0,
+              0.0,
+              -1.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "late_small_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "bess_discharge": [
+              -0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "bess_soc": [
+              3.0,
+              3.0,
+              3.0,
+              2.0,
+              2.0,
+              3.0
+            ],
+            "generation": [
+              1.0,
+              2.0,
+              2.0,
+              0.0,
+              2.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "operating_cost": 7.21
+          },
+          "early_large_surplus": {
+            "probability": 0.5,
+            "delta": [
+              1.0,
+              2.0,
+              -2.0,
+              -4.0,
+              2.0
+            ],
+            "observation_history": [
+              [
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none"
+              ],
+              [
+                "no_signal",
+                "no_signal",
+                "early_large_surplus",
+                "none",
+                "none"
+              ]
+            ],
+            "truck_charge": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "truck_discharge": [
+              [
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0
+              ],
+              [
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0
+              ]
+            ],
+            "truck_soc": [
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ],
+              [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+              ]
+            ],
+            "bess_charge": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0
+            ],
+            "bess_discharge": [
+              1.0,
+              1.0,
+              0.0,
+              0.0,
+              -0.0
+            ],
+            "bess_soc": [
+              3.0,
+              2.0,
+              1.0,
+              2.0,
+              3.0,
+              3.0
+            ],
+            "generation": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              2.0
+            ],
+            "passive_spill": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0
+            ],
+            "operating_cost": 3.32
+          }
+        }
+      }
+    },
+    "oracle_truck_flexibility_gap": 0.0,
+    "causal_truck_flexibility_gap": 0.7800000000000011,
+    "conclusion": "A zero fixed-profile/adaptive oracle gap does not bound the gain of adaptive trucks over a causal fixed-profile controller."
+  }
+}

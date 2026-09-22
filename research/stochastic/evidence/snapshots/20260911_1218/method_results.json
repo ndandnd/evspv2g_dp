@@ -1,0 +1,2777 @@
+{
+  "results": [
+    {
+      "case": 0,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 9.112261238539115e-07,
+      "mip_seconds": 0.4365108013153076,
+      "mip_status": 2,
+      "objective": 4632.969890533609,
+      "source_hashes": {
+        "pool.json": "b0480b72535b013e5c9f55773aafeb110bf7fef5d33dc4a9589744aeead9b8fb",
+        "mip_result.json": "153ab67f4dc9cb9eefbdadbf304d1315f4a50de3be228164de70244617518112",
+        "evaluation.jsonl": "47ae6213c433c0792672b94f25bce5de835541dfc02d67be225545b8b347f39f",
+        "parent_training_evaluation.json": "923f1eb9b56c07e4b4b2f083384eb04832261d1a78623da5f7e0ac71cccd6521"
+      },
+      "mean_cost": 3157.845324621637,
+      "cost_quantiles": [
+        1024.9087357290628,
+        1683.4741322504026,
+        8270.665113018162,
+        10801.260792276453
+      ],
+      "mean_cost_block95": [
+        2257.157658394334,
+        4095.990111332306
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 0.0,
+      "paired_savings_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 1,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 0.46045398712158203,
+      "mip_status": 2,
+      "objective": 9961.96980921002,
+      "source_hashes": {
+        "pool.json": "c7d15f0b7ea4d906ea4840bc36a74ef55aee4c1582e2dbd601206c694b691e23",
+        "mip_result.json": "aff413a2b23efacbf0c69cb8a9affc47bd3985ed234af4503cc986c4a4b6b444",
+        "evaluation.jsonl": "d8dce7357bab0d1f584b2d1d758167df99e37c669f157782dec1fea6b9f70b79",
+        "parent_training_evaluation.json": "ea364f1552e466a7d1437c52e4fcf3ccbc06922517aecc396323bb2edd531f93"
+      },
+      "mean_cost": 6626.551808182964,
+      "cost_quantiles": [
+        5105.888583250324,
+        6513.0353153015085,
+        8320.8282706306,
+        10081.260792276453
+      ],
+      "mean_cost_block95": [
+        6231.336578708631,
+        7024.67661484294
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -3468.7064835613273,
+      "paired_savings_block95": [
+        -4016.82040341433,
+        -2906.8148846487634
+      ]
+    },
+    {
+      "case": 2,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "scenario_indices": [
+          350,
+          192,
+          161,
+          298,
+          235,
+          359,
+          59,
+          57
+        ],
+        "weights": [
+          0.08333333333333333,
+          0.16666666666666666,
+          0.041666666666666664,
+          0.25,
+          0.125,
+          0.25,
+          0.041666666666666664,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            359,
+            350,
+            192,
+            69,
+            363,
+            168,
+            139,
+            301,
+            59,
+            57,
+            161,
+            287,
+            237,
+            273,
+            240,
+            295,
+            235,
+            321,
+            298,
+            3,
+            349,
+            30,
+            6,
+            169
+          ],
+          "representative_positions": [
+            1,
+            2,
+            10,
+            18,
+            16,
+            0,
+            8,
+            9
+          ],
+          "assignment": [
+            5,
+            0,
+            1,
+            5,
+            5,
+            4,
+            4,
+            3,
+            6,
+            7,
+            2,
+            3,
+            1,
+            3,
+            1,
+            3,
+            4,
+            5,
+            3,
+            0,
+            5,
+            3,
+            5,
+            1
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 2.8633612296871577e-08,
+      "mip_seconds": 0.19970011711120605,
+      "mip_status": 2,
+      "objective": 4742.832989681504,
+      "source_hashes": {
+        "pool.json": "f3cd41cffc8bdec0a15b9ca58f941019d76cb8518b42a712cc0e905453550fac",
+        "mip_result.json": "dad438e9d0948120fd0b194bf78b83687d375f9137045749d598b138f02da13f",
+        "evaluation.jsonl": "164f164d1f4ddf95f27381524de6ff6e1a950e5d5cff187dd51bdf6b3e708333",
+        "parent_training_evaluation.json": "b31a95dc808adca12ff095ad0564649acf1d766fd4a183318e503df4036b5b84"
+      },
+      "mean_cost": 3280.8431793485615,
+      "cost_quantiles": [
+        952.908735729063,
+        2170.774132250402,
+        8198.811630334842,
+        10729.260792276453
+      ],
+      "mean_cost_block95": [
+        2437.7174955638075,
+        4174.827131792412
+      ],
+      "weighted_selected_cost": 4742.832989681506,
+      "parent_mean_cost": 4672.312975833588,
+      "parent_minus_selected_cost": -70.52001384791765,
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -122.99785472692471,
+      "paired_savings_block95": [
+        -200.7141368544421,
+        -49.27573685944147
+      ]
+    },
+    {
+      "case": 3,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 0.3795320987701416,
+      "mip_status": 2,
+      "objective": 2895.0371092572714,
+      "source_hashes": {
+        "pool.json": "7cb184128bcdffd3ca9e106f5e688bd5318ba615a64ddb5b4fb93797704cc5c7",
+        "mip_result.json": "bb1b0761f57b5f62ae9f6e5f46804614967a167962354d2b1d92d8cab4216a54",
+        "evaluation.jsonl": "b4aab0d4d44708f5a5fab47449a6989ce0985245b0025de7528252bd967ee129",
+        "parent_training_evaluation.json": "d1b9124e381555f7e0bf83c5cdb6b9df5d00d243d4dad9d3fdd6df4708e2c0be"
+      },
+      "mean_cost": 3144.7134670066744,
+      "cost_quantiles": [
+        1024.7337357290628,
+        1597.3325549766296,
+        8310.543100528697,
+        10841.34272682553
+      ],
+      "mean_cost_block95": [
+        2225.1052279729784,
+        4093.5287900476446
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 0.0,
+      "paired_savings_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 4,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 0.6092751026153564,
+      "mip_status": 2,
+      "objective": 9961.969809210023,
+      "source_hashes": {
+        "pool.json": "ff2305b1f3b607514f7801b1f81f4049ce8ed9a7e38e39d3b11357e99005408e",
+        "mip_result.json": "0f827244a939afa7319dfa8897e94c2883c215c3ab6a16a373c952c757c04d93",
+        "evaluation.jsonl": "a70a6211791c73fdc05a917bfbf11572d340a2af9eba6f5fa7faa196871a96bf",
+        "parent_training_evaluation.json": "f4665413d3d2b58e1138e6057e1cfb97a7462b5facd90e602df4b979729a7c5a"
+      },
+      "mean_cost": 6607.371829048945,
+      "cost_quantiles": [
+        5105.8885832503265,
+        6513.0353153015085,
+        8093.323647996321,
+        10081.26079227645
+      ],
+      "mean_cost_block95": [
+        6221.844975028194,
+        6994.381915140875
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -3462.658362042271,
+      "paired_savings_block95": [
+        -4041.9863456995095,
+        -2867.2738357789326
+      ]
+    },
+    {
+      "case": 5,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "scenario_indices": [
+          350,
+          171,
+          292,
+          184,
+          344,
+          254,
+          80,
+          147
+        ],
+        "weights": [
+          0.08333333333333333,
+          0.125,
+          0.16666666666666666,
+          0.08333333333333333,
+          0.08333333333333333,
+          0.25,
+          0.16666666666666666,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            344,
+            255,
+            298,
+            236,
+            216,
+            350,
+            158,
+            275,
+            184,
+            318,
+            10,
+            120,
+            147,
+            292,
+            171,
+            153,
+            201,
+            80,
+            91,
+            180,
+            198,
+            304,
+            211,
+            254
+          ],
+          "representative_positions": [
+            5,
+            14,
+            13,
+            8,
+            0,
+            23,
+            17,
+            12
+          ],
+          "assignment": [
+            4,
+            6,
+            2,
+            5,
+            1,
+            0,
+            5,
+            2,
+            3,
+            0,
+            4,
+            5,
+            7,
+            2,
+            1,
+            6,
+            1,
+            6,
+            5,
+            6,
+            3,
+            2,
+            5,
+            5
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 0.1504371166229248,
+      "mip_status": 2,
+      "objective": 3058.719055158991,
+      "source_hashes": {
+        "pool.json": "1fba66156f15507e93cb5706da1ba2a28450e4200761997998a1a5ca586f1e68",
+        "mip_result.json": "44fa49cff77840e46ed064db6e3eaa243792d4069391ee86a1d84d4f9e02ac58",
+        "evaluation.jsonl": "4e776223701e62394168f598f84cb78374792817fce72399a3b75fe17c698630",
+        "parent_training_evaluation.json": "5563747485d32cee8f56b6c9f6902f19d5cb6947623600f7c90de1b02c0dd007"
+      },
+      "mean_cost": 3143.708531310255,
+      "cost_quantiles": [
+        1060.7337357290628,
+        1369.3441901003766,
+        8346.570778292851,
+        10877.285792276454
+      ],
+      "mean_cost_block95": [
+        2214.355336115363,
+        4092.2565306016654
+      ],
+      "weighted_selected_cost": 3058.719071527085,
+      "parent_mean_cost": 2915.2911941773295,
+      "parent_minus_selected_cost": -143.42787734975536,
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 1.0049356964196599,
+      "paired_savings_block95": [
+        -21.99706251781732,
+        29.045388069210567
+      ]
+    },
+    {
+      "case": 6,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 7.826914593201208e-07,
+      "mip_seconds": 0.5127859115600586,
+      "mip_status": 2,
+      "objective": 3525.250637020151,
+      "source_hashes": {
+        "pool.json": "1ca69503634a6b34117b70a307fff850d9563bd6b22f9b83678d61089c258237",
+        "mip_result.json": "c82f0098db3f4ffc02e6064d3d96fe166cd9faadad2407432802705046b15489",
+        "evaluation.jsonl": "319482db3e5a7094c278a28d330d2eac49f677eaffeddd14c65611bee242bea8",
+        "parent_training_evaluation.json": "caa4df137274c076430e0ba4eff856c79f9b6f62bc1648e664a178d8d43af8e1"
+      },
+      "mean_cost": 3142.328003634844,
+      "cost_quantiles": [
+        1060.9087357290628,
+        1529.3191901003765,
+        8306.71156539729,
+        10837.262720465862
+      ],
+      "mean_cost_block95": [
+        2223.2461253112656,
+        4083.452763821697
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 0.0,
+      "paired_savings_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 7,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 0.3947720527648926,
+      "mip_status": 2,
+      "objective": 10228.116924373613,
+      "source_hashes": {
+        "pool.json": "5a9910b45085b3dc66f35424dc8a09c6ab5c5d25775c368cb90f6698addda891",
+        "mip_result.json": "c2ae3b61008cca70555355fc7f3ee44a06c30df5ff1323b7509669c8b377201d",
+        "evaluation.jsonl": "839d768d22c9b09925b3c7ed32b3ec477416a53d82c746e8365fd36339a2d41a",
+        "parent_training_evaluation.json": "f28e033598fdbab8b5060245998e7e06f30a441e5964202b25b3918039c8f95a"
+      },
+      "mean_cost": 6606.30170841472,
+      "cost_quantiles": [
+        5105.888583250326,
+        6513.035315301508,
+        8132.740948586314,
+        10081.317726825528
+      ],
+      "mean_cost_block95": [
+        6219.592891415133,
+        6992.8751669037565
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -3463.9737047798767,
+      "paired_savings_block95": [
+        -4041.535099105799,
+        -2866.9901831148836
+      ]
+    },
+    {
+      "case": 8,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "solar_bess",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "scenario_indices": [
+          364,
+          127,
+          79,
+          160,
+          329,
+          279,
+          184,
+          87
+        ],
+        "weights": [
+          0.041666666666666664,
+          0.16666666666666666,
+          0.041666666666666664,
+          0.125,
+          0.20833333333333334,
+          0.25,
+          0.125,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            200,
+            79,
+            160,
+            245,
+            184,
+            332,
+            127,
+            27,
+            294,
+            279,
+            329,
+            242,
+            26,
+            273,
+            135,
+            364,
+            289,
+            215,
+            87,
+            307,
+            300,
+            146,
+            99,
+            148
+          ],
+          "representative_positions": [
+            15,
+            6,
+            1,
+            2,
+            10,
+            9,
+            4,
+            18
+          ],
+          "assignment": [
+            1,
+            2,
+            3,
+            6,
+            6,
+            4,
+            1,
+            4,
+            4,
+            5,
+            4,
+            5,
+            5,
+            5,
+            3,
+            0,
+            5,
+            1,
+            7,
+            4,
+            5,
+            3,
+            1,
+            6
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 0.25432491302490234,
+      "mip_status": 2,
+      "objective": 3438.2920798853224,
+      "source_hashes": {
+        "pool.json": "a830dc1185d583a22217f13a00ba6215f76000ca8667b82ae9cbc0c370c3e733",
+        "mip_result.json": "5312f66d9c3efc364f0772c89fb0a24140dce58f595bacaf00cedd79e44ee5ba",
+        "evaluation.jsonl": "b4ded8965dc62eb6b48f0b0ba8025da305f5383dc99025de6b3c96e2544d5f4f",
+        "parent_training_evaluation.json": "0895b4e8901c384f4bef207e21c00a51bb2cda4c998adf1016065d26e2c6499b"
+      },
+      "mean_cost": 3206.656751339056,
+      "cost_quantiles": [
+        988.9087357290629,
+        1927.1241322504022,
+        8234.66511301816,
+        10765.260792276451
+      ],
+      "mean_cost_block95": [
+        2335.041055956663,
+        4122.4728698117615
+      ],
+      "weighted_selected_cost": 3438.292079885321,
+      "parent_mean_cost": 3536.5692204859774,
+      "parent_minus_selected_cost": 98.27714060065637,
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -64.32874770421203,
+      "paired_savings_block95": [
+        -133.10518597592107,
+        -0.33427206840285073
+      ]
+    },
+    {
+      "case": 9,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 6,
+      "failure_rate": 0.01643835616438356,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.03287671232876712
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.014453670321678191,
+      "mip_seconds": 900.0324528217316,
+      "mip_status": 9,
+      "objective": 6003.426887467109,
+      "source_hashes": {
+        "pool.json": "d6f688555f291355ce3b2573b556a36b48f71b738d8b6b589465681948ef309e",
+        "mip_result.json": "214f9fb6a3b96ef89fcc0d860751b6071341eba21c44f79eafd795ebb56d7a38",
+        "evaluation.jsonl": "7a799eadb7b7c260cc6e8e34429b0d51d5df10027fc0f2f047aa1510bab00160",
+        "parent_training_evaluation.json": "608d6cbc3464e079bd54cfcd1ad58c2c214117a4d4a9c319a6a37e9d5990f8fe"
+      },
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 10,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 3.665138006210327,
+      "mip_status": 2,
+      "objective": 9935.076166577272,
+      "source_hashes": {
+        "pool.json": "5572e332800aa6c681e6f61ef0b3941e269b4fbc49451405b5dd758c1fe3ac1a",
+        "mip_result.json": "14b10480e178b90d60e00ad482d23296045db89a61ac23c891caedecab94b144",
+        "evaluation.jsonl": "0a4a9481d263eddb924665875692e6e544dd124c9537df594dc33bf1843e6a1c",
+        "parent_training_evaluation.json": "07836798f1abe5b136b6f3b53bddcd13e775c79097dbb68ac104cd9a08bb119b"
+      },
+      "mean_cost": 7368.28801094337,
+      "cost_quantiles": [
+        6004.463033484025,
+        7245.68531530151,
+        8926.367868362573,
+        10251.087874492372
+      ],
+      "mean_cost_block95": [
+        7000.736047571015,
+        7737.25213183685
+      ],
+      "paired_failure_reduction_vs_saa": 0.01643835616438356,
+      "paired_failure_block95": [
+        0.0027397260273972603,
+        0.03287671232876712
+      ]
+    },
+    {
+      "case": 11,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "scenario_indices": [
+          350,
+          192,
+          161,
+          298,
+          235,
+          359,
+          59,
+          57
+        ],
+        "weights": [
+          0.08333333333333333,
+          0.16666666666666666,
+          0.041666666666666664,
+          0.25,
+          0.125,
+          0.25,
+          0.041666666666666664,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            359,
+            350,
+            192,
+            69,
+            363,
+            168,
+            139,
+            301,
+            59,
+            57,
+            161,
+            287,
+            237,
+            273,
+            240,
+            295,
+            235,
+            321,
+            298,
+            3,
+            349,
+            30,
+            6,
+            169
+          ],
+          "representative_positions": [
+            1,
+            2,
+            10,
+            18,
+            16,
+            0,
+            8,
+            9
+          ],
+          "assignment": [
+            5,
+            0,
+            1,
+            5,
+            5,
+            4,
+            4,
+            3,
+            6,
+            7,
+            2,
+            3,
+            1,
+            3,
+            1,
+            3,
+            4,
+            5,
+            3,
+            0,
+            5,
+            3,
+            5,
+            1
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 6,
+      "failure_rate": 0.01643835616438356,
+      "failure_block95": [
+        0.0027397260273972603,
+        0.03287671232876712
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.022502631011055277,
+      "mip_seconds": 900.0119199752808,
+      "mip_status": 9,
+      "objective": 6043.276116134138,
+      "source_hashes": {
+        "pool.json": "1b01751a363431d0cbffb9468eb5acd39224b69863b127766af01b2f92ab3606",
+        "mip_result.json": "d46193e5a425273ff3e74cf010cf68fe52108a075f97e41471ef5de2f7aa7299",
+        "evaluation.jsonl": "0e1efb099386deed3e67f9cef0ce01b313831fec28ea3f87daa5771cb50f9cee",
+        "parent_training_evaluation.json": "09d4e48391996b4067be7f1249f4fddc41a0f50920f1668ffe3ffc5712a84c70"
+      },
+      "weighted_selected_cost": 6043.2761161341405,
+      "parent_mean_cost": 6062.074420223227,
+      "parent_minus_selected_cost": 18.79830408908674,
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 12,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 8,
+      "failure_rate": 0.021917808219178082,
+      "failure_block95": [
+        0.005479452054794521,
+        0.043835616438356165
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.01721993404200377,
+      "mip_seconds": 900.034234046936,
+      "mip_status": 9,
+      "objective": 4858.240225206243,
+      "source_hashes": {
+        "pool.json": "036a401be8380dec90f5455b4ff08e8504c0de9e92224f6f615ded22e528d163",
+        "mip_result.json": "80c120589799048549bdd348ac36a6c8de11606cf19c28143a14f5aa8468531d",
+        "evaluation.jsonl": "d9298184a36aebfa3b81151bb9257ac1ac86574d97b9a9eaae189490c878fd96",
+        "parent_training_evaluation.json": "01e9b825957f34c040a18bbe15300b528d4815cdb8a2e477deaaf124adc57fa1"
+      },
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 13,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 1.9515374105551207e-05,
+      "mip_seconds": 4.2707679271698,
+      "mip_status": 2,
+      "objective": 9975.363666577265,
+      "source_hashes": {
+        "pool.json": "97f2263ef9f87101bef49435dd6c7f79b1b65b8ac526b4552fc22a3c6e27ad6f",
+        "mip_result.json": "71f2cb993de2be1220f889ee2b0a7c2d4a1bad0d989399bb4238c5b71fa2e28e",
+        "evaluation.jsonl": "c2c86790c45091d76b117a534feeb2e649c34f8bbb5fee3d46c11678f1cbf1bb",
+        "parent_training_evaluation.json": "1dfa3110f7058cce94d60f3d14082e91236e61377740032f3c3672ddb393f58f"
+      },
+      "mean_cost": 7116.593159304961,
+      "cost_quantiles": [
+        5704.750533484024,
+        6989.00246820167,
+        8805.488561221358,
+        10265.41776204888
+      ],
+      "mean_cost_block95": [
+        6734.967029936823,
+        7500.435810211887
+      ],
+      "paired_failure_reduction_vs_saa": 0.021917808219178082,
+      "paired_failure_block95": [
+        0.005479452054794521,
+        0.043835616438356165
+      ]
+    },
+    {
+      "case": 14,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "scenario_indices": [
+          350,
+          171,
+          292,
+          184,
+          344,
+          254,
+          80,
+          147
+        ],
+        "weights": [
+          0.08333333333333333,
+          0.125,
+          0.16666666666666666,
+          0.08333333333333333,
+          0.08333333333333333,
+          0.25,
+          0.16666666666666666,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            344,
+            255,
+            298,
+            236,
+            216,
+            350,
+            158,
+            275,
+            184,
+            318,
+            10,
+            120,
+            147,
+            292,
+            171,
+            153,
+            201,
+            80,
+            91,
+            180,
+            198,
+            304,
+            211,
+            254
+          ],
+          "representative_positions": [
+            5,
+            14,
+            13,
+            8,
+            0,
+            23,
+            17,
+            12
+          ],
+          "assignment": [
+            4,
+            6,
+            2,
+            5,
+            1,
+            0,
+            5,
+            2,
+            3,
+            0,
+            4,
+            5,
+            7,
+            2,
+            1,
+            6,
+            1,
+            6,
+            5,
+            6,
+            3,
+            2,
+            5,
+            5
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 12,
+      "failure_rate": 0.03287671232876712,
+      "failure_block95": [
+        0.010958904109589041,
+        0.06027397260273973
+      ],
+      "parent_failures": 1,
+      "pool_gap": 0.01846235829087414,
+      "mip_seconds": 900.0107870101929,
+      "mip_status": 9,
+      "objective": 5020.645605700713,
+      "source_hashes": {
+        "pool.json": "5b89b8f75251879d64e2749812d3d557c845592c57a35bc7be7fd9b9d49a86ae",
+        "mip_result.json": "404685e04877bad0c62276071ad1b6bab6b7f6ea327491f371e3d71697f1e18d",
+        "evaluation.jsonl": "3283a305a9dcb64038159b5efdc8bf4a95c16ba6a427662d9d2edb1f8bf40cac",
+        "parent_training_evaluation.json": "24397230f5170005e291cdfd56eb157af426f1f31c8c7d021a125764d83ce39a"
+      },
+      "weighted_selected_cost": 5020.645605700712,
+      "paired_failure_reduction_vs_saa": -0.010958904109589041,
+      "paired_failure_block95": [
+        -0.024657534246575342,
+        0.0
+      ]
+    },
+    {
+      "case": 15,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 9,
+      "failure_rate": 0.024657534246575342,
+      "failure_block95": [
+        0.005479452054794521,
+        0.04657534246575343
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.024079592011738392,
+      "mip_seconds": 900.0335538387299,
+      "mip_status": 9,
+      "objective": 5257.908370686793,
+      "source_hashes": {
+        "pool.json": "9c47e953a2151715efab82b06b57e478f234d4735383b88a63218281482c9b03",
+        "mip_result.json": "8e920076e909341d8a06d35aecee49ba75c5492a01c28831ff55df30aaa85999",
+        "evaluation.jsonl": "227d29be58a1fdff328c6db77a6824c7ceb97432cb22757ff35e951e9e6fb9a2",
+        "parent_training_evaluation.json": "0eb83bcfc1cf090c4091468f07f1a410d1c73e4e040c5383f8f6be1ddd324d43"
+      },
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 16,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 3.716150999069214,
+      "mip_status": 2,
+      "objective": 10214.011114090872,
+      "source_hashes": {
+        "pool.json": "939097a909ed7b4ba8f820355d433eda26552743597f46d51f6daab86d3e1127",
+        "mip_result.json": "eadba3aaea4ef753d8ed2b111223efbe24ab0a973b3107873f48ad8c46be9399",
+        "evaluation.jsonl": "9bd3e28e55df3d5c70a3f046952b0c39bed0d7f981ab6cd6dc66150431d45111",
+        "parent_training_evaluation.json": "5d6e4385a7eafa1f54961ca911b7c6ebc9811c9a1b10360d68e56821de57ac88"
+      },
+      "mean_cost": 7421.126771002694,
+      "cost_quantiles": [
+        6004.463033484025,
+        7298.565554363652,
+        9245.85281204505,
+        10309.924959773194
+      ],
+      "mean_cost_block95": [
+        7032.520524013801,
+        7812.535732736587
+      ],
+      "paired_failure_reduction_vs_saa": 0.024657534246575342,
+      "paired_failure_block95": [
+        0.005479452054794521,
+        0.04657534246575343
+      ]
+    },
+    {
+      "case": 17,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g_fleet",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "scenario_indices": [
+          364,
+          127,
+          79,
+          160,
+          329,
+          279,
+          184,
+          87
+        ],
+        "weights": [
+          0.041666666666666664,
+          0.16666666666666666,
+          0.041666666666666664,
+          0.125,
+          0.20833333333333334,
+          0.25,
+          0.125,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            200,
+            79,
+            160,
+            245,
+            184,
+            332,
+            127,
+            27,
+            294,
+            279,
+            329,
+            242,
+            26,
+            273,
+            135,
+            364,
+            289,
+            215,
+            87,
+            307,
+            300,
+            146,
+            99,
+            148
+          ],
+          "representative_positions": [
+            15,
+            6,
+            1,
+            2,
+            10,
+            9,
+            4,
+            18
+          ],
+          "assignment": [
+            1,
+            2,
+            3,
+            6,
+            6,
+            4,
+            1,
+            4,
+            4,
+            5,
+            4,
+            5,
+            5,
+            5,
+            3,
+            0,
+            5,
+            1,
+            7,
+            4,
+            5,
+            3,
+            1,
+            6
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 14,
+      "failure_rate": 0.038356164383561646,
+      "failure_block95": [
+        0.010958904109589041,
+        0.06856164383561605
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.029998982680243452,
+      "mip_seconds": 900.0125458240509,
+      "mip_status": 9,
+      "objective": 5373.9080230122845,
+      "source_hashes": {
+        "pool.json": "083a3d98f3fb6dc1435489a0b6f58454c620a73b8cf10bcb8747e6b14eb0c3f3",
+        "mip_result.json": "8119319cb6c8b1d744b6cd360e4be3b6670b5edd4a2348a38ef3e9b0d7a447e5",
+        "evaluation.jsonl": "0dc5a226e992926fca8d55cb25c97d5d6090639352e9a872b803d97b823e1586",
+        "parent_training_evaluation.json": "8c1582bb6971849ae914b8993a00c8b5d773545b6ca7e1621ad6383f189fd576"
+      },
+      "weighted_selected_cost": 5373.908023012285,
+      "parent_mean_cost": 5328.599298265778,
+      "parent_minus_selected_cost": -45.30872474650732,
+      "paired_failure_reduction_vs_saa": -0.0136986301369863,
+      "paired_failure_block95": [
+        -0.0273972602739726,
+        -0.0027397260273972603
+      ]
+    },
+    {
+      "case": 18,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 1.9762201531212942e-06,
+      "mip_seconds": 0.6554570198059082,
+      "mip_status": 2,
+      "objective": 4587.543485165566,
+      "source_hashes": {
+        "pool.json": "09c0e9c90533bea1f39056227440a184b8af8369cb6ddedb503a89103b6f65c1",
+        "mip_result.json": "9b1441c04ba5e32b417201dc4419233fcb7c26467718d99a0871fe8461cd0820",
+        "evaluation.jsonl": "95f1fad44099f0ac6f476b98a757985a381f48a4356ed10bb0181d0afcc43d82",
+        "parent_training_evaluation.json": "7d8d71b3bf99071fb63c7b30a4a92afe1b1b919ce23fc2520619df2f6afa333f"
+      },
+      "mean_cost": 3094.516592076606,
+      "cost_quantiles": [
+        952.7337357290629,
+        1622.808790514137,
+        8238.891526319823,
+        10769.835792276455
+      ],
+      "mean_cost_block95": [
+        2184.440520640889,
+        4041.8201585820975
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 0.0,
+      "paired_savings_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 19,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 1.152695894241333,
+      "mip_status": 2,
+      "objective": 9961.969809210019,
+      "source_hashes": {
+        "pool.json": "25f6943c0bf9c5c86b00797053166d5260ef267610e45be21ad784c4d91d9215",
+        "mip_result.json": "d3e0a8c0de28aa9f4d0a0a0914fd6751f72a7b9812a5506b36dbaed83c613176",
+        "evaluation.jsonl": "71eca3deb7432bb239b0b68e2fa85eb1872f9c8505f4cb1c70bc5962d58e45d5",
+        "parent_training_evaluation.json": "161a0c32d31da5427c82379b352818942296df1d685c1e1094b4571472e41362"
+      },
+      "mean_cost": 6621.08578753478,
+      "cost_quantiles": [
+        5105.888583250325,
+        6513.0353153015085,
+        8236.028483449543,
+        10081.321830112633
+      ],
+      "mean_cost_block95": [
+        6228.988654449888,
+        7014.905528122877
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -3526.569195458175,
+      "paired_savings_block95": [
+        -4087.727624304965,
+        -2950.6109146786234
+      ]
+    },
+    {
+      "case": 20,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 11,
+        "parent_indices": [
+          359,
+          350,
+          192,
+          69,
+          363,
+          168,
+          139,
+          301,
+          59,
+          57,
+          161,
+          287,
+          237,
+          273,
+          240,
+          295,
+          235,
+          321,
+          298,
+          3,
+          349,
+          30,
+          6,
+          169
+        ],
+        "scenario_indices": [
+          350,
+          192,
+          161,
+          298,
+          235,
+          359,
+          59,
+          57
+        ],
+        "weights": [
+          0.08333333333333333,
+          0.16666666666666666,
+          0.041666666666666664,
+          0.25,
+          0.125,
+          0.25,
+          0.041666666666666664,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            359,
+            350,
+            192,
+            69,
+            363,
+            168,
+            139,
+            301,
+            59,
+            57,
+            161,
+            287,
+            237,
+            273,
+            240,
+            295,
+            235,
+            321,
+            298,
+            3,
+            349,
+            30,
+            6,
+            169
+          ],
+          "representative_positions": [
+            1,
+            2,
+            10,
+            18,
+            16,
+            0,
+            8,
+            9
+          ],
+          "assignment": [
+            5,
+            0,
+            1,
+            5,
+            5,
+            4,
+            4,
+            3,
+            6,
+            7,
+            2,
+            3,
+            1,
+            3,
+            1,
+            3,
+            4,
+            5,
+            3,
+            0,
+            5,
+            3,
+            5,
+            1
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 1.172205313069005e-07,
+      "mip_seconds": 0.2250828742980957,
+      "mip_status": 2,
+      "objective": 4694.062538136678,
+      "source_hashes": {
+        "pool.json": "f028a1b6a1362f1dc8bf9144a4e10e168e35a93ff4a7de8272c4a962591b08d0",
+        "mip_result.json": "bd14f26323d547157f62e30e6b2154cc25853e9c3fa6cbfa20bbcbdb0b2c517c",
+        "evaluation.jsonl": "4903f5b938a831ac191c7c9c9c4fe3e563da8d5fbd93b1ef4cc8a1d3f8de9772",
+        "parent_training_evaluation.json": "e235efff23f3bb5585dc1debc471f9932693ed0ac7a6f12e78dbde3db8af6278"
+      },
+      "mean_cost": 3211.8065401612885,
+      "cost_quantiles": [
+        880.7337357290629,
+        2058.6491322504025,
+        8166.9307786759655,
+        10697.835792276454
+      ],
+      "mean_cost_block95": [
+        2363.6085676269195,
+        4111.6109512411485
+      ],
+      "weighted_selected_cost": 4694.0625387422415,
+      "parent_mean_cost": 4617.509218910866,
+      "parent_minus_selected_cost": -76.55331983137512,
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -117.28994808468248,
+      "paired_savings_block95": [
+        -193.7980454368209,
+        -43.592505739875115
+      ]
+    },
+    {
+      "case": 21,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 4.764065588226973e-06,
+      "mip_seconds": 0.7762959003448486,
+      "mip_status": 2,
+      "objective": 2839.193222933108,
+      "source_hashes": {
+        "pool.json": "dfa73ca4a97c24b0bc7e86b4529bf3a82d0dde1090528cc87ed07e9890338340",
+        "mip_result.json": "8ef1cc109c94079b6c5fc683d6a1ceabb56180ef61f081287ce03efd7af5e7da",
+        "evaluation.jsonl": "7a98c679d2f26caf8c2d0f9267e2662b38a0b2fbf6112d29a9af5e9af1377a20",
+        "parent_training_evaluation.json": "12121490cb0a95c2d427fe0885302e66f88d4e2f353628236a9752ffd3c12084"
+      },
+      "mean_cost": 3096.261921188531,
+      "cost_quantiles": [
+        952.746235729063,
+        1622.8212905141365,
+        8238.998943567545,
+        10769.835792276454
+      ],
+      "mean_cost_block95": [
+        2185.915089201872,
+        4042.9172118959286
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 0.0,
+      "paired_savings_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 22,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 2.0768039226531982,
+      "mip_status": 2,
+      "objective": 9961.969809210023,
+      "source_hashes": {
+        "pool.json": "121138d95d59bd4d23462b80891e419dd0c1dfabf919b1f292862d1f97cd9108",
+        "mip_result.json": "aae43c7cf1b31be13aa5095873c64c0ad76052ff254dc11714441785fd0b8c47",
+        "evaluation.jsonl": "25b8c66198a5bb9834d813c23b3e582eeddf0dc0a5747399ab7287e7ec4bacb5",
+        "parent_training_evaluation.json": "de502bb1b1b7a4af41f8819321f3c4e98e679e626986f4fd589d39562abc9420"
+      },
+      "mean_cost": 6637.327860511396,
+      "cost_quantiles": [
+        5105.8885832503265,
+        6556.064968201668,
+        8184.748134242588,
+        10081.317726825528
+      ],
+      "mean_cost_block95": [
+        6245.303082972016,
+        7031.832300677347
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -3541.065939322866,
+      "paired_savings_block95": [
+        -4101.760030758782,
+        -2962.9916154152615
+      ]
+    },
+    {
+      "case": 23,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 29,
+        "parent_indices": [
+          344,
+          255,
+          298,
+          236,
+          216,
+          350,
+          158,
+          275,
+          184,
+          318,
+          10,
+          120,
+          147,
+          292,
+          171,
+          153,
+          201,
+          80,
+          91,
+          180,
+          198,
+          304,
+          211,
+          254
+        ],
+        "scenario_indices": [
+          350,
+          171,
+          292,
+          184,
+          344,
+          254,
+          80,
+          147
+        ],
+        "weights": [
+          0.08333333333333333,
+          0.125,
+          0.16666666666666666,
+          0.08333333333333333,
+          0.08333333333333333,
+          0.25,
+          0.16666666666666666,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            344,
+            255,
+            298,
+            236,
+            216,
+            350,
+            158,
+            275,
+            184,
+            318,
+            10,
+            120,
+            147,
+            292,
+            171,
+            153,
+            201,
+            80,
+            91,
+            180,
+            198,
+            304,
+            211,
+            254
+          ],
+          "representative_positions": [
+            5,
+            14,
+            13,
+            8,
+            0,
+            23,
+            17,
+            12
+          ],
+          "assignment": [
+            4,
+            6,
+            2,
+            5,
+            1,
+            0,
+            5,
+            2,
+            3,
+            0,
+            4,
+            5,
+            7,
+            2,
+            1,
+            6,
+            1,
+            6,
+            5,
+            6,
+            3,
+            2,
+            5,
+            5
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 3.7982516406628986e-06,
+      "mip_seconds": 0.20087981224060059,
+      "mip_status": 2,
+      "objective": 3016.7388631937524,
+      "source_hashes": {
+        "pool.json": "ef4a76e8ebc769447a59d08d92a7cdbbeefc157639fbb5857d4450f04829c540",
+        "mip_result.json": "3cf994f1e0e2fcfddf15554b5c197fc459c35885d3ec0ce2e45fce4fdcf9ef25",
+        "evaluation.jsonl": "23300c2970defcad7ade268f2899f581524697ea1e8b898d5ed2140d6d7863a9",
+        "parent_training_evaluation.json": "9f37d6e81c3ffb2d02031b26a8df72ce7647e3af91592193ce8fe33ac69895c9"
+      },
+      "mean_cost": 3085.3776610284417,
+      "cost_quantiles": [
+        988.746235729063,
+        1417.2066901003761,
+        8274.981443567545,
+        10805.835792276454
+      ],
+      "mean_cost_block95": [
+        2160.2745554621724,
+        4034.8904593228035
+      ],
+      "weighted_selected_cost": 3016.7388631937515,
+      "parent_mean_cost": 2848.3415063500875,
+      "parent_minus_selected_cost": -168.39735684366406,
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 10.884260160088873,
+      "paired_savings_block95": [
+        -15.279093786966046,
+        41.81749178105845
+      ]
+    },
+    {
+      "case": 24,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "saa",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 1.5393866768101281e-06,
+      "mip_seconds": 0.7118890285491943,
+      "mip_status": 2,
+      "objective": 3473.8061017993496,
+      "source_hashes": {
+        "pool.json": "fbfd20694e3608094a62568531399707329a9b59b8d98bb61c082bc93b2b5f5b",
+        "mip_result.json": "abf687b61183a692981eefcd18fbcfce815c55cbbbb3235ad9704a06e5d64468",
+        "evaluation.jsonl": "f79aabeb284b1af0579ae2f1930bf14d8dbae971b10968dae6de83f314c51cab",
+        "parent_training_evaluation.json": "5e9a7eda897ea37614b17559f981e721a1e7c124dbdf46bd28409cfff3a55757"
+      },
+      "mean_cost": 3094.8070512814325,
+      "cost_quantiles": [
+        952.7337357290629,
+        1622.8087905141367,
+        8238.802255382732,
+        10769.835792276454
+      ],
+      "mean_cost_block95": [
+        2184.929607117231,
+        4041.4798245368797
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": 0.0,
+      "paired_savings_block95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "case": 25,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "minimax",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 0.0,
+      "mip_seconds": 1.654869794845581,
+      "mip_status": 2,
+      "objective": 10228.11692437361,
+      "source_hashes": {
+        "pool.json": "8a5fa4ff94a657ac2ea0606945b81f73051ddcc35f927a8a4ad50b853a906044",
+        "mip_result.json": "01e9a5901f534380cc5b752b87f9e133f9632b87088b98ea780af17b52431916",
+        "evaluation.jsonl": "0fbbccaa7e69c81b2fe253eb3c4dfb88ec1dd7d0ed7a9d60198446b79785111a",
+        "parent_training_evaluation.json": "b921926cd401be79b5ec0d2cbd7492eb7a239752a52ec7c570a85eef8b5faf4a"
+      },
+      "mean_cost": 6662.842959926967,
+      "cost_quantiles": [
+        5105.8885832503265,
+        6556.064968201667,
+        8357.787935598803,
+        10081.325933399736
+      ],
+      "mean_cost_block95": [
+        6257.489656441917,
+        7067.440842324368
+      ],
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -3568.035908645534,
+      "paired_savings_block95": [
+        -4116.088873478742,
+        -3005.1741660885946
+      ]
+    },
+    {
+      "case": 26,
+      "config": {
+        "points": 2,
+        "pv": 2.0,
+        "arm": "v2g",
+        "cap_factor": 0.8,
+        "method": "reduced",
+        "samples": 24,
+        "seed": 47,
+        "parent_indices": [
+          200,
+          79,
+          160,
+          245,
+          184,
+          332,
+          127,
+          27,
+          294,
+          279,
+          329,
+          242,
+          26,
+          273,
+          135,
+          364,
+          289,
+          215,
+          87,
+          307,
+          300,
+          146,
+          99,
+          148
+        ],
+        "scenario_indices": [
+          364,
+          127,
+          79,
+          160,
+          329,
+          279,
+          184,
+          87
+        ],
+        "weights": [
+          0.041666666666666664,
+          0.16666666666666666,
+          0.041666666666666664,
+          0.125,
+          0.20833333333333334,
+          0.25,
+          0.125,
+          0.041666666666666664
+        ],
+        "reduction": {
+          "parent_indices": [
+            200,
+            79,
+            160,
+            245,
+            184,
+            332,
+            127,
+            27,
+            294,
+            279,
+            329,
+            242,
+            26,
+            273,
+            135,
+            364,
+            289,
+            215,
+            87,
+            307,
+            300,
+            146,
+            99,
+            148
+          ],
+          "representative_positions": [
+            15,
+            6,
+            1,
+            2,
+            10,
+            9,
+            4,
+            18
+          ],
+          "assignment": [
+            1,
+            2,
+            3,
+            6,
+            6,
+            4,
+            1,
+            4,
+            4,
+            5,
+            4,
+            5,
+            5,
+            5,
+            3,
+            0,
+            5,
+            1,
+            7,
+            4,
+            5,
+            3,
+            1,
+            6
+          ],
+          "metric": "Euclidean distance between complete hourly net-load trajectories",
+          "algorithm": "retain maximum/minimum daily net load, then farthest-first real-day representatives; assigned-mass probabilities"
+        },
+        "initialization": "validated union across all three methods and seeds for this identical physical configuration"
+      },
+      "failures": 0,
+      "failure_rate": 0.0,
+      "failure_block95": [
+        0.0,
+        0.0
+      ],
+      "parent_failures": 0,
+      "pool_gap": 2.945694521058218e-06,
+      "mip_seconds": 0.26158595085144043,
+      "mip_status": 2,
+      "objective": 3390.3929633983985,
+      "source_hashes": {
+        "pool.json": "f52c21cc44ad2361fc75d4695ef7a9928203a7bdc7eb6e3146f121a85137e89e",
+        "mip_result.json": "04e566f65ff039f2823718d3e6b0468963ebabb24741a6ff899f346f861cc155",
+        "evaluation.jsonl": "750a7613a34880a8b89e508a5b4adcedcc1009f695f7b14c626d65665e1550f6",
+        "parent_training_evaluation.json": "400d5c3dbf199b80bbc3984b95a73e2658d0facd4fcf0d7352f9f498182aaa4b"
+      },
+      "mean_cost": 3137.801759921824,
+      "cost_quantiles": [
+        916.7337357290629,
+        1814.9991322504027,
+        8202.819755382732,
+        10733.835792276454
+      ],
+      "mean_cost_block95": [
+        2254.698421723615,
+        4063.531865920888
+      ],
+      "weighted_selected_cost": 3390.392963398398,
+      "parent_mean_cost": 3484.4192698516076,
+      "parent_minus_selected_cost": 94.0263064532096,
+      "paired_failure_reduction_vs_saa": 0.0,
+      "paired_failure_block95": [
+        0.0,
+        0.0
+      ],
+      "mean_savings_vs_saa": -42.99470864039182,
+      "paired_savings_block95": [
+        -81.26679126796303,
+        -6.764099157625128
+      ]
+    }
+  ],
+  "bootstrap": {
+    "seed": 7291,
+    "replicates": 2000,
+    "block_days": 14
+  },
+  "scope": "common pool across all methods/seeds within each arm; method-specific objective bounds;2022 development;cost undefined on failed days;constant-sequence bootstrap intervals do not bound unseen-event risk;objective-specific proof bounds not interchangeable"
+}
