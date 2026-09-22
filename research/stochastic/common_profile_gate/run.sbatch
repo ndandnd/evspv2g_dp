@@ -15,7 +15,7 @@ export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 RELEASE_ROOT=$1
 CAMPAIGN_ROOT=$2
 EXECUTION_COMMIT=$3
-PYTHON_BIN=${PYTHON_BIN:?Set PYTHON_BIN to the cluster's scientific environment}
+PYTHON_BIN="${PYTHON_BIN:?Set PYTHON_BIN to the cluster scientific environment}"
 "$PYTHON_BIN" -u "$RELEASE_ROOT/research/stochastic/common_profile_gate/worker.py" \
     --case "$SLURM_ARRAY_TASK_ID" --campaign "$CAMPAIGN_ROOT" \
     --execution-commit "$EXECUTION_COMMIT"
