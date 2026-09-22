@@ -1,0 +1,69 @@
+{
+  "case": {
+    "fit_year": 2022,
+    "name": "policy14_nb20_fit2022",
+    "policy": 14,
+    "reference": "snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017"
+  },
+  "commands": [
+    [
+      "/home/nc437/evsp_env/bin/python",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/common_profile_gate/solver.py",
+      "--input",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/common_profile_gate/inputs/policy14_nb20_fit2022.json",
+      "--output",
+      "/home/nc437/evspv2g-stochastic-review-20260910/campaigns/common_profile_gate_wave17/attempt02/policy14_nb20_fit2022/fit",
+      "--backend",
+      "gurobi",
+      "--time-limit",
+      "600",
+      "--method",
+      "2"
+    ],
+    [
+      "/home/nc437/evsp_env/bin/python",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/common_profile_gate/validate.py",
+      "--input",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/common_profile_gate/inputs/policy14_nb20_fit2022.json",
+      "--result",
+      "/home/nc437/evspv2g-stochastic-review-20260910/campaigns/common_profile_gate_wave17/attempt02/policy14_nb20_fit2022/fit/result.json",
+      "--source-root",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/evidence",
+      "--output",
+      "/home/nc437/evspv2g-stochastic-review-20260910/campaigns/common_profile_gate_wave17/attempt02/policy14_nb20_fit2022/validation.json"
+    ],
+    [
+      "/home/nc437/evsp_env/bin/python",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/common_profile_gate/evaluate.py",
+      "--input",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/common_profile_gate/inputs/policy14_nb20_fit2022.json",
+      "--fit-input",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/common_profile_gate/inputs/policy14_nb20_fit2022.json",
+      "--result",
+      "/home/nc437/evspv2g-stochastic-review-20260910/campaigns/common_profile_gate_wave17/attempt02/policy14_nb20_fit2022/fit/result.json",
+      "--output-dir",
+      "/home/nc437/evspv2g-stochastic-review-20260910/campaigns/common_profile_gate_wave17/attempt02/policy14_nb20_fit2022/replay2022",
+      "--source-root",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/evidence",
+      "--reference-case",
+      "/home/nc437/evspv2g-stochastic-review-20260910/releases/wave17-f8f8101/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017"
+    ]
+  ],
+  "elapsed_seconds": 31.72482922906056,
+  "execution_commit": "f8f8101557f2ee2983f3cdc6e7369def28338ded",
+  "finished_utc": "2026-09-22T03:30:05Z",
+  "hostname": "scaglione-cpu-04.tech.cornell.edu",
+  "manifest_sha256": "47c79b4d8a3a469f65dda8f1bd202ad6a2e2de8d3f3fff6804f59823bdd09b2c",
+  "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+  "scheduler": {
+    "SLURM_ARRAY_JOB_ID": "727176",
+    "SLURM_ARRAY_TASK_ID": "2",
+    "SLURM_CPUS_PER_TASK": "1",
+    "SLURM_JOB_ID": "727178",
+    "SLURM_JOB_PARTITION": "scaglione",
+    "SLURM_MEM_PER_NODE": "4096",
+    "SLURM_RESTART_COUNT": null
+  },
+  "started_utc": "2026-09-22T03:29:33Z",
+  "state": "complete"
+}

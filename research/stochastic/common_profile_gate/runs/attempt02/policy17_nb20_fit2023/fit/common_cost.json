@@ -1,0 +1,50 @@
+{
+  "barrier_iterations": 26,
+  "dual_artifact": {
+    "path": "common_cost_dual.npz",
+    "sha256": "18ce520485d399715b7ab422f1fbdad5de60d3e4428ba3bb6c04834fe066a2c0"
+  },
+  "duality": {
+    "complementarity_inf": 1.5067114222944156e-12,
+    "dual_objective": null,
+    "dual_sign_violation": 1.3877787807814457e-17,
+    "interpretation": "Floating-point LP KKT diagnostics; not an exact rational certificate",
+    "objective_scaled_tolerance": 0.0026074726583770916,
+    "passes_report_tolerance": true,
+    "primal_minus_dual": null,
+    "stationarity_inf": 2.0333734696009742e-13
+  },
+  "elapsed_seconds": 15.311936652753502,
+  "has_primal": true,
+  "is_mip": false,
+  "iterations": 24920.0,
+  "lexicographic_shortage_target": 0.0,
+  "log": "common_cost.log",
+  "log_sha256": "5a554dbb905d154e0644a22345e5265894d50cd6cd0c10f22fcb784b5c684767",
+  "model_fingerprint": 667819863,
+  "native_objective": 2607.472658377092,
+  "native_objective_bound": 2607.472658377092,
+  "native_primal_bound_gap": -4.547473508864641e-13,
+  "native_runtime_seconds": 15.215344190597534,
+  "native_status": 2,
+  "objective": 2607.4726583770916,
+  "optimal_objective_value": 2607.4726583770916,
+  "optimality_certified": true,
+  "primal_artifact": {
+    "path": "common_cost_primal.npz",
+    "sha256": "a2ea07f919ddaa5050d3b6562fa6d38481579ffa269ae9cb06670d78175c02a7"
+  },
+  "primal_residuals": {
+    "equality_inf": 1.4210854715202004e-14,
+    "inequality_violation": 5.329070518200751e-15,
+    "lower_bound_violation": 0.0,
+    "maximum_violation": 1.4210854715202004e-14,
+    "passes_report_tolerance": true,
+    "upper_bound_violation": 0.0
+  },
+  "solution_count": 1,
+  "solver_method": 2,
+  "status": "OPTIMAL",
+  "threads": 1,
+  "time_limit_seconds": 600.0
+}

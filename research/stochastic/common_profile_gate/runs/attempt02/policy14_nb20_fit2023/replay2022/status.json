@@ -1,0 +1,48 @@
+{
+  "cost_convention": "Fixed assets included. Emergency energy is lexicographically minimized and unpriced; all-population money requires zero shortage on every day.",
+  "days": 365,
+  "decomposition": {
+    "common_minus_adaptive": 0.584619059268789,
+    "identity_residual": 0.0,
+    "interpretation": "signed descriptive contrasts; no cross-population ordering asserted",
+    "nesting_asserted": false,
+    "old_minus_adaptive": 1.7309474401304215,
+    "old_minus_common": 1.1463283808616325,
+    "solved_common_optimum": true
+  },
+  "errors": [],
+  "frozen_profile_sha256": "f3d0b613653bd88108eb786816f75d3e9dc5ca2b5ecab6bd1df06910b850ac99",
+  "identity_sha256": "ec38e8b06e31847ed3808858962043a7d1bd3510fe893f409f5bcc15bcdcce9c",
+  "information": "Truck actions frozen for every day; full-day BESS/generator foresight. This is not a causal control-policy comparison.",
+  "jointly_feasible_days": 365,
+  "journal_hash": "5e8570cace4daa26eb7f4c6c4c3f8a879e2765e4d08c5cc5766107c07be6ffcc",
+  "means_on_joint_support": {
+    "adaptive": 3602.3856106769713,
+    "common": 3602.9702297362405,
+    "old": 3604.116558117102
+  },
+  "same_fit_and_evaluation_population": false,
+  "scope": "frozen training-profile evaluation on a different weather population",
+  "state": "complete",
+  "statistics": {
+    "adaptive": {
+      "failures": 0,
+      "mean_cost_all": 3602.385610676971,
+      "mean_operating_all_diagnostic": 2207.385610676971,
+      "mean_shortage": 0.0
+    },
+    "common": {
+      "failures": 0,
+      "mean_cost_all": 3602.9702297362396,
+      "mean_operating_all_diagnostic": 2207.9702297362405,
+      "mean_shortage": 0.0
+    },
+    "old": {
+      "failures": 0,
+      "mean_cost_all": 3604.1165581171012,
+      "mean_operating_all_diagnostic": 2209.1165581171026,
+      "mean_shortage": 0.0
+    }
+  },
+  "target_days": 365
+}

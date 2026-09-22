@@ -1,0 +1,778 @@
+{
+  "bound_interpretation": "All reported phases are continuous LPs with native OPTIMAL status and objective bounds independently compared to exported primal objectives. KKT diagnostics are floating-point checks, not exact rational certificates. Tiny negative reduced costs on variables with infinite upper bounds cause the reconstructed dual objective to remain null; they are preserved and quantified rather than rounded to manufacture a bound.",
+  "cases": {
+    "policy14_nb20_fit2022": {
+      "declared_sources_verified": [
+        {
+          "actual": "01d72c1a01265ae877db2c914a36f5724ec6ae64bd729cc9594cf3f8cc2b53df",
+          "expected": "01d72c1a01265ae877db2c914a36f5724ec6ae64bd729cc9594cf3f8cc2b53df",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017/identity.json"
+        },
+        {
+          "actual": "c2524c9c68b6f30d64e02f74c30edc45894c4efab8aabb6e4740e8b29700e78a",
+          "expected": "c2524c9c68b6f30d64e02f74c30edc45894c4efab8aabb6e4740e8b29700e78a",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017/days.jsonl"
+        },
+        {
+          "actual": "37e21d3de2c86b5e6ae75a052550d7340741e0243b55849cfb7a5711a59eece4",
+          "expected": "37e21d3de2c86b5e6ae75a052550d7340741e0243b55849cfb7a5711a59eece4",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017/status.json"
+        },
+        {
+          "actual": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "expected": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases.json"
+        },
+        {
+          "actual": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "expected": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0014/pool.json"
+        },
+        {
+          "actual": "213ca5ffe2db5194c6297f79ea39742cfb5f368681c5c753b25971fdb333c858",
+          "expected": "213ca5ffe2db5194c6297f79ea39742cfb5f368681c5c753b25971fdb333c858",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0014/mip_result.json"
+        },
+        {
+          "actual": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "expected": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/solar_days_2023.csv"
+        },
+        {
+          "actual": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "expected": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/ghi_2022_socal.csv"
+        }
+      ],
+      "evaluation_input_sha256": "9ce4a19c7f2fcee302800acde5d381a103cf8e418eeea4ab1729267ee8edf4e7",
+      "execution_commit": "f8f8101557f2ee2983f3cdc6e7369def28338ded",
+      "execution_sha256": "84c7f09dda5aeb45cc48cea4b4682d9ffd67c2c4c8dd2180ed82adc9ca8c82a7",
+      "fit_input_sha256": "9ce4a19c7f2fcee302800acde5d381a103cf8e418eeea4ab1729267ee8edf4e7",
+      "fit_physical_max_residual": 7.105427357601002e-15,
+      "phases": {
+        "common_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 5.164202399043916e-12,
+          "dual_sign_violation": 1.3322676295501878e-14,
+          "kkt_stationarity_inf": 1.9623191960249642e-13,
+          "log_sha256": "8eed825f0886e84dc5c2ac2bbbdd9ef4f0275f320bbe806cd35aeb6888b93895",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 1.7763568394002505e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 4.6838977141305804e-11,
+          "native_objective_bound": 2207.9640482438567,
+          "objective_recomputed": 2207.96404824381,
+          "physical_residual": 7.105427357601002e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 2
+        },
+        "common_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "ddcea5ac676f1f892fe44c83641c5a5fd366fb3ebe59b328acfbac6f81d63679",
+          "matrix_equality_inf": 4.263256414560601e-14,
+          "matrix_inequality_violation": 1.4210854715202004e-14,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 4.973799150320701e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        },
+        "inherited_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 1.9466924267400004e-16,
+          "dual_sign_violation": 1.3877787807814457e-17,
+          "kkt_stationarity_inf": 2.0961010704922955e-13,
+          "log_sha256": "2eb159f0a6cada95aac4aab01559189f86c01d5e7851049727c1145bcd41803e",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 1.7763568394002505e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 2.000888343900442e-11,
+          "native_objective_bound": 2209.11655811711,
+          "objective_recomputed": 2209.11655811709,
+          "physical_residual": 7.105427357601002e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 17
+        },
+        "inherited_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "bdf0919f94d924e4162a1dcca01351941b201c34f8336371067f4309dbc4f877",
+          "matrix_equality_inf": 2.842170943040401e-14,
+          "matrix_inequality_violation": 5.329070518200751e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 2.842170943040401e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        }
+      },
+      "replay": {
+        "days": 365,
+        "decomposition": {
+          "common_minus_adaptive": 0.5784375668522443,
+          "identity_residual": 0.0,
+          "interpretation": "same-population nesting decomposition",
+          "nesting_asserted": true,
+          "old_minus_adaptive": 1.7309474401304215,
+          "old_minus_common": 1.152509873278177,
+          "solved_common_optimum": true
+        },
+        "frozen_profile_sha256": "4d371fa8130137c0d3bcd39da8cc9e713ee43276a899889f9ba62639b33a4fcf",
+        "identical_frozen_common_profile_every_day": true,
+        "journal_hash": "a3cb84c259e8e0ae9b3913c6a04276dbcacd3b9ce8eed1c6f1043b1c8beae186",
+        "max_adaptive_vs_wave16_cost_error": 0.0,
+        "max_cross_platform_summary_error": 2.2737367544323206e-12,
+        "max_old_vs_wave16_cost_error": 1.8189894035458565e-12,
+        "max_physical_residual": 7.105427357601002e-15,
+        "max_saved_cost_recomputation_error": 3.637978807091713e-12,
+        "policies_checked_per_day": [
+          "old",
+          "common"
+        ],
+        "reference_source_hashes": {
+          "case_dir": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017",
+          "days_sha256": "c2524c9c68b6f30d64e02f74c30edc45894c4efab8aabb6e4740e8b29700e78a",
+          "identity_sha256": "01d72c1a01265ae877db2c914a36f5724ec6ae64bd729cc9594cf3f8cc2b53df",
+          "journal_hash": "7e5f0d0a0f39d9cdcabe8a6554e4af8206fb5a08940de985f65d7b42a05588ae",
+          "source": {
+            "mip_sha256": "213ca5ffe2db5194c6297f79ea39742cfb5f368681c5c753b25971fdb333c858",
+            "pool_sha256": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90"
+          },
+          "status_sha256": "37e21d3de2c86b5e6ae75a052550d7340741e0243b55849cfb7a5711a59eece4",
+          "task": {
+            "bess_units": 20,
+            "cap_factor": 0.8,
+            "policy": 14,
+            "source_campaign": "weather_fair_policy_wave7"
+          }
+        },
+        "same_fit_evaluation_population": true,
+        "statistics": {
+          "adaptive": {
+            "failures": 0,
+            "mean_cost_all": 3602.385610676971,
+            "mean_operating_all_diagnostic": 2207.385610676971,
+            "mean_shortage": 0.0
+          },
+          "common": {
+            "failures": 0,
+            "mean_cost_all": 3602.964048243823,
+            "mean_operating_all_diagnostic": 2207.964048243823,
+            "mean_shortage": 0.0
+          },
+          "old": {
+            "failures": 0,
+            "mean_cost_all": 3604.1165581171012,
+            "mean_operating_all_diagnostic": 2209.1165581171026,
+            "mean_shortage": 0.0
+          }
+        },
+        "trace_hashes_verified": 365
+      },
+      "result_sha256": "07e09d11913f4dc6421f71de314f7c89ba60282a0c9ec932c7f72e9d6563d15a",
+      "state": "valid",
+      "stored_validation_sha256": "23bdb1000a851d9e796ae5d37fccf2fb72ffa61c4c5e39fc6a6a6173cc3178a9"
+    },
+    "policy14_nb20_fit2023": {
+      "declared_sources_verified": [
+        {
+          "actual": "01d72c1a01265ae877db2c914a36f5724ec6ae64bd729cc9594cf3f8cc2b53df",
+          "expected": "01d72c1a01265ae877db2c914a36f5724ec6ae64bd729cc9594cf3f8cc2b53df",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017/identity.json"
+        },
+        {
+          "actual": "c2524c9c68b6f30d64e02f74c30edc45894c4efab8aabb6e4740e8b29700e78a",
+          "expected": "c2524c9c68b6f30d64e02f74c30edc45894c4efab8aabb6e4740e8b29700e78a",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017/days.jsonl"
+        },
+        {
+          "actual": "37e21d3de2c86b5e6ae75a052550d7340741e0243b55849cfb7a5711a59eece4",
+          "expected": "37e21d3de2c86b5e6ae75a052550d7340741e0243b55849cfb7a5711a59eece4",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017/status.json"
+        },
+        {
+          "actual": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "expected": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases.json"
+        },
+        {
+          "actual": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "expected": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0014/pool.json"
+        },
+        {
+          "actual": "213ca5ffe2db5194c6297f79ea39742cfb5f368681c5c753b25971fdb333c858",
+          "expected": "213ca5ffe2db5194c6297f79ea39742cfb5f368681c5c753b25971fdb333c858",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0014/mip_result.json"
+        },
+        {
+          "actual": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "expected": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/solar_days_2023.csv"
+        },
+        {
+          "actual": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "expected": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/ghi_2022_socal.csv"
+        }
+      ],
+      "evaluation_input_sha256": "9ce4a19c7f2fcee302800acde5d381a103cf8e418eeea4ab1729267ee8edf4e7",
+      "execution_commit": "f8f8101557f2ee2983f3cdc6e7369def28338ded",
+      "execution_sha256": "b6bdf23b50be306005184a2845007fc1bd6562242ad694b1e8833cc4a4defcb4",
+      "fit_input_sha256": "8a40a359fe9143ff01ebbc3be658281b829a688365fdf1c4843f99b4ce55b22c",
+      "fit_physical_max_residual": 7.105427357601002e-15,
+      "phases": {
+        "common_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 2.0050627824730327e-12,
+          "dual_sign_violation": 1.3877787807814457e-17,
+          "kkt_stationarity_inf": 2.0333734696009742e-13,
+          "log_sha256": "97dd09296610f4a72f26e39bbe9f713a7e10658427a3aeb2588f8bb823ce1885",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 8.881784197001252e-16,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 1.3642420526593924e-12,
+          "native_objective_bound": 2607.4726583771026,
+          "objective_recomputed": 2607.472658377104,
+          "physical_residual": 7.105427357601002e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 193
+        },
+        "common_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "127d999e5c5a2c3602824988f14a498de36bbc732d140c722bd94c6f3abc3736",
+          "matrix_equality_inf": 4.263256414560601e-14,
+          "matrix_inequality_violation": 1.2434497875801753e-14,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 3.907985046680551e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        },
+        "inherited_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 1.9466924267400004e-16,
+          "dual_sign_violation": 1.3877787807814457e-17,
+          "kkt_stationarity_inf": 2.0961010704922955e-13,
+          "log_sha256": "5b113417ee40d911b3c11706c8c09eb7743397f64e056950d3b41f637d29fc73",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 1.7763568394002505e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 6.139089236967266e-11,
+          "native_objective_bound": 2610.6820204188766,
+          "objective_recomputed": 2610.6820204188152,
+          "physical_residual": 7.105427357601002e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 33
+        },
+        "inherited_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "30520565b55e59c8892f2b20d9d3c43079193060580bd8eb8ca984d3db91e63b",
+          "matrix_equality_inf": 2.842170943040401e-14,
+          "matrix_inequality_violation": 5.329070518200751e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 2.842170943040401e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        }
+      },
+      "replay": {
+        "days": 365,
+        "decomposition": {
+          "common_minus_adaptive": 0.584619059268789,
+          "identity_residual": 0.0,
+          "interpretation": "signed descriptive contrasts; no cross-population ordering asserted",
+          "nesting_asserted": false,
+          "old_minus_adaptive": 1.7309474401304215,
+          "old_minus_common": 1.1463283808616325,
+          "solved_common_optimum": true
+        },
+        "frozen_profile_sha256": "f3d0b613653bd88108eb786816f75d3e9dc5ca2b5ecab6bd1df06910b850ac99",
+        "identical_frozen_common_profile_every_day": true,
+        "journal_hash": "5e8570cace4daa26eb7f4c6c4c3f8a879e2765e4d08c5cc5766107c07be6ffcc",
+        "max_adaptive_vs_wave16_cost_error": 0.0,
+        "max_cross_platform_summary_error": 1.8189894035458565e-12,
+        "max_old_vs_wave16_cost_error": 1.8189894035458565e-12,
+        "max_physical_residual": 7.105427357601002e-15,
+        "max_saved_cost_recomputation_error": 3.637978807091713e-12,
+        "policies_checked_per_day": [
+          "old",
+          "common"
+        ],
+        "reference_source_hashes": {
+          "case_dir": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0017",
+          "days_sha256": "c2524c9c68b6f30d64e02f74c30edc45894c4efab8aabb6e4740e8b29700e78a",
+          "identity_sha256": "01d72c1a01265ae877db2c914a36f5724ec6ae64bd729cc9594cf3f8cc2b53df",
+          "journal_hash": "7e5f0d0a0f39d9cdcabe8a6554e4af8206fb5a08940de985f65d7b42a05588ae",
+          "source": {
+            "mip_sha256": "213ca5ffe2db5194c6297f79ea39742cfb5f368681c5c753b25971fdb333c858",
+            "pool_sha256": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90"
+          },
+          "status_sha256": "37e21d3de2c86b5e6ae75a052550d7340741e0243b55849cfb7a5711a59eece4",
+          "task": {
+            "bess_units": 20,
+            "cap_factor": 0.8,
+            "policy": 14,
+            "source_campaign": "weather_fair_policy_wave7"
+          }
+        },
+        "same_fit_evaluation_population": false,
+        "statistics": {
+          "adaptive": {
+            "failures": 0,
+            "mean_cost_all": 3602.385610676971,
+            "mean_operating_all_diagnostic": 2207.385610676971,
+            "mean_shortage": 0.0
+          },
+          "common": {
+            "failures": 0,
+            "mean_cost_all": 3602.9702297362396,
+            "mean_operating_all_diagnostic": 2207.9702297362405,
+            "mean_shortage": 0.0
+          },
+          "old": {
+            "failures": 0,
+            "mean_cost_all": 3604.1165581171012,
+            "mean_operating_all_diagnostic": 2209.1165581171026,
+            "mean_shortage": 0.0
+          }
+        },
+        "trace_hashes_verified": 365
+      },
+      "result_sha256": "71b9b5cc0526e594b5ca89942f6f9ed1bff1e49561ffe411b3a5c28a484698b3",
+      "state": "valid",
+      "stored_validation_sha256": "171d298aa28b43e55a671f0cc2c3595f6e6a19dcf64078bbfbd08d96025c9a4a"
+    },
+    "policy17_nb20_fit2022": {
+      "declared_sources_verified": [
+        {
+          "actual": "d813d73a010da373be8c50715e3a8e2cc4567101b0e804c1a312bcb117f4391e",
+          "expected": "d813d73a010da373be8c50715e3a8e2cc4567101b0e804c1a312bcb117f4391e",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023/identity.json"
+        },
+        {
+          "actual": "250522256d077b4d6807fb53c861171769162d40f0d64eefa19cfa836a99f41a",
+          "expected": "250522256d077b4d6807fb53c861171769162d40f0d64eefa19cfa836a99f41a",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023/days.jsonl"
+        },
+        {
+          "actual": "8067f92ca1b0064c8bc66929501613aaafa2f8f57647fc05bf132c8e90e63bbf",
+          "expected": "8067f92ca1b0064c8bc66929501613aaafa2f8f57647fc05bf132c8e90e63bbf",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023/status.json"
+        },
+        {
+          "actual": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "expected": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases.json"
+        },
+        {
+          "actual": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "expected": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0017/pool.json"
+        },
+        {
+          "actual": "9e220a4b56751a917ee85863ad25b92e4e8610336c561f760638b91107e80194",
+          "expected": "9e220a4b56751a917ee85863ad25b92e4e8610336c561f760638b91107e80194",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0017/mip_result.json"
+        },
+        {
+          "actual": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "expected": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/solar_days_2023.csv"
+        },
+        {
+          "actual": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "expected": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/ghi_2022_socal.csv"
+        }
+      ],
+      "evaluation_input_sha256": "4418d578f3e02c5fe5769ae6bdb814077d548d88a56b38e1414e2e31b93f8769",
+      "execution_commit": "f8f8101557f2ee2983f3cdc6e7369def28338ded",
+      "execution_sha256": "c717aa0a655b7444c7be024a843fe8a7e33218b85b277501419e23904a8ee2ff",
+      "fit_input_sha256": "4418d578f3e02c5fe5769ae6bdb814077d548d88a56b38e1414e2e31b93f8769",
+      "fit_physical_max_residual": 7.105427357601002e-15,
+      "phases": {
+        "common_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 2.1573853814516042e-11,
+          "dual_sign_violation": 1.3877787807814457e-17,
+          "kkt_stationarity_inf": 1.9800827644189667e-13,
+          "log_sha256": "e9588908aaaa702433130c2189087d55e65778e4e58b451761f37df3ae09d166",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 4.440892098500626e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 1.7280399333685637e-11,
+          "native_objective_bound": 2207.964048243823,
+          "objective_recomputed": 2207.964048243806,
+          "physical_residual": 7.105427357601002e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 149
+        },
+        "common_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "0721d45fcd47b63259e2effd1f1fd89256c631edaebedbf98ac31bb6c311c195",
+          "matrix_equality_inf": 4.263256414560601e-14,
+          "matrix_inequality_violation": 6.572520305780927e-14,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 6.572520305780927e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        },
+        "inherited_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 1.9466924267400004e-16,
+          "dual_sign_violation": 1.3877787807814457e-17,
+          "kkt_stationarity_inf": 2.0605739337042905e-13,
+          "log_sha256": "549359c25217167eaf525b52bf0b80c6184864c3df68ea5e34d7a0028ad3068b",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 8.881784197001252e-16,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 2.955857780762017e-11,
+          "native_objective_bound": 2282.946854747936,
+          "objective_recomputed": 2282.9468547479064,
+          "physical_residual": 7.105427357601002e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 16
+        },
+        "inherited_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "25aa00f8e407a46212cf31c5fe36a39f46654462cef5149634be66a671cd1a9f",
+          "matrix_equality_inf": 2.842170943040401e-14,
+          "matrix_inequality_violation": 5.329070518200751e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 2.842170943040401e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        }
+      },
+      "replay": {
+        "days": 365,
+        "decomposition": {
+          "common_minus_adaptive": 0.5784375668517896,
+          "identity_residual": 0.0,
+          "interpretation": "same-population nesting decomposition",
+          "nesting_asserted": true,
+          "old_minus_adaptive": 75.56124407094694,
+          "old_minus_common": 74.98280650409515,
+          "solved_common_optimum": true
+        },
+        "frozen_profile_sha256": "df0b2798c252c8e85c0650f214f50ebc8255f84e9d0876c314a1019d308e6d92",
+        "identical_frozen_common_profile_every_day": true,
+        "journal_hash": "c3189c3a686048cccb9390156a284adb7075e4cc7112bc9291b6cd9ca0f47e4c",
+        "max_adaptive_vs_wave16_cost_error": 0.0,
+        "max_cross_platform_summary_error": 1.8189894035458565e-12,
+        "max_old_vs_wave16_cost_error": 1.8189894035458565e-12,
+        "max_physical_residual": 7.105427357601002e-15,
+        "max_saved_cost_recomputation_error": 3.637978807091713e-12,
+        "policies_checked_per_day": [
+          "old",
+          "common"
+        ],
+        "reference_source_hashes": {
+          "case_dir": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023",
+          "days_sha256": "250522256d077b4d6807fb53c861171769162d40f0d64eefa19cfa836a99f41a",
+          "identity_sha256": "d813d73a010da373be8c50715e3a8e2cc4567101b0e804c1a312bcb117f4391e",
+          "journal_hash": "cde9d5e443d29a9570e66260da7f09a2952f4eadc37dbc1234f7b1bc72755f56",
+          "source": {
+            "mip_sha256": "9e220a4b56751a917ee85863ad25b92e4e8610336c561f760638b91107e80194",
+            "pool_sha256": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90"
+          },
+          "status_sha256": "8067f92ca1b0064c8bc66929501613aaafa2f8f57647fc05bf132c8e90e63bbf",
+          "task": {
+            "bess_units": 20,
+            "cap_factor": 0.8,
+            "policy": 17,
+            "source_campaign": "weather_fair_policy_wave7"
+          }
+        },
+        "same_fit_evaluation_population": true,
+        "statistics": {
+          "adaptive": {
+            "failures": 0,
+            "mean_cost_all": 3602.385610676971,
+            "mean_operating_all_diagnostic": 2207.3856106769713,
+            "mean_shortage": 0.0
+          },
+          "common": {
+            "failures": 0,
+            "mean_cost_all": 3602.9640482438226,
+            "mean_operating_all_diagnostic": 2207.9640482438235,
+            "mean_shortage": 0.0
+          },
+          "old": {
+            "failures": 0,
+            "mean_cost_all": 3677.9468547479178,
+            "mean_operating_all_diagnostic": 2282.946854747917,
+            "mean_shortage": 0.0
+          }
+        },
+        "trace_hashes_verified": 365
+      },
+      "result_sha256": "ff1c7f79ade71b6e338dc28f7678a6d7b6599bb73dad9f98c5bccfc775163071",
+      "state": "valid",
+      "stored_validation_sha256": "308cb71e619155a1e48c703367625fc9b96a6e021a5bfcf06e5d28e4eb44d520"
+    },
+    "policy17_nb20_fit2023": {
+      "declared_sources_verified": [
+        {
+          "actual": "d813d73a010da373be8c50715e3a8e2cc4567101b0e804c1a312bcb117f4391e",
+          "expected": "d813d73a010da373be8c50715e3a8e2cc4567101b0e804c1a312bcb117f4391e",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023/identity.json"
+        },
+        {
+          "actual": "250522256d077b4d6807fb53c861171769162d40f0d64eefa19cfa836a99f41a",
+          "expected": "250522256d077b4d6807fb53c861171769162d40f0d64eefa19cfa836a99f41a",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023/days.jsonl"
+        },
+        {
+          "actual": "8067f92ca1b0064c8bc66929501613aaafa2f8f57647fc05bf132c8e90e63bbf",
+          "expected": "8067f92ca1b0064c8bc66929501613aaafa2f8f57647fc05bf132c8e90e63bbf",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023/status.json"
+        },
+        {
+          "actual": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "expected": "b1887943336270e48e6968c515e83d498692233f7fb26b8c8553074013df8932",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases.json"
+        },
+        {
+          "actual": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "expected": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0017/pool.json"
+        },
+        {
+          "actual": "9e220a4b56751a917ee85863ad25b92e4e8610336c561f760638b91107e80194",
+          "expected": "9e220a4b56751a917ee85863ad25b92e4e8610336c561f760638b91107e80194",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/campaigns/weather_fair_policy_wave7/cases/0017/mip_result.json"
+        },
+        {
+          "actual": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "expected": "df03991cad41fbc07ed0078f725306afa16e48c14a3d8df229daaf5dbea9e324",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/solar_days_2023.csv"
+        },
+        {
+          "actual": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "expected": "53f9f7ed79c3f9e14ac985b0395074efa609040bbc8d30026662de9ace7382b3",
+          "path": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/reference/data/ghi_2022_socal.csv"
+        }
+      ],
+      "evaluation_input_sha256": "4418d578f3e02c5fe5769ae6bdb814077d548d88a56b38e1414e2e31b93f8769",
+      "execution_commit": "f8f8101557f2ee2983f3cdc6e7369def28338ded",
+      "execution_sha256": "e6f1e8635ccc08de522f3899de863f3c7a453f36cf7397abb40067a23a1992d4",
+      "fit_input_sha256": "6cbdf6d70bcf269db4e2bfc55a35c808dc7acbeeac6ef9d35ad249fd833b0a32",
+      "fit_physical_max_residual": 8.881784197001252e-15,
+      "phases": {
+        "common_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 1.5067114222944156e-12,
+          "dual_sign_violation": 1.3877787807814457e-17,
+          "kkt_stationarity_inf": 2.0333734696009742e-13,
+          "log_sha256": "5a554dbb905d154e0644a22345e5265894d50cd6cd0c10f22fcb784b5c684767",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 5.329070518200751e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 5.002220859751105e-12,
+          "native_objective_bound": 2607.472658377092,
+          "objective_recomputed": 2607.472658377097,
+          "physical_residual": 8.881784197001252e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 193
+        },
+        "common_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "4c0ee39fda2c35b6be25b7d9d89a64c8d7cf1141720d29dbf6c311b8d06cd59b",
+          "matrix_equality_inf": 4.263256414560601e-14,
+          "matrix_inequality_violation": 1.5987211554602254e-14,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 3.552713678800501e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        },
+        "inherited_cost": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 9.733462133700002e-17,
+          "dual_sign_violation": 1.3877787807814457e-17,
+          "kkt_stationarity_inf": 2.0961010704922955e-13,
+          "log_sha256": "d9324da0d151426b400ba34ca3b74aa98a977dd00e32f74f52ba31a41f105191",
+          "matrix_equality_inf": 1.4210854715202004e-14,
+          "matrix_inequality_violation": 8.881784197001252e-16,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 9.640643838793039e-11,
+          "native_objective_bound": 2668.3770164912385,
+          "objective_recomputed": 2668.377016491142,
+          "physical_residual": 7.105427357601002e-15,
+          "reconstructed_dual_objective": null,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 34
+        },
+        "inherited_shortage": {
+          "bound_violation": 0.0,
+          "complementarity_inf": 0.0,
+          "dual_sign_violation": 0.0,
+          "kkt_stationarity_inf": 0.0,
+          "log_sha256": "b4aae94a59932096ad0e8ba1f6d17ae6f04424fe40db4ef44fc59baaa72698fc",
+          "matrix_equality_inf": 2.842170943040401e-14,
+          "matrix_inequality_violation": 5.329070518200751e-15,
+          "named_array_vs_x_error": 0.0,
+          "native_bound_absolute_gap": 0.0,
+          "native_objective_bound": 0.0,
+          "objective_recomputed": 0.0,
+          "physical_residual": 2.842170943040401e-14,
+          "reconstructed_dual_objective": 0.0,
+          "status": "OPTIMAL",
+          "unbounded_variable_negative_reduced_cost_count": 0
+        }
+      },
+      "replay": {
+        "days": 365,
+        "decomposition": {
+          "common_minus_adaptive": 0.5845896173427718,
+          "identity_residual": 0.0,
+          "interpretation": "signed descriptive contrasts; no cross-population ordering asserted",
+          "nesting_asserted": false,
+          "old_minus_adaptive": 75.56124407094694,
+          "old_minus_common": 74.97665445360417,
+          "solved_common_optimum": true
+        },
+        "frozen_profile_sha256": "2eb1eb6c4aaf69d91dc90be4070a5143a8e0b0a57096e4f146cabefb36083026",
+        "identical_frozen_common_profile_every_day": true,
+        "journal_hash": "5cfd205bd7260c22230958610690b9eafee489b16109e49364ad936443d7d11d",
+        "max_adaptive_vs_wave16_cost_error": 0.0,
+        "max_cross_platform_summary_error": 1.8189894035458565e-12,
+        "max_old_vs_wave16_cost_error": 1.8189894035458565e-12,
+        "max_physical_residual": 7.105427357601002e-15,
+        "max_saved_cost_recomputation_error": 3.637978807091713e-12,
+        "policies_checked_per_day": [
+          "old",
+          "common"
+        ],
+        "reference_source_hashes": {
+          "case_dir": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence/snapshots/capacity_gate_wave16_validation/campaigns/capacity_gate_wave16/cases/0023",
+          "days_sha256": "250522256d077b4d6807fb53c861171769162d40f0d64eefa19cfa836a99f41a",
+          "identity_sha256": "d813d73a010da373be8c50715e3a8e2cc4567101b0e804c1a312bcb117f4391e",
+          "journal_hash": "cde9d5e443d29a9570e66260da7f09a2952f4eadc37dbc1234f7b1bc72755f56",
+          "source": {
+            "mip_sha256": "9e220a4b56751a917ee85863ad25b92e4e8610336c561f760638b91107e80194",
+            "pool_sha256": "1d1be308ede030a370d1f4864d689dbb8cd14c09b5341c2597f7033772b07d90"
+          },
+          "status_sha256": "8067f92ca1b0064c8bc66929501613aaafa2f8f57647fc05bf132c8e90e63bbf",
+          "task": {
+            "bess_units": 20,
+            "cap_factor": 0.8,
+            "policy": 17,
+            "source_campaign": "weather_fair_policy_wave7"
+          }
+        },
+        "same_fit_evaluation_population": false,
+        "statistics": {
+          "adaptive": {
+            "failures": 0,
+            "mean_cost_all": 3602.385610676971,
+            "mean_operating_all_diagnostic": 2207.3856106769713,
+            "mean_shortage": 0.0
+          },
+          "common": {
+            "failures": 0,
+            "mean_cost_all": 3602.9702002943136,
+            "mean_operating_all_diagnostic": 2207.9702002943145,
+            "mean_shortage": 0.0
+          },
+          "old": {
+            "failures": 0,
+            "mean_cost_all": 3677.9468547479178,
+            "mean_operating_all_diagnostic": 2282.946854747917,
+            "mean_shortage": 0.0
+          }
+        },
+        "trace_hashes_verified": 365
+      },
+      "result_sha256": "293ce616ccad130393bda011f74c5f7d9aa93bc6fe2c75adc12589880639261a",
+      "state": "valid",
+      "stored_validation_sha256": "b5285e13a3e64cf0f96432dd6b83121dfa1caaff5da9dc06f50d3f6cfbf426a8"
+    }
+  },
+  "code_sha256": {
+    "evaluate.py": "10c2a4730069409633df58471f50fb66a2934b91b8d3b7b371b01e9debd489c8",
+    "solver.py": "379d364f8dbcd0e7cdf65efdddcde769403e60ad818214e789490a29402efb90",
+    "validate.py": "b0793f0a6d983835c13b70d7274a4c1a7a2e276e9634999e6bc1f1907464f492"
+  },
+  "created_utc": "2026-09-22T03:37:11.623641+00:00",
+  "elapsed_seconds": 4.843882291112095,
+  "errors": [],
+  "manifest_files_checked": 25,
+  "manifest_mismatches": [],
+  "manifest_sha256": "47c79b4d8a3a469f65dda8f1bd202ad6a2e2de8d3f3fff6804f59823bdd09b2c",
+  "method": "Read-only local reinspection of all four synced cluster cases. Rehash release manifest and declared source files. Independently reconstruct physical equations and costs from input/actions without importing the extensive LP builder. Recompute matrix primal feasibility, saved primal-to-named-array consistency, both lexicographic objectives, KKT stationarity/sign/complementarity from saved duals, and native objective-bound gaps for all 16 phases. Verify every replay journal/trace hash, all 1460 daily traces for both common and inherited actions, common truck arrays identical to frozen profile on every day, and both saved wave16 comparators. Recompute summaries with identical probability weights. No optimization rerun, file edits, scheduler operation, or remote mutation performed.",
+  "runtime": {
+    "numpy": "1.26.4",
+    "python": "3.12.2",
+    "scipy": "1.13.1"
+  },
+  "source_root": "/Users/nadan/Documents/research/evspv2g-stochastic-git/research/stochastic/evidence",
+  "state": "valid",
+  "summary_reduction_note": "Local and cluster NumPy/BLAS floating-point summations can differ in the final few bits. Numeric summaries are compared with absolute tolerance 1e-4 and the actual maximum discrepancy is reported for each case; structural fields and all file hashes require exact equality.",
+  "tolerances": {
+    "cost": 0.0001,
+    "kkt_stationarity_sign_complementarity": 1e-06,
+    "native_bound_absolute_gap": 0.0001,
+    "physical": 1e-06,
+    "summary_cross_platform_absolute_difference": 0.0001
+  },
+  "totals": {
+    "cases": 4,
+    "daily_policy_primal_rechecks": 2920,
+    "fit_phases": 16,
+    "replay_days": 1460
+  }
+}

@@ -1,0 +1,65 @@
+
+Gurobi 12.0.3 (linux64) logging started Mon Sep 21 23:29:35 2026
+
+Set parameter LogFile to value "/home/nc437/evspv2g-stochastic-review-20260910/campaigns/common_profile_gate_wave17/attempt02/policy14_nb20_fit2022/fit/inherited_shortage.log"
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Ubuntu 24.04.4 LTS")
+
+CPU model: Intel(R) Xeon(R) Gold 6348 CPU @ 2.60GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 56 physical cores, 56 logical processors, using up to 1 threads
+
+Non-default parameters:
+TimeLimit  600
+FeasibilityTol  1e-07
+OptimalityTol  1e-08
+Method  2
+BarConvTol  1e-09
+InfUnbdInfo  1
+LogToConsole  0
+Threads  1
+
+Optimize a model with 37200 rows, 90140 columns and 670080 nonzeros
+Model fingerprint: 0xa37dba2e
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [3e-03, 3e-03]
+  Bounds range     [2e+00, 1e+02]
+  RHS range        [1e-02, 2e+01]
+Presolve removed 3255 rows and 39040 columns
+Presolve time: 0.21s
+Presolved: 33945 rows, 51100 columns, 84680 nonzeros
+
+Ordering time: 0.01s
+
+Barrier statistics:
+ AA' NZ     : 3.358e+04
+ Factor NZ  : 5.438e+05 (roughly 40 MB of memory)
+ Factor Ops : 1.141e+07 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.17016779e+03 -1.40271450e+03  8.98e+01 0.00e+00  9.13e+00     0s
+   1   1.55557765e+02 -2.41866241e+02  1.21e+01 3.33e-16  1.05e+00     0s
+   2   1.32912648e+00 -1.06805147e+01  1.10e-01 3.33e-16  3.01e-02     0s
+   3   1.40857575e-03 -1.06564019e-02  1.41e-12 3.33e-16  3.02e-05     0s
+   4   1.40860506e-06 -1.06563726e-05  1.19e-12 3.33e-16  3.02e-08     0s
+   5   1.40860509e-09 -1.06563726e-08  1.32e-12 3.33e-16  3.02e-11     0s
+   6   1.40860509e-12 -1.06563726e-11  3.55e-14 2.22e-16  3.02e-14     0s
+
+Barrier solved model in 6 iterations and 0.44 seconds (0.37 work units)
+Optimal objective 1.40860509e-12
+
+Crossover log...
+
+       0 DPushes remaining with DInf 0.0000000e+00                 0s
+
+   17155 PPushes remaining with PInf 0.0000000e+00                 0s
+       0 PPushes remaining with PInf 0.0000000e+00                 1s
+
+  Push phase complete: Pinf 0.0000000e+00, Dinf 0.0000000e+00      1s
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+   17158    0.0000000e+00   0.000000e+00   0.000000e+00      1s
+
+Solved in 17158 iterations and 0.58 seconds (0.41 work units)
+Optimal objective  0.000000000e+00

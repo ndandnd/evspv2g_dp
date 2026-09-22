@@ -163,3 +163,34 @@ Job 727162 runs the first full policy-17/2022 case in a fresh attempt02 director
 Ten semantic solver tests passed, including native Gurobi/HiGHS agreement. Independent validation reproduced all 730 archived policy-14/policy-17 daily costs within 1.82e-12, with maximum physical residual 7.11e-15; it also checked tamper rejection, interrupted-journal resume and cross-year ordering restrictions. [Validation notes](../common_profile_gate/VALIDATION_NOTES.md).
 
 The Google Doc now includes a separate [Research journal tab](https://docs.google.com/document/d/1UJIr77gwfUqexeJfy7oFLFbHdxWZcHMGYnyVAVAKkVM/edit?tab=t.s4s0ccun8aob), arranged oldest to newest with native editable tables. Existing tabs remain available.
+
+## 21 September local / 22 September UTC — Common-profile diagnostic completed
+
+**Question.** Does policy 17's large remaining oracle gap require weather-adaptive truck charging, or can a single improved charging plan remove it?
+
+**Action.** Ran all four declared fits and independently replayed each frozen profile on all 365 days of 2022 (1,460 new daily comparison records). Corrected execution commit [f8f8101](https://github.com/ndandnd/evspv2g_dp/commit/f8f8101557f2ee2983f3cdc6e7369def28338ded); jobs 727162_0 and 727176_1–3 all completed with exit 0:0. All 16 native Gurobi 12.0.3 LP phases were optimal. No fleet, trip assignment, storage count or route pool was changed.
+
+**Result.** At 20 BESS units, retuning a common profile removes **99.23% of seed 47's old gap**. The 2023-fit controls show the same pattern when evaluated on 2022. All costs below include identical fixed asset charges, and every comparator has zero shortage on all 365 days.
+
+| Source / fit year | Inherited cost/day | Retuned common cost/day | Adaptive oracle/day | Static improvement/day | Remaining gap/day |
+|---|---:|---:|---:|---:|---:|
+| Seed 47 / 2022 | 3,677.947 | 3,602.964 | 3,602.386 | 74.983 | 0.578 |
+| Seed 47 / 2023 | 3,677.947 | 3,602.970 | 3,602.386 | 74.977 | 0.585 |
+| Seed 29 / 2022 | 3,604.117 | 3,602.964 | 3,602.386 | 1.153 | 0.578 |
+| Seed 29 / 2023 | 3,604.117 | 3,602.970 | 3,602.386 | 1.146 | 0.585 |
+
+The seed-47 in-sample decomposition is 75.561 = 74.983 static retuning + 0.578 residual full-information adaptation. The old 2.05% gap therefore mostly reflected an inherited no-BESS charging plan that had not been retuned after adding storage. This result directly answers wave16's confound; it does not establish that causal adaptation is unnecessary.
+
+**Limits.** 2022 fits are retrospective in-sample mechanism tests. The 2023 fits separate fitting from evaluation, but 2022 was already inspected development data; there is no new untouched test year here. Their differences are signed descriptive comparisons, not a cross-year nesting theorem. BESS and generation still have full-day foresight. All cases retain lossless charging, zero degradation, unlimited shared chargers and fixed reconstructed skeletons. Zero observed shortage is not a future reliability guarantee. Numerical Gurobi bounds, physical replay and statistical interpretation remain separate claims.
+
+**Compute.** Successful runs consumed 142 allocated CPU-seconds; the four pre-solver shell failures consumed another 12, for 0.0428 CPU-hours total. At most two jobs ran concurrently. The [scheduler record](../common_profile_gate/runs/attempt02/accounting.psv) is filtered by job name and submission date as well as IDs, avoiding historical records with reused job numbers. No V2G jobs remain active from this batch.
+
+**Next decision.** Use a retuned common profile as the fixed-profile baseline for causal energy operation. Compare it with adaptive truck charging under identical forecasts and observations, keeping duties and assets fixed. The remaining oracle gap alone cannot answer that causal comparison. Full branch-and-price, RL and another broad capacity sweep are not justified by this diagnostic.
+
+**Evidence.** [Results, distributions and interval sensitivity](../common_profile_gate/report/RESULTS.md); [independent full-result audit](../common_profile_gate/INDEPENDENT_RESULT_AUDIT.json); [all native logs and full solution/replay artifacts](../common_profile_gate/runs/attempt02/); [seed-47 common-cost Gurobi log](../common_profile_gate/runs/attempt02/policy17_nb20_fit2022/fit/common_cost.log); [registered protocol](../common_profile_gate/PROTOCOL.md).
+
+### Additional cost check — 22 September 2026 UTC
+
+Disaggregating the saved actions shows that **the remaining 0.578–0.585/day is entirely the throughput penalty, not fuel savings**, to numerical tolerance. The common and adaptive profiles have equal fuel costs on every 2022 day in all four cases (maximum discrepancy 2.73e-12). Their annual mean fuel cost is 2,200.381307/day. The common plan's throughput charge is 7.582741–7.588923/day, versus 7.004304 for the oracle. The coefficient is 0.025; explicit degradation cost is zero, so this is not a calibrated battery-wear finding.
+
+This post hoc accounting required no new solve. It rechecked 1,460 trace hashes and reconstructed operating costs within 2.01e-11. Seed47's large static improvement mainly reduced fuel: inherited fuel cost 2,274.677874/day falls to 2,200.381307/day. The fair next causal comparison must report fuel, shortage and throughput separately. [Component table, exact quantities and reproduction](../common_profile_gate/report/COST_COMPONENTS.md).

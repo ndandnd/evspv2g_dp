@@ -20,6 +20,18 @@
       ],
       "state_at_registration": "RUNNING",
       "purpose": "First full case smoke and production result",
+      "execution_commit": "f8f8101557f2ee2983f3cdc6e7369def28338ded",
+      "state": "COMPLETED"
+    },
+    {
+      "attempt": "attempt02",
+      "job_id": "727176",
+      "array_cases": [
+        1,
+        2,
+        3
+      ],
+      "state": "COMPLETED",
       "execution_commit": "f8f8101557f2ee2983f3cdc6e7369def28338ded"
     }
   ],
@@ -30,5 +42,10 @@
   "partition": "scaglione",
   "no_requeue": true,
   "exclude": "scaglione-compute-01",
-  "evsp_dr_dependencies": []
+  "evsp_dr_dependencies": [],
+  "successful_cases": 4,
+  "successful_allocated_cpu_seconds": 142,
+  "failed_launch_allocated_cpu_seconds": 12,
+  "final_accounting": "runs/attempt02/accounting.psv",
+  "result_scope": "Four fixed-skeleton continuous LP fits and 1460 daily independent replays, all2022 evaluation; not causal control or new routing"
 }
