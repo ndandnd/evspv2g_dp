@@ -1,0 +1,278 @@
+{
+ "case": "grid_L015_n0240_draw0",
+ "cohort": "grid",
+ "instance_sha256": "5cb416c0de5c7c491645c1cd222f530cc664173d73f83570b8fbe51f810083d5",
+ "n_tasks": 240,
+ "locations": 16,
+ "soc_step": 0.25,
+ "c_b": 36.0,
+ "c_g": 40.0,
+ "c_v": 45.0,
+ "arms": {
+  "cg1800": {
+   "kind": "cg",
+   "path": "/home/nc437/opte-grid-scaling-20261016/results/grid_L015_n0240_draw0/cg_pool_mip",
+   "input_checks": {
+    "saved_instance_equals_rebuilt": true,
+    "result_hash_matches": true,
+    "manifest_hash_matches": true,
+    "manifest_spec_equals_declared": true
+   },
+   "manifest": {
+    "slurm": {
+     "SLURM_JOB_ID": "341205",
+     "SLURM_ARRAY_JOB_ID": "337662",
+     "SLURM_ARRAY_TASK_ID": "116",
+     "SLURM_MEM_PER_NODE": "6144",
+     "SLURMD_NODENAME": "portal-compute-03",
+     "SLURM_RESTART_COUNT": null
+    },
+    "cpu_model": "AMD EPYC 9654 96-Core Processor",
+    "gurobi": [
+     12,
+     0,
+     3
+    ]
+   },
+   "code_checks": {
+    "runtime_files_compared": [
+     "barrier_mip_solver.py",
+     "direct_mip_traced.py",
+     "followup_inputs.py",
+     "grid_instances.py",
+     "panel_instances.py",
+     "phase_models.py",
+     "postrun_bound.py",
+     "run_grid.py",
+     "scaling_instances.py",
+     "shared_scaling_helpers.py"
+    ],
+    "runtime_files_differing": [],
+    "vendor_files_differing": []
+   },
+   "status": "time_limit",
+   "reported_objective": 19569.512499999997,
+   "reported_cg_lp": 14598.5625,
+   "reported_full_family_bound": 14598.56226,
+   "cg_priced_out": true,
+   "final_pricing_call_empty": true,
+   "restricted_mip_status": "time_limit",
+   "runner_graph": [
+    29822,
+    731791
+   ],
+   "selected_routes": 80,
+   "route_realization": {
+    "singleton": 53,
+    "path_from_saved_hint": 27,
+    "path_found_by_search": 0
+   },
+   "transitions_replayed": 1048,
+   "residuals": {
+    "coverage": 0.0,
+    "balance": 0.0,
+    "bess_dynamics": 0.0,
+    "bess_periodic": 0.0,
+    "bess_capacity": 0.0,
+    "bess_charge_rate": 0.0,
+    "bess_discharge_rate": 0.0,
+    "nonnegativity": 0.0,
+    "integrality": 0.0
+   },
+   "max_residual": 0.0,
+   "recomputed_objective": 19569.5125,
+   "objective_abs_diff": 3.637978807091713e-12,
+   "battery_count": 3.0,
+   "vendor_master_check": {
+    "status": "optimal",
+    "objective": 19569.512499999997,
+    "bound": 19569.512499999997,
+    "routes_selected": 80.0,
+    "not_above_reported": true,
+    "seconds": 0.12048215698450804
+   },
+   "schedule_validated": true,
+   "validated_objective": 19569.512499999997,
+   "dual_certificate": {
+    "available": true,
+    "dual_objective_part": 14598.562500000016,
+    "rc_min_graph": -2.3653967673453735e-11,
+    "rc_min_singletons": 20.01249999999858,
+    "rc_min": -2.3653967673453735e-11,
+    "fleet_term": -5.6769522416288964e-09,
+    "battery_unit_value": 0.0,
+    "battery_reduced_cost": 36.0,
+    "mu_clipped_max": 6.536993168992922e-13,
+    "nu_max_abs": 0.0,
+    "bound_before_battery_term": 14598.56249999434,
+    "priced_out_at_1e-6": true
+   },
+   "passed": true
+  },
+  "direct": {
+   "kind": "direct",
+   "path": "/home/nc437/opte-grid-scaling-20261016/results/grid_L015_n0240_draw0/direct_mip",
+   "input_checks": {
+    "saved_instance_equals_rebuilt": true,
+    "result_hash_matches": true,
+    "manifest_hash_matches": true,
+    "manifest_spec_equals_declared": true
+   },
+   "manifest": {
+    "slurm": {
+     "SLURM_JOB_ID": "341212",
+     "SLURM_ARRAY_JOB_ID": "337663",
+     "SLURM_ARRAY_TASK_ID": "117",
+     "SLURM_MEM_PER_NODE": "6144",
+     "SLURMD_NODENAME": "portal-compute-03",
+     "SLURM_RESTART_COUNT": null
+    },
+    "cpu_model": "AMD EPYC 9654 96-Core Processor",
+    "gurobi": [
+     12,
+     0,
+     3
+    ]
+   },
+   "code_checks": {
+    "runtime_files_compared": [
+     "barrier_mip_solver.py",
+     "direct_mip_traced.py",
+     "followup_inputs.py",
+     "grid_instances.py",
+     "panel_instances.py",
+     "phase_models.py",
+     "postrun_bound.py",
+     "run_grid.py",
+     "scaling_instances.py",
+     "shared_scaling_helpers.py"
+    ],
+    "runtime_files_differing": [],
+    "vendor_files_differing": []
+   },
+   "status": "optimal",
+   "reported_objective": 14598.5625,
+   "reported_bound": 14598.5625,
+   "runner_graph": [
+    29822,
+    731791
+   ],
+   "budget_seconds": 3600.0,
+   "solve_end_to_end_seconds": 668.3998770713806,
+   "root_lp_solved_seconds": 230.7278240835294,
+   "vectors": {
+    "incumbent_4": {
+     "file": "incumbent_004.npz",
+     "reported_objective": 14598.56249992027,
+     "routes": 34,
+     "dag_routes": 34,
+     "singleton_routes": 0,
+     "one_truck_per_task_singletons": false,
+     "transitions_replayed": 1357,
+     "residuals": {
+      "coverage": 0.0,
+      "balance": 1.6522108126082458e-09,
+      "bess_dynamics": 0.0,
+      "bess_periodic": 0.0,
+      "bess_capacity": 0.0,
+      "bess_charge_rate": 0.0,
+      "bess_discharge_rate": 0.0,
+      "nonnegativity": 0.0,
+      "integrality": 0.0,
+      "flow_conservation_raw": 0.0
+     },
+     "max_residual": 1.6522108126082458e-09,
+     "recomputed_objective": 14598.56249992027,
+     "objective_abs_diff": 0.0,
+     "battery_count": 0.0,
+     "vendor_master_check": {
+      "status": "optimal",
+      "objective": 14598.5625,
+      "bound": 14598.5625,
+      "routes_selected": 34.0,
+      "not_above_reported": true,
+      "seconds": 0.05223423312418163
+     },
+     "validated": true
+    },
+    "final_-1": {
+     "file": "direct_mip_primal.npz",
+     "reported_objective": 14598.5625,
+     "routes": 34,
+     "dag_routes": 34,
+     "singleton_routes": 0,
+     "one_truck_per_task_singletons": false,
+     "transitions_replayed": 1357,
+     "residuals": {
+      "coverage": 0.0,
+      "balance": 0.0,
+      "bess_dynamics": 0.0,
+      "bess_periodic": 0.0,
+      "bess_capacity": 0.0,
+      "bess_charge_rate": 0.0,
+      "bess_discharge_rate": 0.0,
+      "nonnegativity": 0.0,
+      "integrality": 0.0,
+      "flow_conservation_raw": 0.0
+     },
+     "max_residual": 0.0,
+     "recomputed_objective": 14598.5625,
+     "objective_abs_diff": 0.0,
+     "battery_count": 0.0,
+     "vendor_master_check": {
+      "status": "optimal",
+      "objective": 14598.5625,
+      "bound": 14598.5625,
+      "routes_selected": 34.0,
+      "not_above_reported": true,
+      "seconds": 0.05401656893081963
+     },
+     "validated": true
+    }
+   },
+   "readings": {
+    "1800": {
+     "vector_index": 4,
+     "elapsed_seconds": 668.1498071616516,
+     "objective": 14598.56249992027,
+     "validated": true,
+     "is_first_incumbent": false,
+     "is_one_truck_per_task_schedule": false
+    },
+    "3600": {
+     "vector_index": 4,
+     "elapsed_seconds": 668.1498071616516,
+     "objective": 14598.56249992027,
+     "validated": true,
+     "is_first_incumbent": false,
+     "is_one_truck_per_task_schedule": false
+    }
+   },
+   "first_incumbent": {
+    "vector_index": 0,
+    "objective": 38317.58750000001,
+    "elapsed_seconds": 3.6260188100859523
+   },
+   "final_validated": true,
+   "passed": true
+  }
+ },
+ "graph": {
+  "nodes": 29822,
+  "arcs": 731791,
+  "unpruned_states": 45472,
+  "unpruned_arcs": 1130668,
+  "build_seconds": 0.5117948660627007
+ },
+ "forbidden_modules_loaded": [],
+ "validator_sha256": "e0bdd729a34e1e0d1ef782079834ac94efde66c746e5261bd9971f29c6b0a925",
+ "vendor_sha256": {
+  "colgen.py": "8ec23a0b52ec8f696ada29d2207c7606b5eab50aaa2f72d6932f0fb1a350ee7e",
+  "gurobi_master.py": "99840d7eeb831d965feb783668110873fd34be81712429746d0c7f485011e8e4",
+  "instance.py": "3665962eea34daacb70b1d55a9cd9bbdcea93d6b30f07938f972d82abec09cbb",
+  "master.py": "e39a9b558c309d0fa10652fc63f87982ef37a1722f315df5ce5b51a6ac37bae1",
+  "pricing_truck.py": "4448778183a688d7faf54711973bd4d7bf4cdb6bfc73dda1d2a75def334007e0",
+  "recreate_arxiv.py": "d929fdf58f1a6da777ff8b16628e8abe35d6f23ed3bfb053fa5f69f24849bbbd"
+ },
+ "seconds": 3.1081623639911413
+}

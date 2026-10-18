@@ -1,0 +1,128 @@
+{
+ "case": "panel_map30_draw0",
+ "cohort": "equal",
+ "instance_sha256": "628dba4927d5ed4515ecec523362e5e7ebb0e7061533f9118990052b24e190ea",
+ "n_tasks": 200,
+ "locations": 31,
+ "soc_step": 0.25,
+ "c_b": 36.0,
+ "c_g": 40.0,
+ "c_v": 45.0,
+ "graph": {
+  "nodes": 57082,
+  "arcs": 2026623,
+  "unpruned_states": 88102,
+  "unpruned_arcs": 3196320,
+  "build_seconds": 1.6192571930587292
+ },
+ "forbidden_modules_loaded": [],
+ "validator_sha256": "e0bdd729a34e1e0d1ef782079834ac94efde66c746e5261bd9971f29c6b0a925",
+ "vendor_sha256": {
+  "colgen.py": "8ec23a0b52ec8f696ada29d2207c7606b5eab50aaa2f72d6932f0fb1a350ee7e",
+  "gurobi_master.py": "99840d7eeb831d965feb783668110873fd34be81712429746d0c7f485011e8e4",
+  "instance.py": "3665962eea34daacb70b1d55a9cd9bbdcea93d6b30f07938f972d82abec09cbb",
+  "master.py": "e39a9b558c309d0fa10652fc63f87982ef37a1722f315df5ce5b51a6ac37bae1",
+  "pricing_truck.py": "4448778183a688d7faf54711973bd4d7bf4cdb6bfc73dda1d2a75def334007e0",
+  "recreate_arxiv.py": "d929fdf58f1a6da777ff8b16628e8abe35d6f23ed3bfb053fa5f69f24849bbbd"
+ },
+ "seconds": 5.174296111101285,
+ "arm_label": "cg1800",
+ "arm": {
+  "kind": "cg",
+  "path": "/home/nc437/opte-equal-mip-20261015/results/panel_map30_draw0/cg_pool_mip",
+  "input_checks": {
+   "saved_instance_equals_rebuilt": true,
+   "result_hash_matches": true,
+   "manifest_hash_matches": true,
+   "manifest_spec_equals_declared": true
+  },
+  "manifest": {
+   "slurm": {
+    "SLURM_JOB_ID": "302987",
+    "SLURM_ARRAY_JOB_ID": "302433",
+    "SLURM_ARRAY_TASK_ID": "26",
+    "SLURM_MEM_PER_NODE": "24576",
+    "SLURMD_NODENAME": "awang-compute-01",
+    "SLURM_RESTART_COUNT": null
+   },
+   "cpu_model": "AMD EPYC 9555 64-Core Processor",
+   "gurobi": [
+    12,
+    0,
+    3
+   ]
+  },
+  "code_checks": {
+   "runtime_files_compared": [
+    "barrier_mip_solver.py",
+    "direct_mip_traced.py",
+    "followup_inputs.py",
+    "panel_instances.py",
+    "phase_models.py",
+    "run_equal_mip.py",
+    "scaling_instances.py",
+    "shared_scaling_helpers.py"
+   ],
+   "runtime_files_differing": [],
+   "vendor_files_differing": []
+  },
+  "status": "time_limit",
+  "reported_objective": 14511.2375,
+  "reported_cg_lp": 12882.041964285712,
+  "reported_full_family_bound": 12882.041764285712,
+  "cg_priced_out": true,
+  "final_pricing_call_empty": true,
+  "restricted_mip_status": "time_limit",
+  "runner_graph": [
+   57082,
+   2026623
+  ],
+  "selected_routes": 46,
+  "route_realization": {
+   "singleton": 17,
+   "path_from_saved_hint": 29,
+   "path_found_by_search": 0
+  },
+  "transitions_replayed": 1143,
+  "residuals": {
+   "coverage": 0.0,
+   "balance": 0.0,
+   "bess_dynamics": 0.0,
+   "bess_periodic": 0.0,
+   "bess_capacity": 0.0,
+   "bess_charge_rate": 0.0,
+   "bess_discharge_rate": 0.0,
+   "nonnegativity": 0.0,
+   "integrality": 0.0
+  },
+  "max_residual": 0.0,
+  "recomputed_objective": 14511.237500000001,
+  "objective_abs_diff": 1.8189894035458565e-12,
+  "battery_count": 2.0,
+  "vendor_master_check": {
+   "status": "optimal",
+   "objective": 14511.2375,
+   "bound": 14511.2375,
+   "routes_selected": 46.0,
+   "not_above_reported": true,
+   "seconds": 0.10439087403938174
+  },
+  "schedule_validated": true,
+  "validated_objective": 14511.2375,
+  "dual_certificate": {
+   "available": true,
+   "dual_objective_part": 12882.041964285754,
+   "rc_min_graph": -1.681854655544157e-11,
+   "rc_min_singletons": 4.97500000000089,
+   "rc_min": -1.681854655544157e-11,
+   "fleet_term": -3.3637093110883143e-09,
+   "battery_unit_value": -2.3125000000004263,
+   "battery_reduced_cost": 33.687499999999574,
+   "mu_clipped_max": 1.1084466677857563e-12,
+   "nu_max_abs": 0.0,
+   "bound_before_battery_term": 12882.04196428239,
+   "priced_out_at_1e-6": true
+  },
+  "passed": true
+ }
+}

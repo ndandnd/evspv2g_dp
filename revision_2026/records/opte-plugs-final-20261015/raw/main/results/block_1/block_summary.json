@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "direct_lp",
+    "cg_pool_mip",
+    "direct_mip",
+    "cg_lp"
+  ],
+  "instance_sha256": "ae585c15fb73d7c43be2670e78c36c089854f9a7fbfe5c2b25c821bb0ce7fbac",
+  "results": [
+    {
+      "arm": "direct_lp",
+      "position": 0,
+      "status": "optimal",
+      "objective": 6289.4732142857165,
+      "incumbent_validated": true,
+      "seconds": 164.71342972200364,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 166.56472460599616
+      },
+      "result_sha256": "167f8166eba3c62cdd8bf0d56c3a34ce5a6f9a7f9e61c67a995019fa7582f40f"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 1,
+      "status": "optimal",
+      "objective": 6474.012500000001,
+      "incumbent_validated": true,
+      "seconds": 1003.9258208987303,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1006.2628130749799
+      },
+      "result_sha256": "5db337b0d89b0e670cca6d36a34fa87dd1660ba9c80d282ba88aa77ee0ab104d"
+    },
+    {
+      "arm": "direct_mip",
+      "position": 2,
+      "status": "optimal",
+      "objective": 6315.1875,
+      "incumbent_validated": true,
+      "seconds": 905.4873897950165,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 906.9310804931447
+      },
+      "result_sha256": "c9f6e82ba5fba2cc6413746309c57083380a6b9646ee3025be2bfad2bd0aa375"
+    },
+    {
+      "arm": "cg_lp",
+      "position": 3,
+      "status": "candidate_priced_out",
+      "objective": 6289.473214285716,
+      "incumbent_validated": true,
+      "seconds": 98.01451316615567,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 103.49869687762111
+      },
+      "result_sha256": "9b8203165e417bb6f0b63281950fb515d04594a5afa90527894a00964fa09105"
+    }
+  ],
+  "environment_consistent": true
+}

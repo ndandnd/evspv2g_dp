@@ -1,0 +1,150 @@
+{
+ "method": "cg_to_convergence_then_restricted_mip",
+ "family": "DP_paths_union_real_singleton_seeds",
+ "cg_cap_seconds": 14400.0,
+ "mip_budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "cg_status": "candidate_priced_out",
+ "cg_priced_out": true,
+ "final_pricing_call_empty": true,
+ "cg_inloop_validation_seconds": 1.9315989883616567,
+ "cg_seconds": 35.928418529219925,
+ "cg_lp": {
+  "objective": 6168.349107142856,
+  "elapsed_seconds": 35.79481173865497,
+  "columns": 682
+ },
+ "full_family_lp_lower_bound": 6168.349007142856,
+ "checkpoint_seconds": 0.5803845971822739,
+ "mip_seconds": 143.5885181259364,
+ "total_seconds": 180.0973267722875,
+ "cg_total_readout_seconds": 179.51693665515631,
+ "status": "optimal",
+ "status_scope": "Restricted-pool integer model only",
+ "native_status": 2,
+ "objective": 6400.893749999999,
+ "restricted_pool_bound": 6400.893749999999,
+ "global_integer_optimality_claimed": false,
+ "branch_and_price": false,
+ "incumbent_validated": false,
+ "process_peak_rss_at_stop_bytes": 142454784,
+ "cg_phase": {
+  "status": "candidate_priced_out",
+  "error": null,
+  "cg_cap_seconds": 14400.0,
+  "elapsed_through_pool_preparation_seconds": 35.9279578384012,
+  "cg_phase_deadline_seconds": 14400.0,
+  "real_pool_columns": 582,
+  "original_singletons": 100,
+  "artificial_columns_removed": 100,
+  "rmp_calls": {
+   "_omitted_list": true,
+   "elements": 467,
+   "pretty_lines": 225657
+  },
+  "pricing_calls": {
+   "_omitted_list": true,
+   "elements": 485,
+   "pretty_lines": 2426
+  },
+  "rmp_objective_trace": {
+   "_omitted_list": true,
+   "elements": 467,
+   "pretty_lines": 2803
+  },
+  "basis_restorations": 466,
+  "candidate_priced_out": true,
+  "last_optimal_rmp_available": true,
+  "full_family_bound_certified_during_timing": false,
+  "pool_membership_scope": "Real columns accepted by frozen CG before cutoff, plus original singleton seeds; selected integer paths independently replayed after stopping; all-pool path witnesses are not claimed",
+  "cutoff_policy": "Unprocessed candidates from a pricing call crossing the phase deadline are discarded; the complete call is charged to the total pipeline budget"
+ },
+ "restricted_mip": {
+  "method": "cold_restricted_pool_mip",
+  "objective": 6400.893749999999,
+  "restricted_pool_bound": 6400.893749999999,
+  "bound_scope": "Restricted integer pool only; never a full-family lower bound",
+  "status": "optimal",
+  "native_status": 2,
+  "solution_count": 10,
+  "threads": 1,
+  "seed": 0,
+  "mip_gap_tolerance": 1e-06,
+  "mip_gap_absolute_tolerance": 1e-10,
+  "feasibility_tolerance": 1e-08,
+  "optimality_tolerance": 1e-08,
+  "integer_feasibility_tolerance": 1e-08,
+  "solver_method": -1,
+  "cold_solve": true,
+  "external_incumbent_or_basis_start": false,
+  "trace": [
+   {
+    "elapsed_seconds": 0.043243158608675,
+    "incumbent": 11541.86875,
+    "restricted_pool_bound": 0.0
+   },
+   {
+    "elapsed_seconds": 31.996679141186178,
+    "incumbent": 6480.6625,
+    "restricted_pool_bound": 6252.25328261014
+   },
+   {
+    "elapsed_seconds": 61.99763585627079,
+    "incumbent": 6480.6625,
+    "restricted_pool_bound": 6252.25328261014
+   },
+   {
+    "elapsed_seconds": 91.99816074594855,
+    "incumbent": 6468.11875,
+    "restricted_pool_bound": 6279.882856434372
+   },
+   {
+    "elapsed_seconds": 121.99980531167239,
+    "incumbent": 6468.11875,
+    "restricted_pool_bound": 6308.76360122924
+   }
+  ],
+  "model_build_seconds": 0.02501238603144884,
+  "remaining_solver_budget_seconds": 1799.9749810835347,
+  "variables": 776,
+  "constraints": 342,
+  "nonzeros": 8221,
+  "integer_variables": 583,
+  "solver_version": [
+   12,
+   0,
+   3
+  ],
+  "pipeline_stop_seconds": 143.5885181259364,
+  "restricted_stage_seconds": 143.5885115955025,
+  "solver_runtime_seconds": 143.5632679462433,
+  "process_peak_rss_at_stop_bytes": 142454784,
+  "node_count": 67282.0,
+  "native_pool_gap": 0.0,
+  "solver_peak_memory_gb": 0.03441708
+ },
+ "_compaction": {
+  "source_bytes": 6367015,
+  "source_sha256": "bd2023fc9f404d731e6aba8e36a6ad17caea8614cad63287821539297aa61c63",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "rmp_calls",
+    "elements": 467,
+    "line": 41
+   },
+   {
+    "key": "pricing_calls",
+    "elements": 485,
+    "line": 225699
+   },
+   {
+    "key": "rmp_objective_trace",
+    "elements": 467,
+    "line": 228126
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

@@ -1,0 +1,62 @@
+{
+  "workers": [
+    {
+      "worker": "/home/nc437/opte-plugs-20261013/results/block_7/direct_mip",
+      "passed": true,
+      "accepted_feasible_incumbent": false,
+      "accepted_common_family_lp": false,
+      "global_economic_lower_bound": 6098.833035714287,
+      "restricted_pool_lower_bound": null,
+      "phase1_infeasibility_evidence": false,
+      "verification_tolerance": 1e-06,
+      "scope": "Independent numerical physical/matrix replay and complete graph/seed/BESS pricing, no LP or MIP optimization",
+      "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+      "local_test_override": false,
+      "case": "plugs_n100_L15_d12p5_s0_loose",
+      "variant": "direct_mip",
+      "repeat": 0,
+      "status": "time_limit",
+      "result_sha256": "7a0d29481f6cb575860c8e3d4dbcca0d9d88dd093a0d21d93a9deb3c7cbd6642",
+      "manifest_sha256": "1953ce108ec4354ffe12ef64759b698740a94b0c4fe96a01ad0995efe26659ee",
+      "instance_file_sha256": "b14f8e93e3b556ec8ca3e3499ea207e1749af2108971b10af9ed0953affe0923",
+      "evidence_binding_sha256": {
+        "result.json": "7a0d29481f6cb575860c8e3d4dbcca0d9d88dd093a0d21d93a9deb3c7cbd6642",
+        "manifest.json": "1953ce108ec4354ffe12ef64759b698740a94b0c4fe96a01ad0995efe26659ee",
+        "instance.json": "b14f8e93e3b556ec8ca3e3499ea207e1749af2108971b10af9ed0953affe0923"
+      },
+      "metadata": {
+        "passed": true,
+        "local_test_override": false,
+        "cluster_protocol_accepted": true,
+        "source_files": 35,
+        "evidence_files": 4,
+        "instance_sha256": "31d2ad712906f31ada30ae37a0f42c963fa6d4fe65f821b01e7d43944232b2ac",
+        "host": "cdses-compute-01.orie.cornell.edu",
+        "partial_evidence_only": false
+      },
+      "evidence_sha256": {
+        "instance.json": "b14f8e93e3b556ec8ca3e3499ea207e1749af2108971b10af9ed0953affe0923",
+        "manifest.json": "1953ce108ec4354ffe12ef64759b698740a94b0c4fe96a01ad0995efe26659ee",
+        "native_stop.json": "14bb2269928abdbf356ee9698c58f0b1989f36d9b08c9a1c35e35b2256daaa95",
+        "logs/direct_mip.log": "9580a17f6b0fe13a269ef369bd2a734e3a479e61d5e3dc1d977c6486848bb552"
+      },
+      "instance_sha256": "31d2ad712906f31ada30ae37a0f42c963fa6d4fe65f821b01e7d43944232b2ac",
+      "graph_nodes": 57968,
+      "graph_arcs": 2094985,
+      "finite_connector_rows": 768,
+      "seed_count": 100,
+      "feasible_upper_bound": null,
+      "reason": "All available raw evidence independently checked",
+      "native_infeasible_claim_only": false,
+      "optimum_scope": "Integer optimality status for restricted CG pool remains restricted; full-family bounds separate",
+      "validation_seconds": 3.168825027998537,
+      "process_peak_rss_bytes": 398336000,
+      "verification_process_peak_rss_bytes": 398336000,
+      "rss_scope": "Cumulative verifier-process peak; fresh CLI per worker"
+    }
+  ],
+  "passed": true,
+  "optimization_performed": false,
+  "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+  "local_test_environment_override": false
+}

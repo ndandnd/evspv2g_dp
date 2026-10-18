@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "cg_lp",
+    "direct_lp",
+    "cg_pool_mip",
+    "direct_mip"
+  ],
+  "instance_sha256": "b03f51196efeec0872041c1d30bb5a82b7a8fff832d4accab46a7952902b20e8",
+  "results": [
+    {
+      "arm": "cg_lp",
+      "position": 0,
+      "status": "candidate_priced_out",
+      "objective": 6289.473214285715,
+      "incumbent_validated": true,
+      "seconds": 97.96447702497244,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 103.22605975298211
+      },
+      "result_sha256": "551ba5820fc7565a2d0030e06f6322943b898a1ee0b6ace15fc48e0d4276b7f3"
+    },
+    {
+      "arm": "direct_lp",
+      "position": 1,
+      "status": "optimal",
+      "objective": 6289.4732142857165,
+      "incumbent_validated": true,
+      "seconds": 161.93924233084545,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 163.96958708995953
+      },
+      "result_sha256": "6292c5258a3c6daf01d3cc2fd8472bd9d5b5993de50520e8e536225e2b75847d"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 2,
+      "status": "optimal",
+      "objective": 6372.875,
+      "incumbent_validated": true,
+      "seconds": 207.74704352999106,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 210.0863399170339
+      },
+      "result_sha256": "bbc25e0bcd7f543d59aa0e2de5f9fced462a69172b7c09aa1d861e385a9d7ef5"
+    },
+    {
+      "arm": "direct_mip",
+      "position": 3,
+      "status": "optimal",
+      "objective": 6315.1875,
+      "incumbent_validated": true,
+      "seconds": 589.9304609359242,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 591.3356585367583
+      },
+      "result_sha256": "566f96143274fbe2ac785afa9db96aab149a0eb7a5164adc237c9b33b6fc2dea"
+    }
+  ],
+  "environment_consistent": true
+}

@@ -1,0 +1,390 @@
+{
+ "method": "direct_mip",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": true,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "status": "optimal",
+ "native_status": 2,
+ "objective": 6392.15,
+ "bound": 6392.15,
+ "bound_scope": "full_family",
+ "solution_count": 9,
+ "solver_method": 2,
+ "cold_solve": true,
+ "external_incumbent_or_basis_start": false,
+ "feasibility_tolerance": 1e-08,
+ "optimality_tolerance": 1e-08,
+ "integer_feasibility_tolerance": 1e-08,
+ "mip_gap_tolerance": 1e-06,
+ "mip_gap_absolute_tolerance": 1e-10,
+ "solver_version": [
+  12,
+  0,
+  3
+ ],
+ "trace": [
+  {
+   "elapsed_seconds": 11.446900701150298,
+   "incumbent": null,
+   "bound": 0.0,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 214.88649136805907,
+   "incumbent": null,
+   "bound": 6387.305357142857,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 387.90097321523353,
+   "incumbent": null,
+   "bound": 6387.305357142857,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 429.17406180826947,
+   "incumbent": 6392.249999982034,
+   "bound": 6392.15,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 504.55518527980894,
+   "incumbent": 6392.249999982034,
+   "bound": 6392.15,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 539.144201007206,
+   "incumbent": 6392.2,
+   "bound": 6392.1500000000015,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 600.5958864912391,
+   "incumbent": 6392.2,
+   "bound": 6392.150000000002,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 658.747064536903,
+   "incumbent": 6392.2,
+   "bound": 6392.150000000004,
+   "bound_scope": "full_family"
+  }
+ ],
+ "model_build_seconds": 0.7166532310657203,
+ "remaining_solver_budget_seconds": 1796.1510145957582,
+ "variables": 719649,
+ "constraints": 30710,
+ "nonzeros": 2137925,
+ "integer_variables": 719456,
+ "crossover_parameter": -1,
+ "solve_end_to_end_seconds": 687.2307088961825,
+ "solve_seconds": 683.3815660402179,
+ "solver_runtime_seconds": 683.3812971115112,
+ "process_peak_rss_at_stop_bytes": 1550991360,
+ "native_gap": 0.0,
+ "node_count": 1.0,
+ "graph_seconds": 1.2556549520231783,
+ "matrix_seconds": 1.8759628129191697,
+ "graph_nodes": 29600,
+ "graph_arcs": 719354,
+ "unpruned_arcs": 1123668,
+ "matrix_primal_check": {
+  "passed": true,
+  "absolute_tolerance": 1e-06,
+  "residuals": {
+   "equalities": 0.0,
+   "inequalities": 0.0,
+   "lower_bounds": 0.0,
+   "upper_bounds": 0.0,
+   "integrality": 0.0,
+   "objective_reconstruction": 0.0
+  }
+ },
+ "validation": {
+  "passed": true,
+  "aggregate": {
+   "passed": true,
+   "scope": "aggregate_master_replay",
+   "original_model_feasible": true,
+   "artificial_mass": 0.0,
+   "truck_count": 19.0,
+   "battery_count": 5.0,
+   "residuals": {
+    "task_coverage": 0.0,
+    "energy_balance": 0.0,
+    "battery_dynamics": 0.0,
+    "battery_periodic": 0.0,
+    "battery_capacity": 0.0,
+    "battery_charge_rate": 0.0,
+    "battery_discharge_rate": 0.0,
+    "generation_cap": 0.0,
+    "aggregate_charging_cap": 0.0,
+    "lower_bounds": 0.0,
+    "upper_bounds": 0.0,
+    "column_integrality": 0.0,
+    "battery_count_integrality": 0.0,
+    "objective": 0.0
+   },
+   "replayed_objective": 6392.15,
+   "selected_columns": [
+    {
+     "index": 0,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 2,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 3,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 4,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 5,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 6,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 7,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 8,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 9,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 10,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 11,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 12,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 13,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 14,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 15,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 16,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 17,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 18,
+     "weight": 1.0,
+     "kind": "truck"
+    }
+   ]
+  },
+  "selected_route_proofs": {
+   "_omitted_list": true,
+   "elements": 19,
+   "pretty_lines": 405
+  },
+  "occupancy": {
+   "_omitted_list": true,
+   "elements": 16,
+   "pretty_lines": 801
+  },
+  "max_connector_violation": 0.0,
+  "station_order": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ]
+ },
+ "diagnostic_seconds": 0.5692654559388757,
+ "total_including_checks_seconds": 687.7999750021845,
+ "process_peak_rss_after_diagnostics_bytes": 1550991360,
+ "variant": "direct_mip",
+ "instance_sha256": "70b4e626b0e3ee4974aa5e78782a7c86de6f8139cbb15b544165837036143ff1",
+ "evidence_sha256": {
+  "instance.json": "96953884ab3e14150a5dda1249bf4eb77aa2360bf826f6adce03f377c977ca6f",
+  "manifest.json": "9eaa5125f7ddc2449087226f0e5936dce971a2f27b40b8d6e599912d96dde004",
+  "native_stop.json": "debb638fcf7eb5f7054a647a697ceaa834694e7582c0e96e13910f333993b124",
+  "direct_primal.npz": "100a6be58f5123e7f8ad3bfb20c8ef4323d3879a9fea76bb3023fc2cc98ebc16",
+  "selected_replay_columns.json.gz": "08538814ab4ef5d559296622a41ad9e43de3d55765dbca62d8056a3879f67a32",
+  "selected_replay_primal.npz": "456c7034f48a1cad90a0ea3d5df8a66772a1d5cea3a1b47821eb7313c56be747",
+  "logs/direct_mip.log": "c8bcca287f3c31e4ef59e5ec9caee7da9fe169acaead4156a3ce6f94f21022bc"
+ },
+ "_compaction": {
+  "source_bytes": 311215,
+  "source_sha256": "0d51798904f86f4812b4104a153325574a4de9ec51a880ae12ec7956ce8fb3bf",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 245
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 1067
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 1887
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 2709
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 3532
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 4352
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 5176
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 6000
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 6822
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 7647
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 8469
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 9291
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 10112
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 10935
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 11757
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 12580
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 13401
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 14225
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 15047
+   },
+   {
+    "key": "selected_route_proofs",
+    "elements": 19,
+    "line": 233
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 15858
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

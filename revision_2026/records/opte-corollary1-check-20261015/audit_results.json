@@ -1,0 +1,2575 @@
+{
+ "families": [
+  {
+   "family": "Reference planning (L=3, 200 kWh tasks), delta=25, eta=0",
+   "n_instances_checked": 180,
+   "paper_claim": "line 846: step divides tasks, deadheads and 175 kWh -> corollary applies when eta=0",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py, overnight14.py (build_instance(3,2.0,BREAKS*), soc_step=0.25)",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Planning one-factor arms at delta=25: G in {350,700,1050,1400}, rate 100-500 kW (spine25, pack4; NOT the Fig. 12 source)",
+   "n_instances_checked": 8,
+   "paper_claim": "line 773: all steps divide G",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py spine25 (lines 395-433), pack4 (864-880)",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    50.0,
+    100.0,
+    175.0,
+    250.0
+   ],
+   "dp_rate_kwh": [
+    50.0,
+    100.0,
+    175.0,
+    250.0
+   ],
+   "G_kwh": [
+    350.0,
+    700.0,
+    1050.0,
+    1400.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Planning loss arms eta>0, delta=25",
+   "n_instances_checked": 6,
+   "paper_claim": "line 854: result does not apply when eta>0",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py spine25 eta arm",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": false,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.03,
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.3
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    100.0,
+    125.0,
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "ALIGN/LATTICE discretization check, delta=50, eta=0",
+   "n_instances_checked": 16,
+   "paper_claim": "line 857 (16 matched delta=25/12.5 agree) and line 1850 (50->25 lowers LP 0.65-0.8%, <=2.2%)",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py align (666-697); overnight4.py lattice_ladder (262-288)",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "ALIGN/LATTICE discretization check, delta=25, eta=0",
+   "n_instances_checked": 16,
+   "paper_claim": "line 857 (16 matched delta=25/12.5 agree) and line 1850 (50->25 lowers LP 0.65-0.8%, <=2.2%)",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py align (666-697); overnight4.py lattice_ladder (262-288)",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "ALIGN/LATTICE discretization check, delta=12.5, eta=0",
+   "n_instances_checked": 16,
+   "paper_claim": "line 857 (16 matched delta=25/12.5 agree) and line 1850 (50->25 lowers LP 0.65-0.8%, <=2.2%)",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py align (666-697); overnight4.py lattice_ladder (262-288)",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Structured timing benchmarks (Table 3, Fig. 2, Table 5 rows 1-12), delta=50, rho=50",
+   "n_instances_checked": 18,
+   "paper_claim": "line 850: 50 kWh limit and matching 50 kWh step, corollary applies",
+   "source": "frozen/vendor/recreate_arxiv.build_instance(pts, eps, SCAL) defaults",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    50.0
+   ],
+   "dp_rate_kwh": [
+    50.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    150.0,
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Random multi-location (Table 4; Table 5 random rows; Tables 6-7), delta=50",
+   "n_instances_checked": 24,
+   "paper_claim": "lines 847-848: rho=175 not divisible by 50; corollary does not apply",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py diag2 (696-716); frozen/lp_scaling_instances.py; frozen/extension_instances.py",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Charging-location study (Fig. 10, App. B.5; 3,456 solves), delta=50 (builder default)",
+   "n_instances_checked": 24,
+   "paper_claim": "not identified as a 50 kWh study (lines 988-990, Table 10 caption)",
+   "source": "~/Downloads/paper-rewrite 2/code/stations_study.py make (85-91); ~/Downloads/paper-rewrite 2/code/overnight3.py u3_stations2 (206-246) via solve(); neither sets soc_step",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Timetable families (App. B.3, five families, 40/80 tasks; sched3 + theory), delta=50 (builder default)",
+   "n_instances_checked": 90,
+   "paper_claim": "not identified as a 50 kWh study",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight10.py sched3 (82-101), theory (104-128), FAM3 (47-49) via overnight3.solve (RHO=1.75); no soc_step set",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    0.0,
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Planning solar profile, 2023 selection and benchmark (Fig. 8), delta=50 (builder default)",
+   "n_instances_checked": 1,
+   "paper_claim": "2023 part not identified as a 50 kWh study",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight10.py stoch (133-196) via overnight3.solve; no soc_step set",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Planning solar profile, 2022 holdout (Table 16), delta=25",
+   "n_instances_checked": 1,
+   "paper_claim": "principal step",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight13.py holdout22 (ws/cand rows record soc_step 0.25)",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Fuel budget (Fig. 11), delta=50 (builder default)",
+   "n_instances_checked": 12,
+   "paper_claim": "not identified as a 50 kWh study",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight11.py end3 (133-157) via overnight3.solve; overnight12.py end4 (154-180) via _solve12; no soc_step set",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Pack size (Fig. 12) and its rate arms, delta=50 (builder default)",
+   "n_instances_checked": 112,
+   "paper_claim": "not identified as a 50 kWh study; line 773 (step divides G) holds",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight4.py pack_sweep (168-197) via _solve_custom (149-166); results/arxiv/overnight4_pack_s0of1.json; no soc_step set",
+   "G_on": true,
+   "rho_on": "mixed",
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": "mixed",
+   "corollary_applies": "mixed",
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    50.0,
+    100.0,
+    175.0,
+    250.0
+   ],
+   "dp_rate_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    250.0
+   ],
+   "G_kwh": [
+    350.0,
+    700.0,
+    1050.0,
+    1400.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Pack x workload dense grid (Table 10 range 8-200 tasks), delta=50 (builder default)",
+   "n_instances_checked": 60,
+   "paper_claim": "not identified as a 50 kWh study",
+   "source": "~/Downloads/paper-rewrite 2/code/overnight11.py pack2 (69-89) via _solve_pack (49-66); no soc_step set",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    350.0,
+    700.0,
+    1050.0,
+    1400.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "Profile shift by two hours (App. B.3), delta=50 (builder default)",
+   "n_instances_checked": 1,
+   "paper_claim": "not identified as a 50 kWh study",
+   "source": "~/Downloads/paper-rewrite 2/code/profile_robustness.py run_cell (72-95), POINTS=3, EPS=2.0; no soc_step set",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  }
+ ],
+ "saved_record_groups": [
+  {
+   "family": "saved: experiments/opte_cg_followup_20261013/preflight_v1 [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_followup_20261013/preflight_v1 [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_followup_20261013/preflight_v1 [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_followup_20261013/preflight_v2 [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_followup_20261013/preflight_v2 [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_followup_20261013/preflight_v2 [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_regimes_20261013/preflight_v1 [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_regimes_20261013/preflight_v1 [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_regimes_20261013/preflight_v1 [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_regimes_20261013/preflight_v2 [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_regimes_20261013/preflight_v2 [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_cg_regimes_20261013/preflight_v2 [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_direct_mip_barrier_20261013/checks_v1 [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_direct_mip_barrier_20261013/checks_v1 [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_direct_mip_barrier_20261013/checks_v1 [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_equal_mip_20261015/runtime [delta=25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_equal_mip_20261015/runtime [delta=50]",
+   "n_instances_checked": 9,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_integer_extension_20261014/checks_v1 [delta=25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_integer_extension_20261014/checks_v1 [delta=50]",
+   "n_instances_checked": 9,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_development [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_development [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_development [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_final [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    87.5,
+    100.0,
+    112.5,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_final [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    100.0,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_final [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    81.25,
+    87.5,
+    93.75,
+    100.0,
+    106.25,
+    112.5,
+    118.75,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_heterogeneous_development [delta=12.5]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    87.5,
+    100.0,
+    112.5,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_heterogeneous_development [delta=25]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    100.0,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_lp_hypothesis_20261013/preflight_heterogeneous_development [delta=6.25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    6.25
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    81.25,
+    87.5,
+    93.75,
+    100.0,
+    106.25,
+    112.5,
+    118.75,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_plugs_20261013/checks_v1 [delta=12.5]",
+   "n_instances_checked": 6,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    12.5
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    87.5,
+    100.0,
+    112.5,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_plugs_20261013/checks_v1 [delta=25]",
+   "n_instances_checked": 12,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    75.0,
+    100.0,
+    125.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_plugs_20261013/checks_v1 [delta=50]",
+   "n_instances_checked": 6,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    100.0
+   ],
+   "dp_rate_kwh": [
+    100.0
+   ],
+   "G_kwh": [
+    200.0
+   ],
+   "task_kwh": [
+    50.0
+   ],
+   "deadhead_kwh": [
+    50.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_plugs_20261013/checks_v2 [delta=50]",
+   "n_instances_checked": 5,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    100.0
+   ],
+   "dp_rate_kwh": [
+    100.0
+   ],
+   "G_kwh": [
+    200.0
+   ],
+   "task_kwh": [
+    50.0
+   ],
+   "deadhead_kwh": [
+    50.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/cg_reuse_deployment_20261013 [delta=50]",
+   "n_instances_checked": 82,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/cluster_20261012 [delta=25]",
+   "n_instances_checked": 12,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/cluster_20261012 [delta=50]",
+   "n_instances_checked": 149,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/direct_mip1000_deployment_20261012 [delta=50]",
+   "n_instances_checked": 4,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/mip1000_preflight_local_20261012 [delta=50]",
+   "n_instances_checked": 1,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/pilot_20261011 [delta=50]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    50.0
+   ],
+   "dp_rate_kwh": [
+    50.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    150.0,
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/pilot_20261011_verified [delta=50]",
+   "n_instances_checked": 8,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    50.0
+   ],
+   "dp_rate_kwh": [
+    50.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    150.0,
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/planning_population_deployment_20261012 [delta=25]",
+   "n_instances_checked": 1080,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/planning_refinement_combined_20261013 [delta=25]",
+   "n_instances_checked": 213,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/planning_refinement_deployment_20261013 [delta=25]",
+   "n_instances_checked": 3,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/planning_refinement_deployment_cdses_20261013 [delta=25]",
+   "n_instances_checked": 211,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/planning_refinement_mixed_node_validation_20261013 [delta=25]",
+   "n_instances_checked": 1,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/planning_refinement_validation_v2_20261013 [delta=25]",
+   "n_instances_checked": 1,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/random_extension_20261012 [delta=50]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/opte_second_round/results/structured_extension_20261012 [delta=50]",
+   "n_instances_checked": 4,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    50.0
+   ],
+   "dp_rate_kwh": [
+    50.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    150.0,
+    200.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/second_round_scaling_20261013/results [delta=25]",
+   "n_instances_checked": 2,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": true,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": true,
+   "corollary_applies": true,
+   "steps_kwh": [
+    25.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    175.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  },
+  {
+   "family": "saved: experiments/second_round_scaling_20261013/results [delta=50]",
+   "n_instances_checked": 10,
+   "paper_claim": "",
+   "source": "instance.json records",
+   "G_on": true,
+   "rho_on": false,
+   "tasks_on": true,
+   "deadheads_on": true,
+   "boundary_full_on": true,
+   "all_on": false,
+   "corollary_applies": false,
+   "steps_kwh": [
+    50.0
+   ],
+   "eta": [
+    0.0
+   ],
+   "rho_kwh": [
+    175.0
+   ],
+   "dp_rate_kwh": [
+    150.0
+   ],
+   "G_kwh": [
+    700.0
+   ],
+   "task_kwh": [
+    100.0
+   ],
+   "deadhead_kwh": [
+    50.0,
+    100.0,
+    150.0,
+    200.0,
+    250.0,
+    300.0
+   ],
+   "undercounts": []
+  }
+ ],
+ "dp_rules": {
+  "rate": "floor((1-eta)*rho/step) (pricing_truck.py:86-87)",
+  "task": "int(round(energy/step)) (pricing_truck.py:106)",
+  "deadhead": "int(round(dist*epd/step)) (pricing_truck.py:101)",
+  "levels": "round(G/step)+1 (pricing_truck.py:81)"
+ }
+}

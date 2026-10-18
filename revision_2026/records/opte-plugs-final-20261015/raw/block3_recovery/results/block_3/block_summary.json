@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "direct_mip",
+    "cg_lp",
+    "direct_lp",
+    "cg_pool_mip"
+  ],
+  "instance_sha256": "22386697d2d7a07ee358f755198f5f9826f5cacfbf9455016381977775e87cac",
+  "results": [
+    {
+      "arm": "direct_mip",
+      "position": 0,
+      "status": "time_limit",
+      "objective": 6382.1625,
+      "incumbent_validated": true,
+      "seconds": 1800.0659494451247,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1801.247787179891
+      },
+      "result_sha256": "257519201967f8489b2338007d76d2b22a8dc5ebfae0728b2960de4f8aba78ad"
+    },
+    {
+      "arm": "cg_lp",
+      "position": 1,
+      "status": "candidate_priced_out",
+      "objective": 6371.175127551019,
+      "incumbent_validated": true,
+      "seconds": 139.93600502517074,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 146.93674338888377
+      },
+      "result_sha256": "3e86e44893a4c3111a229ae06c76391e9f15189206d41fea9e608e6d25177899"
+    },
+    {
+      "arm": "direct_lp",
+      "position": 2,
+      "status": "optimal",
+      "objective": 6371.1751275510205,
+      "incumbent_validated": true,
+      "seconds": 127.01313462480903,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 129.00627585221082
+      },
+      "result_sha256": "ad25776704d55be4ef6e7412ffeb01335baa567190739a2e56e13f973b10be28"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 3,
+      "status": "optimal",
+      "objective": 6430.712500000001,
+      "incumbent_validated": true,
+      "seconds": 1473.7398451901972,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1476.772338900715
+      },
+      "result_sha256": "7ef15d7af49e80f5dcf5bfadfb4d7365af95f38f5e542397361bd0e2e198f690"
+    }
+  ],
+  "environment_consistent": true
+}

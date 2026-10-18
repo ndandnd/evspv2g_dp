@@ -1,0 +1,308 @@
+{
+ "method": "direct_mip",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": true,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "status": "time_limit",
+ "native_status": 9,
+ "objective": 32424.725000000006,
+ "bound": 13015.669196428573,
+ "bound_scope": "full_family",
+ "solution_count": 1,
+ "solver_method": 2,
+ "cold_solve": true,
+ "external_incumbent_or_basis_start": false,
+ "feasibility_tolerance": 1e-08,
+ "optimality_tolerance": 1e-08,
+ "integer_feasibility_tolerance": 1e-08,
+ "mip_gap_tolerance": 1e-06,
+ "mip_gap_absolute_tolerance": 1e-10,
+ "solver_version": [
+  12,
+  0,
+  3
+ ],
+ "trace": [
+  {
+   "elapsed_seconds": 63.80448620254174,
+   "incumbent": 32424.725000000006,
+   "bound": 0.0,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 895.0913473488763,
+   "incumbent": 32424.725000000006,
+   "bound": 13015.669196428573,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 1143.1908709206618,
+   "incumbent": 32424.725000000006,
+   "bound": 13015.669196428573,
+   "bound_scope": "full_family"
+  }
+ ],
+ "model_build_seconds": 2.03245132509619,
+ "remaining_solver_budget_seconds": 1789.5566654093564,
+ "variables": 2022367,
+ "constraints": 57395,
+ "nonzeros": 4721622,
+ "integer_variables": 2022174,
+ "crossover_parameter": -1,
+ "solve_end_to_end_seconds": 1800.1602564007044,
+ "solve_seconds": 1789.7167566679418,
+ "solver_runtime_seconds": 1789.7164590358734,
+ "process_peak_rss_at_stop_bytes": 4237463552,
+ "native_gap": 0.5985881392539623,
+ "node_count": 1.0,
+ "graph_seconds": 3.7363926437683403,
+ "matrix_seconds": 4.67153857415542,
+ "graph_nodes": 56953,
+ "graph_arcs": 2021972,
+ "unpruned_arcs": 3196320,
+ "matrix_primal_check": {
+  "passed": true,
+  "absolute_tolerance": 1e-06,
+  "residuals": {
+   "equalities": 0.0,
+   "inequalities": 0.0,
+   "lower_bounds": 0.0,
+   "upper_bounds": 0.0,
+   "integrality": 0.0,
+   "objective_reconstruction": 0.0
+  }
+ },
+ "validation": {
+  "passed": true,
+  "aggregate": {
+   "passed": true,
+   "scope": "aggregate_master_replay",
+   "original_model_feasible": true,
+   "artificial_mass": 0.0,
+   "truck_count": 200.0,
+   "battery_count": 0.0,
+   "residuals": {
+    "task_coverage": 0.0,
+    "energy_balance": 0.0,
+    "battery_dynamics": 0.0,
+    "battery_periodic": 0.0,
+    "battery_capacity": 0.0,
+    "battery_charge_rate": 0.0,
+    "battery_discharge_rate": 0.0,
+    "generation_cap": 0.0,
+    "aggregate_charging_cap": 0.0,
+    "lower_bounds": 0.0,
+    "upper_bounds": 0.0,
+    "column_integrality": 0.0,
+    "battery_count_integrality": 0.0,
+    "objective": 7.275957614183426e-12
+   },
+   "replayed_objective": 32424.725,
+   "selected_columns": {
+    "_omitted_list": true,
+    "elements": 200,
+    "pretty_lines": 1001
+   }
+  },
+  "selected_route_proofs": {
+   "_omitted_list": true,
+   "elements": 200,
+   "pretty_lines": 277928
+  },
+  "occupancy": {
+   "_omitted_list": true,
+   "elements": 31,
+   "pretty_lines": 1551
+  },
+  "max_connector_violation": 0.0,
+  "station_order": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ]
+ },
+ "diagnostic_seconds": 7.935079963877797,
+ "total_including_checks_seconds": 1808.0953381247818,
+ "process_peak_rss_after_diagnostics_bytes": 4237463552,
+ "variant": "direct_mip",
+ "instance_sha256": "ded503c61bc533d342430ebc22817c51a3ec199b4d575e5851eed1ae2fe31644",
+ "evidence_sha256": {
+  "instance.json": "c29c9be62712297f59105a5d5237251a2aae0e13bd8d61485bb0962eb35c3a42",
+  "manifest.json": "054f87b2649794b548d3759b7a91aa993157e85c03a0f564fe81d8f3911d554e",
+  "native_stop.json": "e3f7447e24063965abedf62505bbe3dd56ecbf473760c7af930b36fe1f337f44",
+  "direct_primal.npz": "d00134f54b8a438737348b6898223d4aa1ebb6ba5d9d154f3359835b77431bc2",
+  "selected_replay_columns.json.gz": "6c5c5bb1c2cf29491b727ad757e331cd791a9d36f24b89b994d89fe07fa745c1",
+  "selected_replay_primal.npz": "2b9e09bc8526431b823ed284395a5fdd51d55098fcc0777e6a9551eb43acf9aa",
+  "logs/direct_mip.log": "db7203d217e56bde342a3d71652d918354edae7e8958e96e5ad6f5f5dfda6e25"
+ },
+ "_compaction": {
+  "source_bytes": 5946823,
+  "source_sha256": "3113c29445aa7d55d492554b632ea46516f8d693bc04850de413de5db3d7840f",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "selected_columns",
+    "elements": 200,
+    "line": 105
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 1120
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 2688
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 4256
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 5824
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 7392
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 8960
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 10528
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 12096
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 13664
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 15232
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 16800
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 18368
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 19936
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 21504
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 23072
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 24640
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 26208
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 27776
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 29344
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 30912
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 32480
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 34048
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 35616
+   },
+   {
+    "key": "selected_route_proofs",
+    "elements": 200,
+    "line": 1108
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 314710
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

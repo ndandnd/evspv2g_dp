@@ -1,0 +1,60 @@
+{
+  "arm": "direct_mip",
+  "block_index": 3,
+  "worker": "/home/nc437/opte-preemption-recovery-20261014/256373_3/submission_0001/attempts/restart_0000/results/block_3/direct_mip",
+  "case_name": "plugs_n100_L15_d25_s1_unlimited",
+  "instance_sha256": "22386697d2d7a07ee358f755198f5f9826f5cacfbf9455016381977775e87cac",
+  "excluded_calibration": false,
+  "optimization_performed": false,
+  "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+  "snapshot_manifest_sha256": "c89eee1724a8976a33fee366de209e0d4b63c1842afd151317e0e4d6bf2f940d",
+  "plan_sha256": "92bad9a3a4bb35cf34e82ff4cfaf8d49314d3661d18593dc0dde200e7785b415",
+  "dispatcher_sha256": "e817295513525e85b25e1babb8da46e7b6c2658772f8da93ba1a52ff4fa4966e",
+  "primary_result_sha256": "257519201967f8489b2338007d76d2b22a8dc5ebfae0728b2960de4f8aba78ad",
+  "passed": true,
+  "status": "verified",
+  "external_execution": {
+    "returncode": 0,
+    "external_timeout": false,
+    "watchdog_limit_seconds": 600,
+    "process_group_killed": false,
+    "wall_seconds": 3.568297613877803,
+    "process_id": 2176560,
+    "user_cpu_seconds": 3.2140629999998964,
+    "system_cpu_seconds": 0.3008190000000006,
+    "cpu_scope": "Delta of reaped-child CPU counters; audits are serial with no other child running",
+    "sampled_process_peak_rss_bytes": 292835328,
+    "sampled_memory_scope": "Linux child VmHWM sampled at <=1 second intervals; a missed final peak is possible; independent verifier also records its own peak"
+  },
+  "verification_process_peak_rss_bytes": 292478976,
+  "accepted_feasible_incumbent": true,
+  "accepted_common_family_lp": false,
+  "primary_evidence_unchanged": true,
+  "primary_status": "time_limit",
+  "available_primal_files": [
+    "direct_primal.npz",
+    "selected_replay_primal.npz"
+  ],
+  "command": [
+    "/home/nc437/evsp_env/bin/python",
+    "/home/nc437/opte-preemption-recovery-20261014/256373_3/submission_0001/attempts/restart_0000/code/experiments/opte_plugs_20261013/verify_plugs.py",
+    "--input",
+    "/home/nc437/opte-preemption-recovery-20261014/256373_3/submission_0001/attempts/restart_0000/results/block_3/direct_mip",
+    "--output",
+    "/home/nc437/opte-preemption-recovery-20261014/256373_3/submission_0001/attempts/restart_0000/audits/block_3_direct_mip.json"
+  ],
+  "global_economic_lower_bound": 6382.150000000001,
+  "phase1_infeasibility_evidence": false,
+  "primary_artifact_hashes_before": {
+    "instance.json": "a358f30d778536cad3ca6b3468aaa5142dad1e51d141daf9f9ef4f7b7e64793e",
+    "manifest.json": "d5ea01717ade3e6f732384e0d1e6741f576cf1b54dc78741e1c1640711576f38",
+    "native_stop.json": "9723de833ed8e786a5e5bfc68419b26bc781644990fc3e687afb840fdde47039",
+    "direct_primal.npz": "be576c42864c0bf75d2eee63c03f398e88ca3973eae54e9793da3518a57a33c4",
+    "selected_replay_columns.json.gz": "79578781630b0c16e550c81c11bdf70260d0e1c5219b25b5ed4343e1e236d73f",
+    "selected_replay_primal.npz": "7ca33baf2d4a95c8b2798479df0cbd5371795f2bc008a07e62329d66d6775aa7",
+    "result.json": "257519201967f8489b2338007d76d2b22a8dc5ebfae0728b2960de4f8aba78ad",
+    "logs/direct_mip.log": "76797f3d4e15910475974c83dc0e8ea46e7896e13945444658a3adde58aaa2fd"
+  },
+  "audit_output_sha256": "1eb37c7910e82b6354ff501602434cd459fd53c238aad8a0130109ee02b6d18d",
+  "audit_log_sha256": "dbf0893f31f55fe614fe8de8712e6ee8a63aca912b6d0c559077f7a64bbfe77f"
+}

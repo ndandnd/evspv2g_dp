@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "cg_lp",
+    "direct_lp",
+    "cg_pool_mip",
+    "direct_mip"
+  ],
+  "instance_sha256": "ded503c61bc533d342430ebc22817c51a3ec199b4d575e5851eed1ae2fe31644",
+  "results": [
+    {
+      "arm": "cg_lp",
+      "position": 0,
+      "status": "candidate_priced_out",
+      "objective": 13015.669196428586,
+      "incumbent_validated": true,
+      "seconds": 525.4684116709977,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 540.9544260841794
+      },
+      "result_sha256": "ffb005a41cc40309eb0fdc5b08208554134aea8f8d1994ffe34dfeaba63d894b"
+    },
+    {
+      "arm": "direct_lp",
+      "position": 1,
+      "status": "optimal",
+      "objective": 13015.66919642857,
+      "incumbent_validated": true,
+      "seconds": 903.3088355748914,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 907.8499396652915
+      },
+      "result_sha256": "4dac8e0d14827a1a912a1916868b227f4669532c6e0fa5af3006e3b6a9ba2042"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 2,
+      "status": "time_limit",
+      "objective": 14031.999999999998,
+      "incumbent_validated": true,
+      "seconds": 1800.0036004651338,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1806.2996129891835
+      },
+      "result_sha256": "48129ccacbf87d1ec2b488ffd4c1962f5f7701bb2b439a8642a26d8f37c52618"
+    },
+    {
+      "arm": "direct_mip",
+      "position": 3,
+      "status": "time_limit",
+      "objective": 32424.725000000006,
+      "incumbent_validated": true,
+      "seconds": 1800.1602564007044,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1809.7682822262868
+      },
+      "result_sha256": "3113c29445aa7d55d492554b632ea46516f8d693bc04850de413de5db3d7840f"
+    }
+  ],
+  "environment_consistent": true
+}

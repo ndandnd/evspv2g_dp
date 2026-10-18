@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "direct_lp",
+    "cg_pool_mip",
+    "direct_mip",
+    "cg_lp"
+  ],
+  "instance_sha256": "d8a1831398a17649b150332c5b839bdc4da75aee9fc5204702c1d83a973554e5",
+  "results": [
+    {
+      "arm": "direct_lp",
+      "position": 0,
+      "status": "optimal",
+      "objective": 6386.722124542126,
+      "incumbent_validated": true,
+      "seconds": 183.67966097407043,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 185.76665361970663
+      },
+      "result_sha256": "8719cc9e6448272a4eb2e2c34c375b927a8c6b2f0928e7e1242974953e643eb4"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 1,
+      "status": "time_limit",
+      "objective": 7487.775,
+      "incumbent_validated": true,
+      "seconds": 1800.005123975221,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1804.8525303592905
+      },
+      "result_sha256": "3a5ed219cb7a006d99098e0f09281b261f207f30ea116313d6813f55b87bfebb"
+    },
+    {
+      "arm": "direct_mip",
+      "position": 2,
+      "status": "time_limit",
+      "objective": 6413.0875,
+      "incumbent_validated": true,
+      "seconds": 1800.0471875397488,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1801.482931680046
+      },
+      "result_sha256": "03f3a4bd7c98a81f34c50e9702abfba464027f27723e13191229163de31d3d74"
+    },
+    {
+      "arm": "cg_lp",
+      "position": 3,
+      "status": "candidate_priced_out",
+      "objective": 6386.722124542121,
+      "incumbent_validated": true,
+      "seconds": 260.0287832780741,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 270.67578917508945
+      },
+      "result_sha256": "fda8d05e78f9e67c7fcf9179c6bfc9b2a18b2d50d5fa9f3caa59d60e392ec8cc"
+    }
+  ],
+  "environment_consistent": true
+}

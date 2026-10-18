@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-12T21:49:38.766271+00:00",
+  "command": [
+    "/usr/local/slurm/current/bin/sbatch",
+    "--parsable",
+    "--job-name=opte_mip1000",
+    "--partition=default_partition",
+    "--nodelist=lisbeth",
+    "--nodes=1",
+    "--ntasks=1",
+    "--cpus-per-task=1",
+    "--hint=nomultithread",
+    "--mem=8G",
+    "--time=00:45:00",
+    "--array=0-3%4",
+    "--output=/home/nc437/opte-mip1000-20261012/logs/mip1000-%A_%a.out",
+    "/home/nc437/opte-mip1000-20261012/array_worker.sh"
+  ],
+  "status": "submitted",
+  "snapshot_manifest_sha256": "a9321b57003c1c1580b9fd6bd433e086c298c26cdebb622d38dc96225cb19ff9",
+  "worker_script_sha256": "da2fc3796ab3b07b0a841f8ce411e21d52b849f0f10861337cb0fd0929384294",
+  "mutates_existing_jobs": false,
+  "returncode": 0,
+  "stdout": "230773",
+  "stderr": ""
+}

@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "cg_lp",
+    "direct_lp",
+    "cg_pool_mip",
+    "direct_mip"
+  ],
+  "instance_sha256": "f59c11531d6cc76752f807d1947b3109fb94867c3805dcb86d56f4f1c806e02c",
+  "results": [
+    {
+      "arm": "cg_lp",
+      "position": 0,
+      "status": "candidate_priced_out",
+      "objective": 6371.17512755102,
+      "incumbent_validated": true,
+      "seconds": 132.54987872112542,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 139.08801977336407
+      },
+      "result_sha256": "dc45a576edac2187776f2e3e2212e6358b72a104e245c6f86ba46d47bcc6afa4"
+    },
+    {
+      "arm": "direct_lp",
+      "position": 1,
+      "status": "optimal",
+      "objective": 6371.1751275510205,
+      "incumbent_validated": true,
+      "seconds": 163.21478040982038,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 165.23895705631003
+      },
+      "result_sha256": "15b4555628dcfd2e98e00fca29e6576159bd75efe7c223ad4702096647118a4b"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 2,
+      "status": "optimal",
+      "objective": 6451.200000000001,
+      "incumbent_validated": true,
+      "seconds": 1531.0654212026857,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1533.796121402178
+      },
+      "result_sha256": "a292f6c7a38a8e625905df903f198cf86e6c93b9451d7e00032285300c877652"
+    },
+    {
+      "arm": "direct_mip",
+      "position": 3,
+      "status": "time_limit",
+      "objective": 6382.312499202874,
+      "incumbent_validated": true,
+      "seconds": 1800.0835371888243,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1801.7774774730206
+      },
+      "result_sha256": "074fda0b7efd33a3ab9c0b808b4299d63db83d8e42f1fea541e89bcbcef402a7"
+    }
+  ],
+  "environment_consistent": true
+}

@@ -1,0 +1,266 @@
+{
+ "case": "diag2_L04_n1000_s0",
+ "cohort": "equal",
+ "instance_sha256": "8bffa420579dfdc471ab2dfa09d8b2b9f9a369f8ddff3b28d39ca8c889f26fe1",
+ "n_tasks": 1000,
+ "locations": 5,
+ "soc_step": 0.5,
+ "c_b": 36.0,
+ "c_g": 40.0,
+ "c_v": 45.0,
+ "arms": {
+  "cg1800": {
+   "kind": "cg",
+   "path": "/home/nc437/opte-equal-mip-20261015/results/diag2_L04_n1000_s0/cg_pool_mip",
+   "input_checks": {
+    "saved_instance_equals_rebuilt": true,
+    "result_hash_matches": true,
+    "manifest_hash_matches": true,
+    "manifest_spec_equals_declared": true
+   },
+   "manifest": {
+    "slurm": {
+     "SLURM_JOB_ID": "302427",
+     "SLURM_ARRAY_JOB_ID": "302379",
+     "SLURM_ARRAY_TASK_ID": "38",
+     "SLURM_MEM_PER_NODE": "24576",
+     "SLURMD_NODENAME": "awang-compute-01",
+     "SLURM_RESTART_COUNT": null
+    },
+    "cpu_model": "AMD EPYC 9555 64-Core Processor",
+    "gurobi": [
+     12,
+     0,
+     3
+    ]
+   },
+   "code_checks": {
+    "runtime_files_compared": [
+     "barrier_mip_solver.py",
+     "direct_mip_traced.py",
+     "followup_inputs.py",
+     "panel_instances.py",
+     "phase_models.py",
+     "run_equal_mip.py",
+     "scaling_instances.py",
+     "shared_scaling_helpers.py"
+    ],
+    "runtime_files_differing": [],
+    "vendor_files_differing": []
+   },
+   "status": "time_limit",
+   "reported_objective": 83828.20000000001,
+   "reported_cg_lp": 48050.42500000003,
+   "reported_full_family_bound": 48050.424000000035,
+   "cg_priced_out": true,
+   "final_pricing_call_empty": true,
+   "restricted_mip_status": "time_limit",
+   "runner_graph": [
+    4974,
+    72553
+   ],
+   "selected_routes": 518,
+   "route_realization": {
+    "singleton": 472,
+    "path_from_saved_hint": 46,
+    "path_found_by_search": 0
+   },
+   "transitions_replayed": 1680,
+   "residuals": {
+    "coverage": 0.0,
+    "balance": 0.0,
+    "bess_dynamics": 0.0,
+    "bess_periodic": 0.0,
+    "bess_capacity": 0.0,
+    "bess_charge_rate": 0.0,
+    "bess_discharge_rate": 0.0,
+    "nonnegativity": 0.0,
+    "integrality": 0.0
+   },
+   "max_residual": 0.0,
+   "recomputed_objective": 83828.20000000001,
+   "objective_abs_diff": 0.0,
+   "battery_count": 0.0,
+   "vendor_master_check": {
+    "status": "optimal",
+    "objective": 83828.20000000001,
+    "bound": 83828.20000000001,
+    "routes_selected": 518.0,
+    "not_above_reported": true,
+    "seconds": 0.3057617910671979
+   },
+   "schedule_validated": true,
+   "validated_objective": 83828.20000000001,
+   "dual_certificate": {
+    "available": true,
+    "dual_objective_part": 48050.4250000001,
+    "rc_min_graph": -5.719371642953774e-10,
+    "rc_min_singletons": 1.8468426787876524e-10,
+    "rc_min": -5.719371642953774e-10,
+    "fleet_term": -5.719371642953774e-07,
+    "battery_unit_value": -26.0749999998485,
+    "battery_reduced_cost": 9.925000000151499,
+    "mu_clipped_max": 0.0,
+    "nu_max_abs": 0.0,
+    "bound_before_battery_term": 48050.42499942816,
+    "priced_out_at_1e-6": true
+   },
+   "passed": true
+  },
+  "direct": {
+   "kind": "direct",
+   "path": "/home/nc437/opte-equal-mip-20261015/results/diag2_L04_n1000_s0/direct_mip",
+   "input_checks": {
+    "saved_instance_equals_rebuilt": true,
+    "result_hash_matches": true,
+    "manifest_hash_matches": true,
+    "manifest_spec_equals_declared": true
+   },
+   "manifest": {
+    "slurm": {
+     "SLURM_JOB_ID": "302429",
+     "SLURM_ARRAY_JOB_ID": "302380",
+     "SLURM_ARRAY_TASK_ID": "39",
+     "SLURM_MEM_PER_NODE": "49152",
+     "SLURMD_NODENAME": "awang-compute-01",
+     "SLURM_RESTART_COUNT": null
+    },
+    "cpu_model": "AMD EPYC 9555 64-Core Processor",
+    "gurobi": [
+     12,
+     0,
+     3
+    ]
+   },
+   "code_checks": {
+    "runtime_files_compared": [
+     "barrier_mip_solver.py",
+     "direct_mip_traced.py",
+     "followup_inputs.py",
+     "panel_instances.py",
+     "phase_models.py",
+     "run_equal_mip.py",
+     "scaling_instances.py",
+     "shared_scaling_helpers.py"
+    ],
+    "runtime_files_differing": [],
+    "vendor_files_differing": []
+   },
+   "status": "optimal",
+   "reported_objective": 48072.925,
+   "reported_bound": 48072.925,
+   "runner_graph": [
+    4974,
+    72553
+   ],
+   "budget_seconds": 16200.0,
+   "solve_end_to_end_seconds": 393.397879043594,
+   "root_lp_solved_seconds": 4.528271679766476,
+   "vectors": {
+    "incumbent_6": {
+     "file": "incumbent_006.npz",
+     "reported_objective": 48072.92499999844,
+     "routes": 89,
+     "dag_routes": 89,
+     "singleton_routes": 0,
+     "one_truck_per_task_singletons": false,
+     "transitions_replayed": 3272,
+     "residuals": {
+      "coverage": 0.0,
+      "balance": 3.9108272176235914e-11,
+      "bess_dynamics": 0.0,
+      "bess_periodic": 0.0,
+      "bess_capacity": 0.0,
+      "bess_charge_rate": 0.0,
+      "bess_discharge_rate": 0.0,
+      "nonnegativity": 0.0,
+      "integrality": 0.0,
+      "flow_conservation_raw": 0.0
+     },
+     "max_residual": 3.9108272176235914e-11,
+     "recomputed_objective": 48072.92499999843,
+     "objective_abs_diff": 7.275957614183426e-12,
+     "battery_count": 0.0,
+     "vendor_master_check": {
+      "status": "optimal",
+      "objective": 48072.925,
+      "bound": 48072.925,
+      "routes_selected": 89.0,
+      "not_above_reported": true,
+      "seconds": 0.15554175106808543
+     },
+     "validated": true
+    },
+    "final_-1": {
+     "file": "direct_mip_primal.npz",
+     "reported_objective": 48072.925,
+     "routes": 89,
+     "dag_routes": 89,
+     "singleton_routes": 0,
+     "one_truck_per_task_singletons": false,
+     "transitions_replayed": 3272,
+     "residuals": {
+      "coverage": 0.0,
+      "balance": 0.0,
+      "bess_dynamics": 0.0,
+      "bess_periodic": 0.0,
+      "bess_capacity": 0.0,
+      "bess_charge_rate": 0.0,
+      "bess_discharge_rate": 0.0,
+      "nonnegativity": 0.0,
+      "integrality": 0.0,
+      "flow_conservation_raw": 0.0
+     },
+     "max_residual": 0.0,
+     "recomputed_objective": 48072.924999999996,
+     "objective_abs_diff": 7.275957614183426e-12,
+     "battery_count": 0.0,
+     "vendor_master_check": {
+      "status": "optimal",
+      "objective": 48072.925,
+      "bound": 48072.925,
+      "routes_selected": 89.0,
+      "not_above_reported": true,
+      "seconds": 0.1615165921393782
+     },
+     "validated": true
+    }
+   },
+   "readings": {
+    "1800": {
+     "vector_index": 6,
+     "elapsed_seconds": 18.07367435283959,
+     "objective": 48072.92499999844,
+     "validated": true,
+     "is_first_incumbent": false,
+     "is_one_truck_per_task_schedule": false
+    }
+   },
+   "first_incumbent": {
+    "vector_index": 0,
+    "objective": 124569.99999999974,
+    "elapsed_seconds": 1.5522131863981485
+   },
+   "final_validated": true,
+   "passed": true
+  }
+ },
+ "graph": {
+  "nodes": 4974,
+  "arcs": 72553,
+  "unpruned_states": 7350,
+  "unpruned_arcs": 97032,
+  "build_seconds": 0.14540608902461827
+ },
+ "forbidden_modules_loaded": [],
+ "validator_sha256": "e0bdd729a34e1e0d1ef782079834ac94efde66c746e5261bd9971f29c6b0a925",
+ "vendor_sha256": {
+  "colgen.py": "8ec23a0b52ec8f696ada29d2207c7606b5eab50aaa2f72d6932f0fb1a350ee7e",
+  "gurobi_master.py": "99840d7eeb831d965feb783668110873fd34be81712429746d0c7f485011e8e4",
+  "instance.py": "3665962eea34daacb70b1d55a9cd9bbdcea93d6b30f07938f972d82abec09cbb",
+  "master.py": "e39a9b558c309d0fa10652fc63f87982ef37a1722f315df5ce5b51a6ac37bae1",
+  "pricing_truck.py": "4448778183a688d7faf54711973bd4d7bf4cdb6bfc73dda1d2a75def334007e0",
+  "recreate_arxiv.py": "d929fdf58f1a6da777ff8b16628e8abe35d6f23ed3bfb053fa5f69f24849bbbd"
+ },
+ "seconds": 13.84236743603833
+}

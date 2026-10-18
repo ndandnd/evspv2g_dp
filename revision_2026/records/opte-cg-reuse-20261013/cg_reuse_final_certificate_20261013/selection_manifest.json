@@ -1,0 +1,103 @@
+{
+  "no_optimization": true,
+  "input": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/results",
+  "checkpoint": false,
+  "outputs": {
+    "selected_barrier_certificate": {
+      "path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_final_certificate_20261013/selected_barrier_certificate.json",
+      "sha256": "156d51189efba73dd3e1501fbcaa34ef25db238a6efe0116557b87164bd2d993",
+      "workers": 18,
+      "supplementary_certified_workers": 18
+    },
+    "unselected_original_barrier_certificate": {
+      "path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_final_certificate_20261013/unselected_original_barrier_certificate.json",
+      "sha256": "2a4d1576327e3e64009ba75551ec3addfc7b3c6075396e0ae09ef45f081621b3",
+      "workers": 1,
+      "supplementary_certified_workers": 1
+    }
+  },
+  "recovery_map": {
+    "used": true,
+    "path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/recovery1/recovery_map_batch1.json",
+    "sha256": "56f1f082a8f0c105574ebb86ab43df623803aecfe3f3f2204f70974ef5c60eb7",
+    "policy_path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/CG_REUSE_RECOVERY_POLICY.md",
+    "policy_sha256": "c2e6d8534fdce1eceae5650d52d39c7f885f21ca8606a2e8ec821b8e46c7349c",
+    "policy_registered_utc": "2026-10-13T05:26:08.096842+00:00",
+    "registered_recovery_blocks": 2,
+    "entries": [
+      {
+        "block_index": 13,
+        "case": "diag2_L15_n1000_s0",
+        "repeat": 1,
+        "registered_utc": "2026-10-13T05:26:08.096842+00:00",
+        "original_folder": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/results/block_13",
+        "selected_recovery_folder": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/results/recovery/block_13",
+        "original_artifacts_preserved": 1402,
+        "original_preemption": {
+          "path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/recovery1/original_accounting_batch1.txt",
+          "sha256": "0d75eaea88cc939ecc357ccc980c9f8bbd21d5ffb33c06f73e67a4d800dd2c49",
+          "job_id": "242625_13",
+          "state": "PREEMPTED",
+          "accounting_fields": {
+            "JobID": "242625_13",
+            "State": "PREEMPTED",
+            "ElapsedRaw": "1450",
+            "AllocCPUS": "2"
+          },
+          "preempted_ids_in_receipt": [
+            "242625_13",
+            "242625_14"
+          ]
+        },
+        "recovery_preemption": null,
+        "submission_receipt_path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/recovery1/submit_batch1.json",
+        "submission_receipt_sha256": "9a0504e54267356f64d07f87b71c223113e9119ba41712941c63d3e85b4223c3",
+        "submitted_node": "lisbeth",
+        "observed_recovery_host": "lisbeth.tech.cornell.edu",
+        "worker_hosts_checked": 3,
+        "selection_rule": "One whole registered recovery, independent of its outcomes; no fallback or mixing"
+      },
+      {
+        "block_index": 14,
+        "case": "diag2_L15_n1000_s0",
+        "repeat": 2,
+        "registered_utc": "2026-10-13T05:26:08.096842+00:00",
+        "original_folder": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/results/block_14",
+        "selected_recovery_folder": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/results/recovery/block_14",
+        "original_artifacts_preserved": 1401,
+        "original_preemption": {
+          "path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/recovery1/original_accounting_batch1.txt",
+          "sha256": "0d75eaea88cc939ecc357ccc980c9f8bbd21d5ffb33c06f73e67a4d800dd2c49",
+          "job_id": "242625_14",
+          "state": "PREEMPTED",
+          "accounting_fields": {
+            "JobID": "242625_14",
+            "State": "PREEMPTED",
+            "ElapsedRaw": "1450",
+            "AllocCPUS": "2"
+          },
+          "preempted_ids_in_receipt": [
+            "242625_13",
+            "242625_14"
+          ]
+        },
+        "recovery_preemption": null,
+        "submission_receipt_path": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/cg_reuse_deployment_20261013/recovery1/submit_batch1.json",
+        "submission_receipt_sha256": "9a0504e54267356f64d07f87b71c223113e9119ba41712941c63d3e85b4223c3",
+        "submitted_node": "lisbeth",
+        "observed_recovery_host": "lisbeth.tech.cornell.edu",
+        "worker_hosts_checked": 3,
+        "selection_rule": "One whole registered recovery, independent of its outcomes; no fallback or mixing"
+      }
+    ]
+  },
+  "source_sha256": {
+    "certify_cg_reuse_selected.py": "3094f45eef457fc59e3e3ed1edae750895b88f57987788b3a83a5d798bd53815",
+    "cg_reuse_recovery.py": "c07a3d26bfa28cb52d138d879f7f5ef63d11418d78cc70c8aac0d744116e8ce5",
+    "direct_common_certificate.py": "2dfb8f413e60825a7726fe69a71035ec785282bc0b325d9255df761e5f65e3d1",
+    "verify_lp_scaling.py": "d766e49f483a135f1b5433e154b93629181a031bb16c202bf5d4c13fec2eabad",
+    "CG_REUSE_RECOVERY_POLICY.md": "c2e6d8534fdce1eceae5650d52d39c7f885f21ca8606a2e8ec821b8e46c7349c"
+  },
+  "total_diagnostic_seconds": 62.826012500561774,
+  "usage": "Pass only selected_barrier_certificate.json to summarize_cg_reuse.py --supplement. The other report is unselected execution evidence."
+}

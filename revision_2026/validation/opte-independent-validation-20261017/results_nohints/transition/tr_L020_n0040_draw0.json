@@ -1,0 +1,131 @@
+{
+ "case": "tr_L020_n0040_draw0",
+ "cohort": "transition",
+ "instance_sha256": "fba05f800a8cc5bc60bd61d48d7b9e76be40005e937ca3bd0ac0f2e21a8601ec",
+ "n_tasks": 40,
+ "locations": 21,
+ "soc_step": 0.25,
+ "c_b": 36.0,
+ "c_g": 40.0,
+ "c_v": 45.0,
+ "arms": {
+  "cg1800": {
+   "kind": "cg",
+   "path": "/home/nc437/opte-transition-20261017/results/tr_L020_n0040_draw0/cg_pool_mip",
+   "input_checks": {
+    "saved_instance_equals_rebuilt": true,
+    "result_hash_matches": true,
+    "manifest_hash_matches": true,
+    "manifest_spec_equals_declared": true
+   },
+   "manifest": {
+    "slurm": {
+     "SLURM_JOB_ID": "350674",
+     "SLURM_ARRAY_JOB_ID": "349296",
+     "SLURM_ARRAY_TASK_ID": "204",
+     "SLURM_MEM_PER_NODE": "6144",
+     "SLURMD_NODENAME": "cdses-compute-01",
+     "SLURM_RESTART_COUNT": null
+    },
+    "cpu_model": "AMD EPYC 9654 96-Core Processor",
+    "gurobi": [
+     12,
+     0,
+     3
+    ]
+   },
+   "code_checks": {
+    "runtime_files_compared": [
+     "barrier_mip_solver.py",
+     "direct_mip_traced.py",
+     "followup_inputs.py",
+     "panel_instances.py",
+     "phase_models.py",
+     "postrun_bound.py",
+     "run_transition.py",
+     "scaling_instances.py",
+     "shared_scaling_helpers.py",
+     "transition_instances.py"
+    ],
+    "runtime_files_differing": [],
+    "vendor_files_differing": []
+   },
+   "status": "optimal",
+   "reported_objective": 2839.3374999999996,
+   "reported_cg_lp": 2823.6339285714294,
+   "reported_full_family_bound": 2823.6338885714295,
+   "cg_priced_out": true,
+   "final_pricing_call_empty": true,
+   "restricted_mip_status": "optimal",
+   "runner_graph": [
+    37640,
+    1049441
+   ],
+   "selected_routes": 11,
+   "route_realization": {
+    "singleton": 0,
+    "path_from_saved_hint": 0,
+    "path_found_by_search": 11
+   },
+   "transitions_replayed": 479,
+   "residuals": {
+    "coverage": 0.0,
+    "balance": 0.0,
+    "bess_dynamics": 0.0,
+    "bess_periodic": 0.0,
+    "bess_capacity": 0.0,
+    "bess_charge_rate": 0.0,
+    "bess_discharge_rate": 0.0,
+    "nonnegativity": 0.0,
+    "integrality": 0.0
+   },
+   "max_residual": 0.0,
+   "recomputed_objective": 2839.3375,
+   "objective_abs_diff": 4.547473508864641e-13,
+   "battery_count": 11.0,
+   "vendor_master_check": {
+    "status": "optimal",
+    "objective": 2839.3374999999996,
+    "bound": 2839.3374999999996,
+    "routes_selected": 11.0,
+    "not_above_reported": true,
+    "seconds": 0.050289870938286185
+   },
+   "schedule_validated": true,
+   "validated_objective": 2839.3374999999996,
+   "dual_certificate": {
+    "available": true,
+    "dual_objective_part": 2823.6339285714284,
+    "rc_min_graph": -5.258016244624741e-13,
+    "rc_min_singletons": 35.999999999999794,
+    "rc_min": -5.258016244624741e-13,
+    "fleet_term": -2.1032064978498966e-11,
+    "battery_unit_value": -36.000000000000014,
+    "battery_reduced_cost": -1.4210854715202004e-14,
+    "mu_clipped_max": 4.263256414560601e-14,
+    "nu_max_abs": 0.0,
+    "bound_before_battery_term": 2823.6339285714075,
+    "priced_out_at_1e-6": true
+   },
+   "passed": true
+  }
+ },
+ "graph": {
+  "nodes": 37640,
+  "arcs": 1049441,
+  "unpruned_states": 59682,
+  "unpruned_arcs": 1700876,
+  "build_seconds": 0.5448309448547661
+ },
+ "forbidden_modules_loaded": [],
+ "validator_sha256": "e0bdd729a34e1e0d1ef782079834ac94efde66c746e5261bd9971f29c6b0a925",
+ "vendor_sha256": {
+  "colgen.py": "8ec23a0b52ec8f696ada29d2207c7606b5eab50aaa2f72d6932f0fb1a350ee7e",
+  "gurobi_master.py": "99840d7eeb831d965feb783668110873fd34be81712429746d0c7f485011e8e4",
+  "instance.py": "3665962eea34daacb70b1d55a9cd9bbdcea93d6b30f07938f972d82abec09cbb",
+  "master.py": "e39a9b558c309d0fa10652fc63f87982ef37a1722f315df5ce5b51a6ac37bae1",
+  "pricing_truck.py": "4448778183a688d7faf54711973bd4d7bf4cdb6bfc73dda1d2a75def334007e0",
+  "recreate_arxiv.py": "d929fdf58f1a6da777ff8b16628e8abe35d6f23ed3bfb053fa5f69f24849bbbd"
+ },
+ "seconds": 3.898677202872932
+}

@@ -1,0 +1,5 @@
+With up to 20 locations the direct MIP proves optimality within 802 seconds, and CG with the MIP over its routes returns schedules within 0.01\% of those optima in about 18 seconds or less in total.
+At 30 locations the MIP over the CG routes is within 0.3\% of the best known lower bound, while the direct MIP reaches 0.21\% on one sample and has only its starting schedule on the other.
+From 40 locations (3.2 million arcs), the direct MIP still holds only its starting schedule after 1{,}800 seconds on every input; its root LP takes about 2{,}000 seconds at 40 locations and is not solved within the run from 50 locations.
+CG converges at every size, within 2{,}209 seconds, and the MIP over its routes stays within 0.7\% of the best known lower bound up to 80 locations, within 2\% at 90 locations and within 6\% at 100--120 locations.
+Appendix~\ref{app:grid} varies the number of locations and the number of tasks separately (Table~\ref{tab:grid}), and Appendix~\ref{app:expandedinteger} reports 23 further inputs (Table~\ref{tab:equalmip}).

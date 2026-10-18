@@ -1,0 +1,524 @@
+{
+ "method": "cg_to_convergence_then_restricted_mip",
+ "family": "DP_paths_union_real_singleton_seeds",
+ "cg_cap_seconds": 14400.0,
+ "mip_budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "cg_status": "candidate_priced_out",
+ "cg_priced_out": true,
+ "final_pricing_call_empty": true,
+ "cg_inloop_validation_seconds": 43.32300109881908,
+ "cg_seconds": 1094.6281643575057,
+ "cg_lp": {
+  "objective": 30357.337500000034,
+  "elapsed_seconds": 1093.8461663359776,
+  "columns": 3284
+ },
+ "full_family_lp_lower_bound": 30357.337020000035,
+ "checkpoint_seconds": 9.885920095257461,
+ "mip_seconds": 1800.0039347540587,
+ "total_seconds": 2904.518020076677,
+ "cg_total_readout_seconds": 2894.6320991115645,
+ "status": "time_limit",
+ "status_scope": "Restricted-pool integer model only",
+ "native_status": 9,
+ "objective": 37070.075,
+ "restricted_pool_bound": 30425.993820930027,
+ "global_integer_optimality_claimed": false,
+ "branch_and_price": false,
+ "incumbent_validated": true,
+ "process_peak_rss_at_stop_bytes": 1363382272,
+ "cg_phase": {
+  "status": "candidate_priced_out",
+  "error": null,
+  "cg_cap_seconds": 14400.0,
+  "elapsed_through_pool_preparation_seconds": 1094.6267938474193,
+  "cg_phase_deadline_seconds": 14400.0,
+  "real_pool_columns": 2804,
+  "original_singletons": 480,
+  "artificial_columns_removed": 480,
+  "rmp_calls": {
+   "_omitted_list": true,
+   "elements": 2286,
+   "pretty_lines": 5071373
+  },
+  "pricing_calls": {
+   "_omitted_list": true,
+   "elements": 2327,
+   "pretty_lines": 11636
+  },
+  "rmp_objective_trace": {
+   "_omitted_list": true,
+   "elements": 2286,
+   "pretty_lines": 13717
+  },
+  "basis_restorations": 2285,
+  "candidate_priced_out": true,
+  "last_optimal_rmp_available": true,
+  "full_family_bound_certified_during_timing": false,
+  "pool_membership_scope": "Real columns accepted by frozen CG before cutoff, plus original singleton seeds; selected integer paths independently replayed after stopping; all-pool path witnesses are not claimed",
+  "cutoff_policy": "Unprocessed candidates from a pricing call crossing the phase deadline are discarded; the complete call is charged to the total pipeline budget"
+ },
+ "restricted_mip": {
+  "method": "cold_restricted_pool_mip",
+  "objective": 37070.075,
+  "restricted_pool_bound": 30425.993820930027,
+  "bound_scope": "Restricted integer pool only; never a full-family lower bound",
+  "status": "time_limit",
+  "native_status": 9,
+  "solution_count": 10,
+  "threads": 1,
+  "seed": 0,
+  "mip_gap_tolerance": 1e-06,
+  "mip_gap_absolute_tolerance": 1e-10,
+  "feasibility_tolerance": 1e-08,
+  "optimality_tolerance": 1e-08,
+  "integer_feasibility_tolerance": 1e-08,
+  "solver_method": -1,
+  "cold_solve": true,
+  "external_incumbent_or_basis_start": false,
+  "trace": [
+   {
+    "elapsed_seconds": 0.19260046631097794,
+    "incumbent": 51760.675,
+    "restricted_pool_bound": 0.0
+   },
+   {
+    "elapsed_seconds": 30.249072934500873,
+    "incumbent": 38508.924999999996,
+    "restricted_pool_bound": 30374.589743904107
+   },
+   {
+    "elapsed_seconds": 60.29082694556564,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30374.589743904107
+   },
+   {
+    "elapsed_seconds": 91.29428283404559,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30375.739125472322
+   },
+   {
+    "elapsed_seconds": 121.37166365608573,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30375.739125472322
+   },
+   {
+    "elapsed_seconds": 151.38047515507787,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30378.445210813115
+   },
+   {
+    "elapsed_seconds": 182.55959417950362,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30387.45164188624
+   },
+   {
+    "elapsed_seconds": 212.57255643140525,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30388.667772137705
+   },
+   {
+    "elapsed_seconds": 242.58752108365297,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30391.133311701997
+   },
+   {
+    "elapsed_seconds": 277.4412428867072,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30391.35947555353
+   },
+   {
+    "elapsed_seconds": 307.46061782632023,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30391.35947555353
+   },
+   {
+    "elapsed_seconds": 337.47393465135247,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30392.437762548074
+   },
+   {
+    "elapsed_seconds": 368.3405203772709,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30394.370292358366
+   },
+   {
+    "elapsed_seconds": 398.41692309081554,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30394.65221496076
+   },
+   {
+    "elapsed_seconds": 428.4495477518067,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30395.134225103848
+   },
+   {
+    "elapsed_seconds": 458.4910921603441,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 530.5787201020867,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 561.6277156956494,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 592.5344899864867,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 624.5360283376649,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 655.1453137993813,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 685.2011785292998,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 715.2426245436072,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 745.2912180386484,
+    "incumbent": 37510.1625,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 778.1223935242742,
+    "incumbent": 37305.13749999984,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 808.1468365043402,
+    "incumbent": 37305.13749999984,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 840.1819480163977,
+    "incumbent": 37305.13749999984,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 870.2562085138634,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 900.3570617465302,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 930.399818030186,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 960.438877790235,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 990.461050119251,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30397.786741078857
+   },
+   {
+    "elapsed_seconds": 1020.5366470972076,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30402.01044695019
+   },
+   {
+    "elapsed_seconds": 1050.55457138177,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30402.01044695019
+   },
+   {
+    "elapsed_seconds": 1080.608270603232,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30404.761113913075
+   },
+   {
+    "elapsed_seconds": 1110.6615343736485,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30408.9238769007
+   },
+   {
+    "elapsed_seconds": 1140.67494140286,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30409.440727950736
+   },
+   {
+    "elapsed_seconds": 1170.7004718836397,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30409.46656489346
+   },
+   {
+    "elapsed_seconds": 1200.759311891161,
+    "incumbent": 37255.162499999824,
+    "restricted_pool_bound": 30411.8907843377
+   },
+   {
+    "elapsed_seconds": 1230.7621531533077,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30413.234335974925
+   },
+   {
+    "elapsed_seconds": 1260.788569767028,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30414.405006886995
+   },
+   {
+    "elapsed_seconds": 1290.8257020134479,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30414.815793151185
+   },
+   {
+    "elapsed_seconds": 1320.8301146170124,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30414.815793151185
+   },
+   {
+    "elapsed_seconds": 1354.0652896510437,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30415.628508127244
+   },
+   {
+    "elapsed_seconds": 1384.0733296694234,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30416.17481254504
+   },
+   {
+    "elapsed_seconds": 1414.1504870895296,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30416.17481254504
+   },
+   {
+    "elapsed_seconds": 1444.1682544434443,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30417.312746614592
+   },
+   {
+    "elapsed_seconds": 1474.2017965205014,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30418.010992060623
+   },
+   {
+    "elapsed_seconds": 1504.25903872028,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30418.692161109968
+   },
+   {
+    "elapsed_seconds": 1534.2892184145749,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30419.896985351737
+   },
+   {
+    "elapsed_seconds": 1564.2971680248156,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30419.896985351737
+   },
+   {
+    "elapsed_seconds": 1594.3491952968761,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30421.074312113207
+   },
+   {
+    "elapsed_seconds": 1634.1558070965111,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30421.77302966432
+   },
+   {
+    "elapsed_seconds": 1678.3964004404843,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30422.12221147454
+   },
+   {
+    "elapsed_seconds": 1708.4232023684308,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30422.856915650278
+   },
+   {
+    "elapsed_seconds": 1738.4252325128764,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30424.257517587543
+   },
+   {
+    "elapsed_seconds": 1769.5480035515502,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30424.68780946504
+   },
+   {
+    "elapsed_seconds": 1799.604144314304,
+    "incumbent": 37070.07499999981,
+    "restricted_pool_bound": 30425.993820930027
+   }
+  ],
+  "model_build_seconds": 0.12148670665919781,
+  "remaining_solver_budget_seconds": 1799.878507883288,
+  "variables": 2998,
+  "constraints": 722,
+  "nonzeros": 37348,
+  "integer_variables": 2805,
+  "solver_version": [
+   12,
+   0,
+   3
+  ],
+  "pipeline_stop_seconds": 1800.0039347540587,
+  "restricted_stage_seconds": 1800.0039293440059,
+  "solver_runtime_seconds": 1799.8821880817413,
+  "process_peak_rss_at_stop_bytes": 1363382272,
+  "node_count": 34956.0,
+  "native_pool_gap": 0.17923031391411995,
+  "solver_peak_memory_gb": 0.107569888
+ },
+ "matrix_primal_check": {
+  "passed": true,
+  "absolute_tolerance": 1e-06,
+  "residuals": {
+   "equalities": 0.0,
+   "inequalities": 0.0,
+   "lower_bounds": 0.0,
+   "upper_bounds": 0.0,
+   "integrality": 0.0,
+   "objective_reconstruction": 0.0
+  }
+ },
+ "validation": {
+  "aggregate": {
+   "passed": true,
+   "scope": "aggregate_master_replay",
+   "original_model_feasible": true,
+   "artificial_mass": 0.0,
+   "truck_count": 130.0,
+   "battery_count": 0.0,
+   "residuals": {
+    "task_coverage": 0.0,
+    "energy_balance": 0.0,
+    "battery_dynamics": 0.0,
+    "battery_periodic": 0.0,
+    "battery_capacity": 0.0,
+    "battery_charge_rate": 0.0,
+    "battery_discharge_rate": 0.0,
+    "generation_cap": 0.0,
+    "aggregate_charging_cap": 0.0,
+    "lower_bounds": 0.0,
+    "upper_bounds": 0.0,
+    "column_integrality": 0.0,
+    "battery_count_integrality": 0.0,
+    "objective": 0.0
+   },
+   "replayed_objective": 37070.075,
+   "selected_columns": {
+    "_omitted_list": true,
+    "elements": 130,
+    "pretty_lines": 651
+   }
+  },
+  "selected_paths": {
+   "passed": true,
+   "reason": "all_selected_columns_witnessed",
+   "selected_count": 130,
+   "selected_mass": 130.0,
+   "artificial_mass": 0.0,
+   "witnesses": {
+    "_omitted_list": true,
+    "elements": 130,
+    "pretty_lines": 131311
+   },
+   "distinct_witnesses": 130,
+   "max_residual": 0.0,
+   "tolerance": 1e-06,
+   "scope": "Physical DP-path or verified initial-singleton witnesses; aggregate master and pricing certificates checked separately."
+  },
+  "passed": true
+ },
+ "graph_nodes": 112424,
+ "graph_arcs": 6546807,
+ "diagnostic_seconds": 153.2884359015152,
+ "case": "grid_L060_n0480_draw1",
+ "cohort": "tasks",
+ "arm": "cg_pool_mip",
+ "instance_sha256": "f8d3f10c8a9cb5d8afc9fec0077d231dfd7558ea4652c2536aa283753cb00559",
+ "process_peak_rss_after_diagnostics_bytes": 1474641920,
+ "_compaction": {
+  "source_bytes": 138803212,
+  "source_sha256": "a80f007ab71bf460a722ad6b00e2b7882c4e64973e57e8efaa8cd3c92276ef28",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "selected_columns",
+    "elements": 164,
+    "line": 78
+   },
+   {
+    "key": "selected_columns",
+    "elements": 164,
+    "line": 971
+   },
+   {
+    "key": "selected_columns",
+    "elements": 164,
+    "line": 1864
+   },
+   {
+    "key": "selected_columns",
+    "elements": 164,
+    "line": 2757
+   },
+   {
+    "key": "selected_columns",
+    "elements": 164,
+    "line": 3650
+   },
+   {
+    "key": "selected_columns",
+    "elements": 164,
+    "line": 4543
+   },
+   {
+    "key": "rmp_calls",
+    "elements": 2286,
+    "line": 41
+   },
+   {
+    "key": "pricing_calls",
+    "elements": 2327,
+    "line": 5076341
+   },
+   {
+    "key": "rmp_objective_trace",
+    "elements": 2286,
+    "line": 5087978
+   },
+   {
+    "key": "selected_columns",
+    "elements": 130,
+    "line": 5102069
+   },
+   {
+    "key": "witnesses",
+    "elements": 130,
+    "line": 5102728
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

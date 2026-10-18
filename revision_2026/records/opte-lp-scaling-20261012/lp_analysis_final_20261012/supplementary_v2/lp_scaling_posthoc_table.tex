@@ -1,0 +1,20 @@
+% POST-HOC supplementary view. Original strict counts and timings are unchanged.
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rrccc}
+\hline
+$L$ & $n$ & Direct dual simplex & Direct barrier & Column generation \\
+\hline
+4 & 100 & \shortstack{16.9 [14.3, 21.1]\\P 6/6; N 0; H 6/6} & \shortstack{2.43 [2.39, 2.76]\\P 6/6; N 0; H 6/6} & \shortstack{18.4 [16.8, 18.9]\\P 6/6} \\
+4 & 400 & \shortstack{17.8 [17.4, 19.9]\\P 6/6; N 0; H 6/6} & \shortstack{2.75 [2.57, 2.94]\\P 3/6; N 3; H 6/6} & \shortstack{230 [212, 247]\\P 6/6} \\
+4 & 1000 & \shortstack{18.6 [18, 22.3]\\P 0/6; N 6; H 6/6} & \shortstack{2.76 [2.45, 3.56]\\P 0/6; N 6; H 6/6} & \shortstack{--\\P 0/6} \\
+15 & 100 & \shortstack{437 [361, 443]\\P 6/6; N 0; H 6/6} & \shortstack{31 [27.3, 34.5]\\P 6/6; N 0; H 6/6} & \shortstack{42.8 [39, 48.9]\\P 6/6} \\
+15 & 400 & \shortstack{424 [350, 487]\\P 3/6; N 3; H 6/6} & \shortstack{39.9 [39, 44.3]\\P 0/6; N 6; H 6/6} & \shortstack{288 [263, 337]\\P 6/6} \\
+15 & 1000 & \shortstack{574 [370, 683]\\P 0/6; N 6; H 6/6} & \shortstack{56.7 [42.7, 59.9]\\P 0/6; N 6; H 6/6} & \shortstack{--\\P 0/6} \\
+\hline
+\end{tabular}
+\caption{Post-hoc full-family validation view: median [minimum, maximum] of the unchanged algorithm-stop times in seconds. Direct summaries require a separately validated post-hoc graph/seed/BESS bound (H); CG summaries retain the original acceptance rule (P). P counts original strict accepted outcomes out of six planned runs; N counts native-optimal direct outcomes without primary acceptance; H counts supplementary validations and may overlap P. The supplemental allowance is $n\,10^{-6}+10^{-6}$ for the primal--bound gap, with nonnegative repaired pricing margins. It does not replace the original native diagnostic or imply exact arithmetic certification. Post-hoc checking time is excluded; these are saved stop times, not the time required to perform the new certificate. Two draws have three timing repeats each. Incomplete summaries are conditional on validation/completion; all outcomes remain in the companion figure and data.}
+\label{tab:lp-scaling-posthoc}
+\end{table}

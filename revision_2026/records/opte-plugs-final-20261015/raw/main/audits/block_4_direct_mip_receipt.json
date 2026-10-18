@@ -1,0 +1,60 @@
+{
+  "arm": "direct_mip",
+  "block_index": 4,
+  "worker": "/home/nc437/opte-plugs-20261013/results/block_4/direct_mip",
+  "case_name": "plugs_n100_L15_d25_s1_loose",
+  "instance_sha256": "f59c11531d6cc76752f807d1947b3109fb94867c3805dcb86d56f4f1c806e02c",
+  "excluded_calibration": false,
+  "optimization_performed": false,
+  "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+  "snapshot_manifest_sha256": "c89eee1724a8976a33fee366de209e0d4b63c1842afd151317e0e4d6bf2f940d",
+  "plan_sha256": "92bad9a3a4bb35cf34e82ff4cfaf8d49314d3661d18593dc0dde200e7785b415",
+  "dispatcher_sha256": "e817295513525e85b25e1babb8da46e7b6c2658772f8da93ba1a52ff4fa4966e",
+  "primary_result_sha256": "074fda0b7efd33a3ab9c0b808b4299d63db83d8e42f1fea541e89bcbcef402a7",
+  "passed": true,
+  "status": "verified",
+  "external_execution": {
+    "returncode": 0,
+    "external_timeout": false,
+    "watchdog_limit_seconds": 600,
+    "process_group_killed": false,
+    "wall_seconds": 3.6721419957466424,
+    "process_id": 2158437,
+    "user_cpu_seconds": 3.2692449999999553,
+    "system_cpu_seconds": 0.33530700000000024,
+    "cpu_scope": "Delta of reaped-child CPU counters; audits are serial with no other child running",
+    "sampled_process_peak_rss_bytes": 300306432,
+    "sampled_memory_scope": "Linux child VmHWM sampled at <=1 second intervals; a missed final peak is possible; independent verifier also records its own peak"
+  },
+  "verification_process_peak_rss_bytes": 300306432,
+  "accepted_feasible_incumbent": true,
+  "accepted_common_family_lp": false,
+  "primary_evidence_unchanged": true,
+  "primary_status": "time_limit",
+  "available_primal_files": [
+    "direct_primal.npz",
+    "selected_replay_primal.npz"
+  ],
+  "command": [
+    "/home/nc437/evsp_env/bin/python",
+    "/home/nc437/opte-plugs-20261013/code/experiments/opte_plugs_20261013/verify_plugs.py",
+    "--input",
+    "/home/nc437/opte-plugs-20261013/results/block_4/direct_mip",
+    "--output",
+    "/home/nc437/opte-plugs-20261013/audits/block_4_direct_mip.json"
+  ],
+  "global_economic_lower_bound": 6382.1500000000015,
+  "phase1_infeasibility_evidence": false,
+  "primary_artifact_hashes_before": {
+    "instance.json": "bdf877162de91a1f23e2093f624b78cea3deaf66d41454fa4e0c1d08b7f4cd71",
+    "manifest.json": "18a4295ada081618eb8605f482aa8a15867f8d4587fcb6780d9092e3c5d7c85c",
+    "native_stop.json": "d4329e8a4eca0bec17ee2f27bea42a805d206e1f62fd6cadd86bf5fd0c6e2810",
+    "direct_primal.npz": "6ea62ac6749fd2b069d0938ed9931003a2ccd2870a3172409d87ee133710ca75",
+    "selected_replay_columns.json.gz": "a513e3cdb7019ef310bc46996e45740d3758b6a67d334f6b05dc695a77dc73ee",
+    "selected_replay_primal.npz": "810de349e826d5770438f8ec431dd2386d9d412989cf0e80359f45871247682e",
+    "result.json": "074fda0b7efd33a3ab9c0b808b4299d63db83d8e42f1fea541e89bcbcef402a7",
+    "logs/direct_mip.log": "4e9767dc9ca29887aaa09d4adb0a70d632ff36c4519ad3be7d14effa197fd8f4"
+  },
+  "audit_output_sha256": "6a831a8a5e09e4955e668a843cb27c981a2344b08b3a59a40c8f64bec446a36a",
+  "audit_log_sha256": "47de5cf0cbe029d3494f7e1893f295808c1787f43a3e312eef3e73b99045e492"
+}

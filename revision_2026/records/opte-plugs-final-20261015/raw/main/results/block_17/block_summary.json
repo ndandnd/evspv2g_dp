@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "direct_lp",
+    "cg_pool_mip",
+    "direct_mip",
+    "cg_lp"
+  ],
+  "instance_sha256": "ca1b25311839b488d5d965ff9f0ac48700668cea4cb834109fe6d4bfe588e36d",
+  "results": [
+    {
+      "arm": "direct_lp",
+      "position": 0,
+      "status": "optimal",
+      "objective": 12663.858928571424,
+      "incumbent_validated": true,
+      "seconds": 1081.282614489086,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1086.0347587419674
+      },
+      "result_sha256": "081dc50760c5940afc70465602198495e304f5dc53bb945115359b65d9ba3a10"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 1,
+      "status": "time_limit",
+      "objective": null,
+      "incumbent_validated": false,
+      "seconds": 1800.0012080930173,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1801.7149344249628
+      },
+      "result_sha256": "ee1d6580af620a75d2f36acaa97eb5b82523ffeb8e5dd3d16a4ed1b65ecd5f06"
+    },
+    {
+      "arm": "direct_mip",
+      "position": 2,
+      "status": "time_limit",
+      "objective": null,
+      "incumbent_validated": false,
+      "seconds": 1800.1033934089355,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1801.4433494629338
+      },
+      "result_sha256": "0efaa0496f6bb7a60f94165de5f3e8c4361f8677f01b69b1e1ca306c83b15b31"
+    },
+    {
+      "arm": "cg_lp",
+      "position": 3,
+      "status": "candidate_priced_out",
+      "objective": 12663.858928571419,
+      "incumbent_validated": true,
+      "seconds": 619.8316754410043,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 642.8025764180347
+      },
+      "result_sha256": "4fe77aa52893eaf44e652ff45bbac41b3c1a6efa069c4f15d9e57f4378222a34"
+    }
+  ],
+  "environment_consistent": true
+}

@@ -1,0 +1,78 @@
+{
+  "method": "direct_mip",
+  "budget_seconds": 1800.0,
+  "threads": 1,
+  "seed": 0,
+  "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+  "incumbent_validated": false,
+  "global_optimality_independently_certified": false,
+  "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+  "status": "time_limit",
+  "native_status": 9,
+  "objective": null,
+  "bound": 13015.669196428571,
+  "bound_scope": "full_family",
+  "solution_count": 0,
+  "solver_method": 2,
+  "cold_solve": true,
+  "external_incumbent_or_basis_start": false,
+  "feasibility_tolerance": 1e-08,
+  "optimality_tolerance": 1e-08,
+  "integer_feasibility_tolerance": 1e-08,
+  "mip_gap_tolerance": 1e-06,
+  "mip_gap_absolute_tolerance": 1e-10,
+  "solver_version": [
+    12,
+    0,
+    3
+  ],
+  "trace": [
+    {
+      "elapsed_seconds": 80.08851260086522,
+      "incumbent": null,
+      "bound": 0.0,
+      "bound_scope": "full_family"
+    },
+    {
+      "elapsed_seconds": 1153.335388859734,
+      "incumbent": null,
+      "bound": 13015.669196428571,
+      "bound_scope": "full_family"
+    },
+    {
+      "elapsed_seconds": 1800.02590472484,
+      "incumbent": null,
+      "bound": 13015.669196428571,
+      "bound_scope": "full_family"
+    }
+  ],
+  "model_build_seconds": 2.0463125184178352,
+  "remaining_solver_budget_seconds": 1789.2377135278657,
+  "variables": 2022367,
+  "constraints": 58883,
+  "nonzeros": 5389025,
+  "integer_variables": 2022174,
+  "crossover_parameter": -1,
+  "solve_end_to_end_seconds": 1800.155484545976,
+  "solve_seconds": 1789.3930174019188,
+  "solver_runtime_seconds": 1789.3927631378174,
+  "process_peak_rss_at_stop_bytes": 4457033728,
+  "native_gap": null,
+  "node_count": 1.0,
+  "graph_seconds": 3.8385000098496675,
+  "matrix_seconds": 4.8737161862663925,
+  "graph_nodes": 56953,
+  "graph_arcs": 2021972,
+  "unpruned_arcs": 3196320,
+  "diagnostic_seconds": 0.49976840196177363,
+  "total_including_checks_seconds": 1800.6552538578399,
+  "process_peak_rss_after_diagnostics_bytes": 4457033728,
+  "variant": "direct_mip",
+  "instance_sha256": "3722f63ca7a722457236cced2ec3d562184246c0cd239a6d36cccad07f37203c",
+  "evidence_sha256": {
+    "instance.json": "f9e2979222b3876cca3f3cb26688212212d4ef9246fbc1578973500fba285ddb",
+    "manifest.json": "6ccd5ca1b0ce32ab67bb7631de30d014dc31b8c70b82bf58e0f4281ea4ba3b56",
+    "native_stop.json": "9697bac4cc6e4a916a1efe68fa6665084666d4eeaa34e72106c2f1676040e82b",
+    "logs/direct_mip.log": "b9e4d415c96ce6af7f8329328aae144252ecb2112d7f976b916708fec829e73f"
+  }
+}

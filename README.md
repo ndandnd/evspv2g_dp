@@ -25,6 +25,8 @@ generated routes. The code does not implement branch-and-price.
 - `data/`: demand and solar input profiles.
 - `results/`: selected JSON and CSV outputs from the computational study.
 - `paper_figures/`: the final figures using the numbering in the manuscript.
+- `revision_2026/`: code, run records and validation for the experiments added
+  in the October 2026 revision; see `revision_2026/README.md`.
 
 ## Environment
 
@@ -37,9 +39,9 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-SciPy/HiGHS solves the restricted master LPs. CBC is used for the structured
-benchmark MIPs, while Gurobi 12.0.3 is used for the remaining final restricted
-master MIPs. A Gurobi license is therefore needed for the large experiment
+SciPy/HiGHS solves the restricted master LPs. Gurobi 12.0.3 solves the final
+restricted MIPs; CBC was used only for the extended runs shown as dashed curves
+in Fig. 2. A Gurobi license is therefore needed for the large experiment
 drivers that select the Gurobi backend.
 
 ## Quick verification

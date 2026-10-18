@@ -1,0 +1,78 @@
+{
+  "utc": "2026-10-12T22:04:22.129818+00:00",
+  "server_local_time": "2026-10-12T18:04:22.129832",
+  "server_tzname": [
+    "EST",
+    "EDT"
+  ],
+  "command": [
+    "/usr/local/slurm/current/bin/sacct",
+    "-j",
+    "230773",
+    "--name=opte_mip1000",
+    "--starttime=2026-10-12",
+    "--allocations",
+    "--parsable2",
+    "--format=JobID,JobName,State,ExitCode,Elapsed,ReqCPUS,AllocCPUS,NodeList,Submit,Start,End"
+  ],
+  "returncode": 0,
+  "stdout": "JobID|JobName|State|ExitCode|Elapsed|ReqCPUS|AllocCPUS|NodeList|Submit|Start|End\n230773_0|opte_mip1000|COMPLETED|0:0|00:06:42|1|2|lisbeth|2026-10-12T17:49:39|2026-10-12T17:49:55|2026-10-12T17:56:37\n230773_1|opte_mip1000|COMPLETED|0:0|00:01:26|1|2|lisbeth|2026-10-12T17:49:39|2026-10-12T17:49:55|2026-10-12T17:51:21\n230773_2|opte_mip1000|COMPLETED|0:0|00:11:06|1|2|lisbeth|2026-10-12T17:49:39|2026-10-12T17:49:55|2026-10-12T18:01:01\n230773_3|opte_mip1000|COMPLETED|0:0|00:09:16|1|2|lisbeth|2026-10-12T17:49:39|2026-10-12T17:49:55|2026-10-12T17:59:11\n",
+  "stderr": "",
+  "matched_records": [
+    {
+      "JobID": "230773_0",
+      "JobName": "opte_mip1000",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Elapsed": "00:06:42",
+      "ReqCPUS": "1",
+      "AllocCPUS": "2",
+      "NodeList": "lisbeth",
+      "Submit": "2026-10-12T17:49:39",
+      "Start": "2026-10-12T17:49:55",
+      "End": "2026-10-12T17:56:37"
+    },
+    {
+      "JobID": "230773_1",
+      "JobName": "opte_mip1000",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Elapsed": "00:01:26",
+      "ReqCPUS": "1",
+      "AllocCPUS": "2",
+      "NodeList": "lisbeth",
+      "Submit": "2026-10-12T17:49:39",
+      "Start": "2026-10-12T17:49:55",
+      "End": "2026-10-12T17:51:21"
+    },
+    {
+      "JobID": "230773_2",
+      "JobName": "opte_mip1000",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Elapsed": "00:11:06",
+      "ReqCPUS": "1",
+      "AllocCPUS": "2",
+      "NodeList": "lisbeth",
+      "Submit": "2026-10-12T17:49:39",
+      "Start": "2026-10-12T17:49:55",
+      "End": "2026-10-12T18:01:01"
+    },
+    {
+      "JobID": "230773_3",
+      "JobName": "opte_mip1000",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Elapsed": "00:09:16",
+      "ReqCPUS": "1",
+      "AllocCPUS": "2",
+      "NodeList": "lisbeth",
+      "Submit": "2026-10-12T17:49:39",
+      "Start": "2026-10-12T17:49:55",
+      "End": "2026-10-12T17:59:11"
+    }
+  ],
+  "all_four_complete": true,
+  "note": "First filtered attempt used UTC clock values as Slurm local dates and returned no rows. This same-date/name-filtered receipt preserves actual scheduler timestamps. Old reused-ID jobs are excluded. Every actual worker manifest has one-element CPU affinity and SLURM_CPUS_PER_TASK=1 despite accounting AllocCPUS=2 hardware-thread reservation.",
+  "existing_jobs_modified": false
+}

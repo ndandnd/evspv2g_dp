@@ -1,0 +1,169 @@
+{
+ "case": "tr_L025_n0060_draw0",
+ "cohort": "transition",
+ "instance_sha256": "95e78d658c20a96cf9d3d1d89a3dbbc15d27b687d7fb22cc65d46060abe8241a",
+ "n_tasks": 60,
+ "locations": 26,
+ "soc_step": 0.25,
+ "c_b": 36.0,
+ "c_g": 40.0,
+ "c_v": 45.0,
+ "graph": {
+  "nodes": 46167,
+  "arcs": 1455759,
+  "unpruned_states": 73892,
+  "unpruned_arcs": 2387348,
+  "build_seconds": 0.7634073121007532
+ },
+ "forbidden_modules_loaded": [],
+ "validator_sha256": "e0bdd729a34e1e0d1ef782079834ac94efde66c746e5261bd9971f29c6b0a925",
+ "vendor_sha256": {
+  "colgen.py": "8ec23a0b52ec8f696ada29d2207c7606b5eab50aaa2f72d6932f0fb1a350ee7e",
+  "gurobi_master.py": "99840d7eeb831d965feb783668110873fd34be81712429746d0c7f485011e8e4",
+  "instance.py": "3665962eea34daacb70b1d55a9cd9bbdcea93d6b30f07938f972d82abec09cbb",
+  "master.py": "e39a9b558c309d0fa10652fc63f87982ef37a1722f315df5ce5b51a6ac37bae1",
+  "pricing_truck.py": "4448778183a688d7faf54711973bd4d7bf4cdb6bfc73dda1d2a75def334007e0",
+  "recreate_arxiv.py": "d929fdf58f1a6da777ff8b16628e8abe35d6f23ed3bfb053fa5f69f24849bbbd"
+ },
+ "seconds": 2.4440724281594157,
+ "arm_label": "direct",
+ "arm": {
+  "kind": "direct",
+  "path": "/home/nc437/opte-transition-20261017/results/tr_L025_n0060_draw0/direct_mip",
+  "input_checks": {
+   "saved_instance_equals_rebuilt": true,
+   "result_hash_matches": true,
+   "manifest_hash_matches": true,
+   "manifest_spec_equals_declared": true
+  },
+  "manifest": {
+   "slurm": {
+    "SLURM_JOB_ID": "349987",
+    "SLURM_ARRAY_JOB_ID": "349295",
+    "SLURM_ARRAY_TASK_ID": "169",
+    "SLURM_MEM_PER_NODE": "10240",
+    "SLURMD_NODENAME": "thickstun-compute-01",
+    "SLURM_RESTART_COUNT": null
+   },
+   "cpu_model": "AMD EPYC 9654 96-Core Processor",
+   "gurobi": [
+    12,
+    0,
+    3
+   ]
+  },
+  "code_checks": {
+   "runtime_files_compared": [
+    "barrier_mip_solver.py",
+    "direct_mip_traced.py",
+    "followup_inputs.py",
+    "panel_instances.py",
+    "phase_models.py",
+    "postrun_bound.py",
+    "run_transition.py",
+    "scaling_instances.py",
+    "shared_scaling_helpers.py",
+    "transition_instances.py"
+   ],
+   "runtime_files_differing": [],
+   "vendor_files_differing": []
+  },
+  "status": "time_limit",
+  "reported_objective": 4272.6875,
+  "reported_bound": 4246.810714285715,
+  "runner_graph": [
+   46167,
+   1455759
+  ],
+  "budget_seconds": 1800.0,
+  "solve_end_to_end_seconds": 1800.1457545489538,
+  "root_lp_solved_seconds": 418.87960973999,
+  "vectors": {
+   "incumbent_3": {
+    "file": "incumbent_003.npz",
+    "reported_objective": 4272.6875,
+    "routes": 17,
+    "dag_routes": 17,
+    "singleton_routes": 0,
+    "one_truck_per_task_singletons": false,
+    "transitions_replayed": 738,
+    "residuals": {
+     "coverage": 0.0,
+     "balance": 0.0,
+     "bess_dynamics": 0.0,
+     "bess_periodic": 0.0,
+     "bess_capacity": 0.0,
+     "bess_charge_rate": 0.0,
+     "bess_discharge_rate": 0.0,
+     "nonnegativity": 0.0,
+     "integrality": 0.0,
+     "flow_conservation_raw": 0.0
+    },
+    "max_residual": 0.0,
+    "recomputed_objective": 4272.6875,
+    "objective_abs_diff": 0.0,
+    "battery_count": 5.0,
+    "vendor_master_check": {
+     "status": "optimal",
+     "objective": 4272.6875,
+     "bound": 4272.6875,
+     "routes_selected": 17.0,
+     "not_above_reported": true,
+     "seconds": 0.04089375794865191
+    },
+    "validated": true
+   },
+   "final_-1": {
+    "file": "direct_mip_primal.npz",
+    "reported_objective": 4272.6875,
+    "routes": 17,
+    "dag_routes": 17,
+    "singleton_routes": 0,
+    "one_truck_per_task_singletons": false,
+    "transitions_replayed": 738,
+    "residuals": {
+     "coverage": 0.0,
+     "balance": 0.0,
+     "bess_dynamics": 0.0,
+     "bess_periodic": 0.0,
+     "bess_capacity": 0.0,
+     "bess_charge_rate": 0.0,
+     "bess_discharge_rate": 0.0,
+     "nonnegativity": 0.0,
+     "integrality": 0.0,
+     "flow_conservation_raw": 0.0
+    },
+    "max_residual": 0.0,
+    "recomputed_objective": 4272.6875,
+    "objective_abs_diff": 0.0,
+    "battery_count": 5.0,
+    "vendor_master_check": {
+     "status": "optimal",
+     "objective": 4272.6875,
+     "bound": 4272.6875,
+     "routes_selected": 17.0,
+     "not_above_reported": true,
+     "seconds": 0.03713484085164964
+    },
+    "validated": true
+   }
+  },
+  "readings": {
+   "1800": {
+    "vector_index": 3,
+    "elapsed_seconds": 1389.8933462959249,
+    "objective": 4272.6875,
+    "validated": true,
+    "is_first_incumbent": false,
+    "is_one_truck_per_task_schedule": false
+   }
+  },
+  "first_incumbent": {
+   "vector_index": 0,
+   "objective": 12194.4125,
+   "elapsed_seconds": 7.191099472925998
+  },
+  "final_validated": true,
+  "passed": true
+ }
+}

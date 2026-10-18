@@ -1,0 +1,437 @@
+{
+ "method": "direct_mip",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": true,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "status": "optimal",
+ "native_status": 2,
+ "objective": 6315.1875,
+ "bound": 6315.1875,
+ "bound_scope": "full_family",
+ "solution_count": 10,
+ "solver_method": 2,
+ "cold_solve": true,
+ "external_incumbent_or_basis_start": false,
+ "feasibility_tolerance": 1e-08,
+ "optimality_tolerance": 1e-08,
+ "integer_feasibility_tolerance": 1e-08,
+ "mip_gap_tolerance": 1e-06,
+ "mip_gap_absolute_tolerance": 1e-10,
+ "solver_version": [
+  12,
+  0,
+  3
+ ],
+ "trace": [
+  {
+   "elapsed_seconds": 11.892076442018151,
+   "incumbent": null,
+   "bound": 0.0,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 195.16393784899265,
+   "incumbent": null,
+   "bound": 6289.473214285717,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 299.79465787205845,
+   "incumbent": null,
+   "bound": 6289.473214285717,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 372.0852646767162,
+   "incumbent": 6315.262500000001,
+   "bound": 6302.330357142859,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 461.3411012799479,
+   "incumbent": 6315.2625,
+   "bound": 6302.330357142859,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 494.41523924283683,
+   "incumbent": 6315.225,
+   "bound": 6302.330357142859,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 533.4578951559961,
+   "incumbent": 6315.225,
+   "bound": 6315.187500000004,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 593.5820995778777,
+   "incumbent": 6315.225,
+   "bound": 6315.187500000004,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 628.4903418999165,
+   "incumbent": 6315.2125,
+   "bound": 6315.187500000005,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 688.1487599406391,
+   "incumbent": 6315.2125,
+   "bound": 6315.187500000005,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 718.6842326270416,
+   "incumbent": 6315.2125,
+   "bound": 6315.187500000005,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 749.9613729687408,
+   "incumbent": 6315.2125,
+   "bound": 6315.187500000005,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 802.0544044310227,
+   "incumbent": 6315.2125,
+   "bound": 6315.187500000005,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 841.9856182928197,
+   "incumbent": 6315.2125,
+   "bound": 6315.187500000005,
+   "bound_scope": "full_family"
+  },
+  {
+   "elapsed_seconds": 878.9904733309522,
+   "incumbent": 6315.2125,
+   "bound": 6315.187500000005,
+   "bound_scope": "full_family"
+  }
+ ],
+ "model_build_seconds": 0.7204359141178429,
+ "remaining_solver_budget_seconds": 1796.1238025161438,
+ "variables": 719649,
+ "constraints": 30710,
+ "nonzeros": 2137925,
+ "integer_variables": 719456,
+ "crossover_parameter": -1,
+ "solve_end_to_end_seconds": 905.4873897950165,
+ "solve_seconds": 901.6110199689865,
+ "solver_runtime_seconds": 901.6107449531555,
+ "process_peak_rss_at_stop_bytes": 1641181184,
+ "native_gap": 0.0,
+ "node_count": 36.0,
+ "graph_seconds": 1.253668091725558,
+ "matrix_seconds": 1.9012941680848598,
+ "graph_nodes": 29600,
+ "graph_arcs": 719354,
+ "unpruned_arcs": 1123668,
+ "matrix_primal_check": {
+  "passed": true,
+  "absolute_tolerance": 1e-06,
+  "residuals": {
+   "equalities": 0.0,
+   "inequalities": 0.0,
+   "lower_bounds": 0.0,
+   "upper_bounds": 0.0,
+   "integrality": 0.0,
+   "objective_reconstruction": 0.0
+  }
+ },
+ "validation": {
+  "passed": true,
+  "aggregate": {
+   "passed": true,
+   "scope": "aggregate_master_replay",
+   "original_model_feasible": true,
+   "artificial_mass": 0.0,
+   "truck_count": 20.0,
+   "battery_count": 3.0,
+   "residuals": {
+    "task_coverage": 0.0,
+    "energy_balance": 0.0,
+    "battery_dynamics": 0.0,
+    "battery_periodic": 0.0,
+    "battery_capacity": 0.0,
+    "battery_charge_rate": 0.0,
+    "battery_discharge_rate": 0.0,
+    "generation_cap": 0.0,
+    "aggregate_charging_cap": 0.0,
+    "lower_bounds": 0.0,
+    "upper_bounds": 0.0,
+    "column_integrality": 0.0,
+    "battery_count_integrality": 0.0,
+    "objective": 0.0
+   },
+   "replayed_objective": 6315.1875,
+   "selected_columns": [
+    {
+     "index": 0,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 2,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 3,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 4,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 5,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 6,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 7,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 8,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 9,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 10,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 11,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 12,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 13,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 14,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 15,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 16,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 17,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 18,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 19,
+     "weight": 1.0,
+     "kind": "truck"
+    }
+   ]
+  },
+  "selected_route_proofs": {
+   "_omitted_list": true,
+   "elements": 20,
+   "pretty_lines": 1222
+  },
+  "occupancy": {
+   "_omitted_list": true,
+   "elements": 16,
+   "pretty_lines": 801
+  },
+  "max_connector_violation": 0.0,
+  "station_order": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ]
+ },
+ "diagnostic_seconds": 0.6077480637468398,
+ "total_including_checks_seconds": 906.0951384487562,
+ "process_peak_rss_after_diagnostics_bytes": 1643982848,
+ "variant": "direct_mip",
+ "instance_sha256": "ae585c15fb73d7c43be2670e78c36c089854f9a7fbfe5c2b25c821bb0ce7fbac",
+ "evidence_sha256": {
+  "instance.json": "6b888f8662ceb2a052f41661d191a14cd1e547785e1c40e0a8a290874cf92c8f",
+  "manifest.json": "8e246353138ad39cbc3812bac46732430639aa0552c14a5337e21537b34622d8",
+  "native_stop.json": "233ff9caacec67f6c92ec71cd9225429980550ce66cac3efe93322bc50eb3c67",
+  "direct_primal.npz": "a5f3b8738a4315f5ad97c6d2eefceafd6ae9240c567bd30f47f37c9f5c35bcc0",
+  "selected_replay_columns.json.gz": "b380b35317cef87e70f51a873127bd3b40f1546ec7a0098542bee33bf9d81974",
+  "selected_replay_primal.npz": "dddcd61481bc97ec76daa376815808c90d222048721adc7daff33a737079c307",
+  "logs/direct_mip.log": "f740ba83fc1d36542520fe36185268ca43b2eb0bcac53651bab0af2eb3f87e53"
+ },
+ "_compaction": {
+  "source_bytes": 327827,
+  "source_sha256": "c9f6e82ba5fba2cc6413746309c57083380a6b9646ee3025be2bfad2bd0aa375",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 292
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 1116
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 1938
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 2762
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 3584
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 4406
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 5229
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 6051
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 6873
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 7693
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 8514
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 9336
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 10158
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 10979
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 11802
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 12625
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 13446
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 14267
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 15087
+   },
+   {
+    "key": "selected_route_proofs",
+    "elements": 20,
+    "line": 280
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 16722
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

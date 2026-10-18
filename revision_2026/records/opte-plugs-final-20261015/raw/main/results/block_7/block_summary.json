@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "direct_mip",
+    "cg_lp",
+    "direct_lp",
+    "cg_pool_mip"
+  ],
+  "instance_sha256": "31d2ad712906f31ada30ae37a0f42c963fa6d4fe65f821b01e7d43944232b2ac",
+  "results": [
+    {
+      "arm": "direct_mip",
+      "position": 0,
+      "status": "time_limit",
+      "objective": null,
+      "incumbent_validated": false,
+      "seconds": 1800.0831000581384,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1801.1212402093224
+      },
+      "result_sha256": "7a0d29481f6cb575860c8e3d4dbcca0d9d88dd093a0d21d93a9deb3c7cbd6642"
+    },
+    {
+      "arm": "cg_lp",
+      "position": 1,
+      "status": "candidate_priced_out",
+      "objective": 6098.833035714286,
+      "incumbent_validated": true,
+      "seconds": 156.95976554695517,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 162.86173680284992
+      },
+      "result_sha256": "abfe567079009d3479eccba0d99633ceda5bcbb429486ab61b57a79c28678dd1"
+    },
+    {
+      "arm": "direct_lp",
+      "position": 2,
+      "status": "optimal",
+      "objective": 6098.833035714286,
+      "incumbent_validated": true,
+      "seconds": 1314.3087381320074,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1318.1714033461176
+      },
+      "result_sha256": "a3985c055f6bd7dc960a179e480552514df885a41a5e8c9f07df313e0ad5acf1"
+    },
+    {
+      "arm": "cg_pool_mip",
+      "position": 3,
+      "status": "time_limit",
+      "objective": 6407.924999999999,
+      "incumbent_validated": true,
+      "seconds": 1800.003789712675,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1802.596459262073
+      },
+      "result_sha256": "28bb20c61cd2eef87fe88e2003e2113f287a1c0d52b141b9ad3605bb540162f4"
+    }
+  ],
+  "environment_consistent": true
+}

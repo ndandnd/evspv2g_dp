@@ -1,0 +1,5 @@
+On the 25\,kWh grid, the direct root LP takes 144--273 seconds at every size, and the direct MIP proves optimality within 1{,}800 seconds on all twenty inputs.
+CG time grows with the number of tasks, from about 30 seconds at 100 tasks to 724--1{,}238 seconds at 1{,}000, and the restricted MIP's gap grows from about 4\% to 42--45\%.
+On the 12.5\,kWh grid, the direct root LP takes 1{,}024--3{,}657 seconds.
+At 1{,}800 seconds the direct MIP still holds only its starting schedule on all twenty inputs, including the nine whose root LP had already been solved, and the restricted MIP gives the better schedule at that time, with gaps from 3--4\% at 100 tasks to 39--44\% from 600 tasks; from 400 tasks neither schedule is close to the bound.
+The direct MIP later proves optimality on 15 of these 20 inputs.

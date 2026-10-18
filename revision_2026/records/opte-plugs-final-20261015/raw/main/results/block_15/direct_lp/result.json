@@ -1,0 +1,262 @@
+{
+ "method": "direct_lp",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": true,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "status": "optimal",
+ "native_status": 2,
+ "objective": 12662.437499999998,
+ "bound": 12662.437499999998,
+ "bound_scope": "full_family",
+ "solution_count": 1,
+ "solver_method": 2,
+ "cold_solve": true,
+ "external_incumbent_or_basis_start": false,
+ "feasibility_tolerance": 1e-08,
+ "optimality_tolerance": 1e-08,
+ "integer_feasibility_tolerance": 1e-08,
+ "mip_gap_tolerance": 1e-06,
+ "mip_gap_absolute_tolerance": 1e-10,
+ "solver_version": [
+  12,
+  0,
+  3
+ ],
+ "trace": [],
+ "model_build_seconds": 1.9587763110175729,
+ "remaining_solver_budget_seconds": 1789.4613532968797,
+ "variables": 2021088,
+ "constraints": 57380,
+ "nonzeros": 4718723,
+ "integer_variables": 0,
+ "crossover_parameter": -1,
+ "solve_end_to_end_seconds": 1034.4542194139212,
+ "solve_seconds": 1023.9154063477181,
+ "solver_runtime_seconds": 1023.9151029586792,
+ "process_peak_rss_at_stop_bytes": 3180240896,
+ "graph_seconds": 3.8548910641111434,
+ "matrix_seconds": 4.722046418115497,
+ "graph_nodes": 56938,
+ "graph_arcs": 2020693,
+ "unpruned_arcs": 3196320,
+ "matrix_primal_check": {
+  "passed": true,
+  "absolute_tolerance": 1e-06,
+  "residuals": {
+   "equalities": 3.552713678800501e-15,
+   "inequalities": 5.329070518200751e-15,
+   "lower_bounds": 0.0,
+   "upper_bounds": 0.0,
+   "integrality": 0.0,
+   "objective_reconstruction": 1.8189894035458565e-12
+  }
+ },
+ "validation": {
+  "passed": true,
+  "aggregate": {
+   "passed": true,
+   "scope": "aggregate_master_replay",
+   "original_model_feasible": true,
+   "artificial_mass": 0.0,
+   "truck_count": 31.000000000000007,
+   "battery_count": 0.0,
+   "residuals": {
+    "task_coverage": 2.3314683517128287e-15,
+    "energy_balance": 5.329070518200751e-15,
+    "battery_dynamics": 0.0,
+    "battery_periodic": 0.0,
+    "battery_capacity": 0.0,
+    "battery_charge_rate": 0.0,
+    "battery_discharge_rate": 0.0,
+    "generation_cap": 0.0,
+    "aggregate_charging_cap": 0.0,
+    "lower_bounds": 0.0,
+    "upper_bounds": 0.0,
+    "column_integrality": 0.0,
+    "battery_count_integrality": 0.0,
+    "objective": 0.0
+   },
+   "replayed_objective": 12662.437499999998,
+   "selected_columns": {
+    "_omitted_list": true,
+    "elements": 151,
+    "pretty_lines": 756
+   }
+  },
+  "selected_route_proofs": {
+   "_omitted_list": true,
+   "elements": 151,
+   "pretty_lines": 209661
+  },
+  "occupancy": {
+   "_omitted_list": true,
+   "elements": 31,
+   "pretty_lines": 1551
+  },
+  "max_connector_violation": 0.0,
+  "station_order": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ]
+ },
+ "diagnostic_seconds": 3.46586193703115,
+ "total_including_checks_seconds": 1037.920082711149,
+ "process_peak_rss_after_diagnostics_bytes": 3180240896,
+ "variant": "direct_lp",
+ "instance_sha256": "abe1af6ca42dc798dcce43e3fa23dbbccf4d2a5ec508af0105be4936bd9f52de",
+ "evidence_sha256": {
+  "instance.json": "046ec0b32690aff31591fb17d50e916b3908fe3db91b55571da7b522720e2195",
+  "manifest.json": "15eb064cab7e75560a399e795c5b5aea97ca8ce6ce24f7c2dcebc64b8b9a61a8",
+  "native_stop.json": "0a8dbee96330c7f6b3a44f2fcf9276acca5cf35a032de72aa5426783f92362e7",
+  "direct_primal.npz": "389ca238c3d32e09f5644ff7c703f9b59a90e99db598434f2d31be19d7126f8e",
+  "selected_replay_columns.json.gz": "e86e1d82e8e5d69b4d356e04bc8a40a6fc415d5a4a8915c7477f4781f68c2060",
+  "selected_replay_primal.npz": "112e6e1a46b846cfe790c2bfca2ffcc43116d8471f837b19ead877aeae6374b5",
+  "logs/direct_lp.log": "6c4761c2e7a9c898cc74b9c99dcff1d6e7fb7530466bc98d8fd78c9db9ca79a3"
+ },
+ "_compaction": {
+  "source_bytes": 4519005,
+  "source_sha256": "d92d0811894183c0e5a2c9166695de028565ade29dc94ef93d304166b4a1f176",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "selected_columns",
+    "elements": 151,
+    "line": 84
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 854
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 2426
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 3998
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 5570
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 7142
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 8716
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 10291
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 11864
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 13436
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 15010
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 16583
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 18156
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 19730
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 21304
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 22878
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 24451
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 26023
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 27596
+   },
+   {
+    "key": "selected_route_proofs",
+    "elements": 151,
+    "line": 842
+   },
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 238422
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

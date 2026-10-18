@@ -1,0 +1,629 @@
+{
+ "method": "direct_lp",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": true,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "status": "optimal",
+ "native_status": 2,
+ "objective": 6098.833035714289,
+ "bound": 6098.833035714289,
+ "bound_scope": "full_family",
+ "solution_count": 1,
+ "solver_method": 2,
+ "cold_solve": true,
+ "external_incumbent_or_basis_start": false,
+ "feasibility_tolerance": 1e-08,
+ "optimality_tolerance": 1e-08,
+ "integer_feasibility_tolerance": 1e-08,
+ "mip_gap_tolerance": 1e-06,
+ "mip_gap_absolute_tolerance": 1e-10,
+ "solver_version": [
+  12,
+  0,
+  3
+ ],
+ "trace": [],
+ "model_build_seconds": 1.9952726382762194,
+ "remaining_solver_budget_seconds": 1789.0128981946036,
+ "variables": 2095280,
+ "constraints": 58310,
+ "nonzeros": 5567782,
+ "integer_variables": 0,
+ "crossover_parameter": -1,
+ "solve_end_to_end_seconds": 941.1891754972748,
+ "solve_seconds": 930.2019070200622,
+ "solver_runtime_seconds": 930.2016279697418,
+ "process_peak_rss_at_stop_bytes": 3319111680,
+ "graph_seconds": 3.255252758041024,
+ "matrix_seconds": 5.73438785225153,
+ "graph_nodes": 57968,
+ "graph_arcs": 2094985,
+ "unpruned_arcs": 3276980,
+ "matrix_primal_check": {
+  "passed": true,
+  "absolute_tolerance": 1e-06,
+  "residuals": {
+   "equalities": 3.552713678800501e-15,
+   "inequalities": 3.552713678800501e-15,
+   "lower_bounds": 0.0,
+   "upper_bounds": 0.0,
+   "integrality": 0.0,
+   "objective_reconstruction": 2.7284841053187847e-12
+  }
+ },
+ "validation": {
+  "passed": true,
+  "aggregate": {
+   "passed": true,
+   "scope": "aggregate_master_replay",
+   "original_model_feasible": true,
+   "artificial_mass": 0.0,
+   "truck_count": 17.0,
+   "battery_count": 1.8392857142857142,
+   "residuals": {
+    "task_coverage": 2.220446049250313e-16,
+    "energy_balance": 2.220446049250313e-15,
+    "battery_dynamics": 8.881784197001252e-16,
+    "battery_periodic": 0.0,
+    "battery_capacity": 0.0,
+    "battery_charge_rate": 0.0,
+    "battery_discharge_rate": 0.0,
+    "generation_cap": 0.0,
+    "aggregate_charging_cap": 0.0,
+    "lower_bounds": 0.0,
+    "upper_bounds": 0.0,
+    "column_integrality": 0.0,
+    "battery_count_integrality": 0.0,
+    "objective": 2.7284841053187847e-12
+   },
+   "replayed_objective": 6098.833035714286,
+   "selected_columns": [
+    {
+     "index": 0,
+     "weight": 0.8179326933708702,
+     "kind": "truck"
+    },
+    {
+     "index": 1,
+     "weight": 0.5806700237766506,
+     "kind": "truck"
+    },
+    {
+     "index": 2,
+     "weight": 0.026204881894347776,
+     "kind": "truck"
+    },
+    {
+     "index": 3,
+     "weight": 0.18206730662912984,
+     "kind": "truck"
+    },
+    {
+     "index": 4,
+     "weight": 0.0625417670450964,
+     "kind": "truck"
+    },
+    {
+     "index": 5,
+     "weight": 0.41932997622334944,
+     "kind": "truck"
+    },
+    {
+     "index": 6,
+     "weight": 0.08436397558773678,
+     "kind": "truck"
+    },
+    {
+     "index": 7,
+     "weight": 0.1930569452547788,
+     "kind": "truck"
+    },
+    {
+     "index": 8,
+     "weight": 0.1094541117841516,
+     "kind": "truck"
+    },
+    {
+     "index": 9,
+     "weight": 0.1337851604563831,
+     "kind": "truck"
+    },
+    {
+     "index": 10,
+     "weight": 0.22393530554717245,
+     "kind": "truck"
+    },
+    {
+     "index": 11,
+     "weight": 0.38687503262666717,
+     "kind": "truck"
+    },
+    {
+     "index": 12,
+     "weight": 0.13404021619214168,
+     "kind": "truck"
+    },
+    {
+     "index": 13,
+     "weight": 0.1930569452547788,
+     "kind": "truck"
+    },
+    {
+     "index": 14,
+     "weight": 0.05155212841944745,
+     "kind": "truck"
+    },
+    {
+     "index": 15,
+     "weight": 0.5,
+     "kind": "truck"
+    },
+    {
+     "index": 16,
+     "weight": 0.09514582823928419,
+     "kind": "truck"
+    },
+    {
+     "index": 17,
+     "weight": 0.16796680905836398,
+     "kind": "truck"
+    },
+    {
+     "index": 18,
+     "weight": 0.010739749746502797,
+     "kind": "truck"
+    },
+    {
+     "index": 19,
+     "weight": 0.24460907367422624,
+     "kind": "truck"
+    },
+    {
+     "index": 20,
+     "weight": 0.1930569452547788,
+     "kind": "truck"
+    },
+    {
+     "index": 21,
+     "weight": 0.004058636786797187,
+     "kind": "truck"
+    },
+    {
+     "index": 22,
+     "weight": 0.2372626695942196,
+     "kind": "truck"
+    },
+    {
+     "index": 23,
+     "weight": 0.24460907367422624,
+     "kind": "truck"
+    },
+    {
+     "index": 24,
+     "weight": 0.3662148395436169,
+     "kind": "truck"
+    },
+    {
+     "index": 25,
+     "weight": 0.25539092632577376,
+     "kind": "truck"
+    },
+    {
+     "index": 26,
+     "weight": 0.2558935441767979,
+     "kind": "truck"
+    },
+    {
+     "index": 27,
+     "weight": 0.14263931987193457,
+     "kind": "truck"
+    },
+    {
+     "index": 28,
+     "weight": 0.11816487985678115,
+     "kind": "truck"
+    },
+    {
+     "index": 29,
+     "weight": 0.23869318242026014,
+     "kind": "truck"
+    },
+    {
+     "index": 30,
+     "weight": 0.10313602912979603,
+     "kind": "truck"
+    },
+    {
+     "index": 31,
+     "weight": 0.1414730445444302,
+     "kind": "truck"
+    },
+    {
+     "index": 32,
+     "weight": 0.14314193772295872,
+     "kind": "truck"
+    },
+    {
+     "index": 33,
+     "weight": 0.4151334065612391,
+     "kind": "truck"
+    },
+    {
+     "index": 34,
+     "weight": 0.2118393294109816,
+     "kind": "truck"
+    },
+    {
+     "index": 35,
+     "weight": 0.19818925678686117,
+     "kind": "truck"
+    },
+    {
+     "index": 36,
+     "weight": 0.2627373304057804,
+     "kind": "truck"
+    },
+    {
+     "index": 37,
+     "weight": 0.07470801297709784,
+     "kind": "truck"
+    },
+    {
+     "index": 38,
+     "weight": 0.08503253319222664,
+     "kind": "truck"
+    },
+    {
+     "index": 39,
+     "weight": 0.23726266959421954,
+     "kind": "truck"
+    },
+    {
+     "index": 40,
+     "weight": 0.41496746680777336,
+     "kind": "truck"
+    },
+    {
+     "index": 41,
+     "weight": 0.45124737273584353,
+     "kind": "truck"
+    },
+    {
+     "index": 42,
+     "weight": 0.04875262726415647,
+     "kind": "truck"
+    },
+    {
+     "index": 43,
+     "weight": 0.291506826566519,
+     "kind": "truck"
+    },
+    {
+     "index": 44,
+     "weight": 0.13378516045638306,
+     "kind": "truck"
+    },
+    {
+     "index": 45,
+     "weight": 0.19941950182544366,
+     "kind": "truck"
+    },
+    {
+     "index": 46,
+     "weight": 0.045189571848782584,
+     "kind": "truck"
+    },
+    {
+     "index": 47,
+     "weight": 0.25488830847474964,
+     "kind": "truck"
+    },
+    {
+     "index": 48,
+     "weight": 0.16024509808648946,
+     "kind": "truck"
+    },
+    {
+     "index": 49,
+     "weight": 0.2695189198576833,
+     "kind": "truck"
+    },
+    {
+     "index": 50,
+     "weight": 0.18206730662912984,
+     "kind": "truck"
+    },
+    {
+     "index": 51,
+     "weight": 0.03281184716828933,
+     "kind": "truck"
+    },
+    {
+     "index": 52,
+     "weight": 0.36677337743367144,
+     "kind": "truck"
+    },
+    {
+     "index": 53,
+     "weight": 0.058827384896210755,
+     "kind": "truck"
+    },
+    {
+     "index": 54,
+     "weight": 0.03095300292757719,
+     "kind": "truck"
+    },
+    {
+     "index": 55,
+     "weight": 0.14775355587728958,
+     "kind": "truck"
+    },
+    {
+     "index": 56,
+     "weight": 0.07073859990685138,
+     "kind": "truck"
+    },
+    {
+     "index": 57,
+     "weight": 0.19941950182544366,
+     "kind": "truck"
+    },
+    {
+     "index": 58,
+     "weight": 0.2753636479819664,
+     "kind": "truck"
+    },
+    {
+     "index": 59,
+     "weight": 0.18206730662912984,
+     "kind": "truck"
+    },
+    {
+     "index": 60,
+     "weight": 0.35274906197373457,
+     "kind": "truck"
+    },
+    {
+     "index": 61,
+     "weight": 0.1937949911499834,
+     "kind": "truck"
+    },
+    {
+     "index": 62,
+     "weight": 0.2286828854251215,
+     "kind": "truck"
+    },
+    {
+     "index": 63,
+     "weight": 0.30181074321313883,
+     "kind": "truck"
+    },
+    {
+     "index": 64,
+     "weight": 0.2881606705890184,
+     "kind": "truck"
+    },
+    {
+     "index": 65,
+     "weight": 0.4417246557158022,
+     "kind": "truck"
+    },
+    {
+     "index": 66,
+     "weight": 0.1906470907982279,
+     "kind": "truck"
+    },
+    {
+     "index": 67,
+     "weight": 0.20832069856969138,
+     "kind": "truck"
+    },
+    {
+     "index": 68,
+     "weight": 0.026678208173330997,
+     "kind": "truck"
+    },
+    {
+     "index": 69,
+     "weight": 0.4728191739756449,
+     "kind": "truck"
+    },
+    {
+     "index": 70,
+     "weight": 0.09276241745588909,
+     "kind": "truck"
+    },
+    {
+     "index": 71,
+     "weight": 0.18578168877801549,
+     "kind": "truck"
+    },
+    {
+     "index": 72,
+     "weight": 0.1955606036373235,
+     "kind": "truck"
+    },
+    {
+     "index": 73,
+     "weight": 0.16024509808648937,
+     "kind": "truck"
+    },
+    {
+     "index": 74,
+     "weight": 0.28291169630223134,
+     "kind": "truck"
+    },
+    {
+     "index": 75,
+     "weight": 0.4344184085684659,
+     "kind": "truck"
+    },
+    {
+     "index": 76,
+     "weight": 0.24309611208874954,
+     "kind": "truck"
+    },
+    {
+     "index": 77,
+     "weight": 0.337573911687901,
+     "kind": "truck"
+    }
+   ]
+  },
+  "selected_route_proofs": {
+   "_omitted_list": true,
+   "elements": 78,
+   "pretty_lines": 49760
+  },
+  "occupancy": {
+   "_omitted_list": true,
+   "elements": 16,
+   "pretty_lines": 801
+  },
+  "max_connector_violation": 0.0,
+  "station_order": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ]
+ },
+ "diagnostic_seconds": 2.8963917628861964,
+ "total_including_checks_seconds": 944.0855681202374,
+ "process_peak_rss_after_diagnostics_bytes": 3319111680,
+ "variant": "direct_lp",
+ "instance_sha256": "7388068842a5eba45bcdc6da751e00b66aa78e0274b904fc17f3aa27deb6125f",
+ "evidence_sha256": {
+  "instance.json": "007fdce7557c0be57f75fc5d33be626e3086ec7343d68bdfcd1dd31975fb8782",
+  "manifest.json": "0d3f12b1cf03e1d1e3fc1f0702fd8c6fbe8fd277202b06e7ed187df304885b67",
+  "native_stop.json": "9a7eadf8cf8f44d095472953fdca9a19e7d9a9f7f808660fbd9a37ecdab8695c",
+  "direct_primal.npz": "df5038c8237fbb05d11827887f0e47d9bfb591bf33e5f4f662ed21bd42285b66",
+  "selected_replay_columns.json.gz": "e79e612140f8b8c977d3b72dec8d5923ff06f16f402f3a1923bedec4613d0d8e",
+  "selected_replay_primal.npz": "1c78cb255ad3fc66a36212760f04fdbaa6cf8a929df9262d80db786fe59ac609",
+  "logs/direct_lp.log": "339ecda52fbd9a8adbb22f9261a1a3290bcc6b79b77b0187fc375fbc0b25b9a2"
+ },
+ "_compaction": {
+  "source_bytes": 1235473,
+  "source_sha256": "384efc15c523a2210efba7875717dd6783e56bab4932fa51d49e7229e9a2fc0a",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 489
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 1312
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 2136
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 2958
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 3778
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 4596
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 5419
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 6242
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 7067
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 7890
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 8714
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 9535
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 10359
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 11181
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 12004
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 12828
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 13651
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 14474
+   },
+   {
+    "key": "selected_route_proofs",
+    "elements": 78,
+    "line": 477
+   },
+   {
+    "key": "occupancy",
+    "elements": 16,
+    "line": 64656
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

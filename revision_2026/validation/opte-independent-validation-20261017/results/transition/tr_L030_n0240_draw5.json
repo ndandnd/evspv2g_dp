@@ -1,0 +1,270 @@
+{
+ "case": "tr_L030_n0240_draw5",
+ "cohort": "transition",
+ "instance_sha256": "2a54d5b54515ef1b2038486d29f1912002d0c7c6bb102fdbb58beb6238bfeac8",
+ "n_tasks": 240,
+ "locations": 31,
+ "soc_step": 0.25,
+ "c_b": 36.0,
+ "c_g": 40.0,
+ "c_v": 45.0,
+ "arms": {
+  "cg1800": {
+   "kind": "cg",
+   "path": "/home/nc437/opte-transition-20261017/results/tr_L030_n0240_draw5/cg_pool_mip",
+   "input_checks": {
+    "saved_instance_equals_rebuilt": true,
+    "result_hash_matches": true,
+    "manifest_hash_matches": true,
+    "manifest_spec_equals_declared": true
+   },
+   "manifest": {
+    "slurm": {
+     "SLURM_JOB_ID": "350179",
+     "SLURM_ARRAY_JOB_ID": "349296",
+     "SLURM_ARRAY_TASK_ID": "58",
+     "SLURM_MEM_PER_NODE": "6144",
+     "SLURMD_NODENAME": "thickstun-compute-01",
+     "SLURM_RESTART_COUNT": null
+    },
+    "cpu_model": "AMD EPYC 9654 96-Core Processor",
+    "gurobi": [
+     12,
+     0,
+     3
+    ]
+   },
+   "code_checks": {
+    "runtime_files_compared": [
+     "barrier_mip_solver.py",
+     "direct_mip_traced.py",
+     "followup_inputs.py",
+     "panel_instances.py",
+     "phase_models.py",
+     "postrun_bound.py",
+     "run_transition.py",
+     "scaling_instances.py",
+     "shared_scaling_helpers.py",
+     "transition_instances.py"
+    ],
+    "runtime_files_differing": [],
+    "vendor_files_differing": []
+   },
+   "status": "time_limit",
+   "reported_objective": 18321.4,
+   "reported_cg_lp": 15339.611607142844,
+   "reported_full_family_bound": 15339.611367142845,
+   "cg_priced_out": true,
+   "final_pricing_call_empty": true,
+   "restricted_mip_status": "time_limit",
+   "runner_graph": [
+    57246,
+    2034735
+   ],
+   "selected_routes": 63,
+   "route_realization": {
+    "singleton": 29,
+    "path_from_saved_hint": 34,
+    "path_found_by_search": 0
+   },
+   "transitions_replayed": 1352,
+   "residuals": {
+    "coverage": 0.0,
+    "balance": 0.0,
+    "bess_dynamics": 0.0,
+    "bess_periodic": 0.0,
+    "bess_capacity": 0.0,
+    "bess_charge_rate": 0.0,
+    "bess_discharge_rate": 0.0,
+    "nonnegativity": 0.0,
+    "integrality": 0.0
+   },
+   "max_residual": 0.0,
+   "recomputed_objective": 18321.4,
+   "objective_abs_diff": 0.0,
+   "battery_count": 1.0,
+   "vendor_master_check": {
+    "status": "optimal",
+    "objective": 18321.4,
+    "bound": 18321.4,
+    "routes_selected": 63.0,
+    "not_above_reported": true,
+    "seconds": 0.17827983386814594
+   },
+   "schedule_validated": true,
+   "validated_objective": 18321.4,
+   "dual_certificate": {
+    "available": true,
+    "dual_objective_part": 15339.611607142855,
+    "rc_min_graph": -1.1183942660863977e-11,
+    "rc_min_singletons": 20.012500000000017,
+    "rc_min": -1.1183942660863977e-11,
+    "fleet_term": -2.6841462386073545e-09,
+    "battery_unit_value": -19.8375000000009,
+    "battery_reduced_cost": 16.1624999999991,
+    "mu_clipped_max": 0.0,
+    "nu_max_abs": 0.0,
+    "bound_before_battery_term": 15339.61160714017,
+    "priced_out_at_1e-6": true
+   },
+   "passed": true
+  },
+  "direct": {
+   "kind": "direct",
+   "path": "/home/nc437/opte-transition-20261017/results/tr_L030_n0240_draw5/direct_mip",
+   "input_checks": {
+    "saved_instance_equals_rebuilt": true,
+    "result_hash_matches": true,
+    "manifest_hash_matches": true,
+    "manifest_spec_equals_declared": true
+   },
+   "manifest": {
+    "slurm": {
+     "SLURM_JOB_ID": "349933",
+     "SLURM_ARRAY_JOB_ID": "349294",
+     "SLURM_ARRAY_TASK_ID": "59",
+     "SLURM_MEM_PER_NODE": "12288",
+     "SLURMD_NODENAME": "portal-compute-03",
+     "SLURM_RESTART_COUNT": null
+    },
+    "cpu_model": "AMD EPYC 9654 96-Core Processor",
+    "gurobi": [
+     12,
+     0,
+     3
+    ]
+   },
+   "code_checks": {
+    "runtime_files_compared": [
+     "barrier_mip_solver.py",
+     "direct_mip_traced.py",
+     "followup_inputs.py",
+     "panel_instances.py",
+     "phase_models.py",
+     "postrun_bound.py",
+     "run_transition.py",
+     "scaling_instances.py",
+     "shared_scaling_helpers.py",
+     "transition_instances.py"
+    ],
+    "runtime_files_differing": [],
+    "vendor_files_differing": []
+   },
+   "status": "time_limit",
+   "reported_objective": 15363.8875,
+   "reported_bound": 15339.611607142857,
+   "runner_graph": [
+    57246,
+    2034735
+   ],
+   "budget_seconds": 1800.0,
+   "solve_end_to_end_seconds": 1800.187292393297,
+   "root_lp_solved_seconds": 849.1965757664293,
+   "vectors": {
+    "incumbent_3": {
+     "file": "incumbent_003.npz",
+     "reported_objective": 15363.887499865254,
+     "routes": 39,
+     "dag_routes": 39,
+     "singleton_routes": 0,
+     "one_truck_per_task_singletons": false,
+     "transitions_replayed": 1585,
+     "residuals": {
+      "coverage": 0.0,
+      "balance": 2.5905819711624645e-09,
+      "bess_dynamics": 0.0,
+      "bess_periodic": 0.0,
+      "bess_capacity": 0.0,
+      "bess_charge_rate": 0.0,
+      "bess_discharge_rate": 0.0,
+      "nonnegativity": 0.0,
+      "integrality": 0.0,
+      "flow_conservation_raw": 0.0
+     },
+     "max_residual": 2.5905819711624645e-09,
+     "recomputed_objective": 15363.887499865254,
+     "objective_abs_diff": 0.0,
+     "battery_count": 0.0,
+     "vendor_master_check": {
+      "status": "optimal",
+      "objective": 15363.8875,
+      "bound": 15363.8875,
+      "routes_selected": 39.0,
+      "not_above_reported": true,
+      "seconds": 0.08652314497157931
+     },
+     "validated": true
+    },
+    "final_-1": {
+     "file": "direct_mip_primal.npz",
+     "reported_objective": 15363.8875,
+     "routes": 39,
+     "dag_routes": 39,
+     "singleton_routes": 0,
+     "one_truck_per_task_singletons": false,
+     "transitions_replayed": 1585,
+     "residuals": {
+      "coverage": 0.0,
+      "balance": 0.0,
+      "bess_dynamics": 0.0,
+      "bess_periodic": 0.0,
+      "bess_capacity": 0.0,
+      "bess_charge_rate": 0.0,
+      "bess_discharge_rate": 0.0,
+      "nonnegativity": 0.0,
+      "integrality": 0.0,
+      "flow_conservation_raw": 0.0
+     },
+     "max_residual": 0.0,
+     "recomputed_objective": 15363.8875,
+     "objective_abs_diff": 0.0,
+     "battery_count": 0.0,
+     "vendor_master_check": {
+      "status": "optimal",
+      "objective": 15363.8875,
+      "bound": 15363.8875,
+      "routes_selected": 39.0,
+      "not_above_reported": true,
+      "seconds": 0.08291644183918834
+     },
+     "validated": true
+    }
+   },
+   "readings": {
+    "1800": {
+     "vector_index": 3,
+     "elapsed_seconds": 1750.365793786943,
+     "objective": 15363.887499865254,
+     "validated": true,
+     "is_first_incumbent": false,
+     "is_one_truck_per_task_schedule": false
+    }
+   },
+   "first_incumbent": {
+    "vector_index": 0,
+    "objective": 38457.67500000001,
+    "elapsed_seconds": 10.596949785016477
+   },
+   "final_validated": true,
+   "passed": true
+  }
+ },
+ "graph": {
+  "nodes": 57246,
+  "arcs": 2034735,
+  "unpruned_states": 88102,
+  "unpruned_arcs": 3198320,
+  "build_seconds": 1.7202505068853498
+ },
+ "forbidden_modules_loaded": [],
+ "validator_sha256": "e0bdd729a34e1e0d1ef782079834ac94efde66c746e5261bd9971f29c6b0a925",
+ "vendor_sha256": {
+  "colgen.py": "8ec23a0b52ec8f696ada29d2207c7606b5eab50aaa2f72d6932f0fb1a350ee7e",
+  "gurobi_master.py": "99840d7eeb831d965feb783668110873fd34be81712429746d0c7f485011e8e4",
+  "instance.py": "3665962eea34daacb70b1d55a9cd9bbdcea93d6b30f07938f972d82abec09cbb",
+  "master.py": "e39a9b558c309d0fa10652fc63f87982ef37a1722f315df5ce5b51a6ac37bae1",
+  "pricing_truck.py": "4448778183a688d7faf54711973bd4d7bf4cdb6bfc73dda1d2a75def334007e0",
+  "recreate_arxiv.py": "d929fdf58f1a6da777ff8b16628e8abe35d6f23ed3bfb053fa5f69f24849bbbd"
+ },
+ "seconds": 5.892971506807953
+}

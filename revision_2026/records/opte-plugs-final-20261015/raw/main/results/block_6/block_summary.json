@@ -1,0 +1,73 @@
+{
+  "completed": true,
+  "arm_order": [
+    "cg_pool_mip",
+    "direct_mip",
+    "cg_lp",
+    "direct_lp"
+  ],
+  "instance_sha256": "7388068842a5eba45bcdc6da751e00b66aa78e0274b904fc17f3aa27deb6125f",
+  "results": [
+    {
+      "arm": "cg_pool_mip",
+      "position": 0,
+      "status": "optimal",
+      "objective": 6178.74375,
+      "incumbent_validated": true,
+      "seconds": 408.01327268220484,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 410.12655415199697
+      },
+      "result_sha256": "e9b2d758a5d55746eba03876025a5c2452981c1a9c711b8ebb37810b19909c2b"
+    },
+    {
+      "arm": "direct_mip",
+      "position": 1,
+      "status": "time_limit",
+      "objective": 18237.475,
+      "incumbent_validated": true,
+      "seconds": 1800.2315963520668,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 1803.7632362586446
+      },
+      "result_sha256": "bfa8c44f829114666b8a33716d2c1aab068dba67bbcbe7be6d056ab1e559ba4d"
+    },
+    {
+      "arm": "cg_lp",
+      "position": 2,
+      "status": "candidate_priced_out",
+      "objective": 6098.833035714285,
+      "incumbent_validated": true,
+      "seconds": 150.83550171926618,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 156.54980746097863
+      },
+      "result_sha256": "cc77b8727e3c7fdd834456351bcd5466ce9d9e0bc785876d25c642cedd48562a"
+    },
+    {
+      "arm": "direct_lp",
+      "position": 3,
+      "status": "optimal",
+      "objective": 6098.833035714289,
+      "incumbent_validated": true,
+      "seconds": 941.1891754972748,
+      "same_environment": true,
+      "external_execution": {
+        "returncode": 0,
+        "external_timeout": false,
+        "external_wall_seconds": 944.8684350219555
+      },
+      "result_sha256": "384efc15c523a2210efba7875717dd6783e56bab4932fa51d49e7229e9a2fc0a"
+    }
+  ],
+  "environment_consistent": true
+}

@@ -1,0 +1,78 @@
+{
+  "method": "direct_mip",
+  "budget_seconds": 1800.0,
+  "threads": 1,
+  "seed": 0,
+  "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+  "incumbent_validated": false,
+  "global_optimality_independently_certified": false,
+  "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+  "status": "time_limit",
+  "native_status": 9,
+  "objective": null,
+  "bound": 6114.904464285717,
+  "bound_scope": "full_family",
+  "solution_count": 0,
+  "solver_method": 2,
+  "cold_solve": true,
+  "external_incumbent_or_basis_start": false,
+  "feasibility_tolerance": 1e-08,
+  "optimality_tolerance": 1e-08,
+  "integer_feasibility_tolerance": 1e-08,
+  "mip_gap_tolerance": 1e-06,
+  "mip_gap_absolute_tolerance": 1e-10,
+  "solver_version": [
+    12,
+    0,
+    3
+  ],
+  "trace": [
+    {
+      "elapsed_seconds": 35.15552151110023,
+      "incumbent": null,
+      "bound": 0.0,
+      "bound_scope": "full_family"
+    },
+    {
+      "elapsed_seconds": 1561.7972285151482,
+      "incumbent": null,
+      "bound": 6114.904464285717,
+      "bound_scope": "full_family"
+    },
+    {
+      "elapsed_seconds": 1800.0588656282052,
+      "incumbent": null,
+      "bound": 6114.904464285717,
+      "bound_scope": "full_family"
+    }
+  ],
+  "model_build_seconds": 2.119592390023172,
+  "remaining_solver_budget_seconds": 1788.5941469701938,
+  "variables": 2095280,
+  "constraints": 59078,
+  "nonzeros": 6935746,
+  "integer_variables": 2095087,
+  "crossover_parameter": -1,
+  "solve_end_to_end_seconds": 1800.0665388908237,
+  "solve_seconds": 1788.6603897367604,
+  "solver_runtime_seconds": 1788.6601030826569,
+  "process_peak_rss_at_stop_bytes": 4721385472,
+  "native_gap": null,
+  "node_count": 1.0,
+  "graph_seconds": 3.1866853339597583,
+  "matrix_seconds": 6.096429708879441,
+  "graph_nodes": 57968,
+  "graph_arcs": 2094985,
+  "unpruned_arcs": 3276980,
+  "diagnostic_seconds": 0.5023882701061666,
+  "total_including_checks_seconds": 1800.5689288307913,
+  "process_peak_rss_after_diagnostics_bytes": 4721385472,
+  "variant": "direct_mip",
+  "instance_sha256": "d7be3ebf1f782b9d0008d6b8cc9ce23dedae4f141f8d44a82aaa26316ce10252",
+  "evidence_sha256": {
+    "instance.json": "4df49a8b94801b29ad4cefa6f0fa57480da9601c25bc35154f69de6c53c98bfa",
+    "manifest.json": "d40f7c86430ae973174534d4b456525cbdb3c392723144e7b4595d7dd889894a",
+    "native_stop.json": "55893c5e9344278c463b24c4099f21b8adc38059088915d8be6a52c4bbd48f2d",
+    "logs/direct_mip.log": "5badb3023756b8c89e1a68b26e5c2f6e0cec08c98368a39b59c8a1f5d47171a7"
+  }
+}

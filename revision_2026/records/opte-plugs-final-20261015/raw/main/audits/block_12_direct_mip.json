@@ -1,0 +1,191 @@
+{
+ "workers": [
+  {
+   "worker": "/home/nc437/opte-plugs-20261013/results/block_12/direct_mip",
+   "passed": true,
+   "accepted_feasible_incumbent": true,
+   "accepted_common_family_lp": false,
+   "global_economic_lower_bound": 13015.669196428573,
+   "restricted_pool_lower_bound": null,
+   "phase1_infeasibility_evidence": false,
+   "verification_tolerance": 1e-06,
+   "scope": "Independent numerical physical/matrix replay and complete graph/seed/BESS pricing, no LP or MIP optimization",
+   "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+   "local_test_override": false,
+   "case": "plugs_n200_L30_d25_s0_unlimited",
+   "variant": "direct_mip",
+   "repeat": 0,
+   "status": "time_limit",
+   "result_sha256": "3113c29445aa7d55d492554b632ea46516f8d693bc04850de413de5db3d7840f",
+   "manifest_sha256": "054f87b2649794b548d3759b7a91aa993157e85c03a0f564fe81d8f3911d554e",
+   "instance_file_sha256": "c29c9be62712297f59105a5d5237251a2aae0e13bd8d61485bb0962eb35c3a42",
+   "evidence_binding_sha256": {
+    "result.json": "3113c29445aa7d55d492554b632ea46516f8d693bc04850de413de5db3d7840f",
+    "manifest.json": "054f87b2649794b548d3759b7a91aa993157e85c03a0f564fe81d8f3911d554e",
+    "instance.json": "c29c9be62712297f59105a5d5237251a2aae0e13bd8d61485bb0962eb35c3a42"
+   },
+   "metadata": {
+    "passed": true,
+    "local_test_override": false,
+    "cluster_protocol_accepted": true,
+    "source_files": 35,
+    "evidence_files": 7,
+    "instance_sha256": "ded503c61bc533d342430ebc22817c51a3ec199b4d575e5851eed1ae2fe31644",
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "partial_evidence_only": false
+   },
+   "evidence_sha256": {
+    "instance.json": "c29c9be62712297f59105a5d5237251a2aae0e13bd8d61485bb0962eb35c3a42",
+    "manifest.json": "054f87b2649794b548d3759b7a91aa993157e85c03a0f564fe81d8f3911d554e",
+    "native_stop.json": "e3f7447e24063965abedf62505bbe3dd56ecbf473760c7af930b36fe1f337f44",
+    "direct_primal.npz": "d00134f54b8a438737348b6898223d4aa1ebb6ba5d9d154f3359835b77431bc2",
+    "selected_replay_columns.json.gz": "6c5c5bb1c2cf29491b727ad757e331cd791a9d36f24b89b994d89fe07fa745c1",
+    "selected_replay_primal.npz": "2b9e09bc8526431b823ed284395a5fdd51d55098fcc0777e6a9551eb43acf9aa",
+    "logs/direct_mip.log": "db7203d217e56bde342a3d71652d918354edae7e8958e96e5ad6f5f5dfda6e25"
+   },
+   "instance_sha256": "ded503c61bc533d342430ebc22817c51a3ec199b4d575e5851eed1ae2fe31644",
+   "graph_nodes": 56953,
+   "graph_arcs": 2021972,
+   "finite_connector_rows": 0,
+   "seed_count": 200,
+   "primal": {
+    "passed": true,
+    "raw_residuals": {
+     "equalities": 0.0,
+     "inequalities": 0.0,
+     "lower_bounds": 0.0,
+     "upper_bounds": 0.0,
+     "objective": 0.0,
+     "integrality": 0.0,
+     "decomposed_arc_flow": 0.0,
+     "decomposed_fleet": 0.0
+    },
+    "physical_replay": {
+     "passed": true,
+     "raw_residuals": {
+      "equalities": 0.0,
+      "inequalities": 0.0,
+      "lower_bounds": 0.0,
+      "upper_bounds": 0.0,
+      "objective": 7.275957614183426e-12,
+      "integrality": 0.0
+     },
+     "artificial_mass": 0.0,
+     "station_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+     ],
+     "occupancy": {
+      "_omitted_list": true,
+      "elements": 31,
+      "pretty_lines": 1551
+     },
+     "max_plug_violation": 0.0,
+     "selected_route_proofs": {
+      "_omitted_list": true,
+      "elements": 200,
+      "pretty_lines": 3601
+     },
+     "original_vendor_aggregate": {
+      "passed": true,
+      "scope": "aggregate_master_replay",
+      "original_model_feasible": true,
+      "artificial_mass": 0.0,
+      "truck_count": 200.0,
+      "battery_count": 0.0,
+      "residuals": {
+       "task_coverage": 0.0,
+       "energy_balance": 0.0,
+       "battery_dynamics": 0.0,
+       "battery_periodic": 0.0,
+       "battery_capacity": 0.0,
+       "battery_charge_rate": 0.0,
+       "battery_discharge_rate": 0.0,
+       "generation_cap": 0.0,
+       "aggregate_charging_cap": 0.0,
+       "lower_bounds": 0.0,
+       "upper_bounds": 0.0,
+       "column_integrality": 0.0,
+       "battery_count_integrality": 0.0,
+       "objective": 7.275957614183426e-12
+      },
+      "replayed_objective": 32424.725,
+      "selected_columns": {
+       "_omitted_list": true,
+       "elements": 200,
+       "pretty_lines": 1001
+      }
+     },
+     "phase": "economic"
+    },
+    "decomposed_paths": 0
+   },
+   "full_family_gap": 19409.055803571435,
+   "full_family_relative_gap": 0.5985881392539623,
+   "feasible_upper_bound": 32424.725000000006,
+   "reason": "All available raw evidence independently checked",
+   "native_infeasible_claim_only": false,
+   "optimum_scope": "Integer optimality status for restricted CG pool remains restricted; full-family bounds separate",
+   "validation_seconds": 9.02974603092298,
+   "process_peak_rss_bytes": 703737856,
+   "verification_process_peak_rss_bytes": 703737856,
+   "rss_scope": "Cumulative verifier-process peak; fresh CLI per worker"
+  }
+ ],
+ "passed": true,
+ "optimization_performed": false,
+ "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+ "local_test_environment_override": false,
+ "_compaction": {
+  "source_bytes": 163920,
+  "source_sha256": "3ce604d578356ba9b68c2a829feecd374d989ba2e140961b1434d8fe828d0c2f",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "occupancy",
+    "elements": 31,
+    "line": 107
+   },
+   {
+    "key": "selected_route_proofs",
+    "elements": 200,
+    "line": 1660
+   },
+   {
+    "key": "selected_columns",
+    "elements": 200,
+    "line": 5286
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

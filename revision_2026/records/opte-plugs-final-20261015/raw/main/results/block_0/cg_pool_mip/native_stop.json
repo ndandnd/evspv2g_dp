@@ -1,0 +1,129 @@
+{
+ "method": "cg_pool_mip",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": false,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "cg": {
+  "status": "candidate_priced_out",
+  "error": null,
+  "rmp_calls": {
+   "_omitted_list": true,
+   "elements": 594,
+   "pretty_lines": 10693
+  },
+  "pricing_calls": {
+   "_omitted_list": true,
+   "elements": 595,
+   "pretty_lines": 4166
+  },
+  "trace": {
+   "_omitted_list": true,
+   "elements": 594,
+   "pretty_lines": 4753
+  },
+  "stopping_price": {
+   "phase": "economic",
+   "graph_min_reduced_cost": -3.325340003357269e-12,
+   "seed_min_reduced_cost": 8.999999999998636,
+   "minimum_reduced_cost": -3.325340003357269e-12,
+   "elapsed_seconds": 98.00762940896675
+  },
+  "basis_restorations": 593,
+  "columns": 792,
+  "elapsed_seconds": 98.01029011094943,
+  "active_phase": "economic",
+  "phase1_infeasibility_independently_certified": false,
+  "lp_optimality_independently_certified": false,
+  "phase1_scope": "Zero physical/shared objective, minimum task artificials; positive priced-out value requires independent global dual check",
+  "cutoff_policy": "Unprocessed price output crossing the phase deadline is discarded; full elapsed time is charged"
+ },
+ "cg_cap_seconds": 600.0,
+ "status": "optimal",
+ "native_status": 2,
+ "objective": 6372.875,
+ "bound_scope": "restricted_pool_only",
+ "solution_count": 10,
+ "solver_method": -1,
+ "cold_solve": true,
+ "external_incumbent_or_basis_start": false,
+ "feasibility_tolerance": 1e-08,
+ "optimality_tolerance": 1e-08,
+ "integer_feasibility_tolerance": 1e-08,
+ "mip_gap_tolerance": 1e-06,
+ "mip_gap_absolute_tolerance": 1e-10,
+ "solver_version": [
+  12,
+  0,
+  3
+ ],
+ "trace": [
+  {
+   "elapsed_seconds": 102.20017072977498,
+   "incumbent": 10767.5,
+   "bound": 0.0,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 132.20131307886913,
+   "incumbent": 6438.175,
+   "bound": 6316.417010869553,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 162.20675962604582,
+   "incumbent": 6372.875,
+   "bound": 6316.417010869553,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 192.2184672737494,
+   "incumbent": 6372.875,
+   "bound": 6324.653074962292,
+   "bound_scope": "restricted_pool_only"
+  }
+ ],
+ "model_build_seconds": 0.015395358204841614,
+ "remaining_solver_budget_seconds": 1697.8286354420707,
+ "variables": 886,
+ "constraints": 342,
+ "nonzeros": 13733,
+ "integer_variables": 693,
+ "crossover_parameter": -1,
+ "solve_end_to_end_seconds": 207.74704352999106,
+ "solve_seconds": 105.57559825107455,
+ "solver_runtime_seconds": 105.57539486885071,
+ "process_peak_rss_at_stop_bytes": 140374016,
+ "native_gap": 9.116123186945833e-07,
+ "node_count": 23589.0,
+ "restricted_pool_bound": 6372.8691904086445,
+ "full_family_bound": null,
+ "global_integer_optimality_claimed": false,
+ "status_scope": "Restricted integer pool only",
+ "_compaction": {
+  "source_bytes": 629864,
+  "source_sha256": "e84ef2f117e48ea7f42dbda71199fa59459f829db9c23b893beadb4ff6b8303e",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "rmp_calls",
+    "elements": 594,
+    "line": 13
+   },
+   {
+    "key": "pricing_calls",
+    "elements": 595,
+    "line": 10707
+   },
+   {
+    "key": "trace",
+    "elements": 594,
+    "line": 14874
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

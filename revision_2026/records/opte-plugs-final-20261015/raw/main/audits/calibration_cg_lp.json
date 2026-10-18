@@ -1,0 +1,591 @@
+{
+  "workers": [
+    {
+      "worker": "/home/nc437/opte-plugs-20261013/calibration/cg_lp",
+      "passed": true,
+      "accepted_feasible_incumbent": true,
+      "accepted_common_family_lp": true,
+      "global_economic_lower_bound": 125.075,
+      "restricted_pool_lower_bound": null,
+      "phase1_infeasibility_evidence": false,
+      "verification_tolerance": 1e-06,
+      "scope": "Independent numerical physical/matrix replay and complete graph/seed/BESS pricing, no LP or MIP optimization",
+      "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+      "local_test_override": false,
+      "case": "calibration_two_trucks_one_plug",
+      "variant": "cg_lp",
+      "repeat": 0,
+      "status": "candidate_priced_out",
+      "result_sha256": "208787e32cda71945acf0794e41f2785a2164b780d1711b5d4d15c2cd6f39a6e",
+      "manifest_sha256": "a309335be02f6fc18444d22628ca48c4732146f036c95fb3c3c6f775d55a19df",
+      "instance_file_sha256": "331cb59be2986d886b1a43c92248677f46527f76ab3d16e48be48581dc910f75",
+      "evidence_binding_sha256": {
+        "result.json": "208787e32cda71945acf0794e41f2785a2164b780d1711b5d4d15c2cd6f39a6e",
+        "manifest.json": "a309335be02f6fc18444d22628ca48c4732146f036c95fb3c3c6f775d55a19df",
+        "instance.json": "331cb59be2986d886b1a43c92248677f46527f76ab3d16e48be48581dc910f75"
+      },
+      "metadata": {
+        "passed": true,
+        "local_test_override": false,
+        "cluster_protocol_accepted": true,
+        "source_files": 35,
+        "evidence_files": 23,
+        "instance_sha256": "c5ea90fa922295f520955dca50e67bff2058bd6dcd99ae112f0caccabeb69699",
+        "host": "cdses-compute-01.orie.cornell.edu",
+        "partial_evidence_only": false
+      },
+      "evidence_sha256": {
+        "instance.json": "331cb59be2986d886b1a43c92248677f46527f76ab3d16e48be48581dc910f75",
+        "manifest.json": "a309335be02f6fc18444d22628ca48c4732146f036c95fb3c3c6f775d55a19df",
+        "cg_trace.json": "7612d72c2e4d129c08a1b5c1587dd22587f6ad0b61c628c2e64a2fa779ef702a",
+        "cg_all_columns.json.gz": "e87c29a455d9b3a35ce08ef2e1868069a7f7039e61b749e469a4b99a03246137",
+        "phase1_stopping_columns.json.gz": "9c397b3d46698955392d53e13d10813c7107098bf1e57694c365f591626a840f",
+        "phase1_stopping_primal.npz": "4596cb205f52c6c081c65f0a3faf5e314c4f08a039764b83a427308226f34d5b",
+        "phase1_stopping.json": "299e759f2746d3ddd37458e4b325e325fc2c9c330e648232b9897715ac16cb0a",
+        "phase2_stopping_columns.json.gz": "e3479f519c4bf6f5503ada3ae7a21cfe706a01d35ada2fe886892c278e29af61",
+        "phase2_stopping_primal.npz": "626a735b48f6bb0115cee319bb68fda39a0cb58b6f94bd481fef7eaf013ee7ce",
+        "phase2_stopping.json": "98a3e0b3fa8bcd258245b4b10838fa3b34b2eb72448fac07dd2a7d7c2817a9ef",
+        "native_stop.json": "a4fd724d20c4b85484fd3091dadaaffecb28e470d528e690ee0d8a33bf9fe7fc",
+        "pool_primal.npz": "3bcf452018227dfa3359a70461f2faf794021d3f9a7c756e9f8dde654a2a54d3",
+        "selected_replay_columns.json.gz": "5176bea96751daee43d51e080bb39d8d306fda6adb49e0b44139484f46909caa",
+        "selected_replay_primal.npz": "3bcf452018227dfa3359a70461f2faf794021d3f9a7c756e9f8dde654a2a54d3",
+        "logs/cg_00000.log": "36fb47f691a4b037b2d07ff477e9b81ab0945491b486783efb64ef5bbc6072c4",
+        "logs/cg_00001.log": "295d9e21945cd858750362fc325d1584e514581063c5f3585ea177a61dcdbdb9",
+        "logs/cg_00002.log": "29859811f109aca0fa53029c39b0061fabbeac8cc0390e25bd38717ad5ea8ed1",
+        "logs/cg_00003.log": "dc019ec243a867326d4e10c36f5c358d05e460a64eab77532d2df577f4a7f41e",
+        "logs/cg_00004.log": "1fd5dc81f92b67a9e0cf01dbab7fefdbf1cc76fb8ef0ce0d0ed9929705547ba3",
+        "logs/cg_00005.log": "b520a41502e7f885f1b7e509156f0d11207b3a1207e0d6fd8e098719b9bc4a78",
+        "logs/cg_00006.log": "4f4e8ad4cc15d6370b1dc7a4f659fa106b89f18c4903ae9138ee98d015426926",
+        "logs/cg_00007.log": "97f895b7c4af1e229b77bf1da9834167b086c3eb908ce8ae9c95941c7c6b1ed9",
+        "logs/cg_00008.log": "2f51d84480056def86dd508b6c05db38de30a4ee69cbf8d0a0070a50b210a716"
+      },
+      "instance_sha256": "c5ea90fa922295f520955dca50e67bff2058bd6dcd99ae112f0caccabeb69699",
+      "graph_nodes": 27,
+      "graph_arcs": 58,
+      "finite_connector_rows": 8,
+      "seed_count": 2,
+      "phase1": {
+        "phase": "feasibility",
+        "primal": {
+          "passed": true,
+          "raw_residuals": {
+            "equalities": 0.0,
+            "inequalities": 0.0,
+            "lower_bounds": 0.0,
+            "upper_bounds": 0.0,
+            "objective": 0.0
+          },
+          "artificial_mass": 0.0,
+          "station_order": [
+            0
+          ],
+          "occupancy": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ]
+          ],
+          "max_plug_violation": 0.0,
+          "selected_route_proofs": [
+            {
+              "column": 1,
+              "weight": 0.5,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  1
+                ]
+              }
+            },
+            {
+              "column": 5,
+              "weight": 0.5,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  0
+                ]
+              }
+            },
+            {
+              "column": 6,
+              "weight": 0.5,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  0
+                ]
+              }
+            },
+            {
+              "column": 7,
+              "weight": 0.5,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  1
+                ]
+              }
+            }
+          ],
+          "original_vendor_aggregate": null,
+          "phase": "feasibility"
+        },
+        "native_restricted_lp_certificate": {
+          "passed": true,
+          "residuals": {
+            "equalities": 0.0,
+            "inequalities": 0.0,
+            "lower_bounds": 0.0,
+            "upper_bounds": 0.0,
+            "objective": 0.0,
+            "dual_sign": 0.0,
+            "reduced_cost_identity": 0.0,
+            "negative_reduced_cost_without_upper_bound": -0.0,
+            "primal_dual_gap": 0.0
+          },
+          "dual_objective": 0.0,
+          "tolerance": 1e-06,
+          "includes_finite_variable_upper_bound_duals": true
+        },
+        "certificate": {
+          "passed": true,
+          "phase": "feasibility",
+          "raw_price_diagnostics": {
+            "graph_min_reduced_cost": 0.0,
+            "seed_min_reduced_cost": 0.0,
+            "route_min_reduced_cost": 0.0,
+            "unit_bess_reduced_cost": 0.0,
+            "finite_plug_capacity_dual_penalty": 2.0,
+            "dual_objective": 0.0
+          },
+          "final_price_diagnostics": {
+            "graph_min_reduced_cost": 0.0,
+            "seed_min_reduced_cost": 0.0,
+            "route_min_reduced_cost": 0.0,
+            "unit_bess_reduced_cost": 0.0,
+            "finite_plug_capacity_dual_penalty": 2.0,
+            "dual_objective": 0.0
+          },
+          "full_family_lower_bound": 0.0,
+          "nonnegative_objective_bound_used": false,
+          "phase1_positive_bound_infeasibility_evidence": false,
+          "global_economic_bound": null,
+          "repairs": {
+            "price_contraction": 1.0,
+            "task_price_decrease": 0.0,
+            "task_price_repair_loss": 0.0,
+            "total_dual_change": 0.0,
+            "max_price_changes": {
+              "alpha": 0.0,
+              "mu": 0.0,
+              "nu": 0.0,
+              "plug_price": 0.0
+            }
+          },
+          "repaired_prices": {
+            "alpha": [
+              1.0,
+              1.0
+            ],
+            "mu": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "nu": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plug_price": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.5,
+                0.5,
+                0.5,
+                0.5
+              ]
+            ]
+          },
+          "convergence_sized_task_repair": true,
+          "scope": "Independent floating-point full graph/real seed/periodic BESS pricing, finite plug dual constant included; Phase-I bound is not an economic bound"
+        },
+        "objective": 0.0,
+        "full_family_gap": 0.0,
+        "columns": 8
+      },
+      "phase2": {
+        "phase": "economic",
+        "primal": {
+          "passed": true,
+          "raw_residuals": {
+            "equalities": 0.0,
+            "inequalities": 0.0,
+            "lower_bounds": 0.0,
+            "upper_bounds": 0.0,
+            "objective": 1.4210854715202004e-14
+          },
+          "artificial_mass": 0.0,
+          "station_order": [
+            0
+          ],
+          "occupancy": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ]
+          ],
+          "max_plug_violation": 0.0,
+          "selected_route_proofs": [
+            {
+              "column": 4,
+              "weight": 1.0,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  0
+                ]
+              }
+            },
+            {
+              "column": 10,
+              "weight": 1.0,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  1
+                ]
+              }
+            }
+          ],
+          "original_vendor_aggregate": {
+            "passed": true,
+            "scope": "aggregate_master_replay",
+            "original_model_feasible": true,
+            "artificial_mass": 0.0,
+            "truck_count": 2.0,
+            "battery_count": 0.0,
+            "residuals": {
+              "task_coverage": 0.0,
+              "energy_balance": 0.0,
+              "battery_dynamics": 0.0,
+              "battery_periodic": 0.0,
+              "battery_capacity": 0.0,
+              "battery_charge_rate": 0.0,
+              "battery_discharge_rate": 0.0,
+              "generation_cap": 0.0,
+              "aggregate_charging_cap": 0.0,
+              "lower_bounds": 0.0,
+              "upper_bounds": 0.0,
+              "column_integrality": 0.0,
+              "battery_count_integrality": 0.0,
+              "objective": 1.4210854715202004e-14
+            },
+            "replayed_objective": 125.075,
+            "selected_columns": [
+              {
+                "index": 4,
+                "weight": 1.0,
+                "kind": "truck"
+              },
+              {
+                "index": 10,
+                "weight": 1.0,
+                "kind": "truck"
+              }
+            ]
+          },
+          "phase": "economic"
+        },
+        "native_restricted_lp_certificate": {
+          "passed": true,
+          "residuals": {
+            "equalities": 0.0,
+            "inequalities": 0.0,
+            "lower_bounds": 0.0,
+            "upper_bounds": 0.0,
+            "objective": 1.4210854715202004e-14,
+            "dual_sign": 0.0,
+            "reduced_cost_identity": 0.0,
+            "negative_reduced_cost_without_upper_bound": -0.0,
+            "primal_dual_gap": 1.4210854715202004e-14
+          },
+          "dual_objective": 125.075,
+          "tolerance": 1e-06,
+          "includes_finite_variable_upper_bound_duals": true
+        },
+        "certificate": {
+          "passed": true,
+          "phase": "economic",
+          "raw_price_diagnostics": {
+            "graph_min_reduced_cost": 0.0,
+            "seed_min_reduced_cost": 2.4750000000000014,
+            "route_min_reduced_cost": 0.0,
+            "unit_bess_reduced_cost": 26.1,
+            "finite_plug_capacity_dual_penalty": 9.950000000000003,
+            "dual_objective": 125.075
+          },
+          "final_price_diagnostics": {
+            "graph_min_reduced_cost": 0.0,
+            "seed_min_reduced_cost": 2.4750000000000014,
+            "route_min_reduced_cost": 0.0,
+            "unit_bess_reduced_cost": 26.1,
+            "finite_plug_capacity_dual_penalty": 9.950000000000003,
+            "dual_objective": 125.075
+          },
+          "full_family_lower_bound": 125.075,
+          "nonnegative_objective_bound_used": false,
+          "phase1_positive_bound_infeasibility_evidence": false,
+          "global_economic_bound": 125.075,
+          "repairs": {
+            "price_contraction": 1.0,
+            "task_price_decrease": 0.0,
+            "task_price_repair_loss": 0.0,
+            "total_dual_change": 0.0,
+            "max_price_changes": {
+              "alpha": 0.0,
+              "mu": 0.0,
+              "nu": 0.0,
+              "plug_price": 0.0
+            }
+          },
+          "repaired_prices": {
+            "alpha": [
+              52.5125,
+              52.5125
+            ],
+            "mu": [
+              5.0,
+              5.0,
+              5.0,
+              5.0,
+              0.0,
+              0.0,
+              5.0,
+              5.0
+            ],
+            "nu": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plug_price": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                4.975000000000001,
+                4.975000000000001,
+                0.0,
+                0.0
+              ]
+            ]
+          },
+          "convergence_sized_task_repair": true,
+          "scope": "Independent floating-point full graph/real seed/periodic BESS pricing, finite plug dual constant included; Phase-I bound is not an economic bound"
+        },
+        "objective": 125.07499999999999,
+        "full_family_gap": -1.4210854715202004e-14,
+        "columns": 11
+      },
+      "primal": {
+        "passed": true,
+        "raw_residuals": {
+          "equalities": 0.0,
+          "inequalities": 0.0,
+          "lower_bounds": 0.0,
+          "upper_bounds": 0.0,
+          "objective": 1.4210854715202004e-14
+        },
+        "artificial_mass": 0.0,
+        "station_order": [
+          0
+        ],
+        "occupancy": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "max_plug_violation": 0.0,
+        "selected_route_proofs": [
+          {
+            "column": 4,
+            "weight": 1.0,
+            "physical": {
+              "passed": true,
+              "residuals": {
+                "dynamics": 0.0,
+                "task_coefficients": 0.0,
+                "energy_coefficients": 0.0,
+                "occupancy_coefficients": 0.0,
+                "fixed_cost": 0.0
+              },
+              "events": 8,
+              "tasks": [
+                0
+              ]
+            }
+          },
+          {
+            "column": 10,
+            "weight": 1.0,
+            "physical": {
+              "passed": true,
+              "residuals": {
+                "dynamics": 0.0,
+                "task_coefficients": 0.0,
+                "energy_coefficients": 0.0,
+                "occupancy_coefficients": 0.0,
+                "fixed_cost": 0.0
+              },
+              "events": 8,
+              "tasks": [
+                1
+              ]
+            }
+          }
+        ],
+        "original_vendor_aggregate": {
+          "passed": true,
+          "scope": "aggregate_master_replay",
+          "original_model_feasible": true,
+          "artificial_mass": 0.0,
+          "truck_count": 2.0,
+          "battery_count": 0.0,
+          "residuals": {
+            "task_coverage": 0.0,
+            "energy_balance": 0.0,
+            "battery_dynamics": 0.0,
+            "battery_periodic": 0.0,
+            "battery_capacity": 0.0,
+            "battery_charge_rate": 0.0,
+            "battery_discharge_rate": 0.0,
+            "generation_cap": 0.0,
+            "aggregate_charging_cap": 0.0,
+            "lower_bounds": 0.0,
+            "upper_bounds": 0.0,
+            "column_integrality": 0.0,
+            "battery_count_integrality": 0.0,
+            "objective": 1.4210854715202004e-14
+          },
+          "replayed_objective": 125.075,
+          "selected_columns": [
+            {
+              "index": 4,
+              "weight": 1.0,
+              "kind": "truck"
+            },
+            {
+              "index": 10,
+              "weight": 1.0,
+              "kind": "truck"
+            }
+          ]
+        },
+        "phase": "economic"
+      },
+      "full_family_gap": -1.4210854715202004e-14,
+      "full_family_relative_gap": -1.1361866652170303e-16,
+      "common_quality_absolute_gap_limit": 1.2e-05,
+      "feasible_upper_bound": 125.07499999999999,
+      "reason": "All available raw evidence independently checked",
+      "native_infeasible_claim_only": false,
+      "optimum_scope": "Integer optimality status for restricted CG pool remains restricted; full-family bounds separate",
+      "validation_seconds": 0.03841084893792868,
+      "process_peak_rss_bytes": 75501568,
+      "verification_process_peak_rss_bytes": 75501568,
+      "rss_scope": "Cumulative verifier-process peak; fresh CLI per worker"
+    }
+  ],
+  "passed": true,
+  "optimization_performed": false,
+  "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+  "local_test_environment_override": false
+}

@@ -1,0 +1,333 @@
+{
+ "method": "cg_pool_mip",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": false,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "cg": {
+  "status": "cg_budget_exhausted",
+  "error": "CG phase budget exhausted",
+  "rmp_calls": {
+   "_omitted_list": true,
+   "elements": 1304,
+   "pretty_lines": 23473
+  },
+  "pricing_calls": {
+   "_omitted_list": true,
+   "elements": 1304,
+   "pretty_lines": 9129
+  },
+  "trace": {
+   "_omitted_list": true,
+   "elements": 1304,
+   "pretty_lines": 10433
+  },
+  "stopping_price": null,
+  "basis_restorations": 1303,
+  "columns": 1702,
+  "elapsed_seconds": 600.1847026287578,
+  "active_phase": "economic",
+  "phase1_infeasibility_independently_certified": false,
+  "lp_optimality_independently_certified": false,
+  "phase1_scope": "Zero physical/shared objective, minimum task artificials; positive priced-out value requires independent global dual check",
+  "cutoff_policy": "Unprocessed price output crossing the phase deadline is discarded; full elapsed time is charged"
+ },
+ "cg_cap_seconds": 600.0,
+ "status": "time_limit",
+ "native_status": 9,
+ "objective": null,
+ "bound_scope": "restricted_pool_only",
+ "solution_count": 0,
+ "solver_method": -1,
+ "cold_solve": true,
+ "external_incumbent_or_basis_start": false,
+ "feasibility_tolerance": 1e-08,
+ "optimality_tolerance": 1e-08,
+ "integer_feasibility_tolerance": 1e-08,
+ "mip_gap_tolerance": 1e-06,
+ "mip_gap_absolute_tolerance": 1e-10,
+ "solver_version": [
+  12,
+  0,
+  3
+ ],
+ "trace": [
+  {
+   "elapsed_seconds": 614.9476870368235,
+   "incumbent": null,
+   "bound": 0.0,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 647.2322980766185,
+   "incumbent": null,
+   "bound": 12694.452052872033,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 677.2418809006922,
+   "incumbent": null,
+   "bound": 12698.371691984792,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 708.9503695499152,
+   "incumbent": null,
+   "bound": 12708.986161698456,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 738.9710432225838,
+   "incumbent": null,
+   "bound": 12715.692406211121,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 768.9860221738927,
+   "incumbent": null,
+   "bound": 12717.791593929178,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 799.0751378815621,
+   "incumbent": null,
+   "bound": 12720.947825775105,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 829.0995861007832,
+   "incumbent": null,
+   "bound": 12721.741483505653,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 859.1392252086662,
+   "incumbent": null,
+   "bound": 12723.834415234584,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 889.176220482681,
+   "incumbent": null,
+   "bound": 12726.616129213831,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 919.1968085356057,
+   "incumbent": null,
+   "bound": 12727.6147944894,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 949.2014759858139,
+   "incumbent": null,
+   "bound": 12728.446041151337,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 979.2226078766398,
+   "incumbent": null,
+   "bound": 12729.719407451174,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1030.9533478557132,
+   "incumbent": null,
+   "bound": 12730.153292094777,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1060.960936431773,
+   "incumbent": null,
+   "bound": 12730.574211679024,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1090.990875045769,
+   "incumbent": null,
+   "bound": 12733.014113902389,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1121.0167229506187,
+   "incumbent": null,
+   "bound": 12734.085668934647,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1151.069960529916,
+   "incumbent": null,
+   "bound": 12734.603602188823,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1181.1206772197038,
+   "incumbent": null,
+   "bound": 12734.822566738354,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1213.81643224461,
+   "incumbent": null,
+   "bound": 12735.689528521623,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1243.846215001773,
+   "incumbent": null,
+   "bound": 12737.909851663095,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1273.8579578469507,
+   "incumbent": null,
+   "bound": 12739.09696142106,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1303.868012698833,
+   "incumbent": null,
+   "bound": 12740.70580449179,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1333.9242369355634,
+   "incumbent": null,
+   "bound": 12741.708190407066,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1363.9584287647158,
+   "incumbent": null,
+   "bound": 12743.307556875983,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1393.958671502769,
+   "incumbent": null,
+   "bound": 12744.209996973503,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1423.9723858009093,
+   "incumbent": null,
+   "bound": 12745.193706549093,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1454.0186988869682,
+   "incumbent": null,
+   "bound": 12746.24725732333,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1484.0744975386187,
+   "incumbent": null,
+   "bound": 12746.819288807525,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1514.1147618656978,
+   "incumbent": null,
+   "bound": 12747.665820052465,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1544.1271940106526,
+   "incumbent": null,
+   "bound": 12748.62421561067,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1574.1696478277445,
+   "incumbent": null,
+   "bound": 12749.033252487547,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1604.1785521148704,
+   "incumbent": null,
+   "bound": 12749.484631433575,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1634.1892690178938,
+   "incumbent": null,
+   "bound": 12749.713307673946,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1664.2007442349568,
+   "incumbent": null,
+   "bound": 12750.686711299591,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1694.2034079437144,
+   "incumbent": null,
+   "bound": 12751.087273061952,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1724.2334536858834,
+   "incumbent": null,
+   "bound": 12751.572262080623,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1754.2530457666144,
+   "incumbent": null,
+   "bound": 12751.8457343954,
+   "bound_scope": "restricted_pool_only"
+  },
+  {
+   "elapsed_seconds": 1784.264314764645,
+   "incumbent": null,
+   "bound": 12752.211845996431,
+   "bound_scope": "restricted_pool_only"
+  }
+ ],
+ "model_build_seconds": 0.021349677816033363,
+ "remaining_solver_budget_seconds": 1185.147706810385,
+ "variables": 1696,
+ "constraints": 1930,
+ "nonzeros": 37845,
+ "integer_variables": 1503,
+ "crossover_parameter": -1,
+ "solve_end_to_end_seconds": 1800.0012080930173,
+ "solve_seconds": 1185.1488109221682,
+ "solver_runtime_seconds": 1185.148586988449,
+ "process_peak_rss_at_stop_bytes": 288526336,
+ "native_gap": null,
+ "node_count": 35376.0,
+ "restricted_pool_bound": 12752.566157157891,
+ "full_family_bound": null,
+ "global_integer_optimality_claimed": false,
+ "status_scope": "Restricted integer pool only",
+ "_compaction": {
+  "source_bytes": 1386542,
+  "source_sha256": "0455f9c5dd095061a55a1cbf5e556cb82ce75c60f5f5f8ebb038b42e0dcb3b89",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "rmp_calls",
+    "elements": 1304,
+    "line": 13
+   },
+   {
+    "key": "pricing_calls",
+    "elements": 1304,
+    "line": 23487
+   },
+   {
+    "key": "trace",
+    "elements": 1304,
+    "line": 32617
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

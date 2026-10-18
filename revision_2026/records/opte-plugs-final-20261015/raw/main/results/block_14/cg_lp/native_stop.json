@@ -1,0 +1,76 @@
+{
+ "method": "cg_lp",
+ "budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+ "incumbent_validated": false,
+ "global_optimality_independently_certified": false,
+ "connector_definition": "One for positive charge OR discharge block; waiting and BESS excluded",
+ "cg": {
+  "status": "candidate_priced_out",
+  "error": null,
+  "rmp_calls": {
+   "_omitted_list": true,
+   "elements": 1377,
+   "pretty_lines": 24787
+  },
+  "pricing_calls": {
+   "_omitted_list": true,
+   "elements": 1384,
+   "pretty_lines": 9689
+  },
+  "trace": {
+   "_omitted_list": true,
+   "elements": 1377,
+   "pretty_lines": 11017
+  },
+  "stopping_price": {
+   "phase": "economic",
+   "graph_min_reduced_cost": -4.9183768169314135e-11,
+   "seed_min_reduced_cost": 20.01249999999007,
+   "minimum_reduced_cost": -4.9183768169314135e-11,
+   "elapsed_seconds": 631.2033246960491
+  },
+  "basis_restorations": 1376,
+  "columns": 1775,
+  "elapsed_seconds": 631.208726357203,
+  "active_phase": "economic",
+  "phase1_infeasibility_independently_certified": false,
+  "lp_optimality_independently_certified": false,
+  "phase1_scope": "Zero physical/shared objective, minimum task artificials; positive priced-out value requires independent global dual check",
+  "cutoff_policy": "Unprocessed price output crossing the phase deadline is discarded; full elapsed time is charged"
+ },
+ "cg_cap_seconds": 1800.0,
+ "status": "candidate_priced_out",
+ "solve_end_to_end_seconds": 631.2094384580851,
+ "process_peak_rss_at_stop_bytes": 140861440,
+ "bound": null,
+ "bound_scope": "No global bound claimed before independent pricing replay",
+ "objective": 13015.669196428573,
+ "native_status": 2,
+ "native_status_scope": "Last economic RMP only",
+ "_compaction": {
+  "source_bytes": 1457285,
+  "source_sha256": "f8a15231ac28e31276969eb77f39c644f9a266a7e27f50499c8151c6443719c5",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "rmp_calls",
+    "elements": 1377,
+    "line": 13
+   },
+   {
+    "key": "pricing_calls",
+    "elements": 1384,
+    "line": 24801
+   },
+   {
+    "key": "trace",
+    "elements": 1377,
+    "line": 34491
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}

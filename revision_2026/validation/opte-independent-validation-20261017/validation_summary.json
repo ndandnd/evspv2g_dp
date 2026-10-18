@@ -1,0 +1,183 @@
+{
+ "inputs_with_reports": 235,
+ "tables": {
+  "Table 8 and Table 21 (grid, 64 inputs)": {
+   "inputs": 64,
+   "rows_matching_collector": 64,
+   "table8_tex": {
+    "rows": 24,
+    "rows_identical": 24,
+    "differing": 0
+   },
+   "table21_cg_tex": {
+    "rows": 6,
+    "rows_identical": 6,
+    "differing": 0
+   },
+   "table21_direct_tex": {
+    "rows": 6,
+    "rows_identical": 6,
+    "differing": 0
+   }
+  },
+  "Table 22 and Figure 3 (transition, 108 inputs)": {
+   "inputs": 108,
+   "rows_matching_collector": 108,
+   "table22_tex": {
+    "rows": 18,
+    "rows_identical": 18,
+    "differing": 0
+   }
+  },
+  "Table 19 (tasks, 40 inputs)": {
+   "inputs": 40,
+   "rows_matching_collector": 40,
+   "table19_tex": {
+    "rows": 29,
+    "rows_identical": 29,
+    "differing": 0
+   }
+  },
+  "Table 20 (equal MIP, 23 inputs)": {
+   "inputs": 23,
+   "rows_matching_collector": 23,
+   "table20_tex": {
+    "rows": 23,
+    "rows_identical": 22,
+    "differing": 1
+   },
+   "note": "printed 4,000-task direct entry was edited by hand to <0.01 (TL); the generator prints 0.00"
+  },
+  "3,600-s runs (48 inputs)": {
+   "inputs": 48,
+   "rows_matching_collector": 48,
+   "direct_has_better_than_start_at_3600_by_cell": {
+    "L30_n60": "6/6",
+    "L30_n90": "6/6",
+    "L30_n120": "6/6",
+    "L35_n70": "5/6",
+    "L35_n120": "6/6",
+    "L40_n80": "0/2",
+    "L50_n100": "0/2",
+    "L60_n120": "0/2",
+    "L70_n140": "0/2",
+    "L80_n160": "0/2",
+    "L90_n180": "0/2",
+    "L100_n200": "0/2",
+    "L110_n220": "0/2",
+    "L120_n240": "0/2"
+   }
+  }
+ },
+ "lower_bound_dependence": {
+  "Tables 8/21": {
+   "lower_bound_source": {
+    "cg_certified": 35,
+    "gurobi_objbound": 29,
+    "none": 0
+   },
+   "max_gap_increase_pp_if_only_certified_cg_bound_used": 0.6725819618420832,
+   "at": [
+    "grid_L015_n0030_draw1",
+    "d_U"
+   ],
+   "rows_without_a_converged_cg_bound": []
+  },
+  "Table 22": {
+   "lower_bound_source": {
+    "cg_certified": 0,
+    "gurobi_objbound": 108,
+    "none": 0
+   },
+   "max_gap_increase_pp_if_only_certified_cg_bound_used": 0.6342366516278412,
+   "at": [
+    "tr_L030_n0060_draw2",
+    "d_U"
+   ],
+   "rows_without_a_converged_cg_bound": []
+  },
+  "Table 19": {
+   "lower_bound_source": {
+    "cg_certified": 0,
+    "gurobi_objbound": 40,
+    "none": 0
+   },
+   "max_gap_increase_pp_if_only_certified_cg_bound_used": 0.4266115707865646,
+   "at": [
+    "tasks_n0100_d25_draw1",
+    "d_U1800"
+   ],
+   "rows_without_a_converged_cg_bound": []
+  },
+  "Table 20": {
+   "lower_bound_source": {
+    "cg_certified": 4,
+    "gurobi_objbound": 19,
+    "none": 0
+   },
+   "max_gap_increase_pp_if_only_certified_cg_bound_used": 0.10693213621548213,
+   "at": [
+    "panel_energy25_draw1",
+    "d_U1800"
+   ],
+   "rows_without_a_converged_cg_bound": [
+    "scale_n4000_L15_d50_s0"
+   ]
+  }
+ },
+ "arm_counts": {
+  "cg": {
+   "checked": 283,
+   "passed": 283
+  },
+  "direct_vectors": {
+   "checked": 538,
+   "passed": 538
+  },
+  "dual_certificates": {
+   "checked": 282,
+   "passed": 282
+  }
+ },
+ "max_physical_residual": {
+  "cg": 1.6370904631912708e-11,
+  "direct": 9.95160576167109e-09
+ },
+ "max_relative_objective_difference": {
+  "cg": 3.2244599553990363e-16,
+  "direct": 1.1133021232623932e-15
+ },
+ "vendor_master_not_above_reported": {
+  "checked": 821,
+  "passed": 821
+ },
+ "optimal_status_bound_checks": {
+  "checked": 118,
+  "passed": 118
+ },
+ "forbidden_modules_loaded": [],
+ "code_hash_mismatches": [],
+ "issues": [
+  {
+   "table": "Table 20",
+   "case": "-",
+   "issue": "printed row differs from row rebuilt from validated values: printed [4000/15/50/1 & 100 & 0.37 & 14{,}400$^\\ast$ & 60 & 56.65 & \\textbf{$<$0.01} (TL) \\\\] rebuilt [4000/15/50/1 & 100 & 0.37 & 14{,}400$^\\ast$ & 60 & 56.65 & \\textbf{0.00} \\\\]"
+  }
+ ],
+ "witness_free_second_pass": {
+  "inputs_done": 228,
+  "cg_runs": 276,
+  "passed": 276,
+  "routes_found_by_search": 8882,
+  "same_costs_and_certificates_as_first_pass": true,
+  "still_queued_job_365866": [
+   "grid_L120_n0480_draw0",
+   "grid_L120_n0480_draw1",
+   "grid_L120_n0960_draw0",
+   "grid_L120_n0960_draw1",
+   "panel_map75_draw0",
+   "panel_map75_draw1",
+   "scale_n4000_L15_d50_s0"
+  ]
+ }
+}

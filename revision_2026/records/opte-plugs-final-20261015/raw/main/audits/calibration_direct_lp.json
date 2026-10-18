@@ -1,0 +1,277 @@
+{
+  "workers": [
+    {
+      "worker": "/home/nc437/opte-plugs-20261013/calibration/direct_lp",
+      "passed": true,
+      "accepted_feasible_incumbent": true,
+      "accepted_common_family_lp": true,
+      "global_economic_lower_bound": 125.07499999999999,
+      "restricted_pool_lower_bound": null,
+      "phase1_infeasibility_evidence": false,
+      "verification_tolerance": 1e-06,
+      "scope": "Independent numerical physical/matrix replay and complete graph/seed/BESS pricing, no LP or MIP optimization",
+      "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+      "local_test_override": false,
+      "case": "calibration_two_trucks_one_plug",
+      "variant": "direct_lp",
+      "repeat": 0,
+      "status": "optimal",
+      "result_sha256": "389ca8c079b5b1cbb1cce4731bbef92128cf61894758d17dc9ab9b27cab54993",
+      "manifest_sha256": "8210385afb726e34bd1d9a09b6b4fdc6c632de19959ef5ea2e8d61b9915ec83c",
+      "instance_file_sha256": "331cb59be2986d886b1a43c92248677f46527f76ab3d16e48be48581dc910f75",
+      "evidence_binding_sha256": {
+        "result.json": "389ca8c079b5b1cbb1cce4731bbef92128cf61894758d17dc9ab9b27cab54993",
+        "manifest.json": "8210385afb726e34bd1d9a09b6b4fdc6c632de19959ef5ea2e8d61b9915ec83c",
+        "instance.json": "331cb59be2986d886b1a43c92248677f46527f76ab3d16e48be48581dc910f75"
+      },
+      "metadata": {
+        "passed": true,
+        "local_test_override": false,
+        "cluster_protocol_accepted": true,
+        "source_files": 35,
+        "evidence_files": 7,
+        "instance_sha256": "c5ea90fa922295f520955dca50e67bff2058bd6dcd99ae112f0caccabeb69699",
+        "host": "cdses-compute-01.orie.cornell.edu",
+        "partial_evidence_only": false
+      },
+      "evidence_sha256": {
+        "instance.json": "331cb59be2986d886b1a43c92248677f46527f76ab3d16e48be48581dc910f75",
+        "manifest.json": "8210385afb726e34bd1d9a09b6b4fdc6c632de19959ef5ea2e8d61b9915ec83c",
+        "native_stop.json": "2480cdab02c6edfcc2096e004dbc6ce33ce517733bfcafeb31d6fa6888617fc4",
+        "direct_primal.npz": "4557d9ff28731cf299e52637b1c93bcc7c411fcd0be670f1b5545840e2971734",
+        "selected_replay_columns.json.gz": "20d4c15a835922693e90fa0eb2dd6ece9c26d0f6b5c50d6c0cd1d0ab54076ca8",
+        "selected_replay_primal.npz": "6ff56b7be90d1f9d240c1a103a46f5ddfa3d0fdac2c43c01c8c3cc6f439f316a",
+        "logs/direct_lp.log": "c343809b094ad4a5db3330e4ab4a4be0179a0c6dacfb95e907fcea81fc2e2bac"
+      },
+      "instance_sha256": "c5ea90fa922295f520955dca50e67bff2058bd6dcd99ae112f0caccabeb69699",
+      "graph_nodes": 27,
+      "graph_arcs": 58,
+      "finite_connector_rows": 8,
+      "seed_count": 2,
+      "primal": {
+        "passed": true,
+        "raw_residuals": {
+          "equalities": 0.0,
+          "inequalities": 0.0,
+          "lower_bounds": 0.0,
+          "upper_bounds": 0.0,
+          "objective": 1.4210854715202004e-14,
+          "decomposed_arc_flow": 0.0,
+          "decomposed_fleet": 0.0
+        },
+        "physical_replay": {
+          "passed": true,
+          "raw_residuals": {
+            "equalities": 0.0,
+            "inequalities": 0.0,
+            "lower_bounds": 0.0,
+            "upper_bounds": 0.0,
+            "objective": 0.0
+          },
+          "artificial_mass": 0.0,
+          "station_order": [
+            0
+          ],
+          "occupancy": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ]
+          ],
+          "max_plug_violation": 0.0,
+          "selected_route_proofs": [
+            {
+              "column": 0,
+              "weight": 1.0,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  0
+                ]
+              }
+            },
+            {
+              "column": 1,
+              "weight": 1.0,
+              "physical": {
+                "passed": true,
+                "residuals": {
+                  "dynamics": 0.0,
+                  "task_coefficients": 0.0,
+                  "energy_coefficients": 0.0,
+                  "occupancy_coefficients": 0.0,
+                  "fixed_cost": 0.0
+                },
+                "events": 8,
+                "tasks": [
+                  1
+                ]
+              }
+            }
+          ],
+          "original_vendor_aggregate": {
+            "passed": true,
+            "scope": "aggregate_master_replay",
+            "original_model_feasible": true,
+            "artificial_mass": 0.0,
+            "truck_count": 2.0,
+            "battery_count": 0.0,
+            "residuals": {
+              "task_coverage": 0.0,
+              "energy_balance": 0.0,
+              "battery_dynamics": 0.0,
+              "battery_periodic": 0.0,
+              "battery_capacity": 0.0,
+              "battery_charge_rate": 0.0,
+              "battery_discharge_rate": 0.0,
+              "generation_cap": 0.0,
+              "aggregate_charging_cap": 0.0,
+              "lower_bounds": 0.0,
+              "upper_bounds": 0.0,
+              "column_integrality": 0.0,
+              "battery_count_integrality": 0.0,
+              "objective": 0.0
+            },
+            "replayed_objective": 125.075,
+            "selected_columns": [
+              {
+                "index": 0,
+                "weight": 1.0,
+                "kind": "truck"
+              },
+              {
+                "index": 1,
+                "weight": 1.0,
+                "kind": "truck"
+              }
+            ]
+          },
+          "phase": "economic"
+        },
+        "decomposed_paths": 2
+      },
+      "native_direct_dual_certificate": {
+        "passed": true,
+        "residuals": {
+          "equalities": 0.0,
+          "inequalities": 0.0,
+          "lower_bounds": 0.0,
+          "upper_bounds": 0.0,
+          "objective": 1.4210854715202004e-14,
+          "dual_sign": 0.0,
+          "reduced_cost_identity": 7.105427357601002e-15,
+          "negative_reduced_cost_without_upper_bound": -0.0,
+          "primal_dual_gap": 1.4210854715202004e-14
+        },
+        "dual_objective": 125.07499999999999,
+        "tolerance": 1e-06,
+        "includes_finite_variable_upper_bound_duals": true
+      },
+      "full_family_certificate": {
+        "passed": true,
+        "phase": "economic",
+        "raw_price_diagnostics": {
+          "graph_min_reduced_cost": 0.0,
+          "seed_min_reduced_cost": 2.5,
+          "route_min_reduced_cost": 0.0,
+          "unit_bess_reduced_cost": 26.1,
+          "finite_plug_capacity_dual_penalty": 10.0,
+          "dual_objective": 125.07499999999999
+        },
+        "final_price_diagnostics": {
+          "graph_min_reduced_cost": 0.0,
+          "seed_min_reduced_cost": 2.5,
+          "route_min_reduced_cost": 0.0,
+          "unit_bess_reduced_cost": 26.1,
+          "finite_plug_capacity_dual_penalty": 10.0,
+          "dual_objective": 125.07499999999999
+        },
+        "full_family_lower_bound": 125.07499999999999,
+        "nonnegative_objective_bound_used": false,
+        "phase1_positive_bound_infeasibility_evidence": false,
+        "global_economic_bound": 125.07499999999999,
+        "repairs": {
+          "price_contraction": 1.0,
+          "task_price_decrease": 0.0,
+          "task_price_repair_loss": 0.0,
+          "total_dual_change": 0.0,
+          "max_price_changes": {
+            "alpha": 0.0,
+            "mu": 0.0,
+            "nu": 0.0,
+            "plug_price": 0.0
+          }
+        },
+        "repaired_prices": {
+          "alpha": [
+            52.5375,
+            52.5375
+          ],
+          "mu": [
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            0.0,
+            0.0,
+            5.0,
+            5.0
+          ],
+          "nu": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "plug_price": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              5.000000000000001,
+              5.0,
+              0.0,
+              0.0
+            ]
+          ]
+        },
+        "convergence_sized_task_repair": true,
+        "scope": "Independent floating-point full graph/real seed/periodic BESS pricing, finite plug dual constant included; Phase-I bound is not an economic bound"
+      },
+      "full_family_gap": 1.4210854715202004e-14,
+      "full_family_relative_gap": 1.13618666521703e-16,
+      "common_quality_absolute_gap_limit": 1.2e-05,
+      "feasible_upper_bound": 125.075,
+      "reason": "All available raw evidence independently checked",
+      "native_infeasible_claim_only": false,
+      "optimum_scope": "Integer optimality status for restricted CG pool remains restricted; full-family bounds separate",
+      "validation_seconds": 0.027186721097677946,
+      "process_peak_rss_bytes": 75509760,
+      "verification_process_peak_rss_bytes": 75509760,
+      "rss_scope": "Cumulative verifier-process peak; fresh CLI per worker"
+    }
+  ],
+  "passed": true,
+  "optimization_performed": false,
+  "verifier_sha256": "c451c31b8c0060f02d2017627844e43e0e27622d4430d602edccfa82e2b8deb1",
+  "local_test_environment_override": false
+}

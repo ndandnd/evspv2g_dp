@@ -1,0 +1,69 @@
+{
+  "checker_sha256": "222410fc2be93aab31a958cdaee0150be33da80a375815191afafa12fe5c5d40",
+  "optimization_performed": false,
+  "workers": [
+    {
+      "worker": "/Users/nadan/Documents/projects/v2g/experiments/opte_second_round/results/direct_mip1000_deployment_20261012/results/diag2_L04_n1000_s0/worker",
+      "passed": true,
+      "optimization_performed": false,
+      "scope": "Raw primal, independent physical paths, original vendor rows, hashes and native bound ordering; native lower bound is not independently proved",
+      "case": "diag2_L04_n1000_s0",
+      "status": "optimal",
+      "objective": 48072.925,
+      "bound": 48072.925,
+      "result_sha256": "20f29d8f9c9d2c96d7a5d330342e0039b3ea030c88ef2b555424f93821b52ba8",
+      "checked_evidence_count": 5,
+      "instance_sha256": "8bffa420579dfdc471ab2dfa09d8b2b9f9a369f8ddff3b28d39ca8c889f26fe1",
+      "native_bound_usable": true,
+      "incumbent_available": true,
+      "raw_primal_residuals": {
+        "equalities": 0.0,
+        "inequalities": 0.0,
+        "lower_bounds": 0.0,
+        "upper_bounds": 0.0,
+        "objective": 0.0,
+        "integrality": 0.0
+      },
+      "independent_physical_replay": {
+        "passed": true,
+        "paths": 89,
+        "transitions": 3272,
+        "residuals": {
+          "coverage": 0.0,
+          "balance": 0.0,
+          "bess_dynamics": 0.0,
+          "bess_periodic": 0.0,
+          "bess_capacity": 0.0,
+          "bess_charge_rate": 0.0,
+          "bess_discharge_rate": 0.0,
+          "nonnegative": 0.0,
+          "bess_integer": 0.0,
+          "fleet": 0.0,
+          "objective": 7.275957614183426e-12
+        },
+        "replayed_objective": 48072.924999999996,
+        "battery_count": 0.0
+      },
+      "original_vendor_master": {
+        "passed": true,
+        "residuals": {
+          "equality": 0.0,
+          "inequality": 0.0,
+          "nonnegative": 0.0,
+          "objective": 0.0
+        },
+        "path_columns": 89,
+        "variables": 283,
+        "recovered_saved_objective": 48072.925,
+        "uses_new_graph_or_model_builder": false,
+        "selected_path_lp": {
+          "status": "not_requested"
+        }
+      },
+      "native_absolute_gap": 0.0,
+      "native_relative_gap": 0.0,
+      "verification_seconds": 0.38613241631537676
+    }
+  ],
+  "passed": true
+}

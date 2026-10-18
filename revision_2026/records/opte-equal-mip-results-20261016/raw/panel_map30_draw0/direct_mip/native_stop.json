@@ -1,0 +1,264 @@
+{
+  "method": "direct_full_family_mip_traced",
+  "snapshot_seconds": 1800.0,
+  "soft_mem_limit_gb": 36.0,
+  "family": "DP_paths_union_real_singleton_seeds",
+  "budget_seconds": 3600.0,
+  "threads": 1,
+  "seed": 0,
+  "solver_method": 2,
+  "mip_gap_tolerance": 1e-06,
+  "mip_gap_absolute_tolerance": 1e-10,
+  "feasibility_tolerance": 1e-08,
+  "optimality_tolerance": 1e-08,
+  "integer_feasibility_tolerance": 1e-08,
+  "cold_solve": true,
+  "external_incumbent_or_basis_start": false,
+  "solver_version": [
+    12,
+    0,
+    3
+  ],
+  "graph_seconds": 2.755918242968619,
+  "matrix_build_seconds": 3.1806856831535697,
+  "graph_nodes": 57082,
+  "graph_arcs": 2026623,
+  "unpruned_states": 88102,
+  "unpruned_arcs": 3196320,
+  "seed_count": 200,
+  "off_grid_seed_count": 0,
+  "original_rho": 1.75,
+  "bess_rho": 1.75,
+  "effective_dag_truck_rho": 1.75,
+  "soc_step": 0.25,
+  "objective": null,
+  "bound": 12882.041964285714,
+  "gap": 0.0015913905336172505,
+  "status": "time_limit",
+  "native_status": 9,
+  "solution_count": 7,
+  "incumbent_validated": false,
+  "validation": null,
+  "matrix_primal_check": null,
+  "trace": [
+    {
+      "elapsed_seconds": 38.337109042331576,
+      "incumbent": 32134.649999999998,
+      "bound": 0.0,
+      "nodes": 0.0,
+      "solutions": 1,
+      "work": 31.24957315413363
+    },
+    {
+      "elapsed_seconds": 1139.3519116342068,
+      "incumbent": 32134.649999999998,
+      "bound": 12882.041964285714,
+      "nodes": 0.0,
+      "solutions": 1,
+      "work": 804.6639143664215
+    },
+    {
+      "elapsed_seconds": 1879.7861181618646,
+      "incumbent": 32134.649999999998,
+      "bound": 12882.041964285714,
+      "nodes": 0.0,
+      "solutions": 1,
+      "work": 1127.5709383377414
+    },
+    {
+      "elapsed_seconds": 2956.6892655938864,
+      "incumbent": 12902.575,
+      "bound": 12882.041964285714,
+      "nodes": 0.0,
+      "solutions": 7,
+      "work": 2149.9068060891277
+    },
+    {
+      "elapsed_seconds": 3016.082118661143,
+      "incumbent": 12902.575,
+      "bound": 12882.041964285714,
+      "nodes": 0.0,
+      "solutions": 7,
+      "work": 2182.9684532183273
+    },
+    {
+      "elapsed_seconds": 3032.4877001801506,
+      "incumbent": 12902.575,
+      "bound": 12882.041964285714,
+      "nodes": 0.0,
+      "solutions": 7,
+      "work": 2199.8284416825077
+    },
+    {
+      "elapsed_seconds": 3164.202604226768,
+      "incumbent": 12902.575,
+      "bound": 12882.041964285714,
+      "nodes": 0.0,
+      "solutions": 7,
+      "work": 2338.5498471552887
+    },
+    {
+      "elapsed_seconds": 3498.8383303480223,
+      "incumbent": 12902.575,
+      "bound": 12882.041964285714,
+      "nodes": 0.0,
+      "solutions": 7,
+      "work": 2616.4722541167775
+    }
+  ],
+  "gurobi_build_seconds": 1.5716678658500314,
+  "model_build_seconds": 4.752353549003601,
+  "variables": 2027018,
+  "constraints": 57524,
+  "nonzeros": 4732353,
+  "integer_variables": 2026825,
+  "binary_variables": 0,
+  "solver_budget_seconds": 3592.491728208028,
+  "incumbent_events": [
+    {
+      "elapsed_seconds": 7.708110570907593,
+      "objective": 32134.649999999998,
+      "bound": null,
+      "work": 0.122779123,
+      "vector_index": 0
+    },
+    {
+      "elapsed_seconds": 2587.579961198382,
+      "objective": 12962.575,
+      "bound": 12882.041964285714,
+      "work": 1738.9136769458853,
+      "vector_index": 1
+    },
+    {
+      "elapsed_seconds": 2589.598545025103,
+      "objective": 12952.574999999862,
+      "bound": 12882.041964285714,
+      "work": 1739.908667136821,
+      "vector_index": 2
+    },
+    {
+      "elapsed_seconds": 2593.3984890682623,
+      "objective": 12902.75,
+      "bound": 12882.041964285714,
+      "work": 1743.2174138434862,
+      "vector_index": 3
+    },
+    {
+      "elapsed_seconds": 2603.7352646887302,
+      "objective": 12902.687500000027,
+      "bound": 12882.041964285714,
+      "work": 1753.4751864146326,
+      "vector_index": 4
+    },
+    {
+      "elapsed_seconds": 2632.555123959668,
+      "objective": 12902.675,
+      "bound": 12882.041964285714,
+      "work": 1785.394815761296,
+      "vector_index": 5
+    },
+    {
+      "elapsed_seconds": 2652.24406784866,
+      "objective": 12902.575,
+      "bound": 12882.041964285714,
+      "work": 1810.1509830432803,
+      "vector_index": 6
+    }
+  ],
+  "bound_observations": [
+    {
+      "elapsed_seconds": 38.337109042331576,
+      "bound": 0.0,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 1139.3519116342068,
+      "bound": 12882.041964285714,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 1879.7861181618646,
+      "bound": 12882.041964285714,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 2587.579961198382,
+      "bound": 12882.041964285714,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 2589.598545025103,
+      "bound": 12882.041964285714,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 2593.3984890682623,
+      "bound": 12882.041964285714,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 2603.7352646887302,
+      "bound": 12882.041964285714,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 2632.555123959668,
+      "bound": 12882.041964285714,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 2652.24406784866,
+      "bound": 12882.041964285714,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 2956.6892655938864,
+      "bound": 12882.041964285714,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 3016.082118661143,
+      "bound": 12882.041964285714,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 3032.4877001801506,
+      "bound": 12882.041964285714,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 3164.202604226768,
+      "bound": 12882.041964285714,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 3498.8383303480223,
+      "bound": 12882.041964285714,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 3600.097983945161,
+      "bound": 12882.041964285714,
+      "source": "final_ObjBound"
+    }
+  ],
+  "solve_end_to_end_seconds": 3600.097983945161,
+  "solve_seconds": 3592.5894860131666,
+  "solver_runtime_seconds": 3592.5892519950867,
+  "node_count": 1.0,
+  "iterations": 968157.0,
+  "barrier_iterations": 95,
+  "process_peak_rss_at_stop_bytes": 4332937216,
+  "continuous_native_bound": 12882.041964285714,
+  "solver_peak_memory_gb": 3.744376456,
+  "solver_work": 2766.456783099062,
+  "native_constraint_violation": 0.0,
+  "native_bound_violation": 0.0,
+  "native_integrality_violation": 0.0,
+  "root_lp_solved_seconds": 1139.3223691163585,
+  "root_relaxation_log_line": "Root relaxation: objective 1.288204e+04, 139517 iterations, 1100.92 seconds (773.34 work units)",
+  "root_lp_objective_log": 12882.04,
+  "root_lp_work": 31.30764274013363,
+  "root_node_bound": 12882.041964285714,
+  "root_node_seconds": 2956.6927512809634
+}

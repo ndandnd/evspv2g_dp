@@ -1,0 +1,346 @@
+{
+ "method": "cg_to_convergence_then_restricted_mip",
+ "family": "DP_paths_union_real_singleton_seeds",
+ "cg_cap_seconds": 14400.0,
+ "mip_budget_seconds": 1800.0,
+ "threads": 1,
+ "seed": 0,
+ "cg_status": "candidate_priced_out",
+ "cg_priced_out": true,
+ "final_pricing_call_empty": true,
+ "cg_inloop_validation_seconds": 9.17108382761944,
+ "cg_seconds": 207.58676925802138,
+ "cg_lp": {
+  "objective": 7996.59929245283,
+  "elapsed_seconds": 207.26517230994068,
+  "columns": 1397
+ },
+ "full_family_lp_lower_bound": 7996.59917245283,
+ "checkpoint_seconds": 1.8360945219174027,
+ "mip_seconds": 223.06076131796,
+ "total_seconds": 432.4836260479642,
+ "cg_total_readout_seconds": 430.64753057598136,
+ "status": "optimal",
+ "status_scope": "Restricted-pool integer model only",
+ "native_status": 2,
+ "objective": 8033.075,
+ "restricted_pool_bound": 8033.067058120242,
+ "global_integer_optimality_claimed": false,
+ "branch_and_price": false,
+ "incumbent_validated": true,
+ "process_peak_rss_at_stop_bytes": 248524800,
+ "cg_phase": {
+  "status": "candidate_priced_out",
+  "error": null,
+  "cg_cap_seconds": 14400.0,
+  "elapsed_through_pool_preparation_seconds": 207.5862044680398,
+  "cg_phase_deadline_seconds": 14400.0,
+  "real_pool_columns": 1277,
+  "original_singletons": 120,
+  "artificial_columns_removed": 120,
+  "rmp_calls": {
+   "_omitted_list": true,
+   "elements": 1139,
+   "pretty_lines": 633638
+  },
+  "pricing_calls": {
+   "_omitted_list": true,
+   "elements": 1162,
+   "pretty_lines": 5811
+  },
+  "rmp_objective_trace": {
+   "_omitted_list": true,
+   "elements": 1139,
+   "pretty_lines": 6835
+  },
+  "basis_restorations": 1138,
+  "candidate_priced_out": true,
+  "last_optimal_rmp_available": true,
+  "full_family_bound_certified_during_timing": false,
+  "pool_membership_scope": "Real columns accepted by frozen CG before cutoff, plus original singleton seeds; selected integer paths independently replayed after stopping; all-pool path witnesses are not claimed",
+  "cutoff_policy": "Unprocessed candidates from a pricing call crossing the phase deadline are discarded; the complete call is charged to the total pipeline budget"
+ },
+ "restricted_mip": {
+  "method": "cold_restricted_pool_mip",
+  "objective": 8033.075,
+  "restricted_pool_bound": 8033.067058120242,
+  "bound_scope": "Restricted integer pool only; never a full-family lower bound",
+  "status": "optimal",
+  "native_status": 2,
+  "solution_count": 10,
+  "threads": 1,
+  "seed": 0,
+  "mip_gap_tolerance": 1e-06,
+  "mip_gap_absolute_tolerance": 1e-10,
+  "feasibility_tolerance": 1e-08,
+  "optimality_tolerance": 1e-08,
+  "integer_feasibility_tolerance": 1e-08,
+  "solver_method": -1,
+  "cold_solve": true,
+  "external_incumbent_or_basis_start": false,
+  "trace": [
+   {
+    "elapsed_seconds": 0.10294793592765927,
+    "incumbent": 13537.7375,
+    "restricted_pool_bound": 0.0
+   },
+   {
+    "elapsed_seconds": 30.13691696699243,
+    "incumbent": 8033.5125,
+    "restricted_pool_bound": 7998.88744237672
+   },
+   {
+    "elapsed_seconds": 60.13721703796182,
+    "incumbent": 8033.187499999992,
+    "restricted_pool_bound": 7999.951826626272
+   },
+   {
+    "elapsed_seconds": 99.04461571294814,
+    "incumbent": 8033.187499999992,
+    "restricted_pool_bound": 8002.442532048553
+   },
+   {
+    "elapsed_seconds": 129.0448591989698,
+    "incumbent": 8033.187499999992,
+    "restricted_pool_bound": 8002.442532048553
+   },
+   {
+    "elapsed_seconds": 159.04497768194415,
+    "incumbent": 8033.187499999992,
+    "restricted_pool_bound": 8005.277292880053
+   },
+   {
+    "elapsed_seconds": 189.0454418149311,
+    "incumbent": 8033.187499999992,
+    "restricted_pool_bound": 8015.208370527059
+   },
+   {
+    "elapsed_seconds": 219.0692767179571,
+    "incumbent": 8033.07500000001,
+    "restricted_pool_bound": 8032.805413703939
+   }
+  ],
+  "model_build_seconds": 0.05957820103503764,
+  "remaining_solver_budget_seconds": 1799.940415389021,
+  "variables": 1471,
+  "constraints": 362,
+  "nonzeros": 19092,
+  "integer_variables": 1278,
+  "solver_version": [
+   12,
+   0,
+   3
+  ],
+  "pipeline_stop_seconds": 223.06076131796,
+  "restricted_stage_seconds": 223.06075490801595,
+  "solver_runtime_seconds": 223.00083303451538,
+  "process_peak_rss_at_stop_bytes": 248524800,
+  "node_count": 48756.0,
+  "native_pool_gap": 9.886475300814572e-07,
+  "solver_peak_memory_gb": 0.04398776
+ },
+ "matrix_primal_check": {
+  "passed": true,
+  "absolute_tolerance": 1e-06,
+  "residuals": {
+   "equalities": 0.0,
+   "inequalities": 0.0,
+   "lower_bounds": 0.0,
+   "upper_bounds": 0.0,
+   "integrality": 0.0,
+   "objective_reconstruction": 9.094947017729282e-13
+  }
+ },
+ "validation": {
+  "aggregate": {
+   "passed": true,
+   "scope": "aggregate_master_replay",
+   "original_model_feasible": true,
+   "artificial_mass": 0.0,
+   "truck_count": 22.0,
+   "battery_count": 1.0,
+   "residuals": {
+    "task_coverage": 0.0,
+    "energy_balance": 0.0,
+    "battery_dynamics": 0.0,
+    "battery_periodic": 0.0,
+    "battery_capacity": 0.0,
+    "battery_charge_rate": 0.0,
+    "battery_discharge_rate": 0.0,
+    "generation_cap": 0.0,
+    "aggregate_charging_cap": 0.0,
+    "lower_bounds": 0.0,
+    "upper_bounds": 0.0,
+    "column_integrality": 0.0,
+    "battery_count_integrality": 0.0,
+    "objective": 0.0
+   },
+   "replayed_objective": 8033.075,
+   "selected_columns": [
+    {
+     "index": 347,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 355,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 650,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 927,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 931,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 939,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 957,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 960,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 968,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 971,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1007,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1014,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1069,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1093,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1107,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1129,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1187,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1205,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1210,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1221,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1227,
+     "weight": 1.0,
+     "kind": "truck"
+    },
+    {
+     "index": 1245,
+     "weight": 1.0,
+     "kind": "truck"
+    }
+   ]
+  },
+  "selected_paths": {
+   "passed": true,
+   "reason": "all_selected_columns_witnessed",
+   "selected_count": 22,
+   "selected_mass": 22.0,
+   "artificial_mass": 0.0,
+   "witnesses": {
+    "_omitted_list": true,
+    "elements": 22,
+    "pretty_lines": 13915
+   },
+   "distinct_witnesses": 22,
+   "max_residual": 0.0,
+   "tolerance": 1e-06,
+   "scope": "Physical DP-path or verified initial-singleton witnesses; aggregate master and pricing certificates checked separately."
+  },
+  "passed": true
+ },
+ "graph_nodes": 56467,
+ "graph_arcs": 1999324,
+ "diagnostic_seconds": 11.075400392059237,
+ "case": "tr_L030_n0120_draw5",
+ "cohort": "tasks",
+ "arm": "cg_pool_mip",
+ "instance_sha256": "c51695eee8dc533d90055469ab257974af0ecec20ea0ef62f587322a7a423de9",
+ "process_peak_rss_after_diagnostics_bytes": 476139520,
+ "_compaction": {
+  "source_bytes": 18008161,
+  "source_sha256": "42f93fdcf14858fdadec54f4b8c610dbd2a2820e9aa71c3258e17e8f3295aaa4",
+  "max_lines_kept_per_list": 400,
+  "omitted_lists": [
+   {
+    "key": "rmp_calls",
+    "elements": 1139,
+    "line": 41
+   },
+   {
+    "key": "pricing_calls",
+    "elements": 1162,
+    "line": 633680
+   },
+   {
+    "key": "rmp_objective_trace",
+    "elements": 1139,
+    "line": 639492
+   },
+   {
+    "key": "witnesses",
+    "elements": 22,
+    "line": 646570
+   }
+  ],
+  "tool": "tools/compact_result.py"
+ }
+}
