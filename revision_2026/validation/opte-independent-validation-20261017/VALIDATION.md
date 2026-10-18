@@ -126,4 +126,108 @@ This excludes the unconverged 4,000-task input, where the Gurobi bound is the on
   - `sacct` records
   - the worker script
 
-The Slurm logs and the stage-1 input records are not included in this copy.
+The cluster copy is in `~/opte-independent-validation-20261017/`, including logs and the stage-1 input records.
+
+## Addendum, 18 October: 160 and 200 locations
+
+Section 8.2 now cites four more inputs from the map extension (`experiments/opte_map_extension_20261017`): 160 and 200 locations (320 and 400 tasks), two samples each. Each input has two saved runs, 8 in all:
+- 4 CG + route-MIP runs;
+- 4 direct-MIP runs, with an 1,800-second limit.
+
+This addendum checks the saved evidence only. No optimization was rerun.
+
+**All 8 runs passed.** The witness-free second pass also passed for all 4 CG runs. All printed gaps and the manuscript's gap range (l. 1187) are reproduced from validated values.
+
+**How it was run.**
+- The validator, the input rebuild and the worker are unchanged. `src/validate_case.py` has the same SHA256 (`e0bdd729…`) as in all 548 earlier runs.
+- The only new input is the job list. `src/make_jobs_mapx.py` writes `slurm/jobs_mapx.json`. It uses cohort `grid` and the extension's runtime copy, which is the code that ran (its `grid_instances.py` adds 160 and 200 to `DIAG_L`). It sets one reading time, 1,800 s.
+- `src/aggregate_mapx.py` applies the same rules as `aggregate.py`; its functions are copied from it unchanged. It does three things:
+  - rebuilds the rows in the collector's schema (`output/opte-map-extension-20261017/grid_rows.json`) from validated values;
+  - reruns that folder's `make_tables.py`, which is byte-identical to the grid study's, on the rebuilt rows;
+  - diffs the LaTeX output with `table8_rows.tex`.
+- It writes its own files. It does not change the summary files of the 548-run validation.
+
+**CG + route-MIP runs.** Routes are replayed against the rebuilt graph, and LB\* is the certified CG bound.
+
+| L / n / sample | Input SHA256 | Nodes / arcs (rebuilt = runner) | Routes replayed (one-task + graph paths) | Max residual | Recomputed cost (= reported) | Certificate (reported bound) | Most negative reduced cost | Gap %, recomputed (printed) |
+|---|---|---|---|---:|---:|---:|---:|---:|
+| 160 / 320 / 1 | `01a8983b…` | 293,764 / 39,426,390 | 79 (31 + 48) | 0 | 24,964.8875 | 22,037.6750 (22,037.6747) | −1.9·10⁻¹¹ | 11.73 (11.73) |
+| 160 / 320 / 2 | `fb534359…` | 294,373 / 39,513,418 | 66 (13 + 53) | 0 | 22,858.9625 | 21,647.3750 (21,647.3747) | −1.4·10⁻¹¹ | 5.30 (5.30) |
+| 200 / 400 / 1 | `20c8488b…` | 367,040 / 60,479,730 | 94 (33 + 61) | 0 | 30,676.9375 | 27,425.6750 (27,425.6746) | −1.5·10⁻¹¹ | 10.60 (10.60) |
+| 200 / 400 / 2 | `2a716caf…` | 366,728 / 60,425,577 | 88 (26 + 62) | 0 | 29,836.5625 | 27,570.7375 (27,570.7371) | −1.1·10⁻¹¹ | 7.59 (7.59) |
+
+**Direct MIP runs.** The table gives the vector read at 1,800 s; it is also the final vector. The Gurobi bound was null in all four runs.
+
+| L / n / sample | Unpruned states / arcs (rebuilt = runner) | Vector at 1,800 s | Max residual | Recomputed cost (= reported) | Gap %, recomputed (printed) |
+|---|---|---|---:|---:|---:|
+| 160 / 320 / 1 | 457,562 / 63,213,852 | incumbent 0, found at 199 s: 320 one-task routes | 0 | 52,103.95 | 57.70 (57.7) |
+| 160 / 320 / 2 | 457,562 / 63,213,852 | incumbent 0, found at 199 s: 320 one-task routes | 0 | 52,103.95 | 58.45 (58.5) |
+| 200 / 400 / 1 | 571,242 / 96,916,448 | incumbent 0, found at 302 s: 400 one-task routes | 0 | 65,309.95 | 58.01 (58.0) |
+| 200 / 400 / 2 | 571,242 / 96,916,448 | incumbent 0, found at 299 s: 400 one-task routes | 0 | 65,309.95 | 57.78 (57.8) |
+
+The printed values are those in `table8_rows.tex` of the extension. The pruned node and arc counts of the direct runs equal those of the CG run of the same input.
+
+**Inputs and code.**
+- In all 8 runs, the input rebuilt by the extension's generator equals the saved `instance.json`.
+- Its SHA256 equals the hash in `result.json` and `manifest.json`, and the manifest's specification equals the declared one.
+- No runtime or vendor file differs from the hashes in the manifests.
+- No forbidden module was loaded, in either pass.
+
+**Graphs.**
+- In all 8 runs, the rebuilt node and arc counts equal the runner's records. For the direct runs, the unpruned counts also match.
+- The rebuilt graphs have 39.4–60.5 million arcs; the manuscript rounds this to "39--60 million".
+- At 160 locations, the unpruned counts are the same for both samples. The runner records show the same values.
+
+**Route-MIP schedules.**
+- All 327 selected routes were replayed: 103 vendor one-task routes and 224 graph paths, with 8,996 transitions.
+- Each stored energy profile and cost equals its replay.
+- The physical residuals are all 0. Recomputed costs equal the reported ones to within 3.6·10⁻¹² (absolute).
+- The original published master over the replayed routes finds an optimal cost equal to the reported cost in all four runs.
+- Witness-free pass (`results_nohints/mapx/`): all 224 graph paths were found again by search on the rebuilt graph. The costs and certificates are the same as in the first pass.
+
+**Direct schedules.**
+- 8 vectors were checked: the 1,800-second reading and the final vector of each run. Both are the same incumbent, which was the first and only one.
+- Every vector is the one-truck-per-task starting schedule: 320 or 400 vendor one-task routes, no graph route, no battery.
+- The residuals, including flow conservation, are 0. Recomputed costs equal the reported ones to within 1.5·10⁻¹¹.
+- The vendor master over the same routes gives the same cost.
+
+**CG bounds.**
+- All four CG runs report pricing convergence (`cg_priced_out` and `final_pricing_call_empty`).
+- The certificate uses the exact reduced-cost DP over the full rebuilt graph plus all one-task routes. The most negative reduced cost is between −1.9·10⁻¹¹ and −1.1·10⁻¹¹.
+- The battery reduced cost is +36 (= c_b), so the battery term is zero.
+- Each certificate is above the reported bound by n·10⁻⁶ (3.2·10⁻⁴ and 4.0·10⁻⁴), to within 10⁻⁸. This is because the reported bound is the final RMP value minus n·10⁻⁶ (checked against `cg_lp.objective` in each `result.json`).
+
+**LB\* and gaps.**
+- The direct runs report no Gurobi bound, so LB\* is the certified CG bound in all four rows. These rows do not depend on any Gurobi bound.
+- Rows rebuilt from validated values match the collector's rows field by field (4/4). From them, `make_tables.py` reproduces all 4 printed lines exactly.
+- Manuscript l. 1187:
+  - "gaps of 5.3--11.7%": recomputed as 5.30–11.73%.
+  - "holds only its starting schedule": confirmed (see Direct schedules).
+  - "39--60 million arcs": the rebuilt counts (39.4–60.5 million).
+
+**Not covered.**
+- **Times.** These are clock records and were not validated: the CG phase (3,686–8,345 s, "61--139 minutes" in the manuscript), the route-MIP and direct limits, and the incumbent times.
+- **Root relaxation.** That the direct root relaxation was not solved comes from the solver record (`root_lp_solved_seconds` = null). The validator confirms only that no bound was reported and that the only incumbent is the starting schedule.
+- **Preempted attempts.** The CG run at 160 locations, sample 1, was preempted twice (job 365215, `SLURM_RESTART_COUNT` = 2). The two partial attempts in `preempted/` were not validated. The validated run is the complete one in `results/`.
+
+**Jobs.**
+- Common settings for all jobs:
+  - flags `--nodes=1 --ntasks=1 --cpus-per-task=1 --hint=nomultithread --requeue`;
+  - command `/usr/bin/time -v worker.sh`, with `JOBS=jobs_mapx.json` (and `NOHINTS=1` for the second pass).
+- Memory was first measured on one 160-location input: job 380169, 32 GB requested, peak RSS 3.24 GB, 27 s.
+- The rest were then sized from that measurement:
+  - first pass: 380192 (8 GB) and 380193 (12 GB); peak RSS 3.19 GB at 160 locations, 5.23–5.79 GB at 200; 47–93 s;
+  - witness-free pass: 380194 (12 GB) and 380195 (16 GB); peak RSS 3.24–3.25 GB and 4.93 GB; 10–20 min.
+- All jobs COMPLETED with exit 0 and no requeue.
+- Job IDs on unicorn have wrapped around, so query `sacct` with `-S 2026-10-18`.
+- On the cluster, the unchanged worker wrote the reports to `results/grid/` and `results_nohints/grid/`; the case names do not collide with the 64 grid inputs. The local copies are in `results/mapx/` and `results_nohints/mapx/`.
+
+**Files.**
+- Reports:
+  - `results/mapx/<case>.json`
+  - `results_by_arm/mapx/<case>__{cg1800,direct}.json`
+  - `results_nohints/mapx/<case>.json`
+- Summaries: `validation_summary_mapx.json`, `cg_bound_certificates_mapx.json`, `aggregate_mapx_stdout.txt`.
+- Scripts: `src/make_jobs_mapx.py`, `src/aggregate_mapx.py`.
+- Slurm records: `slurm/jobs_mapx.json`, `slurm/submit_mapx_receipt.json`, `slurm/sacct_mapx.txt` (with the peak RSS of each job).
+- `aggregate.py` reads every `results/*/*.json`. Rerunning it, or `finalize.sh`, would therefore add these 4 CG arms and 8 direct vectors to its counts. Its table checks would not change.

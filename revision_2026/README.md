@@ -123,21 +123,18 @@ numbers printed.
 
 ## Validation coverage
 
-- **Independent validator** (`validation/`): Tables 4 and 15-18, Fig. 3 and
-  the 3,600-s runs, that is 235 inputs and 548 saved runs (283 CG + route MIP,
-  265 direct MIP). It rebuilds each input, replays every reported schedule and
+- **Independent validator** (`validation/`): Tables 4 and 15-18, Fig. 3, the
+  3,600-s runs and the 160- and 200-location runs, that is 239 inputs and 556
+  saved runs (287 CG + route MIP, 269 direct MIP; the 160/200-location runs are
+  in the addendum of `VALIDATION.md`). It rebuilds each input, replays every reported schedule and
   certifies each CG bound from the saved duals; all checks passed. It does not
   check run times, and it does not cover the eight grid direct runs replaced by
   the 72-GB reruns (not printed).
-- **In-run checks only:** the 160- and 200-location runs and the plug-limit
-  integer rerun. In these runs every reported schedule passed the in-run matrix
-  check and the replay of its routes (plug rerun: with zero plug violation),
-  and the input and code hashes match the preflight records (`RESULTS.md` in
-  each records folder). The independent validator was not run on them.
-- <!-- STATUS LINE, to be updated: independent validation of the 160/200-location runs -->
-  **Status (18 October 2026):** an extension of the independent validation to
-  the 160- and 200-location runs is in progress; this line will be updated
-  when it finishes.
+- **In-run checks only:** the plug-limit integer rerun. Every reported
+  schedule passed the in-run matrix check and the replay of its routes, with
+  zero plug violation, and the input and code hashes match the preflight
+  records (`records/opte-plugs-protocol-20261017/RESULTS.md`). The independent
+  validator does not model plug limits.
 - The other studies (Tables 5, 6 and 14, the original plug study, the
   Corollary 1 checks) carry their own checks in their records.
 
@@ -214,10 +211,10 @@ first-submission code at the repository root.
 ## Journal computational supplement
 
 The journal's computational supplement contains this folder, identical to the
-version in this repository, and adds the saved vectors of the 556 run folders
-behind Tables 4 and 15-18, Fig. 3 and the 3,600-s runs (the 548 validated runs
-and the 8 grid direct runs replaced by the 72-GB reruns): 2,079 `*.npz` and
-839 `*.json.gz` files, about 122 MB.
+version in this repository, and adds the saved vectors of the 564 run folders
+behind Tables 4 and 15-18, Fig. 3, the 3,600-s runs and the 160/200-location
+runs (the 556 validated runs and the 8 grid direct runs replaced by the 72-GB
+reruns): 2,095 `*.npz` and 851 `*.json.gz` files, about 126 MB.
 
 - Direct MIP: time-stamped incumbents `incumbent_NNN.npz`, the final vector
   `direct_mip_primal.npz` and the in-run physical replay
@@ -227,14 +224,14 @@ and the 8 grid direct runs replaced by the 72-GB reruns): 2,079 `*.npz` and
   the generated routes `cg_pool_columns.json.gz` and
   `cg_stopping_columns.json.gz`.
 
-The independent validator replayed the vectors of the 548 validated runs. The
+The independent validator replayed the vectors of the 556 validated runs. The
 supplement's own README maps each vector folder to its records folder here.
 
 ## Not included
 
 - In neither this repository nor the supplement: the full CG traces (the
   complete `result.json` and `native_stop.json` files, about 22 GB), and the
-  schedule vectors of the 160/200-location runs and of both plug studies. They
+  schedule vectors of both plug studies. They
   are kept by the authors. The validator in `validation/` replays the vectors
   of the supplement, so it cannot be rerun from this repository alone; its
   outputs are included.

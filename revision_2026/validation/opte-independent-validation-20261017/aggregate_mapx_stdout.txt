@@ -1,0 +1,48 @@
+{
+ "scope": "4 inputs (160 and 200 locations, two samples each), 8 runs: 4 CG + route-MIP, 4 direct MIP (1,800-s limit)",
+ "inputs_with_reports": 4,
+ "inputs_with_nohints_reports": 4,
+ "runs_passed": {
+  "cg": 4,
+  "direct": 4
+ },
+ "direct_vectors_validated": [
+  8,
+  8
+ ],
+ "cg_certificates_reaching_reported_bound": [
+  4,
+  4
+ ],
+ "rows_matching_collector": [
+  4,
+  4
+ ],
+ "printed_rows_reproduced": {
+  "rows": 4,
+  "rows_identical": 4,
+  "differing": 0
+ },
+ "restricted_mip_gap_range_recomputed": [
+  5.300274760939067,
+  11.725319491225473
+ ],
+ "direct_gap_range_recomputed": [
+  57.70440690197195,
+  58.453486386348885
+ ],
+ "manuscript_sentence_l1187": "At 160 and 200 locations (39--60 million arcs, two samples each), CG still converges, in 61--139 minutes, and the restricted MIP ends at its 1{,}800-second limit with gaps of 5.3--11.7\\%, while the direct MIP, here with a 1{,}800-second limit, holds only its starting schedule.",
+ "forbidden_modules_loaded": [],
+ "validator_sha256": [
+  "e0bdd729a34e1e0d1ef782079834ac94efde66c746e5261bd9971f29c6b0a925"
+ ]
+}
+grid_L160_n0320_draw0 cg1800: graph True routes 79 {'singleton': 31, 'path_from_saved_hint': 48, 'path_found_by_search': 0} resid 0.00e+00 U 24964.8875 vs 24964.8875 (diff 3.6e-12) cert 22037.675000 vs 22037.674680 rc_min -1.87e-11 gap 11.7253 (collector 11.7253) nohints (True, {'singleton': 31, 'path_from_saved_hint': 0, 'path_found_by_search': 48})
+grid_L160_n0320_draw0 direct: graph True unpruned [457562, 63213852] bound None vectors [('incumbent_0', True, 0.0, 52103.95, 7.275957614183426e-12, True), ('final_-1', True, 0.0, 52103.95, 7.275957614183426e-12, True)] reading1800 t=198.7993717249483 first=True start=True gap 57.7044 (collector 57.7044)
+grid_L160_n0320_draw1 cg1800: graph True routes 66 {'singleton': 13, 'path_from_saved_hint': 53, 'path_found_by_search': 0} resid 0.00e+00 U 22858.9625 vs 22858.9625 (diff 0.0e+00) cert 21647.375000 vs 21647.374680 rc_min -1.39e-11 gap 5.3003 (collector 5.3003) nohints (True, {'singleton': 13, 'path_from_saved_hint': 0, 'path_found_by_search': 53})
+grid_L160_n0320_draw1 direct: graph True unpruned [457562, 63213852] bound None vectors [('incumbent_0', True, 0.0, 52103.95, 1.4551915228366852e-11, True), ('final_-1', True, 0.0, 52103.95, 1.4551915228366852e-11, True)] reading1800 t=198.56852057995275 first=True start=True gap 58.4535 (collector 58.4535)
+grid_L200_n0400_draw0 cg1800: graph True routes 94 {'singleton': 33, 'path_from_saved_hint': 61, 'path_found_by_search': 0} resid 0.00e+00 U 30676.9375 vs 30676.9375 (diff 0.0e+00) cert 27425.675000 vs 27425.674600 rc_min -1.53e-11 gap 10.5984 (collector 10.5984) nohints (True, {'singleton': 33, 'path_from_saved_hint': 0, 'path_found_by_search': 61})
+grid_L200_n0400_draw0 direct: graph True unpruned [571242, 96916448] bound None vectors [('incumbent_0', True, 0.0, 65309.95, 0.0, True), ('final_-1', True, 0.0, 65309.95, 0.0, True)] reading1800 t=302.18496181070805 first=True start=True gap 58.0069 (collector 58.0069)
+grid_L200_n0400_draw1 cg1800: graph True routes 88 {'singleton': 26, 'path_from_saved_hint': 62, 'path_found_by_search': 0} resid 0.00e+00 U 29836.5625 vs 29836.5625 (diff 0.0e+00) cert 27570.737500 vs 27570.737100 rc_min -1.11e-11 gap 7.5941 (collector 7.5941) nohints (True, {'singleton': 26, 'path_from_saved_hint': 0, 'path_found_by_search': 62})
+grid_L200_n0400_draw1 direct: graph True unpruned [571242, 96916448] bound None vectors [('incumbent_0', True, 0.0, 65309.95, 0.0, True), ('final_-1', True, 0.0, 65309.95, 0.0, True)] reading1800 t=299.3705454948358 first=True start=True gap 57.7848 (collector 57.7848)
+0 issues

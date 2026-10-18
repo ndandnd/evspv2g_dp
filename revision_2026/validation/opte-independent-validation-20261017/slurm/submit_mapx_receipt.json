@@ -1,0 +1,53 @@
+{
+ "stageA": {
+  "job": "380169",
+  "array": "0",
+  "cases": [
+   "grid_L160_n0320_draw0"
+  ],
+  "mem_GB": 32,
+  "wall": "03:00:00",
+  "jobs_file": "jobs_mapx.json",
+  "pass": "hints",
+  "measured": {
+   "elapsed_s": 26.6,
+   "peak_rss_kB": 3240332,
+   "result": "both arms passed"
+  }
+ },
+ "stageB": [
+  {
+   "job": "380192",
+   "array": "1",
+   "mem_GB": 8,
+   "wall": "01:00:00",
+   "pass": "hints"
+  },
+  {
+   "job": "380193",
+   "array": "2-3",
+   "mem_GB": 12,
+   "wall": "01:00:00",
+   "pass": "hints"
+  }
+ ],
+ "nohints": [
+  {
+   "job": "380194",
+   "array": "0-1",
+   "mem_GB": 12,
+   "wall": "04:00:00",
+   "pass": "nohints (CG arms only)",
+   "dependency": "afterok on the hints jobs"
+  },
+  {
+   "job": "380195",
+   "array": "2-3",
+   "mem_GB": 16,
+   "wall": "04:00:00",
+   "pass": "nohints (CG arms only)",
+   "dependency": "afterok on the hints jobs"
+  }
+ ],
+ "flags": "--partition=default_partition --nodes=1 --ntasks=1 --cpus-per-task=1 --hint=nomultithread --requeue --open-mode=append; wrapped as /usr/bin/time -v worker.sh (worker unchanged)"
+}
