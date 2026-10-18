@@ -6,7 +6,7 @@ Protocol: `experiments/opte_plugs_protocol_20261017/PROTOCOL.md`. CG runs to pri
 
 - `raw/`: rsync of `unicorn:opte-plugs-protocol-20261017/results/` (without `*.npz`, `*.json.gz`, CG logs)
 - `collected/`: output of the hashed collector, unedited (`protocol_table.md`, `protocol_results.json`, `protocol_arms.csv`)
-- `summarize_plugs_protocol.py` → `summary/summary_table.md`, `summary/summary.json`. This is my own script. It handles the two collector nits (below) and adds truck/battery counts, single-task route counts, old values and a bracket on the optimal cost change.
+- `summarize_plugs_protocol.py` → `summary/summary_table.md`, `summary/summary.json`. It is not part of the hashed collector. It handles the two collector nits (below) and adds truck/battery counts, single-task route counts, old values and a bracket on the optimal cost change.
 
 ## Checks (measured)
 
@@ -77,15 +77,3 @@ The collector's own table (`collected/protocol_table.md`) has a "Best cost Δ vs
 Root-LP times are longer on samitha-compute-01: blocks 6/9 took 1,457/1,320 s, against ≤1,180/≤1,110 s originally (from a 30 s trace grid). Proven solves took 789/1,105/865 s, against 590/905/687 s in the original. On portal-compute-04 the times were within about 0–8% of the original (block 17 was faster). *Inferred:* the differences come from host speed or placement (same CPU model, different node; the incumbent/bound callback may also add overhead). They do not come from the protocol, since the direct budget is unchanged. This means the direct column carries machine-to-machine variance near the 1,800 s limit.
 
 Memory: direct peak RSS was 1.5–1.8 GB on the 100-task/25 kWh inputs and 4.3–4.8 GB on the others. CG arms used ≤ 0.38 GB.
-
-## Draft text (for the main session; not inserted anywhere)
-
-(a) Response letter, comment 4 (after the LP sentence):
-
-> In the integer problem, the direct arc-flow MIP solved two of the six instances to within 0.4% under all three plug policies: with two plugs per task location the cost was unchanged (within 0.003%), and with one plug it rose by 1.22% (proven optimal) and by 0.09% to 0.49%, the best schedules using one truck fewer and one or two more stationary batteries, which use no plugs in the model. The restricted MIP over the generated routes found a schedule in all 18 cases, whereas the direct MIP found none in 8 of the 12 plug-limited cases; with one plug per location, however, the restricted MIP's schedules had gaps of 15% to 29% to the lower bound (20% above the proven optimum on one instance), so they overstate the cost of the plug limit.
-
-If the truck/battery clause is dropped, end the first sentence at "by 0.09% to 0.49%". Do not keep the battery shift without the "no plugs" qualifier.
-
-(b) Optional, rem:infra (after the LP sentence):
-
-> On two of these instances, where the integer problem was solved to within 0.4\%, the optimal cost rose by at most 1.22\%.

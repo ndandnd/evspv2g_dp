@@ -42,23 +42,6 @@ In these rows, "not solved" means not solved within 1,800 s. In Table 4 it means
 1. Direct MIP limit: 1,800 s here, 3,600 s in Table 4. The "Result at 1,800 s" column reads the same quantity. The "Direct MIP root" column does not: the Table 4 caption defines "not solved" as not within 3,600 s. Inferred, not measured: a 3,600-s limit would very likely not change these rows, because the 120-location Table 4 direct runs also logged 0 barrier iterations at 3,600 s.
 2. Total time: CG + route MIP used 91-169 min, while the direct MIP had 30 min. In Table 4 at 40-120 locations the direct MIP had more total time than CG + MIP. That is no longer true here.
 
-## Recommendation
-
-**Mention in one sentence; do not add the rows to Table 4.** CG converged on all four inputs and every validation check passed, so adding the rows would be defensible. It would, however, require five edits for a minor revision, plus a figure:
-- Table 4 caption (l. 1203 of `blue_manuscript.tex`): add a clause that the direct MIP had a 1,800-s limit at 160 and 200 locations, or put a dagger on "not solved".
-- l. 1186: "CG converges at every size, within 2{,}209 seconds" would become 8,345 s. "within 6\% at 100--120 locations" would need gaps up to 11.7% at 160-200 locations.
-- l. 1193: "finished within 57 minutes ... (67 minutes at 120)" would need 169 min at 200. The sentence's claim that the direct MIP had more total time would not hold for the new rows.
-- l. 1192: the 3,600-s rerun sentence covers "the 40--120-location instances of Table 4". It would need a note that the new rows were not rerun.
-- Fig. breakpoint caption (l. 1245): "all 164 instances of Tables ..." and panel (a). Either regenerate the figure or limit it to at most 120 locations.
-
-A single sentence carries the result without any of these edits.
-
-## Draft sentence
-
-Insert after the sentence that ends "within 6\% at 100--120 locations" (l. 1186):
-
-> On two further sizes, 160 and 200 locations (320 and 400 tasks, 39--60 million arcs, two samples each), CG converged in 3{,}686--8{,}345 seconds and the restricted MIP reached its 1{,}800-second limit with gaps of 5.3--11.7\%, its own bound being within 0.5\% of the CG bound, whereas the direct MIP, run with a 1{,}800-second limit, did not solve its root relaxation and held only its starting schedule (gaps 57.7--58.5\%).
-
 ## Files
 
 - `raw/<case>/{cg_pool_mip,direct_mip}/{result,manifest}.json`: the 16 copied files.

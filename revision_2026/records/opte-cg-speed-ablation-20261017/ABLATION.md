@@ -129,7 +129,6 @@ Notes:
 | SciPy/HiGHS vs Gurobi | remainder, 2.2–3.8× | 2.9–3.4× (A/C); 2.5–2.9× via the original code's own Gurobi path (A/E) |
 | Enrichment | no effect | 0.30–0.96 s; no change to the iterations; total-time ratio 1.004–1.022 |
 
-The letter and manuscript should use the measured values, not the FORENSIC.md inferences.
 
 ## 8. Caveats
 
@@ -142,10 +141,10 @@ The letter and manuscript should use the measured values, not the FORENSIC.md in
 - The processor factor is Silver 4214 vs EPYC 9654. Table 20 ran on an EPYC 9555; the ablation does not measure
   Silver 4214 vs EPYC 9555 directly.
 
-## 9. Draft sentence for the letter, comment 1
+## 9. Summary
 
 Rerunning both codes on the two 1,000-task inputs, with the same LP value in every run, splits the 15–16-fold
-speedup between the original code on the Table 4 node (Intel Xeon Silver 4214) and the new code on one AMD EPYC 9654
+speedup between the original code on the node of the original runs (Intel Xeon Silver 4214) and the new code on one AMD EPYC 9654
 node into a factor of about 1.4 from the processor, 2.9–3.4 from solving the rebuilt restricted master with Gurobi
 instead of SciPy/HiGHS, and 3.3–3.5 from keeping one Gurobi master and reusing its basis, while the 25 enrichment
 rounds took less than 2 s and did not change the iterations.
