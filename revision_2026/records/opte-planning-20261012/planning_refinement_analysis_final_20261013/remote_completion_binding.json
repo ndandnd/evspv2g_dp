@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "receipt_sha256": "7753332833546c23fefa43189a05723b31d9a03a1274a90a75b552fd9e23f1fa",
+  "receipt_utc": "2026-10-13T06:02:39.517838+00:00",
+  "all187_remote_result_hashes_match_local": true,
+  "no_active_planning_jobs_in_saved_snapshot": true,
+  "scheduler_accounting_rows_by_state": {
+    "COMPLETED": 187,
+    "CANCELLED": 94,
+    "PREEMPTED": 26
+  },
+  "elapsed_seconds_by_state": {
+    "COMPLETED": 39087,
+    "CANCELLED": 0,
+    "PREEMPTED": 2199
+  },
+  "accounting_allocation_cpu_counts": [
+    {
+      "state": "COMPLETED",
+      "alloc_cpus": 2,
+      "rows": 187
+    },
+    {
+      "state": "CANCELLED",
+      "alloc_cpus": 0,
+      "rows": 94
+    },
+    {
+      "state": "PREEMPTED",
+      "alloc_cpus": 2,
+      "rows": 26
+    }
+  ],
+  "note": "AllocCPUS is preserved verbatim. Worker manifests record SLURM_CPUS_PER_TASK=1, one CPU affinity and one solver/math thread; scheduler accounting records two allocated logical CPUs for executed allocations. No scheduler action or cross-node timing claim."
+}

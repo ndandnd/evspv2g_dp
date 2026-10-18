@@ -1,10 +1,9 @@
 # Revision experiments (October 2026)
 
 This folder holds the code, run records and independent validation for the
-solver benchmarks added in the October 2026 revision of the manuscript: Tables
-5-7 and 17-21, Fig. 3, the 3,600-second runs, the plug-limit study and the
-Corollary 1 checks (map below). The planning studies behind Tables 8 and 9 are
-not included (see the end of this file). The code at the repository root is
+experiments added in the October 2026 revision of the manuscript: Tables
+5-9 and 17-21, Fig. 3, the 3,600-second runs, the plug-limit study and the
+Corollary 1 checks (map below). The code at the repository root is
 the first-submission code; every experiment here runs a frozen, hash-checked
 copy of it (`runtime/frozen/vendor/` or `vendor/` inside each study).
 
@@ -22,6 +21,8 @@ Folder names carry the date of the study.
 |---|---|---|
 | Table 5 (`tab:lpscaling`), LP times, 108 runs | `code/opte_lp_scaling_20261012` | `records/opte-lp-scaling-20261012` (`lp_analysis_final_20261012/lp_scaling_workers.csv`; validation in `lp_analysis_final_certificate_20261012/`) |
 | Table 6 (`tab:directlarge`), direct MIPs on four 1,000-task inputs | `code/opte_direct_mip1000_20261012` | `records/opte-direct-mip1000-20261012` (`direct_mip1000_analysis_20261012/mip1000_comparison.csv`) |
+| Table 8 (`tab:decomp`), restricted-MIP medians and direct bounds over 270 planning bases (Section 8.4, Appendix B.1 "Planning checks") | `code/opte_planning_population_20261012` (60-s direct solves), `code/opte_planning_refinement_20261013` (300-s refinements) | `records/opte-planning-20261012` (`planning_population_analysis_final_20261012/`, `planning_refinement_analysis_final_20261013/`; repair and residuals in `planning_population_numerical_sensitivity_verified_20261012/`) |
+| Table 9 (`tab:planningdirect`), targeted planning checks | `code/opte_lp_scaling_20261012` (`planning_direct.py`) | `records/opte-planning-20261012/table9_planning_direct/` (`mip.json`, `lp.json` per base and configuration) |
 | Table 7 (`tab:locscaling`), map growth | `code/opte_grid_scaling_20261016` (`runtime/run_grid.py`) | `records/opte-grid-results-20261016` (`table8_rows.tex`) |
 | Table 17 (`tab:cgreuse`), master reuse | `code/opte_cg_reuse_20261013` | `records/opte-cg-reuse-20261013` (`cg_reuse_analysis_final_20261013/worker_outcomes.csv`) |
 | Table 18 (`tab:taskscaling`), number of tasks | `code/opte_task_scaling_20261016` (`runtime/run_task_scaling.py`) | `records/opte-task-scaling-results-20261016` (`v9654/main_table_rows.tex`) |
@@ -165,10 +166,4 @@ first-submission code at the repository root.
   `validation/opte-independent-validation-20261017/slurm/`); superseded
   attempts (the first mixed-processor task-scaling run, a location-scaling
   pilot that no table uses, and preempted or cancelled runs).
-- The planning studies behind Table 8 (`tab:decomp`, restricted-MIP medians
-  and direct bounds over 270 planning bases) and Table 9
-  (`tab:planningdirect`, targeted planning checks), and the script that
-  redrew Fig. 2 with corrected legend labels (plotted values unchanged).
-  The code snapshot in `code/opte_lp_scaling_20261012/` contains
-  `planning_direct.py`, the worker of the Table 9 checks, but no records of
-  those runs are included.
+- The script that redrew Fig. 2 with corrected legend labels (plotted values unchanged).

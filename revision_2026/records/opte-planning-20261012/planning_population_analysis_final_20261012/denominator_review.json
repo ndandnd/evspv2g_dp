@@ -1,0 +1,677 @@
+{
+  "scope": "Read-only denominator inspection and explicitly separate sensitivity; primary270-base intervals unchanged",
+  "source_sha256": "48baaa8c9b4267781db91e16a24508cf1838366b07b48b5844ba1381f1526261",
+  "optimization_performed": false,
+  "unresolved_joint_denominators": [
+    {
+      "case": "planning_n060_pv1_s1",
+      "gamma": 0.30833333333333335,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 11703.55,
+          "bound": 11703.55,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 11703.550000000001,
+          "bound": 11703.549999999806,
+          "gap": 1.6630156335420162e-14,
+          "absolute_native_gap": 1.9463186617940664e-10,
+          "recomputed_relative_gap": 1.6630156335420162e-14
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 11703.55,
+          "bound": 11703.55,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 11703.549998454117,
+          "bound": 11703.54999829764,
+          "gap": 1.3370024007356507e-11,
+          "absolute_native_gap": 1.5647674445062876e-07,
+          "recomputed_relative_gap": 1.3370024007356507e-11
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 1.5458826965186745e-06,
+      "maximum_four_incumbent_spread": 1.545884515508078e-06,
+      "joint_saving_interval": [
+        0.0,
+        3.702360118040815e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          11703.549998999999,
+          11703.550001
+        ],
+        "solar_bess": [
+          11703.549998999806,
+          11703.550001
+        ],
+        "v2g_fleet": [
+          11703.549998999999,
+          11703.550001
+        ],
+        "v2g": [
+          11703.54999729764,
+          11703.549999454117
+        ]
+      }
+    },
+    {
+      "case": "planning_n060_pv1_s7",
+      "gamma": 0.30833333333333335,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 11703.5625,
+          "bound": 11703.5625,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 11703.5625,
+          "bound": 11703.562499999402,
+          "gap": 5.113379056732399e-14,
+          "absolute_native_gap": 5.984475137665868e-10,
+          "recomputed_relative_gap": 5.113379056732399e-14
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 11703.5625,
+          "bound": 11703.5625,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 11703.562498552637,
+          "bound": 11703.562498512196,
+          "gap": 3.4554941210453123e-12,
+          "absolute_native_gap": 4.044159140903503e-08,
+          "recomputed_relative_gap": 3.4554941210453123e-12
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 1.4473625924438238e-06,
+      "maximum_four_incumbent_spread": 1.4473625924438238e-06,
+      "joint_saving_interval": [
+        0.0,
+        3.4878048609243706e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          11703.562499,
+          11703.562501
+        ],
+        "solar_bess": [
+          11703.562498999401,
+          11703.562501
+        ],
+        "v2g_fleet": [
+          11703.562499,
+          11703.562501
+        ],
+        "v2g": [
+          11703.562497512195,
+          11703.562499552638
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s0",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 17932.087499999998,
+          "bound": 17932.087499999998,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 17932.0875,
+          "bound": 17932.0875,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 17932.087499999998,
+          "bound": 17932.087499999998,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 17932.087499999998,
+          "bound": 17932.087499999998,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 0.0,
+      "maximum_four_incumbent_spread": 3.637978807091713e-12,
+      "joint_saving_interval": [
+        0.0,
+        2.000004315050319e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          17932.087499,
+          17932.087501
+        ],
+        "solar_bess": [
+          17932.087499,
+          17932.087501
+        ],
+        "v2g_fleet": [
+          17932.087498999997,
+          17932.087501
+        ],
+        "v2g": [
+          17932.087498999997,
+          17932.087501
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s1",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 18007.05,
+          "bound": 18007.05,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 18007.05,
+          "bound": 18007.05,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 18007.050000000003,
+          "bound": 18007.050000000003,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 18007.05,
+          "bound": 18007.05,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 0.0,
+      "maximum_four_incumbent_spread": 3.637978807091713e-12,
+      "joint_saving_interval": [
+        0.0,
+        2.000004315050319e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          18007.049999000003,
+          18007.050001000003
+        ],
+        "solar_bess": [
+          18007.049999,
+          18007.050001
+        ],
+        "v2g_fleet": [
+          18007.049999000003,
+          18007.050001000003
+        ],
+        "v2g": [
+          18007.049999,
+          18007.050001
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s4",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 17957.075,
+          "bound": 17957.074999999997,
+          "gap": 0.0,
+          "absolute_native_gap": 3.637978807091713e-12,
+          "recomputed_relative_gap": 2.0259306190410815e-16
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 17957.075,
+          "bound": 17957.075,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 17957.075,
+          "bound": 17957.075,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 17957.075,
+          "bound": 17957.075,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 0.0,
+      "maximum_four_incumbent_spread": 0.0,
+      "joint_saving_interval": [
+        0.0,
+        2.0000006770715117e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          17957.074999,
+          17957.075001
+        ],
+        "solar_bess": [
+          17957.074999,
+          17957.075001
+        ],
+        "v2g_fleet": [
+          17957.074999,
+          17957.075001
+        ],
+        "v2g": [
+          17957.074999,
+          17957.075001
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s5",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 18032.15,
+          "bound": 18032.15,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 18032.15,
+          "bound": 18032.15,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 18032.15,
+          "bound": 18032.15,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 18032.15,
+          "bound": 18032.15,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 0.0,
+      "maximum_four_incumbent_spread": 0.0,
+      "joint_saving_interval": [
+        0.0,
+        2.0000006770715117e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          18032.149999,
+          18032.150001
+        ],
+        "solar_bess": [
+          18032.149999,
+          18032.150001
+        ],
+        "v2g_fleet": [
+          18032.149999,
+          18032.150001
+        ],
+        "v2g": [
+          18032.149999,
+          18032.150001
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s6",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 17952.1,
+          "bound": 17952.1,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 17952.1,
+          "bound": 17952.1,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 17952.100000000002,
+          "bound": 17952.100000000002,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 17952.100000000002,
+          "bound": 17952.1,
+          "gap": 0.0,
+          "absolute_native_gap": 3.637978807091713e-12,
+          "recomputed_relative_gap": 2.0264920578047763e-16
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": -3.637978807091713e-12,
+      "maximum_four_incumbent_spread": 3.637978807091713e-12,
+      "joint_saving_interval": [
+        0.0,
+        2.0000006770715117e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          17952.099999000002,
+          17952.100001
+        ],
+        "solar_bess": [
+          17952.099999,
+          17952.100001
+        ],
+        "v2g_fleet": [
+          17952.099999000002,
+          17952.100001
+        ],
+        "v2g": [
+          17952.099999,
+          17952.100001
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s7",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 18002.074999999997,
+          "bound": 18002.074999999997,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 18002.075,
+          "bound": 18002.075,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 18002.075,
+          "bound": 18002.075,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 18002.074999999997,
+          "bound": 18002.074999999997,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 0.0,
+      "maximum_four_incumbent_spread": 3.637978807091713e-12,
+      "joint_saving_interval": [
+        0.0,
+        2.000004315050319e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          18002.074999,
+          18002.075001
+        ],
+        "solar_bess": [
+          18002.074999,
+          18002.075001
+        ],
+        "v2g_fleet": [
+          18002.074999,
+          18002.075001
+        ],
+        "v2g": [
+          18002.074998999997,
+          18002.075001
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s8",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 18022.0875,
+          "bound": 18022.0875,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 18022.0875,
+          "bound": 18022.087499998415,
+          "gap": 8.801193312883354e-14,
+          "absolute_native_gap": 1.5861587598919868e-09,
+          "recomputed_relative_gap": 8.801193312883354e-14
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 18022.0875,
+          "bound": 18022.0875,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 18022.0875,
+          "bound": 18022.087499999998,
+          "gap": 0.0,
+          "absolute_native_gap": 3.637978807091713e-12,
+          "recomputed_relative_gap": 2.018622319468659e-16
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 0.0,
+      "maximum_four_incumbent_spread": 0.0,
+      "joint_saving_interval": [
+        0.0,
+        2.000004315050319e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          18022.087499,
+          18022.087501
+        ],
+        "solar_bess": [
+          18022.087498999997,
+          18022.087501
+        ],
+        "v2g_fleet": [
+          18022.087499,
+          18022.087501
+        ],
+        "v2g": [
+          18022.087498999997,
+          18022.087501
+        ]
+      }
+    },
+    {
+      "case": "planning_n120_pv1_s9",
+      "gamma": 0.15416666666666667,
+      "arms": {
+        "solar": {
+          "status": "optimal",
+          "objective": 17997.1,
+          "bound": 17997.1,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "solar_bess": {
+          "status": "optimal",
+          "objective": 17997.100000000002,
+          "bound": 17997.1,
+          "gap": 0.0,
+          "absolute_native_gap": 3.637978807091713e-12,
+          "recomputed_relative_gap": 2.0214250113027723e-16
+        },
+        "v2g_fleet": {
+          "status": "optimal",
+          "objective": 17997.1,
+          "bound": 17997.1,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        },
+        "v2g": {
+          "status": "optimal",
+          "objective": 17997.1,
+          "bound": 17997.1,
+          "gap": 0.0,
+          "absolute_native_gap": 0.0,
+          "recomputed_relative_gap": 0.0
+        }
+      },
+      "all_native_optimal": true,
+      "A_minus_D_incumbent": 0.0,
+      "maximum_four_incumbent_spread": 3.637978807091713e-12,
+      "joint_saving_interval": [
+        0.0,
+        2.0000006770715117e-06
+      ],
+      "cost_intervals": {
+        "solar": [
+          17997.099999,
+          17997.100001
+        ],
+        "solar_bess": [
+          17997.099999,
+          17997.100001
+        ],
+        "v2g_fleet": [
+          17997.099999,
+          17997.100001
+        ],
+        "v2g": [
+          17997.099999,
+          17997.100001
+        ]
+      }
+    }
+  ],
+  "counts": {
+    "total": 10,
+    "all_native_optimal": 10,
+    "four_incumbents_equal_within_1e_8": 8,
+    "small_numerical_difference_at_most_1p6e_6": 2
+  },
+  "strictly_positive_subset_sensitivity": {
+    "n": 260,
+    "definition": "Only bases whose positive joint saving is established by primary new60-second bounds; data-defined sensitivity, never a substitute for the270-base primary population",
+    "metrics": {
+      "BESS_share": {
+        "median_interval": [
+          0.9650751207756139,
+          0.9662385657279036
+        ],
+        "outward_percent_2dp": [
+          96.5,
+          96.63
+        ],
+        "one_based_order_statistics": [
+          130,
+          131
+        ]
+      },
+      "V2G_alone_share": {
+        "median_interval": [
+          0.7261641491494282,
+          0.729383890165346
+        ],
+        "outward_percent_2dp": [
+          72.61,
+          72.94
+        ],
+        "one_based_order_statistics": [
+          130,
+          131
+        ]
+      }
+    }
+  }
+}

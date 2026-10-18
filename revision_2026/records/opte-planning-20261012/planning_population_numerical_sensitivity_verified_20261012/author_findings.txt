@@ -1,0 +1,30 @@
+Final full-population numerical validation — 12 October 2026
+
+All 1,080 cold 60-second outcomes from all 270 planning bases are retained: 893 native optimal and 187 time-limit statuses. All new native bounds and all independently validated incumbents are available. Native optimal means the configured numerical stopping tolerance; it does not imply exact equality of incumbent and bound. No additional optimization was performed.
+
+The original primary analysis and every raw worker result remain unchanged. A separately labeled uniform constructive repair of all 1,080 saved schedules rounds asset/path counts, checks exact task coverage, contracts periodic lossless BESS states if necessary, and recomputes generation. It increases any objective by at most $0.000003764730. The maximum physical residual is zero; original-vendor matrix residuals are at most 5.46e-12. All source evidence hashes and technology transfers were revalidated. Native lower bounds remain floating-point solver evidence.
+
+One $0.000001765 apparent positive saving in the original primary analysis arose from accumulated balance residuals. The strengthened validation gives 253 numerically certified strict conditional V2G benefits and 17 unresolved signs; 259 joint-saving denominators are certified positive and 11 are numerical ties. These counts and every two-decimal outward percentage interval below are unchanged under uniform endpoint allowances of $1e-6, $1e-4 and $1e-3. The next smallest positive conditional and joint margins at the smallest allowance are $3.487498 and $7.262498.
+
+All 11 unresolved denominators have native-optimal status in every technology arm; they are not discarded timeouts. Their joint-saving upper bounds are at most $0.000005765 at the smallest allowance. Shares are undefined if a true joint saving is zero. The original all-270 share intervals therefore remain conditional. A separate useful envelope bounds the median among all truly positive-saving bases: its unknown membership includes the 259 certain bases and any subset of the remaining 11. Padding certain lower endpoints with 11 zeros and upper endpoints with 11 ones bounds every possible positive-saving-population median. The resulting share intervals happen to equal the conditional all-270 intervals here. This is an explicit secondary estimand, not a selected-259-case estimate.
+
+Outward percentage intervals (stable at every allowance):
+Metric | Original restricted-incumbent display | New numerical interval | Population
+BESS share of joint savings | 96% | 96.25–96.78% | All truly positive-saving bases, unknown count 259–270
+V2G-alone share of joint savings | 62% | 69.63–75.66% | All truly positive-saving bases, unknown count 259–270
+V2G-alone daily cost reduction | 19.6% | 21.68–21.73% | All 270 bases
+Conditional V2G daily reduction, gamma<=0.35 | 0.6% | 0.09–0.10% | Original exact 30-base subset
+Conditional V2G daily reduction, gamma>2 | 9.3% | 9.36–9.62% | Original exact 100-base subset
+
+Only the daily median points 21.7% and 0.1% resolve at one decimal place. The BESS-share interval crosses the 96/97 rounding threshold; the V2G share and high-gamma daily reduction also require intervals. The two share rows concern a newly explicit positive-saving population and must not be described as unconditional ratios for all 270 bases. Original rounded restricted-incumbent estimates never enter new cost bounds. Cost nesting alone is used, with no submodularity assumption.
+
+Possible concise manuscript methods wording:
+For all 270 planning bases, we solve each of the four nested technology configurations independently under a uniform 60-second budget. Native lower bounds and independently replayed feasible upper bounds yield numerical intervals for optimal costs. We propagate these intervals through the savings ratios and bound each median by the corresponding ordered endpoints, retaining time-limit outcomes. A uniform constructive repair of saved dispatches and endpoint allowances from $1e-6 to $1e-3 leave the reported intervals unchanged. For shares, we bound the median over all bases with genuinely positive joint savings, allowing each of the 11 numerically unresolved cases either to be absent or to contribute any share in [0,1].
+
+Provenance:
+Numerical report SHA256: 5c7dbbe79dba3981122cb30670e1d6f6fa4cfbb72efc8721c69ae54d6ab799ed
+Primary report SHA256: 48baaa8c9b4267781db91e16a24508cf1838366b07b48b5844ba1381f1526261
+Repair script SHA256: dd333ef88448a60439cd34b2c92fad4482c6d6b1c069cd2c929503972ce8dd25
+Repaired profiles SHA256: 7746d2fb143cc9fd1739e6e6587e74199c54768a27cd788b8f5de8932dc4c5cb
+Proof: repair_proof.md; machine evidence: numerical_sensitivity.json and repaired_profiles.json.gz.
+Additional finite median monotonicity check: 244,156 small-list/subset cases passed; the written argument establishes the general result.

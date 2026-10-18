@@ -1,0 +1,212 @@
+{
+  "passed": true,
+  "optimization_performed": false,
+  "scope": "Independent standard-library provenance and Decimal scalar checks; native bounds remain numerical solver evidence",
+  "summary_sha256": "6b2317829c4045588980a8206dd4c6650572f1fd4959aa5066ada8cdd0d0ef1a",
+  "checker_sha256": "13a993178e35f206119dcf1fb0d1103d6b100f7a5094ebff190a32c3c8341901",
+  "check_categories": {
+    "all and only prior time limits": 1,
+    "all logical indices retained": 1,
+    "all new endpoints independently accepted": 1,
+    "all attempts finished": 1,
+    "final status reconciliation": 1,
+    "final node mapping reconciliation": 1,
+    "original audit binding": 1,
+    "analyzer source binding": 1,
+    "analyzer dependency binding": 6,
+    "source result binding": 1267,
+    "raw evidence binding": 6335,
+    "native bound versus repaired incumbent": 187,
+    "repair cost accounting": 187,
+    "native relative gap": 187,
+    "all primal replay layers passed": 187,
+    "new repaired profiles binding": 1,
+    "all recovery executions reconciled": 1,
+    "interrupted compute retained": 1,
+    "scheduler receipt binding": 2,
+    "all 26 retry scheduler states completed": 1,
+    "all configuration intervals retained": 3,
+    "endpoint source selection": 3240,
+    "endpoint improvement accounting": 3,
+    "all base identities retained": 3,
+    "raw intersection endpoint dimension": 3240,
+    "raw intersection endpoint": 6480,
+    "closed-form technology nesting dimension": 3240,
+    "closed-form technology nesting": 6480,
+    "nonempty nested interval": 3240,
+    "saving sign qualification": 810,
+    "fixed gamma subset membership": 810,
+    "independent ratio endpoint dimension": 2820,
+    "independent ratio endpoint": 5640,
+    "unit-interval metric": 2820,
+    "median population size": 15,
+    "independent exact even-N median dimension": 15,
+    "independent exact even-N median": 30,
+    "outward publication rounding": 15,
+    "strict rounding-cell decision": 15,
+    "unknown positive-saving population retained": 3,
+    "positive-saving median envelope dimension": 6,
+    "positive-saving median envelope": 12,
+    "all possible positive-membership sizes contained": 72,
+    "larger numerical allowances widen intervals": 1880
+  },
+  "checks_passed": 49262,
+  "all187_result_and_all1080_prior_result_digests_stable": true,
+  "total_logical_refinements": 187,
+  "total_observed_refinement_executions": 213,
+  "interrupted_executions": 26,
+  "interrupted_elapsed_seconds": 2199,
+  "native_gap_summary": {
+    "optimal": {
+      "count": 106,
+      "positive_absolute_gap_count": 31,
+      "maximum_absolute_gap": 0.012500000004365575,
+      "maximum_relative_gap": 9.877674874930932e-07
+    },
+    "time_limit": {
+      "count": 81,
+      "positive_absolute_gap_count": 81,
+      "maximum_absolute_gap": 36.4765625,
+      "maximum_relative_gap": 0.011386219440781789
+    }
+  },
+  "maximum_residuals": {
+    "raw_physical_replay": 8.707047527423128e-09,
+    "raw_vendor_master": 8.707047527423128e-09,
+    "raw_primal_consistency": 0.0,
+    "independent_physical_replay": 0.0,
+    "original_vendor_master": 3.637978807091713e-12
+  },
+  "maximum_repair_cost_increase": 1.5814202924957499e-06,
+  "minimum_repair_cost_change": -9.094947017729282e-12,
+  "maximum_native_bound_minus_repaired_incumbent": 9.094947017729282e-13,
+  "new_transitions_independently_replayed": 179722,
+  "outward_intervals_and_rounding": {
+    "1e-06": {
+      "BESS_share": {
+        "outward_percent": [
+          96.34,
+          96.73
+        ],
+        "resolved": false,
+        "rounded_percent": null
+      },
+      "V2G_alone_share": {
+        "outward_percent": [
+          69.65,
+          75.38
+        ],
+        "resolved": false,
+        "rounded_percent": null
+      },
+      "V2G_alone_daily_reduction": {
+        "outward_percent": [
+          21.68,
+          21.69
+        ],
+        "resolved": true,
+        "rounded_percent": 21.7
+      },
+      "V2G_with_BESS_daily_reduction_low_gamma": {
+        "outward_percent": [
+          0.09,
+          0.1
+        ],
+        "resolved": true,
+        "rounded_percent": 0.1
+      },
+      "V2G_with_BESS_daily_reduction_high_gamma": {
+        "outward_percent": [
+          9.47,
+          9.48
+        ],
+        "resolved": true,
+        "rounded_percent": 9.5
+      }
+    },
+    "0.0001": {
+      "BESS_share": {
+        "outward_percent": [
+          96.34,
+          96.73
+        ],
+        "resolved": false,
+        "rounded_percent": null
+      },
+      "V2G_alone_share": {
+        "outward_percent": [
+          69.65,
+          75.38
+        ],
+        "resolved": false,
+        "rounded_percent": null
+      },
+      "V2G_alone_daily_reduction": {
+        "outward_percent": [
+          21.68,
+          21.69
+        ],
+        "resolved": true,
+        "rounded_percent": 21.7
+      },
+      "V2G_with_BESS_daily_reduction_low_gamma": {
+        "outward_percent": [
+          0.09,
+          0.1
+        ],
+        "resolved": true,
+        "rounded_percent": 0.1
+      },
+      "V2G_with_BESS_daily_reduction_high_gamma": {
+        "outward_percent": [
+          9.47,
+          9.48
+        ],
+        "resolved": true,
+        "rounded_percent": 9.5
+      }
+    },
+    "0.001": {
+      "BESS_share": {
+        "outward_percent": [
+          96.34,
+          96.73
+        ],
+        "resolved": false,
+        "rounded_percent": null
+      },
+      "V2G_alone_share": {
+        "outward_percent": [
+          69.64,
+          75.38
+        ],
+        "resolved": false,
+        "rounded_percent": null
+      },
+      "V2G_alone_daily_reduction": {
+        "outward_percent": [
+          21.68,
+          21.69
+        ],
+        "resolved": true,
+        "rounded_percent": 21.7
+      },
+      "V2G_with_BESS_daily_reduction_low_gamma": {
+        "outward_percent": [
+          0.09,
+          0.1
+        ],
+        "resolved": true,
+        "rounded_percent": 0.1
+      },
+      "V2G_with_BESS_daily_reduction_high_gamma": {
+        "outward_percent": [
+          9.47,
+          9.48
+        ],
+        "resolved": true,
+        "rounded_percent": 9.5
+      }
+    }
+  }
+}

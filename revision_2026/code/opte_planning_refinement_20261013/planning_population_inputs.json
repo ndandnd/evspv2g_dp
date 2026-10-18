@@ -1,0 +1,2464 @@
+{
+  "purpose": "Fixed complete COMMON4 population;270basesx4configurations",
+  "historical_audit_sha256": "04a9994a53f9d0ad4c3f3d40be4291fd82289974242cfe86b423051f36e5941a",
+  "scenario_order": [
+    "solar",
+    "solar_bess",
+    "v2g_fleet",
+    "v2g"
+  ],
+  "builder": {
+    "frozen_vendor": "recreate_arxiv.build_instance(3,2.0,BREAKS,trip_list=rand_trips(3,n,draw_seed,salt=50000),pv_scale=pv_scale)",
+    "rand_trips": "extension_instances.rand_trips; default windows(6,20), exclusive upper20",
+    "T": 48,
+    "points_excluding_depot": 3,
+    "G": 7.0,
+    "rho": 1.75,
+    "soc_step": 0.25,
+    "eta": 0.0,
+    "energy_per_dist": 0.5,
+    "c_g": 40.0,
+    "c_v": 45.0,
+    "c_b": 36.0,
+    "eps_pen": 0.025,
+    "deg_cost": 0.0,
+    "stations": "depot_only",
+    "truck_boundary": "full/full",
+    "stationary_boundary": "periodic",
+    "generation_cap": "unbounded",
+    "charging_cap": "unbounded",
+    "model_energy_unit_kwh": 100
+  },
+  "cases": [
+    {
+      "case": "planning_n020_pv1_s0",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 0.925,
+      "physical_sha256": "c564282763cd0a57788f1859c4b314aa890eab9bbf86471d6c3ae39d7c98f62e"
+    },
+    {
+      "case": "planning_n020_pv1_s1",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 0.925,
+      "physical_sha256": "299e3deb6e6fdf5153723ab538db41937f8f55f6ab35e969a1525f732df5fcbb"
+    },
+    {
+      "case": "planning_n020_pv1_s2",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 0.925,
+      "physical_sha256": "2ade05a804b74794646b0a1b6f188455a08ff83d5db8e35e05eb228913529a2e"
+    },
+    {
+      "case": "planning_n020_pv1_s3",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 0.925,
+      "physical_sha256": "5912f1d437bda67e6920df98ad2a9b62d00eb5552be615b87816331ce95b3740"
+    },
+    {
+      "case": "planning_n020_pv1_s4",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 0.925,
+      "physical_sha256": "3d5cdd1676c9fae78726ac01e7e8160ffdefc9a272475b05f45a192e6822724e"
+    },
+    {
+      "case": "planning_n020_pv1_s5",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 0.925,
+      "physical_sha256": "c23b79064badb93523e31417acdc95a8fa936c3354b5a9cd864446c5e3f2b8e2"
+    },
+    {
+      "case": "planning_n020_pv1_s6",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 0.925,
+      "physical_sha256": "778f12bea3a3b7fc6d39a2fbf2afa4723aa1c0eb2e199febbbb267b53ce4907d"
+    },
+    {
+      "case": "planning_n020_pv1_s7",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 0.925,
+      "physical_sha256": "855f5bc18d56b1d0673b8c1215c0f2386f432e1a9ed9229874fdf834d60ef5c5"
+    },
+    {
+      "case": "planning_n020_pv1_s8",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 0.925,
+      "physical_sha256": "28ea8db392017a01d06678e8c35ed93ae7fe467d5fd824aca98782b96dcc8b18"
+    },
+    {
+      "case": "planning_n020_pv1_s9",
+      "n_tasks": 20,
+      "pv_scale": 1.0,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 0.925,
+      "physical_sha256": "5f411a44b8591bf12c8c443cacb009e836d2d8fa6d6c7bfc0f5104dc481931c3"
+    },
+    {
+      "case": "planning_n020_pv1p25_s0",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 1.75,
+      "physical_sha256": "70cfed62e49960d1a6e35ae69435da8823e4f2ea74b88a7d472a3702d15c15b9"
+    },
+    {
+      "case": "planning_n020_pv1p25_s1",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 1.75,
+      "physical_sha256": "8f3e3706a153c3d98857c2bb8102d682f4ce2521cf8712cf0765cd1bd618a5d2"
+    },
+    {
+      "case": "planning_n020_pv1p25_s2",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 1.75,
+      "physical_sha256": "355dd887c4e6420ed3f4be5e56f14827ccb9b35cf46529aebf6838ba13ba8c33"
+    },
+    {
+      "case": "planning_n020_pv1p25_s3",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 1.75,
+      "physical_sha256": "01621ea97c6a18c588e2ad3e5fa8b9ae33efcfdb05194f6ba2261b9f180d235d"
+    },
+    {
+      "case": "planning_n020_pv1p25_s4",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 1.75,
+      "physical_sha256": "75189bd5eb902d56aafcc0a818600b1b16cb51a0b4a949aa01372bc7f495ad52"
+    },
+    {
+      "case": "planning_n020_pv1p25_s5",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 1.75,
+      "physical_sha256": "be34d085c9c11fddc98e02cb935228d061e0f1a019816f9a08b0d8b731a09784"
+    },
+    {
+      "case": "planning_n020_pv1p25_s6",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 1.75,
+      "physical_sha256": "19855c62f761328185e4aa5d4e2296a5a7090fdcf0f513c718a32896d57f7834"
+    },
+    {
+      "case": "planning_n020_pv1p25_s7",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 1.75,
+      "physical_sha256": "a26fbd2b83718a90a5e352fd60942c081b2b8a3d484ae8afa74aa6cf1d5460af"
+    },
+    {
+      "case": "planning_n020_pv1p25_s8",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 1.75,
+      "physical_sha256": "d277ca23eee963dd2ab7080733485ec2f91eacf734ec7a03691ae33e3c307f3b"
+    },
+    {
+      "case": "planning_n020_pv1p25_s9",
+      "n_tasks": 20,
+      "pv_scale": 1.25,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 1.75,
+      "physical_sha256": "53ead50092bfabfd9eb9c3ecbcc1f34fd4cb1633886580584d8a6bb14d63bce9"
+    },
+    {
+      "case": "planning_n020_pv1p5_s0",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 2.575,
+      "physical_sha256": "72858580865c22e001b5f88236ef2605b52db6cbb01a18cb1eb342aa18ca190e"
+    },
+    {
+      "case": "planning_n020_pv1p5_s1",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 2.575,
+      "physical_sha256": "def77cbb21930ed6f47cff2321c15c2ca845839ae23cac9f768ae53a464593ea"
+    },
+    {
+      "case": "planning_n020_pv1p5_s2",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 2.575,
+      "physical_sha256": "bd84246fdca0f479a57e053be2b28343f041718a9fb417303398dd431949e5c5"
+    },
+    {
+      "case": "planning_n020_pv1p5_s3",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 2.575,
+      "physical_sha256": "7e26d0f3e0a26776b67d1017d3fd79c2d1c927b7098f465b0f7db483e52199c1"
+    },
+    {
+      "case": "planning_n020_pv1p5_s4",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 2.575,
+      "physical_sha256": "e2a80be31da5ce49382509b5b78dbf2e2d3bcce6fd407ce04e6fc46ed4787923"
+    },
+    {
+      "case": "planning_n020_pv1p5_s5",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 2.575,
+      "physical_sha256": "bd51b85e7cce16a22560982b65a882fe8a8af02874af27a8e3587b8f564657f6"
+    },
+    {
+      "case": "planning_n020_pv1p5_s6",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 2.575,
+      "physical_sha256": "4646b227068dfd9d73d81d13c67079581c84fd5e7ce0a3b05a2c0806d3579b4d"
+    },
+    {
+      "case": "planning_n020_pv1p5_s7",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 2.575,
+      "physical_sha256": "2c232b9b9c16cc59281eed9e4073ecb560a43034048b6d397829e259240a9921"
+    },
+    {
+      "case": "planning_n020_pv1p5_s8",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 2.575,
+      "physical_sha256": "91fbfd6139f20e48d9290e4d00fe066b03da5c9f5d7b65244c557228660b2e47"
+    },
+    {
+      "case": "planning_n020_pv1p5_s9",
+      "n_tasks": 20,
+      "pv_scale": 1.5,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 2.575,
+      "physical_sha256": "c561cb0e19a52234a594ec820211060ef7c32e60a3e384fceb27fd5c01044db5"
+    },
+    {
+      "case": "planning_n020_pv1p75_s0",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 3.375,
+      "physical_sha256": "0ff1f6397245d181fd07092410f19f02771804ae946feff9109ae6abe662a588"
+    },
+    {
+      "case": "planning_n020_pv1p75_s1",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 3.375,
+      "physical_sha256": "0a0b5bb02749b4fe6945c73b1e44c2488809e190d3ec728f85c70f8fd3757662"
+    },
+    {
+      "case": "planning_n020_pv1p75_s2",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 3.375,
+      "physical_sha256": "f15e71d23faf29b1cc79b1b96a8487d34afe0049b68bbb78d35e0775bbea2fa3"
+    },
+    {
+      "case": "planning_n020_pv1p75_s3",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 3.375,
+      "physical_sha256": "784bef39a600cb2da67a4d94fcfb2d75fbcdef80242d36d6d7f792afb7f5efe2"
+    },
+    {
+      "case": "planning_n020_pv1p75_s4",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 3.375,
+      "physical_sha256": "e6b16e286a5ecaea40785a1de099d6621ea4531a038aed308d380762d116bf29"
+    },
+    {
+      "case": "planning_n020_pv1p75_s5",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 3.375,
+      "physical_sha256": "ea734d97e9f72a17e663594f8d9fa999d553543df756b20a3df7d9890f3db726"
+    },
+    {
+      "case": "planning_n020_pv1p75_s6",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 3.375,
+      "physical_sha256": "579f0c9356e30d3364dcd1e4702891a7dff643af5176eb58ed1310c89bbffa90"
+    },
+    {
+      "case": "planning_n020_pv1p75_s7",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 3.375,
+      "physical_sha256": "e9231e0e52cba8acacd9525827ff1caa9840a6703bcb2a24f3f2787372a97f39"
+    },
+    {
+      "case": "planning_n020_pv1p75_s8",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 3.375,
+      "physical_sha256": "11b1bd3d892865f02645f6faa64546f12c54225b00371b9ec9fe9cfcbc19956e"
+    },
+    {
+      "case": "planning_n020_pv1p75_s9",
+      "n_tasks": 20,
+      "pv_scale": 1.75,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 3.375,
+      "physical_sha256": "d6cd19b17f85eb111df3e012aabdb7b8f546de58d7f1e8370239f87176cf6372"
+    },
+    {
+      "case": "planning_n020_pv2_s0",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 4.2,
+      "physical_sha256": "d4d434070023ae0275eda06583373fa908f66e070269dc8f6ee854dfa496e4c4"
+    },
+    {
+      "case": "planning_n020_pv2_s1",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 4.2,
+      "physical_sha256": "961896d15ad0c8f5ba433abf37e25daa7932b27415dc2b09557871a7fd46c15d"
+    },
+    {
+      "case": "planning_n020_pv2_s2",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 4.2,
+      "physical_sha256": "cb96e2108b34df6ccf69d3e76cdbd9b46c06f93c1f4f34742cf2a10bd33d96f3"
+    },
+    {
+      "case": "planning_n020_pv2_s3",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 4.2,
+      "physical_sha256": "8325c9f42a38c5532365e484eadf945c364a806bf859b764ee46d9c1501c0b52"
+    },
+    {
+      "case": "planning_n020_pv2_s4",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 4.2,
+      "physical_sha256": "1ba49730f8a7fd178ffecbb35d6baa8195e842578ac809ab7ab6a504fe95eab5"
+    },
+    {
+      "case": "planning_n020_pv2_s5",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 4.2,
+      "physical_sha256": "519b831ba73d4dedb62b58171eb52df6708902ec84030ee0336b573ec4efe804"
+    },
+    {
+      "case": "planning_n020_pv2_s6",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 4.2,
+      "physical_sha256": "78376e32615d2d6fd6f61ff13a6eb0082adb04e78db1a00f62b06721d8e14a28"
+    },
+    {
+      "case": "planning_n020_pv2_s7",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 4.2,
+      "physical_sha256": "91114c487f1185e3bc00186e08e397611a60206036a554dd412f9be07c1de4ac"
+    },
+    {
+      "case": "planning_n020_pv2_s8",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 4.2,
+      "physical_sha256": "2dd8a005177ff23227411ea03dc1e98cdc948bf12323b643fb7ca685fe2ed12a"
+    },
+    {
+      "case": "planning_n020_pv2_s9",
+      "n_tasks": 20,
+      "pv_scale": 2.0,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 4.2,
+      "physical_sha256": "c9e79b356d115a0d4b04e1dfabdd6bb865bb3d6314c2f57f8fc0b15dba328038"
+    },
+    {
+      "case": "planning_n020_pv2p5_s0",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 5.925,
+      "physical_sha256": "9b17170a636820b53e5c860c8f648056a40e269e6dd3ae87892a3bd2e4fb79e9"
+    },
+    {
+      "case": "planning_n020_pv2p5_s1",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 5.925,
+      "physical_sha256": "82ad3d6c97928ef68de40972728d77b61fc8f0125902697f2793ca3f9bbea8b2"
+    },
+    {
+      "case": "planning_n020_pv2p5_s2",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 5.925,
+      "physical_sha256": "3097f6614dab11ba0b0556ddfe40fb0033229ad773e7d0c141a3a65286060b7e"
+    },
+    {
+      "case": "planning_n020_pv2p5_s3",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 5.925,
+      "physical_sha256": "2b048d7206c08d7991bdb8562e91b6552bb693a24c8010fc8d3ddcdfaab3d5e8"
+    },
+    {
+      "case": "planning_n020_pv2p5_s4",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 5.925,
+      "physical_sha256": "b1d5ef557ae7538512a241646fecdd0a649d08b5dd923ac5499bc0007488bcca"
+    },
+    {
+      "case": "planning_n020_pv2p5_s5",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 5.925,
+      "physical_sha256": "8e7405f8ba67a1edcc42fa5953cbb62f0a57eb7b39979a93cd3f97981e1971de"
+    },
+    {
+      "case": "planning_n020_pv2p5_s6",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 5.925,
+      "physical_sha256": "9bfd4632f1a5d0c6fef193b997cd48c325162bafb0c649bec2ad9d5da6f1cf42"
+    },
+    {
+      "case": "planning_n020_pv2p5_s7",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 5.925,
+      "physical_sha256": "5646b76def6ecf099b1c7ceb0a8e682f17ca3c1e064f472c8f805e7caddfbd12"
+    },
+    {
+      "case": "planning_n020_pv2p5_s8",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 5.925,
+      "physical_sha256": "80481ff3b6770bf04a036bfe944c2c1c8f4a359760deb4f88b1794b0ef12e2de"
+    },
+    {
+      "case": "planning_n020_pv2p5_s9",
+      "n_tasks": 20,
+      "pv_scale": 2.5,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 5.925,
+      "physical_sha256": "d8d47e1ecd29f9f2719c91b1ee49cc016ffcf3dbd75e0fb7d2696a24aad6a5c5"
+    },
+    {
+      "case": "planning_n020_pv3_s0",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 7.725,
+      "physical_sha256": "98e6cc992af96b3599a60e31accba3da525969df92238ac09183611bdec76ee0"
+    },
+    {
+      "case": "planning_n020_pv3_s1",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 7.725,
+      "physical_sha256": "8830844b0b4afd8bb2f7a63b913dc4fb66172ca489c23a1f23eba127eb969378"
+    },
+    {
+      "case": "planning_n020_pv3_s2",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 7.725,
+      "physical_sha256": "58737fe2e1054a7c810fa7fc3785ffe4ce0e8ea12fbfd06ea9b0271d06522e88"
+    },
+    {
+      "case": "planning_n020_pv3_s3",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 7.725,
+      "physical_sha256": "354681def5b9d8423bc13bd48a9e94b9ffb9cb89871ab0cf5a15ca7f75cea0c3"
+    },
+    {
+      "case": "planning_n020_pv3_s4",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 7.725,
+      "physical_sha256": "9a15f48d76725e3f41e06c263edf876d8e15ca78d7009ac8aba2f9245b10fe34"
+    },
+    {
+      "case": "planning_n020_pv3_s5",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 7.725,
+      "physical_sha256": "c4431353d9b06379b0d74b799d3b75e4965f867683981aa801afac0b0984c381"
+    },
+    {
+      "case": "planning_n020_pv3_s6",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 7.725,
+      "physical_sha256": "e651887f72cd82daf1dfcff688c68366ead32e81e6084f473c3a9983aaa6580e"
+    },
+    {
+      "case": "planning_n020_pv3_s7",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 7.725,
+      "physical_sha256": "274d54e8ec60958b8aa952fd4ef9d7534609fdae7246822e38ae7e7b49b74831"
+    },
+    {
+      "case": "planning_n020_pv3_s8",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 7.725,
+      "physical_sha256": "288e04f5428292906b78cfcde1fc6006ef6b5d0d9a3a300fa55ef78d727eab47"
+    },
+    {
+      "case": "planning_n020_pv3_s9",
+      "n_tasks": 20,
+      "pv_scale": 3.0,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 7.725,
+      "physical_sha256": "f61cf85df6736d7bad31462f28ba60869159050a410af7b73a656efb4848e9f5"
+    },
+    {
+      "case": "planning_n020_pv3p5_s0",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 9.5,
+      "physical_sha256": "619675afdc3c9613bfc32a7733873e32eae904841d899c1906f3848d71ad93a4"
+    },
+    {
+      "case": "planning_n020_pv3p5_s1",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 9.5,
+      "physical_sha256": "75fd8d4b58a5b20e76e919933326a950908af1e270a44b4de04a69075db24aa9"
+    },
+    {
+      "case": "planning_n020_pv3p5_s2",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 9.5,
+      "physical_sha256": "322dce7ceff5a2ed2dac9729e184dc4da1f0b99b6d4ecf52747b558aa529d4bd"
+    },
+    {
+      "case": "planning_n020_pv3p5_s3",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 9.5,
+      "physical_sha256": "b4b199471b85d60c6cef3b40b7ae73a668ab792fd60fa314bc59fa5626a8eb1b"
+    },
+    {
+      "case": "planning_n020_pv3p5_s4",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 9.5,
+      "physical_sha256": "d77fde6c4b1b49bddbb4145c772d75da1570037361050fcedd1be5206b863487"
+    },
+    {
+      "case": "planning_n020_pv3p5_s5",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 9.5,
+      "physical_sha256": "82dc955e66683c0567017e391245d64a618925ec5dc60416f588e400a1860f5e"
+    },
+    {
+      "case": "planning_n020_pv3p5_s6",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 9.5,
+      "physical_sha256": "0c73c5b81cfc9dc712408543eaa2ca47e87b478f687c536d2666736c78aeca78"
+    },
+    {
+      "case": "planning_n020_pv3p5_s7",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 9.5,
+      "physical_sha256": "5dc4a0fc5fd9f5bae8103172b3fc37f9f2813f773a6f5858eb5a8ca30596af27"
+    },
+    {
+      "case": "planning_n020_pv3p5_s8",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 9.5,
+      "physical_sha256": "325d752a6c0fa2e924925f554a5b8c2d0d9b4e1f597411b65dd38e9f6e14c1b8"
+    },
+    {
+      "case": "planning_n020_pv3p5_s9",
+      "n_tasks": 20,
+      "pv_scale": 3.5,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 9.5,
+      "physical_sha256": "a9620e90daf8681918d930139b07f79605234b9af648e31c12ec9ee94d800744"
+    },
+    {
+      "case": "planning_n020_pv4_s0",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 0,
+      "rng_seed": 50050,
+      "gamma": 11.275,
+      "physical_sha256": "3f789a9241007735d2fbd82f4d32ff9a16b55e7af4315c05ef3baf3fdf50726f"
+    },
+    {
+      "case": "planning_n020_pv4_s1",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 1,
+      "rng_seed": 51050,
+      "gamma": 11.275,
+      "physical_sha256": "84e944b47ebca7ca89cdb3a1b5729cf079f89eb778eab47c56bfe55ea23172ce"
+    },
+    {
+      "case": "planning_n020_pv4_s2",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 2,
+      "rng_seed": 52050,
+      "gamma": 11.275,
+      "physical_sha256": "538761fbe67e4f1abea288d995bc40fd9fb13014ea5e0854de8523b47cd386b7"
+    },
+    {
+      "case": "planning_n020_pv4_s3",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 3,
+      "rng_seed": 53050,
+      "gamma": 11.275,
+      "physical_sha256": "0e9142d35ab58eba9585ed71e84755227fb1b80edd98f5c464e188c81b677d09"
+    },
+    {
+      "case": "planning_n020_pv4_s4",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 4,
+      "rng_seed": 54050,
+      "gamma": 11.275,
+      "physical_sha256": "e67c8854aa3a735a06f741a7fdc03fee0900fb558401045a79b96fdb96a38b9c"
+    },
+    {
+      "case": "planning_n020_pv4_s5",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 5,
+      "rng_seed": 55050,
+      "gamma": 11.275,
+      "physical_sha256": "b11adc7551b7fbc85151105529efa75b8ad23f1f33931640927a958dca3b79b4"
+    },
+    {
+      "case": "planning_n020_pv4_s6",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 6,
+      "rng_seed": 56050,
+      "gamma": 11.275,
+      "physical_sha256": "bcd7bd1ab4adfb34ef1e09a3b2b0bb658d92ff342b3a8756c6dac177bf0b5b43"
+    },
+    {
+      "case": "planning_n020_pv4_s7",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 7,
+      "rng_seed": 57050,
+      "gamma": 11.275,
+      "physical_sha256": "9dfb564da397d5c3c4840f07c1f90b96a5228db3c8e522998805502a6f8ebae7"
+    },
+    {
+      "case": "planning_n020_pv4_s8",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 8,
+      "rng_seed": 58050,
+      "gamma": 11.275,
+      "physical_sha256": "e6c52f5ecc468c4d2e769b3cfffa7a5f589c8a797cb9062c0380cea78d4fd404"
+    },
+    {
+      "case": "planning_n020_pv4_s9",
+      "n_tasks": 20,
+      "pv_scale": 4.0,
+      "draw_seed": 9,
+      "rng_seed": 59050,
+      "gamma": 11.275,
+      "physical_sha256": "9d2771cb61978db79d506c1a68b03f01a7277fd3b9460e377712954c6998adc3"
+    },
+    {
+      "case": "planning_n060_pv1_s0",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "a2c892b820ea265efdca92363c93e8ac206ad32de755a08b756e13b2074313ad"
+    },
+    {
+      "case": "planning_n060_pv1_s1",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "bf5e4b3edb4f6205e68df7af0662225ded300fcb60ea7d16a47772bc4554fbe5"
+    },
+    {
+      "case": "planning_n060_pv1_s2",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "15dad859568ce316d95cac400d19db783ed59ea13ccefb775390abcafea91e20"
+    },
+    {
+      "case": "planning_n060_pv1_s3",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "901665bbe766983bf97c816c4e2a98c356f6960796fd99e694118dfbad713151"
+    },
+    {
+      "case": "planning_n060_pv1_s4",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "6c1ac30f4e113ff3fd7fd5ffc65045d1857106778c5f84b1288c6f2fbb840493"
+    },
+    {
+      "case": "planning_n060_pv1_s5",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "d37cfb9e9ebb97f7cc8eea78afd6f1fb218dbcb3af514658f40b9ddf96a7cd52"
+    },
+    {
+      "case": "planning_n060_pv1_s6",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "2ad27764828a466c74c420fc164d881bc97baa151516b5338aa1b3f5f986fed5"
+    },
+    {
+      "case": "planning_n060_pv1_s7",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "db5b33ac89cd51753865450eeb48066e0a1a1d4a0ad56d38c188a60b00346366"
+    },
+    {
+      "case": "planning_n060_pv1_s8",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "ac1df689fde8d99f0e1611c1fe22d52499e9cbf4263d620b66e9edbd69ac67b5"
+    },
+    {
+      "case": "planning_n060_pv1_s9",
+      "n_tasks": 60,
+      "pv_scale": 1.0,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 0.30833333333333335,
+      "physical_sha256": "b4a3188b34055ec076477f3ec20fdcade731a3298dd9bed4d5f456e1ecf809b4"
+    },
+    {
+      "case": "planning_n060_pv1p25_s0",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "d52728e7b7807965bac90fd4fc40ce0bf6dc5012133fee8e12b1863cbc5cb3e4"
+    },
+    {
+      "case": "planning_n060_pv1p25_s1",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "986f49dfc0a790e926c830c07da3cb269cb55f7539ccb2f161d795946713698d"
+    },
+    {
+      "case": "planning_n060_pv1p25_s2",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "c7694a319d16c00e1b9bdf560d5b4537801faa8012ba368bfc97808da5867588"
+    },
+    {
+      "case": "planning_n060_pv1p25_s3",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "d8c42b1a0ceab68a497f7f9ab2c18a177ff8c255514196059f0f6e9b8f3fbf82"
+    },
+    {
+      "case": "planning_n060_pv1p25_s4",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "76b965f2426116ec6dead15d9e217fb727d1dc43147b59ea9270da236c8f8d5f"
+    },
+    {
+      "case": "planning_n060_pv1p25_s5",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "bd09fff41ad308b5f707c513f4c47e141f21590d3769de94bad999dec71416b3"
+    },
+    {
+      "case": "planning_n060_pv1p25_s6",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "5a77c3d86ea99565447a117a63df8923558c79bc4307f17b021cbf8170dabc96"
+    },
+    {
+      "case": "planning_n060_pv1p25_s7",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "8ccb16db23a89c0d698ad63dfbfbab49e4daeaaf6c4ad251f0060573cf09f9ee"
+    },
+    {
+      "case": "planning_n060_pv1p25_s8",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "f3d93f12d30a98df4a7b3531979fbdf0fc5abe68bfe2c4e87f9d7233d586a9af"
+    },
+    {
+      "case": "planning_n060_pv1p25_s9",
+      "n_tasks": 60,
+      "pv_scale": 1.25,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 0.5833333333333334,
+      "physical_sha256": "3dd6ec9189b30e52da8d4bdd13df361ba8ec78afdb8784b1a4a1632b11d37aa4"
+    },
+    {
+      "case": "planning_n060_pv1p5_s0",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "21325fe91df9ce6c127fa8a1d58b2af9a728ce7fd65f5ae7a914c6240fdcd182"
+    },
+    {
+      "case": "planning_n060_pv1p5_s1",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "a22acd1f94131266782c5bfafc3dca96cc773f32bf82dbf9d6f219a436ae8a40"
+    },
+    {
+      "case": "planning_n060_pv1p5_s2",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "d76668eeb3e6b586275ad77afbb0e6c9946dbeacb674161cc5d7f5eff1c53254"
+    },
+    {
+      "case": "planning_n060_pv1p5_s3",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "938621281b37114df416c005ca91931cec73c8421764bf0cd4a594b1785808a1"
+    },
+    {
+      "case": "planning_n060_pv1p5_s4",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "444d6387b70c7a7ec168c2effa2eb84fc3e80cf0e4de4e001bea6f00ce8977a7"
+    },
+    {
+      "case": "planning_n060_pv1p5_s5",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "74363a40ac07f3baae914322e7386f21a8fa5f859effde946b651bf7aeb746b8"
+    },
+    {
+      "case": "planning_n060_pv1p5_s6",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "52271ddbc58edcba8ee73eb880b8169dfa4c4f7682012a0c0bed88459786f49a"
+    },
+    {
+      "case": "planning_n060_pv1p5_s7",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "cbd7a93380a641719b6b8d583e9bf583f95ef6c40f6d52524a165160b14a9707"
+    },
+    {
+      "case": "planning_n060_pv1p5_s8",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "51fcfb2378761dbcd4616ec761d6e11064d2dbefe07d21d058f04a2d5ca198ca"
+    },
+    {
+      "case": "planning_n060_pv1p5_s9",
+      "n_tasks": 60,
+      "pv_scale": 1.5,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 0.8583333333333333,
+      "physical_sha256": "fa8582940a0ced36efcf2c226c231828a1451133b276382e4e5bb23315fc3258"
+    },
+    {
+      "case": "planning_n060_pv1p75_s0",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 1.125,
+      "physical_sha256": "1fbbc7cf345fdf9a7a6594166d6a1d7d9c47242e00144c0d41c0868754c68fee"
+    },
+    {
+      "case": "planning_n060_pv1p75_s1",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 1.125,
+      "physical_sha256": "ba72f141149407117d65a63b8c3c4abeff87f521e867db4c62ca4c822752e47f"
+    },
+    {
+      "case": "planning_n060_pv1p75_s2",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 1.125,
+      "physical_sha256": "6e52f30a05c8eb5247fdf6f8836777f7be9aa1933fcc09077b90bb2c3e5693a0"
+    },
+    {
+      "case": "planning_n060_pv1p75_s3",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 1.125,
+      "physical_sha256": "75c3b9dd54f3f2ff08fb0c370db63830dc42e013ce454522e445c6c631999a82"
+    },
+    {
+      "case": "planning_n060_pv1p75_s4",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 1.125,
+      "physical_sha256": "c498a432b1b4df6a8ef9bc6c1faf7dabe47d96cdcfd1ca2478e32ec9e47053af"
+    },
+    {
+      "case": "planning_n060_pv1p75_s5",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 1.125,
+      "physical_sha256": "ad71d9bd304191b9e824ba893a445c47eb07e0f1f79015510b094b6a265e13e6"
+    },
+    {
+      "case": "planning_n060_pv1p75_s6",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 1.125,
+      "physical_sha256": "f7038ebd93411ed1a33fae72b9ddb2470589140cf8a376464bb88176e69b89cc"
+    },
+    {
+      "case": "planning_n060_pv1p75_s7",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 1.125,
+      "physical_sha256": "1c3a9dc75946f6930800e6766e0789fc78fb7380e8b174155b12d1c691a362d9"
+    },
+    {
+      "case": "planning_n060_pv1p75_s8",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 1.125,
+      "physical_sha256": "dbef87935115932ab4b54f059c38dd86b91ff93f3974636631827039b0c1ce4e"
+    },
+    {
+      "case": "planning_n060_pv1p75_s9",
+      "n_tasks": 60,
+      "pv_scale": 1.75,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 1.125,
+      "physical_sha256": "f9949d9c4dcd1d0aa9073be5d51d215999b5c30834ea31220d19ecbd919ed5cb"
+    },
+    {
+      "case": "planning_n060_pv2_s0",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 1.4,
+      "physical_sha256": "14c4490ac7ec0b06a526a573fa604dd707107188ffe5aa6e2b0711f1206d9d4e"
+    },
+    {
+      "case": "planning_n060_pv2_s1",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 1.4,
+      "physical_sha256": "0dc31402c77b5e8259e112b217890f690c6a089e12c4389a478efe08e61dc92f"
+    },
+    {
+      "case": "planning_n060_pv2_s2",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 1.4,
+      "physical_sha256": "bf9e7b0df4de650a675a0f7658a5516dbbba614154ee68b03af0730bc4ba8332"
+    },
+    {
+      "case": "planning_n060_pv2_s3",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 1.4,
+      "physical_sha256": "71c540829682493541251579e79cf2cabd7558c92eeb8d16f8b7c00ff16b2bb0"
+    },
+    {
+      "case": "planning_n060_pv2_s4",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 1.4,
+      "physical_sha256": "6bc7151b66a9e0be34b96f0773be1b85d377de82491ce08ad26ac93475b0e16b"
+    },
+    {
+      "case": "planning_n060_pv2_s5",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 1.4,
+      "physical_sha256": "4aea885a992089536166dcdea672f98420fe605dad04c918c2f378fe06f21f15"
+    },
+    {
+      "case": "planning_n060_pv2_s6",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 1.4,
+      "physical_sha256": "f7e71676ef41c99567a51c601f2b768e34c7c428bfae672a5b5f489598255947"
+    },
+    {
+      "case": "planning_n060_pv2_s7",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 1.4,
+      "physical_sha256": "2fa6452b58983cdad0d7d595fc6cc3fc4bed7f839e6b4cdbb8504ad1596b822d"
+    },
+    {
+      "case": "planning_n060_pv2_s8",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 1.4,
+      "physical_sha256": "e62d88cd5ae4a011311724d57a1fd02ed8cdd7f1f865f86d17a172dd4bbd951c"
+    },
+    {
+      "case": "planning_n060_pv2_s9",
+      "n_tasks": 60,
+      "pv_scale": 2.0,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 1.4,
+      "physical_sha256": "7ed1529526ba5533da28d2e7a82dadb589b71d154e43e087919a537917cadb5b"
+    },
+    {
+      "case": "planning_n060_pv2p5_s0",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 1.975,
+      "physical_sha256": "a6f642bb742daa35e338f12c74de631a7eca3ef564427cc16fa8660dc18f04b4"
+    },
+    {
+      "case": "planning_n060_pv2p5_s1",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 1.975,
+      "physical_sha256": "c75c5f9a0dcfd83c739e12dbe37199071bfd94ac5c6beb36d31c2de39ecda191"
+    },
+    {
+      "case": "planning_n060_pv2p5_s2",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 1.975,
+      "physical_sha256": "d257fc3bb687b77d87048254266006506080cd60b385569eff5fcf6906d420ef"
+    },
+    {
+      "case": "planning_n060_pv2p5_s3",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 1.975,
+      "physical_sha256": "c6e3fd1e37634aedf3d033b44a019e5cb12c7846afb993c1d0d06f9fca369a1e"
+    },
+    {
+      "case": "planning_n060_pv2p5_s4",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 1.975,
+      "physical_sha256": "3f85aa14d220e071bae1fce09131d99a0ea50854a9712f544e9564fd5f72a4d5"
+    },
+    {
+      "case": "planning_n060_pv2p5_s5",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 1.975,
+      "physical_sha256": "bf6176cda29d9f5d601277c84220519720b5646a47c878cae94ce96082b232ef"
+    },
+    {
+      "case": "planning_n060_pv2p5_s6",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 1.975,
+      "physical_sha256": "5ba8af31ba2580f5a052ca7d3b5511e879b20b076355f61d3934fe2f2d6a47b8"
+    },
+    {
+      "case": "planning_n060_pv2p5_s7",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 1.975,
+      "physical_sha256": "77cdb76942202c64f67fc43281361844491c2fc1512b6ea2faea576f96dd61d2"
+    },
+    {
+      "case": "planning_n060_pv2p5_s8",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 1.975,
+      "physical_sha256": "43aeb940f90ea6fa98e4ee8ef6974e0d9dc8dd1b6a669380da0ba9efb921399f"
+    },
+    {
+      "case": "planning_n060_pv2p5_s9",
+      "n_tasks": 60,
+      "pv_scale": 2.5,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 1.975,
+      "physical_sha256": "bdc60b6e3fc5aa2b22f361cde5cf256bc30954ecf783120e8dabbe71624f88d5"
+    },
+    {
+      "case": "planning_n060_pv3_s0",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 2.575,
+      "physical_sha256": "5c2f5ba8b9d8fdd7fce9f998425b60772c908ae808ac2158ec76f91636bc5c7b"
+    },
+    {
+      "case": "planning_n060_pv3_s1",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 2.575,
+      "physical_sha256": "8e721e4b2532f8895e4dbe9f750355527ec80f473a775d0137459b5bcdbdbfa6"
+    },
+    {
+      "case": "planning_n060_pv3_s2",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 2.575,
+      "physical_sha256": "ac65ac6e51e970ec862943af135366ecbfbaad0edbedf5a243a5efa5e6a0473e"
+    },
+    {
+      "case": "planning_n060_pv3_s3",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 2.575,
+      "physical_sha256": "d7f5ae1e358c057722984129e2437af5948462caa6e243e40aaae9f3317397c9"
+    },
+    {
+      "case": "planning_n060_pv3_s4",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 2.575,
+      "physical_sha256": "96ae9c65ecd1979b6a2bd2265d28e8eea0e0bfd9af64561bf50550cfcffb50de"
+    },
+    {
+      "case": "planning_n060_pv3_s5",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 2.575,
+      "physical_sha256": "8b7446be195763306bf738a8b1b5bc56a388fff9d3c5d59b2c77ea6d5f484fa2"
+    },
+    {
+      "case": "planning_n060_pv3_s6",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 2.575,
+      "physical_sha256": "1c5ce3cfa22c9a9b8ef687ade80707f0fe29fcaba538f2ba7a7538179ef0d663"
+    },
+    {
+      "case": "planning_n060_pv3_s7",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 2.575,
+      "physical_sha256": "14107de0307ed7abc912a9f6ef548caf5bfced94ee22c07b3ecd3709f314dc05"
+    },
+    {
+      "case": "planning_n060_pv3_s8",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 2.575,
+      "physical_sha256": "6e0fb57d9e184ad54cb8185caaf4bc0bc7e4f6c32ef48d083377a149558b1675"
+    },
+    {
+      "case": "planning_n060_pv3_s9",
+      "n_tasks": 60,
+      "pv_scale": 3.0,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 2.575,
+      "physical_sha256": "acb8dd4d0eb64dc5bbde6f020c213240d2c056ed437a0321eb02c1495118e97b"
+    },
+    {
+      "case": "planning_n060_pv3p5_s0",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "6aff5868b2d56bfef868adda6dbe0f10886de4c226c9592842756529ed3c5248"
+    },
+    {
+      "case": "planning_n060_pv3p5_s1",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "0a62b45bc832fa844f95cf8583919585c886224f403179b026039376f57536ca"
+    },
+    {
+      "case": "planning_n060_pv3p5_s2",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "ff33601e33993118c131d4521238a2d80d4084e91c97e00d261adebd8bb0cacd"
+    },
+    {
+      "case": "planning_n060_pv3p5_s3",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "64f6c0217d3d0e7f472f36d3c57a9d1ca7cf12038ea5d9587549c4b40dd06fe6"
+    },
+    {
+      "case": "planning_n060_pv3p5_s4",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "1e816c1ef990cf44d4b86a7c084ee26ab07ac33217e77f4a17c35622d3fddaa5"
+    },
+    {
+      "case": "planning_n060_pv3p5_s5",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "0c51c531fa67b32fc5cb09ccb6fd4418dfe16c22dc020afc35e87078d63dcc1b"
+    },
+    {
+      "case": "planning_n060_pv3p5_s6",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "5c75616ba292c82d0f2a3dc82a57941a9dca7bb3f72444c7ed59dedccf42dea3"
+    },
+    {
+      "case": "planning_n060_pv3p5_s7",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "b7e3d26d69267ae92d892fe7126dd55125390989365ae7d25adb30d8c73e16ca"
+    },
+    {
+      "case": "planning_n060_pv3p5_s8",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "7c2948373d9c766c28f2d448ac565c60cdc3fc33f2d0e37a3d4481114b037bf7"
+    },
+    {
+      "case": "planning_n060_pv3p5_s9",
+      "n_tasks": 60,
+      "pv_scale": 3.5,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 3.1666666666666665,
+      "physical_sha256": "6e9575b619984da42acdd89bdcb57f93a9b95d832a2e87a8d4472965ef372dd5"
+    },
+    {
+      "case": "planning_n060_pv4_s0",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 0,
+      "rng_seed": 50090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "4644b89a924462945bb97468c7b41bb1785b6060e9e710abd530770324e7b27f"
+    },
+    {
+      "case": "planning_n060_pv4_s1",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 1,
+      "rng_seed": 51090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "e0dcd9ea68e12c9b850c0e393e167f7de1d8cb75650b8a289c66595265750102"
+    },
+    {
+      "case": "planning_n060_pv4_s2",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 2,
+      "rng_seed": 52090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "106ecd5c8b48b83806b34b014c39300ceb945aedfd4118ade6bf64b531fd36a8"
+    },
+    {
+      "case": "planning_n060_pv4_s3",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 3,
+      "rng_seed": 53090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "2fb99989d6233490c3a69c5cdfc0ff04874d3b1e51c2fd63fe2394d95c8b2fe0"
+    },
+    {
+      "case": "planning_n060_pv4_s4",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 4,
+      "rng_seed": 54090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "90b59f1c2975d07f92d691622f216d731fe003610f87223e63bdcd206ddfebd0"
+    },
+    {
+      "case": "planning_n060_pv4_s5",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 5,
+      "rng_seed": 55090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "f69bf21574c3505ee91fc1c9b169792904523a8a3899bf03f0953d8b475df9bb"
+    },
+    {
+      "case": "planning_n060_pv4_s6",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 6,
+      "rng_seed": 56090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "d70d99d832d8f4df84bed81f4a3c961e0d7aaf2e4b1574bf9e72bc8fa3ab4d01"
+    },
+    {
+      "case": "planning_n060_pv4_s7",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 7,
+      "rng_seed": 57090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "040edf0451cdf2ece95d87feb8009f0e81317a62e7d1d2cb2ea594d57e865830"
+    },
+    {
+      "case": "planning_n060_pv4_s8",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 8,
+      "rng_seed": 58090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "3acb8dbb60ea6b96fc002444057e172e01192bf91a357bd3bc9813338e8db029"
+    },
+    {
+      "case": "planning_n060_pv4_s9",
+      "n_tasks": 60,
+      "pv_scale": 4.0,
+      "draw_seed": 9,
+      "rng_seed": 59090,
+      "gamma": 3.7583333333333333,
+      "physical_sha256": "d18e4e2008ef799e1975800a81735510d2ea8b3be7fa48a63d4591de851433dc"
+    },
+    {
+      "case": "planning_n120_pv1_s0",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "348badb0c77b8a2f5ad6fb97470852bd089f5cbbac8421737b3800ec3f682c9e"
+    },
+    {
+      "case": "planning_n120_pv1_s1",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "3787ad34ea4d555268c98abab7506ad6e8a31ee35abc76a1260d358f9f883c6a"
+    },
+    {
+      "case": "planning_n120_pv1_s2",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "a144f761dffffef4bb5ed3f030d50a90f03f9160fde3305ce1f837c6cc7f5484"
+    },
+    {
+      "case": "planning_n120_pv1_s3",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "12d05188ef7504ff87af443d87e16e340d480f679a7f469d4f7524b63b7d3deb"
+    },
+    {
+      "case": "planning_n120_pv1_s4",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "0b21823235432c4d27e522347d1eff918675d234e1d9aaff06bad37687fd9d7d"
+    },
+    {
+      "case": "planning_n120_pv1_s5",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "d2a8b32a392a38b120997d3976dd832ffb73e5af7599830cd7d87a2f99ef6720"
+    },
+    {
+      "case": "planning_n120_pv1_s6",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "0981f9146fe815eb4c698d8ccef2f34edb3640102e94109f6e785b35a7153a83"
+    },
+    {
+      "case": "planning_n120_pv1_s7",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "c4a760ffff430f499571b63ab7c82117e95ee014c764ba81d58097e19fd611d6"
+    },
+    {
+      "case": "planning_n120_pv1_s8",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "6a1f0ec5f2fb6fd512ebf57c81b9950bb907f596231b9766906b08ff95a1ce47"
+    },
+    {
+      "case": "planning_n120_pv1_s9",
+      "n_tasks": 120,
+      "pv_scale": 1.0,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 0.15416666666666667,
+      "physical_sha256": "88f57827889a6d702fc10e9c8ce7b2fe041580610eac774e4370e8f41c476c06"
+    },
+    {
+      "case": "planning_n120_pv1p25_s0",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "8a3ad010de02b792a50c0c216986529c6a9dbd99b69cd9be9b645de424d1803e"
+    },
+    {
+      "case": "planning_n120_pv1p25_s1",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "15f21822649a18f9bfbe45831f14949a250c39fc75fba209760052485aeb4ac9"
+    },
+    {
+      "case": "planning_n120_pv1p25_s2",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "de65719392809f949dd7671ebb78b01f6250f38efceba865ebfd11cc838ba9b3"
+    },
+    {
+      "case": "planning_n120_pv1p25_s3",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "4c935e7a5a8f8cd9b5cae06ae3364aab27def46eebb23b922df5379b60fe5600"
+    },
+    {
+      "case": "planning_n120_pv1p25_s4",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "628a6ff39af062ddb05e6a9a9762f8f131ff1d6c87016e58f1f3c2bbfeeb06bd"
+    },
+    {
+      "case": "planning_n120_pv1p25_s5",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "827b00004b7cc3a1dd14bfe1cb21edaf3e1ea13ff1cbe1dee70c73af9e23cf07"
+    },
+    {
+      "case": "planning_n120_pv1p25_s6",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "8907262b5c7a14fb5236e01fd8b0bc4e3bc46bd8a758f01def51ca3f75e9bd92"
+    },
+    {
+      "case": "planning_n120_pv1p25_s7",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "ff30e0641e50f58d62a954b889323f4c4c2796d9bb4b4f7f8fda5701e64c22e8"
+    },
+    {
+      "case": "planning_n120_pv1p25_s8",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "624e71475fa422bef2aac9d60fb1c0eb69947e9dcebfecd32d5d8de568f6a14f"
+    },
+    {
+      "case": "planning_n120_pv1p25_s9",
+      "n_tasks": 120,
+      "pv_scale": 1.25,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 0.2916666666666667,
+      "physical_sha256": "2eefdeeccbbbba3abbb0af68b987627ddfed3d062641e3b02726a711dba4c9d8"
+    },
+    {
+      "case": "planning_n120_pv1p5_s0",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "263674adf474ec8e1bce692fc5ecdfe6b97021495a4ca9fc053314c41f1037ed"
+    },
+    {
+      "case": "planning_n120_pv1p5_s1",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "7d66e8cb915b04633a14a19b301208301e7409d48c186de045d258059831b7da"
+    },
+    {
+      "case": "planning_n120_pv1p5_s2",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "f1fac370bc53502cf0fb6be39b4301ac8033f0e780c39aed97e18bc8a272632c"
+    },
+    {
+      "case": "planning_n120_pv1p5_s3",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "044a3ac008f33583895f477740418e9e22bdab455a24b6ae4721103ffaed1d34"
+    },
+    {
+      "case": "planning_n120_pv1p5_s4",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "b3dbf3f509cf4d259650a763266686f60f173e809b1aaa467373efdcb97a5565"
+    },
+    {
+      "case": "planning_n120_pv1p5_s5",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "28261d78f4b3d2ed2f00c7d2fcb473095091eff5571ec0fc1b158f723eee39ae"
+    },
+    {
+      "case": "planning_n120_pv1p5_s6",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "0fd3e8bbe2e745feb54d93046d01d283c3ba0b62213b92f0fde46e6cdd83b036"
+    },
+    {
+      "case": "planning_n120_pv1p5_s7",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "6ea9bf656a54a0eb59b6a8b01fcf30bf112632ed996aa422a7a47169befb2cfb"
+    },
+    {
+      "case": "planning_n120_pv1p5_s8",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "8466f4e88f50cd03ad8e69a333f41ab5e4aab500df1c848d78cd7f33f4b0aa82"
+    },
+    {
+      "case": "planning_n120_pv1p5_s9",
+      "n_tasks": 120,
+      "pv_scale": 1.5,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 0.42916666666666664,
+      "physical_sha256": "02507e4275b8422afee5f27c2466ffe6092113aa6de888f1f28058e0e563becd"
+    },
+    {
+      "case": "planning_n120_pv1p75_s0",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 0.5625,
+      "physical_sha256": "3f95f77b77a0be25d2a1fb77eac40c3b09737d2e2278a8f386951d05be94e567"
+    },
+    {
+      "case": "planning_n120_pv1p75_s1",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 0.5625,
+      "physical_sha256": "f348dc20a59cdd1ce6048783d5c25d138f09ce0df70737c34465bab70b9baa1d"
+    },
+    {
+      "case": "planning_n120_pv1p75_s2",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 0.5625,
+      "physical_sha256": "d98d7ef4b136294e5815534ceee4a31f55b5a874321147b674dc1263d8bd670d"
+    },
+    {
+      "case": "planning_n120_pv1p75_s3",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 0.5625,
+      "physical_sha256": "527864c4df0f4fe3651ad337214e26e1bf0676f3b09773cc345e91a76bce235a"
+    },
+    {
+      "case": "planning_n120_pv1p75_s4",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 0.5625,
+      "physical_sha256": "122ef4783ab1a4c703b9c3d00eed4e0b67727fb56690f5593b8fdc2465472f3a"
+    },
+    {
+      "case": "planning_n120_pv1p75_s5",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 0.5625,
+      "physical_sha256": "be6f2c5da547c19bca67511b00d18c2d94a0120d152ce0a7121e0e740331f9bc"
+    },
+    {
+      "case": "planning_n120_pv1p75_s6",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 0.5625,
+      "physical_sha256": "8d3529ecb03d665ff40b16fbc298c74ca0cbb36b4f08f5aef0fa0e1d5f7de804"
+    },
+    {
+      "case": "planning_n120_pv1p75_s7",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 0.5625,
+      "physical_sha256": "00c120529423bcbc608ab15536d7a22f02c5aa59760d7b522c45cafccdda179e"
+    },
+    {
+      "case": "planning_n120_pv1p75_s8",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 0.5625,
+      "physical_sha256": "2e6ba4e36d6b5b6f3c83e56c9845720cbd766a62923e0b32b4203c39c795088e"
+    },
+    {
+      "case": "planning_n120_pv1p75_s9",
+      "n_tasks": 120,
+      "pv_scale": 1.75,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 0.5625,
+      "physical_sha256": "400381562baa7622418ec614b1967ef6363ec41be7008591126e4ec53fddc128"
+    },
+    {
+      "case": "planning_n120_pv2_s0",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 0.7,
+      "physical_sha256": "40dd93a5c4c47821cd36c8f150dd7df9fe01db38fb193ff8e77ee97580a887e5"
+    },
+    {
+      "case": "planning_n120_pv2_s1",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 0.7,
+      "physical_sha256": "ce85e4a235672745d445a5332cfd09cd6a4d547ab9c46c0ce27c5bd8457a5c10"
+    },
+    {
+      "case": "planning_n120_pv2_s2",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 0.7,
+      "physical_sha256": "27f29c6e98c2650ee846f4d0c4665f10877d510f6eee63b5b4eaa0952849cab8"
+    },
+    {
+      "case": "planning_n120_pv2_s3",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 0.7,
+      "physical_sha256": "92083611f4de86ed7c1490fb3fbb09e155d33142919cc3240e0809b005191c62"
+    },
+    {
+      "case": "planning_n120_pv2_s4",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 0.7,
+      "physical_sha256": "8af350332bc27c9ae8f6eef46ad5ef533133842c4ade8b17b4f5f37b9ff46b1d"
+    },
+    {
+      "case": "planning_n120_pv2_s5",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 0.7,
+      "physical_sha256": "add40673edf7df44cdaea648fb226c761bcc720384002983b9dcf5d13e1da3e5"
+    },
+    {
+      "case": "planning_n120_pv2_s6",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 0.7,
+      "physical_sha256": "6208c91dfd71853004e54286bda556b25c140e6b7055fe93e2cdb818d22f90ed"
+    },
+    {
+      "case": "planning_n120_pv2_s7",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 0.7,
+      "physical_sha256": "864be3b2e5be93b09b24165649263e878d7261d2242a1a49e73870ed4ea5b93d"
+    },
+    {
+      "case": "planning_n120_pv2_s8",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 0.7,
+      "physical_sha256": "9e04e1e5fd2ce79d511ea11a98d714ad08454eb2803a5589b0a1c6c97ead6122"
+    },
+    {
+      "case": "planning_n120_pv2_s9",
+      "n_tasks": 120,
+      "pv_scale": 2.0,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 0.7,
+      "physical_sha256": "6995be4859da39187e6bcfc2e237ee08276a1e7711ee55a4802fc9104bba5444"
+    },
+    {
+      "case": "planning_n120_pv2p5_s0",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 0.9875,
+      "physical_sha256": "4ff42a7f91b6e043e0a5a68bf20da374c3d5952ed00c5fc2a5585bb13c6bb3cd"
+    },
+    {
+      "case": "planning_n120_pv2p5_s1",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 0.9875,
+      "physical_sha256": "1a6befc5c63e98ef2dc4ac506dacfd09e6dcb2e0997cfcaa0865398107b24fe4"
+    },
+    {
+      "case": "planning_n120_pv2p5_s2",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 0.9875,
+      "physical_sha256": "f13b50c0c83574bb08f606914ef9f812dfbf0921010776faaf3e68c103b88ec5"
+    },
+    {
+      "case": "planning_n120_pv2p5_s3",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 0.9875,
+      "physical_sha256": "1094dd8de8643b42d67f7cb54b60636a297d53fede87978394a9bfef1afee101"
+    },
+    {
+      "case": "planning_n120_pv2p5_s4",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 0.9875,
+      "physical_sha256": "6a18e8c87952baf5dfacec54767c1ae0409e0419850e06d4cc979a4a066ef09f"
+    },
+    {
+      "case": "planning_n120_pv2p5_s5",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 0.9875,
+      "physical_sha256": "a7fa744d08be6311438791082ce1b4ee54fa840007379ca318edde9d87be3137"
+    },
+    {
+      "case": "planning_n120_pv2p5_s6",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 0.9875,
+      "physical_sha256": "c10447fa81e264fb71eff022ad7f3086d452f480589bb7c9191a019d315a658b"
+    },
+    {
+      "case": "planning_n120_pv2p5_s7",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 0.9875,
+      "physical_sha256": "1fea2b18f47bc8a9dbc48e4ae4c8706a615163c5c86215d3f82f1de39ffd44a8"
+    },
+    {
+      "case": "planning_n120_pv2p5_s8",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 0.9875,
+      "physical_sha256": "23c9d9d542029398592bf2b34f7482d016e3a3b46823cc13b2c6a9865afeede5"
+    },
+    {
+      "case": "planning_n120_pv2p5_s9",
+      "n_tasks": 120,
+      "pv_scale": 2.5,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 0.9875,
+      "physical_sha256": "fd8dcaa7566444c5ed5637b76ec09a2cb7bd073bc634d8d5d3b507c846bd275d"
+    },
+    {
+      "case": "planning_n120_pv3_s0",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 1.2875,
+      "physical_sha256": "a10b7a679d1ab26a59bd23e1a1ae9bf07f4eb913884830b036aba13cb1d024cd"
+    },
+    {
+      "case": "planning_n120_pv3_s1",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 1.2875,
+      "physical_sha256": "27a4926c20ea861026e3d2156bcba9dee6812bcfe4a062f087e4d960e9462be9"
+    },
+    {
+      "case": "planning_n120_pv3_s2",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 1.2875,
+      "physical_sha256": "837b556126dcca18ded3a62f923bd2dc7136cb20d703be81e0f78e55d6beeb6a"
+    },
+    {
+      "case": "planning_n120_pv3_s3",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 1.2875,
+      "physical_sha256": "8cd2717ca2e3cd49bd68b27e1ff464d9dc0f7802275d63a1595943a99107afd0"
+    },
+    {
+      "case": "planning_n120_pv3_s4",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 1.2875,
+      "physical_sha256": "1a5d77ad51a359dc5a833929a073b3dc25b871cf8b292960dbc7decbbf4fec21"
+    },
+    {
+      "case": "planning_n120_pv3_s5",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 1.2875,
+      "physical_sha256": "a45b5ca2886172a74dd8b451cfccd3d1ae76400d3ee96392fa39dea5cb0c4e75"
+    },
+    {
+      "case": "planning_n120_pv3_s6",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 1.2875,
+      "physical_sha256": "0b7a675e059d4b8914511d35012adb982693bcf772b4f3b60d9c05ec6dbc49dc"
+    },
+    {
+      "case": "planning_n120_pv3_s7",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 1.2875,
+      "physical_sha256": "56ced3f99a74468338794c49c4abb72877e6f39ccbf89357d2ad9f46833e3c67"
+    },
+    {
+      "case": "planning_n120_pv3_s8",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 1.2875,
+      "physical_sha256": "60ff41be61147d82e87f8b8bca5a54e5eccc0674beb04e87bcba17bbdb9e5f56"
+    },
+    {
+      "case": "planning_n120_pv3_s9",
+      "n_tasks": 120,
+      "pv_scale": 3.0,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 1.2875,
+      "physical_sha256": "f543ba914e799ee4b85581bee2b4978b50e7d4c6a3b178d32b77114b69a067a7"
+    },
+    {
+      "case": "planning_n120_pv3p5_s0",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "7e5a27a03f3356f816f6c3e264b20f2365a53e3226bc2b04090d36bb41cf6535"
+    },
+    {
+      "case": "planning_n120_pv3p5_s1",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "6a2548be0e7a541fdac49856865996059a326336c5096dd8a0d7d96d5f544752"
+    },
+    {
+      "case": "planning_n120_pv3p5_s2",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "a2df60fd74f5506c88b82fbcd2a34bed53fa3274a6c5ca2962eaabfeb01d1c40"
+    },
+    {
+      "case": "planning_n120_pv3p5_s3",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "6f4db1ec783d736b9eb78232ab3cc15cf47602211aced17889cb84233c393149"
+    },
+    {
+      "case": "planning_n120_pv3p5_s4",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "05c59569d1b7dc6a8718dbd7ea120cd1e5064022db581cef3cb3290346afe74f"
+    },
+    {
+      "case": "planning_n120_pv3p5_s5",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "c2e10464995f9c6424e4ed9436bec603cc2457f91797896fc22de29a829bb9be"
+    },
+    {
+      "case": "planning_n120_pv3p5_s6",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "57d83b38898475b96d954d0f11cede8bf7ed8b074427566663009c612096ae3a"
+    },
+    {
+      "case": "planning_n120_pv3p5_s7",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "8e8fd00383f74ea3f1bc9de6cb5250341037c1bad271e035147dbdc154dc28df"
+    },
+    {
+      "case": "planning_n120_pv3p5_s8",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "8a15082cd0d8fdec9deb50757559da963e1c8a47cbbb70a924a48295b508abcc"
+    },
+    {
+      "case": "planning_n120_pv3p5_s9",
+      "n_tasks": 120,
+      "pv_scale": 3.5,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 1.5833333333333333,
+      "physical_sha256": "16682833e71ba6078056ccf38cc97b6b26ac99bcfe9ed89327aac3f68f2c6ded"
+    },
+    {
+      "case": "planning_n120_pv4_s0",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 0,
+      "rng_seed": 50150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "69f8eef9a0497936a730e90f9df04b0d86e2e3b6e27c9cff00261349d2421327"
+    },
+    {
+      "case": "planning_n120_pv4_s1",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 1,
+      "rng_seed": 51150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "ba56a513c632e4e8df55fbd9f6dd19459903b9b548a6269546249e85add83025"
+    },
+    {
+      "case": "planning_n120_pv4_s2",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 2,
+      "rng_seed": 52150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "8aa408879919ae5d61a35ad19993e84ab9e2a9634dfa0b9d3b4f84277f679604"
+    },
+    {
+      "case": "planning_n120_pv4_s3",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 3,
+      "rng_seed": 53150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "50d1a4c9e7e0edc5c1f7cc425f778568e9eab61c1227f41f5885f592cdab6f46"
+    },
+    {
+      "case": "planning_n120_pv4_s4",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 4,
+      "rng_seed": 54150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "6f7bb0f4e26ea217b62794c53523c6b2c25e003166b378f4cbe936b2b4c636cc"
+    },
+    {
+      "case": "planning_n120_pv4_s5",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 5,
+      "rng_seed": 55150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "cf0b2cfd4a047e88b83dd3bc57d1e5e45659e1089886021eb054a60d54119d8b"
+    },
+    {
+      "case": "planning_n120_pv4_s6",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 6,
+      "rng_seed": 56150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "6e028e2c81f90c0d3a8f813814487a9043a4fca5573571d05bc49093a7303e06"
+    },
+    {
+      "case": "planning_n120_pv4_s7",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 7,
+      "rng_seed": 57150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "3fbcabdad748edc05313ee6c5c5a8dc1a111e2aef1d9bf42598cbaac4f18a9b4"
+    },
+    {
+      "case": "planning_n120_pv4_s8",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 8,
+      "rng_seed": 58150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "2b1c8541c428c9d19809e340e600a744b22ecf33b7794226b1c6ded58d20eef1"
+    },
+    {
+      "case": "planning_n120_pv4_s9",
+      "n_tasks": 120,
+      "pv_scale": 4.0,
+      "draw_seed": 9,
+      "rng_seed": 59150,
+      "gamma": 1.8791666666666667,
+      "physical_sha256": "8ea1fd2d49fe7c38f31948d02c2cf089d62850862dc95faf62f549264e474782"
+    }
+  ]
+}
