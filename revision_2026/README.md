@@ -2,7 +2,7 @@
 
 This folder holds the code, run records and independent validation for the
 experiments added in the October 2026 revision of the manuscript: Tables
-5-9 and 17-21, Fig. 3, the 3,600-second runs, the plug-limit study and the
+4-6 and 14-18, Fig. 3, the 3,600-second runs, the plug-limit study and the
 Corollary 1 checks (map below). The code at the repository root is
 the first-submission code; every experiment here runs a frozen, hash-checked
 copy of it (`runtime/frozen/vendor/` or `vendor/` inside each study).
@@ -19,26 +19,29 @@ Folder names carry the date of the study.
 
 | Manuscript item | Code | Records (rows) |
 |---|---|---|
-| Table 5 (`tab:lpscaling`), LP times, 108 runs | `code/opte_lp_scaling_20261012` | `records/opte-lp-scaling-20261012` (`lp_analysis_final_20261012/lp_scaling_workers.csv`; validation in `lp_analysis_final_certificate_20261012/`) |
-| Table 6 (`tab:directlarge`), direct MIPs on four 1,000-task inputs | `code/opte_direct_mip1000_20261012` | `records/opte-direct-mip1000-20261012` (`direct_mip1000_analysis_20261012/mip1000_comparison.csv`) |
-| Table 8 (`tab:decomp`), restricted-MIP medians and direct bounds over 270 planning bases (Section 8.4, Appendix B.1 "Planning checks") | `code/opte_planning_population_20261012` (60-s direct solves), `code/opte_planning_refinement_20261013` (300-s refinements) | `records/opte-planning-20261012` (`planning_population_analysis_final_20261012/`, `planning_refinement_analysis_final_20261013/`; repair and residuals in `planning_population_numerical_sensitivity_verified_20261012/`) |
-| Table 9 (`tab:planningdirect`), targeted planning checks | `code/opte_lp_scaling_20261012` (`planning_direct.py`) | `records/opte-planning-20261012/table9_planning_direct/` (`mip.json`, `lp.json` per base and configuration) |
-| Table 7 (`tab:locscaling`), map growth | `code/opte_grid_scaling_20261016` (`runtime/run_grid.py`) | `records/opte-grid-results-20261016` (`table8_rows.tex`) |
-| Table 17 (`tab:cgreuse`), master reuse | `code/opte_cg_reuse_20261013` | `records/opte-cg-reuse-20261013` (`cg_reuse_analysis_final_20261013/worker_outcomes.csv`) |
-| Table 18 (`tab:taskscaling`), number of tasks | `code/opte_task_scaling_20261016` (`runtime/run_task_scaling.py`) | `records/opte-task-scaling-results-20261016` (`v9654/main_table_rows.tex`) |
-| Table 19 (`tab:equalmip`), 23 further inputs | `code/opte_equal_mip_20261015` (`runtime/run_equal_mip.py`, `PROTOCOL.md`) | `records/opte-equal-mip-results-20261016` (`appendix_table_rows.tex`) |
-| Table 20 (`tab:grid`), map x tasks | `code/opte_grid_scaling_20261016` | `records/opte-grid-results-20261016` (`table21_cg_rows.tex` and `table21_direct_rows.tex`, printed side by side) |
-| Table 21 (`tab:transition`), six samples per cell | `code/opte_transition_20261017` (`runtime/run_transition.py`) | `records/opte-transition-results-20261017` (`transition_rows.tex`) |
-| Fig. 3 (`fig:breakpoint`) | as Tables 7, 20, 21 | `records/opte-transition-results-20261017/figure/` |
+| Table 4 (`tab:locscaling`), map growth | `code/opte_grid_scaling_20261016` (`runtime/run_grid.py`) | `records/opte-grid-results-20261016` (`table8_rows.tex`) |
+| Section 8.2, 160 and 200 locations (sentence after Table 4) | `code/opte_map_extension_20261017` | `records/opte-map-extension-20261017` (`RESULTS.md`, `table8_rows.tex`) |
+| Table 5 (`tab:decomp`), restricted-MIP medians and direct bounds over 270 planning bases (Section 8.4, Appendix B.1 "Planning checks") | `code/opte_planning_population_20261012` (60-s direct solves), `code/opte_planning_refinement_20261013` (300-s refinements) | `records/opte-planning-20261012` (`planning_population_analysis_final_20261012/`, `planning_refinement_analysis_final_20261013/`; repair and residuals in `planning_population_numerical_sensitivity_verified_20261012/`) |
+| Table 6 (`tab:planningdirect`), targeted planning checks | `code/opte_lp_scaling_20261012` (`planning_direct.py`) | `records/opte-planning-20261012/table9_planning_direct/` |
+| Table 14 (`tab:cgreuse`, Appendix C), master reuse | `code/opte_cg_reuse_20261013` | `records/opte-cg-reuse-20261013` (`cg_reuse_analysis_final_20261013/worker_outcomes.csv`) |
+| Table 15 (`tab:taskscaling`, Appendix D.1), number of tasks | `code/opte_task_scaling_20261016` (`runtime/run_task_scaling.py`) | `records/opte-task-scaling-results-20261016` (`v9654/main_table_rows.tex`) |
+| Table 16 (`tab:equalmip`, Appendix D.2), 23 further instances | `code/opte_equal_mip_20261015` (`runtime/run_equal_mip.py`, `PROTOCOL.md`) | `records/opte-equal-mip-results-20261016` (`appendix_table_rows.tex`) |
+| Table 17 (`tab:grid`, Appendix D.3), map x tasks | `code/opte_grid_scaling_20261016` | `records/opte-grid-results-20261016` (`table21_cg_rows.tex`, `table21_direct_rows.tex`) |
+| Table 18 (`tab:transition`, Appendix D.4), six samples per cell | `code/opte_transition_20261017` (`runtime/run_transition.py`) | `records/opte-transition-results-20261017` (`transition_rows.tex`) |
+| Fig. 3 (`fig:breakpoint`) | as Tables 4, 17, 18 | `records/opte-transition-results-20261017/figure/` |
 | 3,600-second runs (Section 8.2) | `code/opte_grid_scaling_20261016`, `code/opte_transition_20261017` | `records/opte-3600-results-20261017` (`rows_3600.json`) |
-| Plug limits (Remark `rem:infra` in Section 5; Section 9) | `code/opte_plugs_20261013` | `records/opte-plugs-final-20261015` (`plug_table.md`, `plug_results.json`, `plug_arms.csv`) |
-| Corollary 1 divisibility checks (Section 7) | `code/opte_corollary1_check_20261015`, `code/opte_conservative_grid_20261017` | `records/opte-corollary1-check-20261015` (`audit_table.md`, `sweep_table.md`), `records/opte-conservative-grid-20261017` (`tables.md`, `summary.json`) |
+| Plug limits (Remark on plug limits; LP study and integer rerun) | `code/opte_plugs_20261013` (LP arms), `code/opte_plugs_protocol_20261017` (integer arms under the benchmark protocol) | `records/opte-plugs-final-20261015`, `records/opte-plugs-protocol-20261017` (`RESULTS.md`, `summary/`) |
+| Corollary 1 divisibility checks (Section 7) | `code/opte_corollary1_check_20261015`, `code/opte_conservative_grid_20261017` | `records/opte-corollary1-check-20261015`, `records/opte-conservative-grid-20261017` |
+| CG speed comparison of the original and current code (response letter, comment 1) | first-submission code at the repository root and `code/opte_equal_mip_20261015` | `records/opte-cg-speed-ablation-20261017` (`ABLATION.md`) |
+| Not in the final manuscript, kept for completeness: LP times of dual simplex, barrier and CG with a rebuilt master (108 runs); direct MIPs on the four 1,000-task instances of Table 3 (summarized in one sentence in Section 8.2) | `code/opte_lp_scaling_20261012`, `code/opte_direct_mip1000_20261012` | `records/opte-lp-scaling-20261012`, `records/opte-direct-mip1000-20261012` |
+
+Tables 1-3 and 7-13, and Figs. 1, 2 and 4-12, come from the first-submission code and results at the repository root.
 
 **Older numbers in file names and notes.** File names and the notes inside the
-records (including `validation/.../VALIDATION.md`) use the numbering of an
-earlier draft: old Table 8 = Table 7, old 19 = 18, old 20 = 19, old 21 = 20,
-old 22 = 21. Protocols written before the runs may cite still older numbers.
-Use the table above.
+records (including `validation/.../VALIDATION.md`) use the numbering of earlier
+drafts: Table 8 (also `table8_*` files) = current Table 4, and Tables 19, 20,
+21, 22 (also `table21_*` files) = current Tables 15, 16, 17, 18.
+Protocols written before the runs may cite still older numbers.
 
 **One hand edit.** In Table 19, the 4,000-task row prints the direct gap as
 `<0.01 (TL)`; the generator prints `0.00`. Stored values: cost at 1,800 s

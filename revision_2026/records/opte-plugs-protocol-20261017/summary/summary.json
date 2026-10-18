@@ -1,0 +1,1221 @@
+{
+ "source_collector_sha256": "cab4193f16a157377badc8aea3c07515e3cf7185282ab49e791f3350afc88610",
+ "blocks": [
+  {
+   "block": 0,
+   "case": "plugs_n100_L15_d25_s0_unlimited",
+   "physical_case": "plugs_n100_L15_d25_s0",
+   "policy": "unlimited",
+   "n_tasks": 100,
+   "nondepot_plugs": null,
+   "depot_plugs": null,
+   "lp": 6289.4732142857165,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 6315.1875,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 6372.875,
+    "status": "optimal",
+    "cg_seconds": 114.03906320501119,
+    "mip_seconds": 125.44618475902826,
+    "restricted_pool_bound": 6372.8691904086445,
+    "pool_columns": 692,
+    "gap_pct": 0.9052036953494302,
+    "internal_pool_gap_pct": 9.116123186945833e-05,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368163",
+    "peak_rss_gb": 0.141131776,
+    "composition": {
+     "trucks": 20,
+     "batteries": 4,
+     "single_task_routes": 1,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 6315.1875,
+    "U_found_seconds": 783.9368793061003,
+    "status": "optimal",
+    "bound": 6315.1875,
+    "root_lp_solved_seconds": 195.7638448830694,
+    "root_finished": true,
+    "gap_pct": 0.0,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368147",
+    "peak_rss_gb": 1.551417344,
+    "composition": {
+     "trucks": 20,
+     "batteries": 3,
+     "single_task_routes": 0,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 20,
+     "batteries": 3,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "best_U": 6315.1875,
+   "old": {
+    "cg_U": 6372.875,
+    "cg_status": "optimal",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 6315.1875,
+    "direct_status": "optimal",
+    "direct_bound": 6315.1875
+   },
+   "best_U_change_vs_unlimited_pct": 0.0,
+   "optimum_change_interval_pct": [
+    0.0,
+    0.0
+   ],
+   "cg_vs_cg_change_pct": 0.0,
+   "proven": true
+  },
+  {
+   "block": 1,
+   "case": "plugs_n100_L15_d25_s0_loose",
+   "physical_case": "plugs_n100_L15_d25_s0",
+   "policy": "loose",
+   "n_tasks": 100,
+   "nondepot_plugs": 2,
+   "depot_plugs": 5,
+   "lp": 6289.4732142857165,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 6315.1875,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 6474.012500000001,
+    "status": "optimal",
+    "cg_seconds": 103.84479490108788,
+    "mip_seconds": 980.3486524140462,
+    "restricted_pool_bound": 6474.012500000001,
+    "pool_columns": 691,
+    "gap_pct": 2.453269900235761,
+    "internal_pool_gap_pct": 0.0,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368164",
+    "peak_rss_gb": 0.181960704,
+    "composition": {
+     "trucks": 21,
+     "batteries": 5,
+     "single_task_routes": 2,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 6315.1875,
+    "U_found_seconds": 1104.5298998658545,
+    "status": "optimal",
+    "bound": 6315.1875,
+    "root_lp_solved_seconds": 244.43019796395674,
+    "root_finished": true,
+    "gap_pct": 0.0,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368148",
+    "peak_rss_gb": 1.763049472,
+    "composition": {
+     "trucks": 20,
+     "batteries": 3,
+     "single_task_routes": 0,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 20,
+     "batteries": 3,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "best_U": 6315.1875,
+   "old": {
+    "cg_U": 6474.012500000001,
+    "cg_status": "optimal",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 6315.1875,
+    "direct_status": "optimal",
+    "direct_bound": 6315.1875
+   },
+   "best_U_change_vs_unlimited_pct": 0.0,
+   "optimum_change_interval_pct": [
+    0.0,
+    0.0
+   ],
+   "cg_vs_cg_change_pct": 1.5869995880980037,
+   "proven": true
+  },
+  {
+   "block": 2,
+   "case": "plugs_n100_L15_d25_s0_tight",
+   "physical_case": "plugs_n100_L15_d25_s0",
+   "policy": "tight",
+   "n_tasks": 100,
+   "nondepot_plugs": 1,
+   "depot_plugs": 3,
+   "lp": 6387.305357142858,
+   "lp_increase_vs_unlimited_pct": 1.5554902536976982,
+   "LB_star": 6392.15,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 7692.0625,
+    "status": "time_limit",
+    "cg_seconds": 115.96062454907224,
+    "mip_seconds": 1800.0042459769174,
+    "restricted_pool_bound": 6569.409996734806,
+    "pool_columns": 746,
+    "gap_pct": 16.899401168412247,
+    "internal_pool_gap_pct": 14.594947756407263,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368165",
+    "peak_rss_gb": 0.254599168,
+    "composition": {
+     "trucks": 28,
+     "batteries": 9,
+     "single_task_routes": 13,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 6392.15,
+    "U_found_seconds": 865.2025826368481,
+    "status": "optimal",
+    "bound": 6392.15,
+    "root_lp_solved_seconds": 267.60105477971956,
+    "root_finished": true,
+    "gap_pct": 0.0,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368149",
+    "peak_rss_gb": 1.576259584,
+    "composition": {
+     "trucks": 19,
+     "batteries": 5,
+     "single_task_routes": 0,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 19,
+     "batteries": 5,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "best_U": 6392.15,
+   "old": {
+    "cg_U": 7692.0625,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 6392.15,
+    "direct_status": "optimal",
+    "direct_bound": 6392.15
+   },
+   "best_U_change_vs_unlimited_pct": 1.218689072968937,
+   "optimum_change_interval_pct": [
+    1.218689072968937,
+    1.218689072968937
+   ],
+   "cg_vs_cg_change_pct": 20.70003726732441,
+   "proven": true
+  },
+  {
+   "block": 3,
+   "case": "plugs_n100_L15_d25_s1_unlimited",
+   "physical_case": "plugs_n100_L15_d25_s1",
+   "policy": "unlimited",
+   "n_tasks": 100,
+   "nondepot_plugs": null,
+   "depot_plugs": null,
+   "lp": 6371.1751275510205,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 6382.150000000018,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 6430.712500000001,
+    "status": "optimal",
+    "cg_seconds": 145.9732559490949,
+    "mip_seconds": 1417.326117445249,
+    "restricted_pool_bound": 6430.712500000001,
+    "pool_columns": 919,
+    "gap_pct": 0.7551651547162576,
+    "internal_pool_gap_pct": 0.0,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368166",
+    "peak_rss_gb": 0.184188928,
+    "composition": {
+     "trucks": 19,
+     "batteries": 1,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 6382.1625,
+    "U_found_seconds": 461.774376377929,
+    "status": "time_limit",
+    "bound": 6382.150000000018,
+    "root_lp_solved_seconds": 208.62435100693256,
+    "root_finished": true,
+    "gap_pct": 0.0001958583784499016,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368150",
+    "peak_rss_gb": 1.533288448,
+    "composition": {
+     "trucks": 19,
+     "batteries": 0,
+     "single_task_routes": 0,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 19,
+     "batteries": 0,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "best_U": 6382.1625,
+   "old": {
+    "cg_U": 6430.712500000001,
+    "cg_status": "optimal",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 6382.1625,
+    "direct_status": "time_limit",
+    "direct_bound": 6382.150000000001
+   },
+   "best_U_change_vs_unlimited_pct": 0.0,
+   "optimum_change_interval_pct": [
+    -0.00019585837844893206,
+    0.00019585876205319153
+   ],
+   "cg_vs_cg_change_pct": 0.0,
+   "proven": false
+  },
+  {
+   "block": 4,
+   "case": "plugs_n100_L15_d25_s1_loose",
+   "physical_case": "plugs_n100_L15_d25_s1",
+   "policy": "loose",
+   "n_tasks": 100,
+   "nondepot_plugs": 2,
+   "depot_plugs": 5,
+   "lp": 6371.1751275510205,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 6382.1500000000015,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 6451.200000000001,
+    "status": "optimal",
+    "cg_seconds": 136.3539010528475,
+    "mip_seconds": 1419.8091781348921,
+    "restricted_pool_bound": 6451.200000000001,
+    "pool_columns": 869,
+    "gap_pct": 1.0703435019841157,
+    "internal_pool_gap_pct": 0.0,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368167",
+    "peak_rss_gb": 0.19695616,
+    "composition": {
+     "trucks": 18,
+     "batteries": 2,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 6382.3124999999345,
+    "U_found_seconds": 933.3312595752068,
+    "status": "time_limit",
+    "bound": 6382.1500000000015,
+    "root_lp_solved_seconds": 287.3429253939539,
+    "root_finished": true,
+    "gap_pct": 0.00254609908137627,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368151",
+    "peak_rss_gb": 1.702322176,
+    "composition": {
+     "trucks": 19,
+     "batteries": 0,
+     "single_task_routes": 0,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 19,
+     "batteries": 0,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "best_U": 6382.3124999999345,
+   "old": {
+    "cg_U": 6451.200000000001,
+    "cg_status": "optimal",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 6382.312499202874,
+    "direct_status": "time_limit",
+    "direct_bound": 6382.1500000000015
+   },
+   "best_U_change_vs_unlimited_pct": 0.0023503005436520397,
+   "optimum_change_interval_pct": [
+    -0.00019585837870428335,
+    0.0025461639089785493
+   ],
+   "cg_vs_cg_change_pct": 0.31858833682893994,
+   "proven": false
+  },
+  {
+   "block": 5,
+   "case": "plugs_n100_L15_d25_s1_tight",
+   "physical_case": "plugs_n100_L15_d25_s1",
+   "policy": "tight",
+   "n_tasks": 100,
+   "nondepot_plugs": 1,
+   "depot_plugs": 3,
+   "lp": 6386.722124542126,
+   "lp_increase_vs_unlimited_pct": 0.24402087024535357,
+   "LB_star": 6388.153892857143,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 7487.775,
+    "status": "time_limit",
+    "cg_seconds": 269.1252748533152,
+    "mip_seconds": 1800.0045015118085,
+    "restricted_pool_bound": 6412.40297957546,
+    "pool_columns": 1509,
+    "gap_pct": 14.685552212010336,
+    "internal_pool_gap_pct": 14.361703181846934,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368168",
+    "peak_rss_gb": 0.232370176,
+    "composition": {
+     "trucks": 27,
+     "batteries": 4,
+     "single_task_routes": 12,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 6413.0875,
+    "U_found_seconds": 1706.9467165628448,
+    "status": "time_limit",
+    "bound": 6388.153892857143,
+    "root_lp_solved_seconds": 291.0591952120885,
+    "root_finished": true,
+    "gap_pct": 0.3887925611939179,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "367995",
+    "peak_rss_gb": 1.8448384,
+    "composition": {
+     "trucks": 18,
+     "batteries": 1,
+     "single_task_routes": 0,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 18,
+     "batteries": 1,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "best_U": 6413.0875,
+   "old": {
+    "cg_U": 7487.775,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 6413.0875,
+    "direct_status": "time_limit",
+    "direct_bound": 6398.628107195614
+   },
+   "best_U_change_vs_unlimited_pct": 0.48455362896195897,
+   "optimum_change_interval_pct": [
+    0.09387715930364582,
+    0.48475043676474705
+   ],
+   "cg_vs_cg_change_pct": 16.43771977055417,
+   "proven": false
+  },
+  {
+   "block": 6,
+   "case": "plugs_n100_L15_d12p5_s0_unlimited",
+   "physical_case": "plugs_n100_L15_d12p5_s0",
+   "policy": "unlimited",
+   "n_tasks": 100,
+   "nondepot_plugs": null,
+   "depot_plugs": null,
+   "lp": 6098.833035714289,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 6098.833035714288,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 6178.74375,
+    "status": "optimal",
+    "cg_seconds": 154.22449986170977,
+    "mip_seconds": 259.6730468161404,
+    "restricted_pool_bound": 6178.74375,
+    "pool_columns": 725,
+    "gap_pct": 1.293316530333726,
+    "internal_pool_gap_pct": 0.0,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368169",
+    "peak_rss_gb": 0.15464448,
+    "composition": {
+     "trucks": 17,
+     "batteries": 4,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 18237.475,
+    "U_found_seconds": 13.859504402149469,
+    "status": "time_limit",
+    "bound": 6098.833035714288,
+    "root_lp_solved_seconds": 1456.7259490601718,
+    "root_finished": true,
+    "gap_pct": 66.55878603965577,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368152",
+    "peak_rss_gb": 4.546330624,
+    "composition": {
+     "trucks": 100,
+     "batteries": 0,
+     "single_task_routes": 100,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 100,
+     "batteries": 0,
+     "single_task_routes": 100,
+     "tasks": 100
+    }
+   },
+   "best_U": 6178.74375,
+   "old": {
+    "cg_U": 6178.74375,
+    "cg_status": "optimal",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 18237.475,
+    "direct_status": "time_limit",
+    "direct_bound": 6098.833035714288
+   },
+   "best_U_change_vs_unlimited_pct": 0.0,
+   "optimum_change_interval_pct": [
+    -1.2933165303337213,
+    1.310262370157722
+   ],
+   "cg_vs_cg_change_pct": 0.0,
+   "proven": false
+  },
+  {
+   "block": 7,
+   "case": "plugs_n100_L15_d12p5_s0_loose",
+   "physical_case": "plugs_n100_L15_d12p5_s0",
+   "policy": "loose",
+   "n_tasks": 100,
+   "nondepot_plugs": 2,
+   "depot_plugs": 5,
+   "lp": 6098.833035714286,
+   "lp_increase_vs_unlimited_pct": -4.473780622196075e-14,
+   "LB_star": 6098.832935714286,
+   "LB_star_source": "CG",
+   "cg": {
+    "U": 6407.924999999999,
+    "status": "time_limit",
+    "cg_seconds": 159.5601996378973,
+    "mip_seconds": 1800.0030256020837,
+    "restricted_pool_bound": 6249.438473917304,
+    "pool_columns": 740,
+    "gap_pct": 4.823590542737526,
+    "internal_pool_gap_pct": 2.4732893422238167,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368170",
+    "peak_rss_gb": 0.226185216,
+    "composition": {
+     "trucks": 19,
+     "batteries": 4,
+     "single_task_routes": 3,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": null,
+    "root_lp_solved_seconds": null,
+    "root_finished": false,
+    "gap_pct": null,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368153",
+    "peak_rss_gb": 4.805435392,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 6407.924999999999,
+   "old": {
+    "cg_U": 6407.924999999999,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 6098.833035714287
+   },
+   "best_U_change_vs_unlimited_pct": 3.7091884576051504,
+   "optimum_change_interval_pct": [
+    -1.293318148785727,
+    5.068050928361112
+   ],
+   "cg_vs_cg_change_pct": 3.7091884576051504,
+   "proven": false
+  },
+  {
+   "block": 8,
+   "case": "plugs_n100_L15_d12p5_s0_tight",
+   "physical_case": "plugs_n100_L15_d12p5_s0",
+   "policy": "tight",
+   "n_tasks": 100,
+   "nondepot_plugs": 1,
+   "depot_plugs": 3,
+   "lp": 6114.904464285716,
+   "lp_increase_vs_unlimited_pct": 0.2635164543333865,
+   "LB_star": 6114.904364285714,
+   "LB_star_source": "CG",
+   "cg": {
+    "U": 7905.9749999999985,
+    "status": "time_limit",
+    "cg_seconds": 200.79359038872644,
+    "mip_seconds": 1800.0040530776605,
+    "restricted_pool_bound": 6289.250213367984,
+    "pool_columns": 880,
+    "gap_pct": 22.654645830707594,
+    "internal_pool_gap_pct": 20.449404237074052,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368171",
+    "peak_rss_gb": 0.243224576,
+    "composition": {
+     "trucks": 29,
+     "batteries": 7,
+     "single_task_routes": 15,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": null,
+    "root_lp_solved_seconds": null,
+    "root_finished": false,
+    "gap_pct": null,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368154",
+    "peak_rss_gb": 4.774326272,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 7905.9749999999985,
+   "old": {
+    "cg_U": 7991.0,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 6114.904464285717
+   },
+   "best_U_change_vs_unlimited_pct": 27.954408207979164,
+   "optimum_change_interval_pct": [
+    -1.03320979631637,
+    29.63094666968631
+   ],
+   "cg_vs_cg_change_pct": 27.954408207979164,
+   "proven": false
+  },
+  {
+   "block": 9,
+   "case": "plugs_n100_L15_d12p5_s1_unlimited",
+   "physical_case": "plugs_n100_L15_d12p5_s1",
+   "policy": "unlimited",
+   "n_tasks": 100,
+   "nondepot_plugs": null,
+   "depot_plugs": null,
+   "lp": 6089.054464285714,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 6089.054464285716,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 6156.037499999997,
+    "status": "optimal",
+    "cg_seconds": 133.05617499677464,
+    "mip_seconds": 51.55323567986488,
+    "restricted_pool_bound": 6156.037499999997,
+    "pool_columns": 662,
+    "gap_pct": 1.0880868694234074,
+    "internal_pool_gap_pct": 0.0,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368172",
+    "peak_rss_gb": 0.139210752,
+    "composition": {
+     "trucks": 20,
+     "batteries": 3,
+     "single_task_routes": 0,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": 17242.3125,
+    "U_found_seconds": 13.479533683974296,
+    "status": "time_limit",
+    "bound": 6089.054464285716,
+    "root_lp_solved_seconds": 1320.2608576570638,
+    "root_finished": true,
+    "gap_pct": 64.68539551011087,
+    "host": "samitha-compute-01.cee.cornell.edu",
+    "slurm_job": "368155",
+    "peak_rss_gb": 4.474392576,
+    "composition": {
+     "trucks": 100,
+     "batteries": 0,
+     "single_task_routes": 100,
+     "tasks": 100
+    },
+    "final_composition": {
+     "trucks": 100,
+     "batteries": 0,
+     "single_task_routes": 100,
+     "tasks": 100
+    }
+   },
+   "best_U": 6156.037499999997,
+   "old": {
+    "cg_U": 6156.037499999997,
+    "cg_status": "optimal",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 6114.86875,
+    "direct_status": "time_limit",
+    "direct_bound": 6089.054464285716
+   },
+   "best_U_change_vs_unlimited_pct": 0.0,
+   "optimum_change_interval_pct": [
+    -1.0880868694234103,
+    1.100056439093433
+   ],
+   "cg_vs_cg_change_pct": 0.0,
+   "proven": false
+  },
+  {
+   "block": 10,
+   "case": "plugs_n100_L15_d12p5_s1_loose",
+   "physical_case": "plugs_n100_L15_d12p5_s1",
+   "policy": "loose",
+   "n_tasks": 100,
+   "nondepot_plugs": 2,
+   "depot_plugs": 5,
+   "lp": 6089.054464285716,
+   "lp_increase_vs_unlimited_pct": 2.987310122145928e-14,
+   "LB_star": 6089.054464285717,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 6426.618750000002,
+    "status": "time_limit",
+    "cg_seconds": 137.138145592995,
+    "mip_seconds": 1800.0030167978257,
+    "restricted_pool_bound": 6280.955994983657,
+    "pool_columns": 670,
+    "gap_pct": 5.252595475875794,
+    "internal_pool_gap_pct": 2.2665535436709336,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368173",
+    "peak_rss_gb": 0.272031744,
+    "composition": {
+     "trucks": 23,
+     "batteries": 4,
+     "single_task_routes": 3,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": 6089.054464285717,
+    "root_lp_solved_seconds": 1511.4222853919491,
+    "root_finished": true,
+    "gap_pct": null,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "368156",
+    "peak_rss_gb": 4.704415744,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 6426.618750000002,
+   "old": {
+    "cg_U": 6426.618750000002,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 6089.054464285717
+   },
+   "best_U_change_vs_unlimited_pct": 4.395380145101546,
+   "optimum_change_interval_pct": [
+    -1.088086869423388,
+    5.543788246503811
+   ],
+   "cg_vs_cg_change_pct": 4.395380145101546,
+   "proven": false
+  },
+  {
+   "block": 11,
+   "case": "plugs_n100_L15_d12p5_s1_tight",
+   "physical_case": "plugs_n100_L15_d12p5_s1",
+   "policy": "tight",
+   "n_tasks": 100,
+   "nondepot_plugs": 1,
+   "depot_plugs": 3,
+   "lp": 6156.041964285711,
+   "lp_increase_vs_unlimited_pct": 1.100129755660767,
+   "LB_star": 6156.041964285717,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 7896.18125,
+    "status": "time_limit",
+    "cg_seconds": 164.89759065723047,
+    "mip_seconds": 1800.0031817723066,
+    "restricted_pool_bound": 6369.422740836178,
+    "pool_columns": 778,
+    "gap_pct": 22.03773229894239,
+    "internal_pool_gap_pct": 19.33540354286855,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368174",
+    "peak_rss_gb": 0.278450176,
+    "composition": {
+     "trucks": 32,
+     "batteries": 8,
+     "single_task_routes": 17,
+     "tasks": 100
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": 6156.041964285717,
+    "root_lp_solved_seconds": 1542.4543276596814,
+    "root_finished": true,
+    "gap_pct": null,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "368157",
+    "peak_rss_gb": 4.781408256,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 7896.18125,
+   "old": {
+    "cg_U": 7896.18125,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 6156.041964285717
+   },
+   "best_U_change_vs_unlimited_pct": 28.267270139273904,
+   "optimum_change_interval_pct": [
+    7.251881946057637e-05,
+    29.678282503690355
+   ],
+   "cg_vs_cg_change_pct": 28.267270139273904,
+   "proven": false
+  },
+  {
+   "block": 12,
+   "case": "plugs_n200_L30_d25_s0_unlimited",
+   "physical_case": "plugs_n200_L30_d25_s0",
+   "policy": "unlimited",
+   "n_tasks": 200,
+   "nondepot_plugs": null,
+   "depot_plugs": null,
+   "lp": 13015.66919642857,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 13015.669196428573,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 13862.4375,
+    "status": "time_limit",
+    "cg_seconds": 531.3820712990128,
+    "mip_seconds": 1800.0034104180522,
+    "restricted_pool_bound": 13052.56029437788,
+    "pool_columns": 1381,
+    "gap_pct": 6.108365167175161,
+    "internal_pool_gap_pct": 5.842242431189468,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368175",
+    "peak_rss_gb": 0.376958976,
+    "composition": {
+     "trucks": 40,
+     "batteries": 2,
+     "single_task_routes": 10,
+     "tasks": 200
+    }
+   },
+   "direct": {
+    "U": 32424.725000000006,
+    "U_found_seconds": 11.162795519456267,
+    "status": "time_limit",
+    "bound": 13015.669196428573,
+    "root_lp_solved_seconds": 914.7835932513699,
+    "root_finished": true,
+    "gap_pct": 59.85881392539623,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "368158",
+    "peak_rss_gb": 4.307226624,
+    "composition": {
+     "trucks": 200,
+     "batteries": 0,
+     "single_task_routes": 200,
+     "tasks": 200
+    },
+    "final_composition": {
+     "trucks": 200,
+     "batteries": 0,
+     "single_task_routes": 200,
+     "tasks": 200
+    }
+   },
+   "best_U": 13862.4375,
+   "old": {
+    "cg_U": 14031.999999999998,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 32424.725000000006,
+    "direct_status": "time_limit",
+    "direct_bound": 13015.669196428573
+   },
+   "best_U_change_vs_unlimited_pct": 0.0,
+   "optimum_change_interval_pct": [
+    -6.108365167175156,
+    6.50576079333498
+   ],
+   "cg_vs_cg_change_pct": 0.0,
+   "proven": false
+  },
+  {
+   "block": 13,
+   "case": "plugs_n200_L30_d25_s0_loose",
+   "physical_case": "plugs_n200_L30_d25_s0",
+   "policy": "loose",
+   "n_tasks": 200,
+   "nondepot_plugs": 2,
+   "depot_plugs": 10,
+   "lp": 13015.669196428575,
+   "lp_increase_vs_unlimited_pct": 4.192614400598728e-14,
+   "LB_star": 13015.669196428571,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 14695.2375,
+    "status": "time_limit",
+    "cg_seconds": 517.348614430055,
+    "mip_seconds": 1800.0033794622868,
+    "restricted_pool_bound": 13069.008656294898,
+    "pool_columns": 1312,
+    "gap_pct": 11.429337590300452,
+    "internal_pool_gap_pct": 11.066366526604972,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368176",
+    "peak_rss_gb": 0.355192832,
+    "composition": {
+     "trucks": 45,
+     "batteries": 5,
+     "single_task_routes": 15,
+     "tasks": 200
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": 13015.669196428571,
+    "root_lp_solved_seconds": 1184.3434073170647,
+    "root_finished": true,
+    "gap_pct": null,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "368159",
+    "peak_rss_gb": 4.500242432,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 14695.2375,
+   "old": {
+    "cg_U": 14695.2375,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 13015.669196428571
+   },
+   "best_U_change_vs_unlimited_pct": 6.007601477012958,
+   "optimum_change_interval_pct": [
+    -6.108365167175178,
+    12.904202451859259
+   ],
+   "cg_vs_cg_change_pct": 6.007601477012958,
+   "proven": false
+  },
+  {
+   "block": 14,
+   "case": "plugs_n200_L30_d25_s0_tight",
+   "physical_case": "plugs_n200_L30_d25_s0",
+   "policy": "tight",
+   "n_tasks": 200,
+   "nondepot_plugs": 1,
+   "depot_plugs": 5,
+   "lp": 13015.669196428571,
+   "lp_increase_vs_unlimited_pct": 1.3975381335329094e-14,
+   "LB_star": 13015.669196428571,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 17001.824999999997,
+    "status": "time_limit",
+    "cg_seconds": 633.1897017741576,
+    "mip_seconds": 1800.0040813591331,
+    "restricted_pool_bound": 13054.924954333868,
+    "pool_columns": 1575,
+    "gap_pct": 23.445458376212123,
+    "internal_pool_gap_pct": 23.214566940114544,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368177",
+    "peak_rss_gb": 0.3024896,
+    "composition": {
+     "trucks": 65,
+     "batteries": 1,
+     "single_task_routes": 37,
+     "tasks": 200
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": 13015.669196428571,
+    "root_lp_solved_seconds": 1184.7841623490676,
+    "root_finished": true,
+    "gap_pct": null,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "368160",
+    "peak_rss_gb": 4.526096384,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 17001.824999999997,
+   "old": {
+    "cg_U": null,
+    "cg_status": "time_limit",
+    "cg_status_cg": "cg_budget_exhausted",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 13015.669196428571
+   },
+   "best_U_change_vs_unlimited_pct": 22.64672067953415,
+   "optimum_change_interval_pct": [
+    -6.108365167175178,
+    30.625822947814353
+   ],
+   "cg_vs_cg_change_pct": 22.64672067953415,
+   "proven": false
+  },
+  {
+   "block": 15,
+   "case": "plugs_n200_L30_d25_s1_unlimited",
+   "physical_case": "plugs_n200_L30_d25_s1",
+   "policy": "unlimited",
+   "n_tasks": 200,
+   "nondepot_plugs": null,
+   "depot_plugs": null,
+   "lp": 12662.437499999998,
+   "lp_increase_vs_unlimited_pct": 0.0,
+   "LB_star": 12662.4375,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 14006.575,
+    "status": "time_limit",
+    "cg_seconds": 508.9958555609919,
+    "mip_seconds": 1800.0031048660167,
+    "restricted_pool_bound": 12720.197934325528,
+    "pool_columns": 1326,
+    "gap_pct": 9.596475226813125,
+    "internal_pool_gap_pct": 9.18409436764143,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368178",
+    "peak_rss_gb": 0.36337664,
+    "composition": {
+     "trucks": 41,
+     "batteries": 2,
+     "single_task_routes": 12,
+     "tasks": 200
+    }
+   },
+   "direct": {
+    "U": 12662.437499874519,
+    "U_found_seconds": 1251.2286294419318,
+    "status": "optimal",
+    "bound": 12662.4375,
+    "root_lp_solved_seconds": 921.6580511629581,
+    "root_finished": true,
+    "gap_pct": -9.90971643614832e-10,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "368161",
+    "peak_rss_gb": 4.315922432,
+    "composition": {
+     "trucks": 31,
+     "batteries": 0,
+     "single_task_routes": 0,
+     "tasks": 200
+    },
+    "final_composition": {
+     "trucks": 31,
+     "batteries": 0,
+     "single_task_routes": 0,
+     "tasks": 200
+    }
+   },
+   "best_U": 12662.437499874519,
+   "old": {
+    "cg_U": 14006.575,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": 12662.4375,
+    "direct_status": "optimal",
+    "direct_bound": 12662.4375
+   },
+   "best_U_change_vs_unlimited_pct": 0.0,
+   "optimum_change_interval_pct": [
+    9.909628673199222e-10,
+    -9.909739695501685e-10
+   ],
+   "cg_vs_cg_change_pct": 0.0,
+   "proven": true
+  },
+  {
+   "block": 16,
+   "case": "plugs_n200_L30_d25_s1_loose",
+   "physical_case": "plugs_n200_L30_d25_s1",
+   "policy": "loose",
+   "n_tasks": 200,
+   "nondepot_plugs": 2,
+   "depot_plugs": 10,
+   "lp": 12662.437500000004,
+   "lp_increase_vs_unlimited_pct": 4.309571684470364e-14,
+   "LB_star": 12662.4375,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 14330.349999999999,
+    "status": "time_limit",
+    "cg_seconds": 475.4645230011083,
+    "mip_seconds": 1800.00410675304,
+    "restricted_pool_bound": 12723.53634120995,
+    "pool_columns": 1253,
+    "gap_pct": 11.639021377705351,
+    "internal_pool_gap_pct": 11.212661650204275,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "368179",
+    "peak_rss_gb": 0.336592896,
+    "composition": {
+     "trucks": 47,
+     "batteries": 1,
+     "single_task_routes": 18,
+     "tasks": 200
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": 12662.4375,
+    "root_lp_solved_seconds": 1379.2706389157102,
+    "root_finished": true,
+    "gap_pct": null,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "368162",
+    "peak_rss_gb": 4.54483968,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 14330.349999999999,
+   "old": {
+    "cg_U": 14330.349999999999,
+    "cg_status": "time_limit",
+    "cg_status_cg": "candidate_priced_out",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 12662.4375
+   },
+   "best_U_change_vs_unlimited_pct": 13.17212819523894,
+   "optimum_change_interval_pct": [
+    9.909628673199222e-10,
+    13.172128194117438
+   ],
+   "cg_vs_cg_change_pct": 2.311592948311758,
+   "proven": false
+  },
+  {
+   "block": 17,
+   "case": "plugs_n200_L30_d25_s1_tight",
+   "physical_case": "plugs_n200_L30_d25_s1",
+   "policy": "tight",
+   "n_tasks": 200,
+   "nondepot_plugs": 1,
+   "depot_plugs": 5,
+   "lp": 12663.858928571424,
+   "lp_increase_vs_unlimited_pct": 0.011225552516457253,
+   "LB_star": 12663.858928571432,
+   "LB_star_source": "direct",
+   "cg": {
+    "U": 17814.9375,
+    "status": "time_limit",
+    "cg_seconds": 627.0577699318528,
+    "mip_seconds": 1800.003901163116,
+    "restricted_pool_bound": 12751.89156600182,
+    "pool_columns": 1552,
+    "gap_pct": 28.91437913508576,
+    "internal_pool_gap_pct": 28.42022844030848,
+    "host": "cdses-compute-01.orie.cornell.edu",
+    "slurm_job": "367990",
+    "peak_rss_gb": 0.29673472,
+    "composition": {
+     "trucks": 70,
+     "batteries": 4,
+     "single_task_routes": 49,
+     "tasks": 200
+    }
+   },
+   "direct": {
+    "U": null,
+    "U_found_seconds": null,
+    "status": "time_limit",
+    "bound": 12663.858928571432,
+    "root_lp_solved_seconds": 1240.0670231729746,
+    "root_finished": true,
+    "gap_pct": null,
+    "host": "portal-compute-04.cs.cornell.edu",
+    "slurm_job": "367996",
+    "peak_rss_gb": 4.578557952,
+    "composition": null,
+    "final_composition": null
+   },
+   "best_U": 17814.9375,
+   "old": {
+    "cg_U": null,
+    "cg_status": "time_limit",
+    "cg_status_cg": "cg_budget_exhausted",
+    "direct_U": null,
+    "direct_status": "time_limit",
+    "direct_bound": 12663.85892857143
+   },
+   "best_U_change_vs_unlimited_pct": 40.69121762833214,
+   "optimum_change_interval_pct": [
+    0.011225553507587804,
+    40.69121762693795
+   ],
+   "cg_vs_cg_change_pct": 27.189819781067094,
+   "proven": false
+  }
+ ]
+}

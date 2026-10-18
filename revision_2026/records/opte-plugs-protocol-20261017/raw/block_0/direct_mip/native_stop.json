@@ -1,0 +1,300 @@
+{
+  "method": "plug_direct_full_family_mip_traced",
+  "family": "DP_paths_union_fixed_original_singleton_witnesses_with_connector_rows",
+  "budget_seconds": 1800.0,
+  "snapshot_seconds": 1800.0,
+  "soft_mem_limit_gb": 3.0,
+  "threads": 1,
+  "seed": 0,
+  "solver_method": 2,
+  "mip_gap_tolerance": 1e-06,
+  "mip_gap_absolute_tolerance": 1e-10,
+  "feasibility_tolerance": 1e-08,
+  "optimality_tolerance": 1e-08,
+  "integer_feasibility_tolerance": 1e-08,
+  "cold_solve": true,
+  "external_incumbent_or_basis_start": false,
+  "solver_version": [
+    12,
+    0,
+    3
+  ],
+  "graph_seconds": 1.3599489880725741,
+  "matrix_build_seconds": 2.0784495938569307,
+  "graph_nodes": 29600,
+  "graph_arcs": 719354,
+  "unpruned_arcs": 1123668,
+  "seed_count": 100,
+  "finite_plug_rows": 0,
+  "plug_row_start": 193,
+  "objective": 6315.1875,
+  "bound": 6315.1875,
+  "gap": 0.0,
+  "status": "optimal",
+  "native_status": 2,
+  "solution_count": 8,
+  "incumbent_validated": false,
+  "validation": null,
+  "matrix_primal_check": null,
+  "trace": [
+    {
+      "elapsed_seconds": 13.063384525943547,
+      "incumbent": 17907.35,
+      "bound": 0.0,
+      "nodes": 0.0,
+      "solutions": 1,
+      "work": 6.85864305882973
+    },
+    {
+      "elapsed_seconds": 195.77368027204648,
+      "incumbent": 17907.35,
+      "bound": 6289.4732142857165,
+      "nodes": 0.0,
+      "solutions": 1,
+      "work": 113.11245592530034
+    },
+    {
+      "elapsed_seconds": 342.8324303710833,
+      "incumbent": 17907.35,
+      "bound": 6289.4732142857165,
+      "nodes": 0.0,
+      "solutions": 1,
+      "work": 196.1731894742561
+    },
+    {
+      "elapsed_seconds": 469.69591430714354,
+      "incumbent": 6315.2875,
+      "bound": 6289.4732142857165,
+      "nodes": 0.0,
+      "solutions": 3,
+      "work": 315.6502069928336
+    },
+    {
+      "elapsed_seconds": 531.5665082163177,
+      "incumbent": 6315.2875,
+      "bound": 6289.4732142857165,
+      "nodes": 0.0,
+      "solutions": 3,
+      "work": 355.5903965415956
+    },
+    {
+      "elapsed_seconds": 657.2191435731947,
+      "incumbent": 6315.2875,
+      "bound": 6289.473214285717,
+      "nodes": 0.0,
+      "solutions": 3,
+      "work": 468.6453119033775
+    },
+    {
+      "elapsed_seconds": 682.3152866531163,
+      "incumbent": 6315.2875,
+      "bound": 6289.473214285717,
+      "nodes": 0.0,
+      "solutions": 3,
+      "work": 495.4277610374119
+    },
+    {
+      "elapsed_seconds": 706.3163080490194,
+      "incumbent": 6315.2875,
+      "bound": 6302.3303571428605,
+      "nodes": 0.0,
+      "solutions": 3,
+      "work": 517.3409370323722
+    },
+    {
+      "elapsed_seconds": 786.4561964580789,
+      "incumbent": 6315.1875,
+      "bound": 6302.3303571428605,
+      "nodes": 0.0,
+      "solutions": 8,
+      "work": 629.4547267017006
+    }
+  ],
+  "incumbent_events": [
+    {
+      "elapsed_seconds": 4.422715968918055,
+      "objective": 17907.35,
+      "bound": null,
+      "work": 0.045094701,
+      "vector_index": 0
+    },
+    {
+      "elapsed_seconds": 455.1058121533133,
+      "objective": 6315.3,
+      "bound": 6289.4732142857165,
+      "work": 309.7202245369671,
+      "vector_index": 1
+    },
+    {
+      "elapsed_seconds": 455.681101186201,
+      "objective": 6315.2875,
+      "bound": 6289.4732142857165,
+      "work": 310.0024718387713,
+      "vector_index": 2
+    },
+    {
+      "elapsed_seconds": 725.7807821719907,
+      "objective": 6315.250000000001,
+      "bound": 6302.3303571428605,
+      "work": 540.4632011198278,
+      "vector_index": 3
+    },
+    {
+      "elapsed_seconds": 726.4250391433015,
+      "objective": 6315.225,
+      "bound": 6302.3303571428605,
+      "work": 541.0426727773413,
+      "vector_index": 4
+    },
+    {
+      "elapsed_seconds": 756.2844618819654,
+      "objective": 6315.2125,
+      "bound": 6302.3303571428605,
+      "work": 583.6279985300948,
+      "vector_index": 5
+    },
+    {
+      "elapsed_seconds": 772.2384541560896,
+      "objective": 6315.200000000001,
+      "bound": 6302.3303571428605,
+      "work": 608.3793221994412,
+      "vector_index": 6
+    },
+    {
+      "elapsed_seconds": 783.9368793061003,
+      "objective": 6315.1875,
+      "bound": 6302.3303571428605,
+      "work": 626.2127497746903,
+      "vector_index": 7
+    }
+  ],
+  "bound_observations": [
+    {
+      "elapsed_seconds": 13.063384525943547,
+      "bound": 0.0,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 195.77368027204648,
+      "bound": 6289.4732142857165,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 342.8324303710833,
+      "bound": 6289.4732142857165,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 455.1058121533133,
+      "bound": 6289.4732142857165,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 455.681101186201,
+      "bound": 6289.4732142857165,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 469.69591430714354,
+      "bound": 6289.4732142857165,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 470.8391608479433,
+      "bound": 6289.4732142857165,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 476.6307730153203,
+      "bound": 6289.4732142857165,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 531.5665082163177,
+      "bound": 6289.4732142857165,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 657.2191435731947,
+      "bound": 6289.473214285717,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 682.3152866531163,
+      "bound": 6289.473214285717,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 706.3163080490194,
+      "bound": 6302.3303571428605,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 725.7807821719907,
+      "bound": 6302.3303571428605,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 726.4250391433015,
+      "bound": 6302.3303571428605,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 756.2844618819654,
+      "bound": 6302.3303571428605,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 772.2384541560896,
+      "bound": 6302.3303571428605,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 783.9368793061003,
+      "bound": 6302.3303571428605,
+      "source": "MIPSOL"
+    },
+    {
+      "elapsed_seconds": 786.4561964580789,
+      "bound": 6302.3303571428605,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 788.7454781471752,
+      "bound": 6315.1875,
+      "source": "MIP"
+    },
+    {
+      "elapsed_seconds": 788.7891735322773,
+      "bound": 6315.1875,
+      "source": "final_ObjBound"
+    }
+  ],
+  "gurobi_build_seconds": 0.8837201111018658,
+  "model_build_seconds": 2.9621697049587965,
+  "variables": 719649,
+  "constraints": 29942,
+  "nonzeros": 1791001,
+  "integer_variables": 719456,
+  "binary_variables": 0,
+  "solver_budget_seconds": 1795.6778813069686,
+  "solve_end_to_end_seconds": 788.7891735322773,
+  "solve_seconds": 784.4668381153606,
+  "solver_runtime_seconds": 784.4665160179138,
+  "node_count": 1.0,
+  "iterations": 487012.0,
+  "barrier_iterations": 92,
+  "process_peak_rss_at_stop_bytes": 1551417344,
+  "continuous_native_bound": 6315.1875,
+  "solver_peak_memory_gb": 1.216088536,
+  "solver_work": 631.4642274270502,
+  "native_constraint_violation": 0.0,
+  "native_bound_violation": 0.0,
+  "native_integrality_violation": 0.0,
+  "root_lp_solved_seconds": 195.7638448830694,
+  "root_relaxation_log_line": "Root relaxation: objective 6.289473e+03, 94272 iterations, 182.64 seconds (106.23 work units)",
+  "root_lp_objective_log": 6289.473,
+  "root_lp_work": 6.88016049482973,
+  "root_node_bound": 6289.4732142857165,
+  "root_node_seconds": 469.69902986008674
+}
