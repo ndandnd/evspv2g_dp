@@ -4,7 +4,7 @@ Truck-route pricing by a label-setting dynamic program (the methodological cente
 Time-space-state-of-charge DAG; state = (time t, location loc, SoC level s). Forward
 pass is exact (DAG handles the negative arc costs from coverage rewards -alpha and
 discharge rewards that Dijkstra could not). Dense numpy with vectorized charge/discharge
-relaxations; backward reconstruction without stored parents.
+relaxations; exact-label backward reconstruction without stored parents.
 
 Arcs out of (t, loc, s), t < T:
   wait      : (t+1, loc, s)                    cost 0
@@ -19,6 +19,8 @@ from __future__ import annotations
 import numpy as np
 from instance import Instance
 from master import Column
+from pricing_contract import (checked_prepared, prepare_pricing, grid_index,
+                              validate_duals, check_reconstructed_cost)
 
 INF = np.inf
 
@@ -26,7 +28,8 @@ INF = np.inf
 def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                    step: float = None, tol: float = 1e-6,
                    allow_charge: bool = True, allow_discharge: bool = True,
-                   ice: bool = False, nu: np.ndarray = None, soc_mode: str = "cyclic"):
+                   ice: bool = False, nu: np.ndarray = None, soc_mode: str = "cyclic",
+                   *, prepared=None, use_cache: bool = True):
     """Mode flags:
        ice=True            -> ICE truck: no grid coupling, traction is fuel (energy
                               constraints disabled), pure time-feasible coverage (VSP).
@@ -37,82 +40,68 @@ def price_truck_dp(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                               returned (full-recharge s0 = sT = G is the special case
                               of the single top level).
     """
+    prepared = checked_prepared(inst, step, ice, prepared, use_cache)
+    alpha, mu, nu = validate_duals(inst, alpha, mu, nu)
+    if not np.isfinite(tol) or tol < 0:
+        raise ValueError("pricing tol must be finite and nonnegative")
+    if soc_mode not in ("cyclic", "free", "periodic") and not soc_mode.startswith("pin"):
+        raise ValueError(f"unknown SoC boundary mode: {soc_mode}")
     if soc_mode == "periodic":
-        nL = int(round(inst.G / (step or getattr(inst, "soc_step", 5.0)))) + 1
+        nL = prepared.nlevels
         out = []
         for s0 in range(nL):
             out += _price_truck_dp_core(inst, alpha, mu, step=step, tol=tol,
                                         allow_charge=allow_charge,
                                         allow_discharge=allow_discharge, ice=ice,
-                                        nu=nu, soc_mode="periodic", s0_idx=s0)
+                                        nu=nu, soc_mode="periodic", s0_idx=s0, prepared=prepared)
         return sorted(out, key=lambda cr: cr[1])
     if soc_mode.startswith("pin"):
         # pinned steady state s0 = sT = c for a FIXED level c (model units in
         # the mode string, e.g. "pin3.5"): one core sweep, i.e. the single-level
         # special case of the periodic loop above (cheap boundary comparison)
-        st = step or getattr(inst, "soc_step", 5.0)
+        st = prepared.step
         kwh = float(soc_mode[3:])
-        s0 = int(round(kwh / st))
-        if abs(s0 * st - kwh) > 1e-6 or not (0 <= kwh <= inst.G):
+        s0 = grid_index(kwh, st, "pinned SoC")
+        if not (0 <= kwh <= inst.G):
             raise ValueError(f"pinned level {kwh} not on the {st} SoC grid")
         return _price_truck_dp_core(inst, alpha, mu, step=step, tol=tol,
                                     allow_charge=allow_charge,
                                     allow_discharge=allow_discharge, ice=ice,
-                                    nu=nu, soc_mode="periodic", s0_idx=s0)
+                                    nu=nu, soc_mode="periodic", s0_idx=s0, prepared=prepared)
     return _price_truck_dp_core(inst, alpha, mu, step=step, tol=tol,
                                 allow_charge=allow_charge,
                                 allow_discharge=allow_discharge, ice=ice,
-                                nu=nu, soc_mode=soc_mode, s0_idx=None)
+                                nu=nu, soc_mode=soc_mode, s0_idx=None, prepared=prepared)
 
 
 def _price_truck_dp_core(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
                          step: float = None, tol: float = 1e-6,
                          allow_charge: bool = True, allow_discharge: bool = True,
                          ice: bool = False, nu: np.ndarray = None,
-                         soc_mode: str = "cyclic", s0_idx: int = None):
-    if step is None:                                 # per-instance SoC lattice (default 5 kWh)
-        step = getattr(inst, "soc_step", 5.0)
-    T = inst.T
-    eta, rho, G = inst.eta, inst.rho, inst.G
-    eps = inst.eps_pen
-    epd = inst.energy_per_dist
-    origin = inst.depot
-    nLoc = inst.dist.shape[0]
-    nL = int(round(G / step)) + 1
+                         soc_mode: str = "cyclic", s0_idx: int = None, prepared=None):
+    # Public entry validates the identity once, including for periodic sweeps.
+    if prepared is None:
+        prepared = checked_prepared(inst, step, ice)
+        alpha, mu, nu = validate_duals(inst, alpha, mu, nu)
+    step, T, origin = prepared.step, prepared.T, prepared.origin
+    nLoc, nL = prepared.nloc, prepared.nlevels
     Gidx = nL - 1
-    if ice:                                          # ICE: energy non-binding, no charge/discharge
+    eta, eps = inst.eta, inst.eps_pen
+    if ice:
         allow_charge = allow_discharge = False
-        epd = 0.0
-    up = int(np.floor((1 - eta) * rho / step))      # max SoC-up levels per charge block
-    dn = int(np.floor(rho / step))                  # max SoC-down levels per discharge block
-
-    if nu is None:
-        nu = np.zeros(T)
-    slope_c = (mu + nu + eps) * step / (1 - eta)     # charging also pays the charger-capacity price nu
-    deg = getattr(inst, "deg_cost", 0.0)             # cycling degradation on discharge
-    slope_d = (eps + deg - mu) * step                # cost per -level when discharging, per block
-
-    # deadhead level shifts and time
-    dd_time = np.zeros((nLoc, nLoc), dtype=int)
-    de_idx = np.zeros((nLoc, nLoc), dtype=int)
-    for a_ in range(nLoc):
-        for b_ in range(nLoc):
-            dd_time[a_, b_] = int(round(inst.dist[a_, b_]))
-            de_idx[a_, b_] = int(round(inst.dist[a_, b_] * epd / step))
-    trips_at = {}
-    eps_idx = {}
-    for tr in inst.trips:
-        trips_at.setdefault((tr.start, tr.sloc), []).append(tr)
-        eps_idx[tr.idx] = 0 if ice else int(round(tr.energy / step))
+    up, dn = prepared.up, prepared.down
+    slope_c = (mu + nu + eps) * step / (1 - eta)
+    deg = getattr(inst, "deg_cost", 0.0)
+    slope_d = (eps + deg - mu) * step
 
     # extra binary dimension k in {0,1}: whether the route has covered >=1 trip.
-    # A deployed truck is only worthwhile if it covers a trip (pure arbitrage is
-    # dominated by a cheaper battery schedule), so the terminal requires k = 1.
+    # The admitted route family requires at least one covered trip. This is a
+    # model restriction, not a dominance proof when stationary storage is absent.
     si0 = Gidx if s0_idx is None else int(s0_idx)
     dp = np.full((T + 1, nLoc, nL, 2), INF)
     dp[0, origin, si0, 0] = 0.0
 
-    stations = list(getattr(inst, "charge_locs", None) or [origin])
+    stations = prepared.stations
 
     for t in range(T):
         cur = dp[t]                                  # (nLoc, nL, 2)
@@ -134,24 +123,19 @@ def _price_truck_dp_core(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
             src = cur[a_]
             if not np.isfinite(src).any():
                 continue
-            for b_ in range(nLoc):
-                if b_ == a_:
-                    continue
-                dd = dd_time[a_, b_]; sh = de_idx[a_, b_]
-                if dd <= 0 or t + dd > T or sh >= nL:
+            for b_, dd, sh in prepared.outgoing[a_]:
+                if t + dd > T:
                     continue
                 np.minimum(dp[t + dd, b_, :nL - sh], src[sh:], out=dp[t + dd, b_, :nL - sh])
-        # trips starting here -> set k = 1
-        for (st, sl), trs in trips_at.items():
-            if st != t:
+        # Direct time lookup avoids scanning every trip start group at each block.
+        for sl, trs in enumerate(prepared.trips_start[t]):
+            if not trs:
                 continue
-            srcmin = np.minimum(cur[sl, :, 0], cur[sl, :, 1])    # min over incoming k
+            srcmin = np.minimum(cur[sl, :, 0], cur[sl, :, 1])
             if not np.isfinite(srcmin).any():
                 continue
             for tr in trs:
-                sh = eps_idx[tr.idx]
-                if tr.end > T or sh >= nL:
-                    continue
+                sh = tr.shift
                 np.minimum(dp[tr.end, tr.eloc, :nL - sh, 1], srcmin[sh:] - alpha[tr.idx],
                            out=dp[tr.end, tr.eloc, :nL - sh, 1])
 
@@ -170,71 +154,77 @@ def _price_truck_dp_core(inst: Instance, alpha: np.ndarray, mu: np.ndarray,
     if not np.isfinite(best) or rc >= -tol:
         return []
 
-    # ----- backward reconstruction (no stored parents) -----
+    # Recompute the exact same floating-point arc expression used in the
+    # forward minimum. A near-tied, more expensive predecessor is never accepted.
     e_prof = np.zeros(T); a = np.zeros(inst.n_trips)
-    trips_end = {}
-    for tr in inst.trips:
-        trips_end.setdefault((tr.end, tr.eloc), []).append(tr)
     t, loc, si, k = T, origin, best_si, 1
-    guard = 0
-    while not (t == 0 and loc == origin and si == si0 and k == 0) and guard < 12 * T:
-        guard += 1
+    source = (0, origin, si0, 0)
+    for _ in range(T + 1):
+        if (t, loc, si, k) == source:
+            break
         v = dp[t, loc, si, k]; found = False
-        # wait (preserves k)
-        if t >= 1 and abs(dp[t - 1, loc, si, k] - v) < 1e-5:
-            t = t - 1; found = True; continue
-        # charge / discharge (any station in H0, preserves k and loc)
+        if t >= 1 and dp[t - 1, loc, si, k] == v:
+            t -= 1
+            continue
         if loc in stations and t >= 1:
             if allow_charge:
                 for d in range(1, up + 1):
                     pi = si - d
-                    if pi >= 0 and abs(dp[t - 1, loc, pi, k] + slope_c[t - 1] * d - v) < 1e-5:
-                        e_prof[t - 1] += (d * step) / (1 - eta); t, si = t - 1, pi; found = True; break
+                    if pi >= 0 and dp[t - 1, loc, pi, k] + slope_c[t - 1] * d == v:
+                        e_prof[t - 1] = (d * step) / (1 - eta)
+                        t, si = t - 1, pi; found = True; break
             if not found and allow_discharge:
                 for d in range(1, dn + 1):
                     pi = si + d
-                    if pi < nL and abs(dp[t - 1, loc, pi, k] + slope_d[t - 1] * d - v) < 1e-5:
-                        e_prof[t - 1] += -(d * step); t, si = t - 1, pi; found = True; break
+                    if pi < nL and dp[t - 1, loc, pi, k] + slope_d[t - 1] * d == v:
+                        e_prof[t - 1] = -(d * step)
+                        t, si = t - 1, pi; found = True; break
             if found:
                 continue
-        # trip ending here (only when k == 1; predecessor k may be 0 or 1)
         if k == 1:
-            for tr in trips_end.get((t, loc), []):
-                pi = si + eps_idx[tr.idx]
+            for tr in prepared.trips_end[t][loc]:
+                pi = si + tr.shift
                 if pi >= nL:
                     continue
                 for pk in (0, 1):
-                    if abs(dp[tr.start, tr.sloc, pi, pk] - alpha[tr.idx] - v) < 1e-5:
-                        a[tr.idx] = 1.0; t, loc, si, k = tr.start, tr.sloc, pi, pk
+                    if dp[tr.start, tr.sloc, pi, pk] - alpha[tr.idx] == v:
+                        if a[tr.idx]:
+                            raise RuntimeError("pricing reconstruction repeated a trip")
+                        a[tr.idx] = 1.0
+                        t, loc, si, k = tr.start, tr.sloc, pi, pk
                         found = True; break
                 if found:
                     break
             if found:
                 continue
-        # travel ending here (preserves k)
-        for fl in range(nLoc):
-            if fl == loc:
-                continue
-            dd = dd_time[fl, loc]; sh = de_idx[fl, loc]; pt = t - dd; pi = si + sh
-            if pt >= 0 and pi < nL and dd > 0 and abs(dp[pt, fl, pi, k] - v) < 1e-5:
+        for fl, dd, sh in prepared.incoming[loc]:
+            pt, pi = t - dd, si + sh
+            if pt >= 0 and pi < nL and dp[pt, fl, pi, k] == v:
                 t, loc, si = pt, fl, pi; found = True; break
         if not found:
-            break
+            raise RuntimeError(f"pricing reconstruction has no exact predecessor at {(t, loc, si, k)}")
+    if (t, loc, si, k) != source:
+        raise RuntimeError("pricing reconstruction did not reach its exact source")
     dis_total = float(np.maximum(-e_prof, 0.0).sum())
     col = Column("truck", a, e_prof, inst.c_v + deg * dis_total,   # degradation folded into
                  f"truck[{int(a.sum())}trips]")                    # the column fixed cost
-    return [(col, rc)]
+    terms = (col.cost(eps), -float(a @ alpha), float(e_prof @ mu),
+             float(np.maximum(e_prof, 0) @ nu))
+    direct = sum(terms)
+    check_reconstructed_cost(rc, direct, terms, T)
+    return [(col, float(rc))]
 
 
 def _dp_cost_via_networkx(inst, alpha, mu, step=5.0, soc_mode="cyclic"):
     """Independent shortest-path on the same DAG (Bellman-Ford) -- coding cross-check."""
     import networkx as nx
+    prepared = checked_prepared(inst, step)
     T = inst.T; eta, rho, G = inst.eta, inst.rho, inst.G
     eps = inst.eps_pen; epd = inst.energy_per_dist; origin = inst.depot
     nLoc = inst.dist.shape[0]; nL = int(round(G / step)) + 1
     def sidx(v): return int(round(v / step))
     Gidx = nL - 1
-    up = int(np.floor((1 - eta) * rho / step)); dn = int(np.floor(rho / step))
+    up, dn = prepared.up, prepared.down
     trips_at = {}
     for tr in inst.trips:
         trips_at.setdefault((tr.start, tr.sloc), []).append(tr)
@@ -264,7 +254,7 @@ def _dp_cost_via_networkx(inst, alpha, mu, step=5.0, soc_mode="cyclic"):
                             if sj < 0 or sj >= nL: continue
                             ds = dl * step
                             e = ds / (1 - eta) if ds >= 0 else ds
-                            _add(u, (t + 1, loc, sj, k), mu[t] * e + eps * abs(e))
+                            _add(u, (t + 1, loc, sj, k), mu[t] * e + eps * abs(e) + getattr(inst, "deg_cost", 0.0) * max(-e, 0.0))
                     for loc2 in range(nLoc):
                         if loc2 == loc: continue
                         dd = int(round(inst.dist[loc, loc2]))
@@ -291,7 +281,7 @@ def _dp_cost_via_networkx_periodic(inst, alpha, mu, step=5.0, nu=None,
     """Independent periodic (s0 = sT free) check: min over repeated start levels
     of the per-level full-recharge-style graph with start = end = s0."""
     best = INF
-    nL = int(round(inst.G / step)) + 1
+    nL = checked_prepared(inst, step).nlevels
     for s0 in range(nL):
         v = _dp_cost_via_networkx_at(inst, alpha, mu, step=step, s0=s0, nu=nu,
                                      allow_discharge=allow_discharge)
@@ -305,6 +295,7 @@ def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
     Terminal: cyclic/periodic-at-s0 fixes the terminal to s0; soc_mode="free"
     starts full and accepts any terminal level (the free-start diagnostic)."""
     import networkx as nx
+    prepared = checked_prepared(inst, step)
     T = inst.T; eta, rho, G = inst.eta, inst.rho, inst.G
     eps = inst.eps_pen; epd = inst.energy_per_dist; origin = inst.depot
     nLoc = inst.dist.shape[0]; nL = int(round(G / step)) + 1
@@ -313,7 +304,7 @@ def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
     def sidx(v): return int(round(v / step))
     Gidx = nL - 1
     si0 = Gidx if s0 is None else int(s0)
-    up = int(np.floor((1 - eta) * rho / step)); dn = int(np.floor(rho / step))
+    up, dn = prepared.up, prepared.down
     if not allow_discharge:
         dn = 0
     trips_at = {}
@@ -344,7 +335,7 @@ def _dp_cost_via_networkx_at(inst, alpha, mu, step=5.0, s0=None, nu=None,
                                 continue
                             ds = dl * step
                             e = ds / (1 - eta) if ds >= 0 else ds
-                            w = mu[t] * e + eps * abs(e)
+                            w = mu[t] * e + eps * abs(e) + getattr(inst, "deg_cost", 0.0) * max(-e, 0.0)
                             if ds >= 0:
                                 w += nu[t] * e
                             _add(u, (t + 1, loc, sj, k), w)

@@ -1,9 +1,13 @@
 """
-Battery-schedule pricing: the storage-arbitrage subproblem priced by the duals mu_t.
+Legacy battery-schedule pricing: full initial charge and free terminal SoC.
+
+These helpers are not the current aggregate cyclic-storage master. The LP is
+continuous; the DP is exact only for its explicitly validated SoC grid.
 
 Given duals (alpha unused for batteries, mu_t the generation price), find the energy
 profile e_t minimizing the reduced cost
-    rc = c_b + eps*sum_t(charge_t + discharge_t) + sum_t mu_t (charge_t - discharge_t)
+    rc = c_b + eps*sum_t(charge_t + discharge_t) + deg*sum_t discharge_t
+         + sum_t mu_t (charge_t - discharge_t)
 subject to the state-of-charge dynamics
     s_{t+1} = s_t + (1-eta) charge_t - discharge_t,   0<=s_t<=G,
     0<=charge_t,discharge_t<=rho,    s_1 = G.
@@ -11,7 +15,7 @@ subject to the state-of-charge dynamics
 Two implementations:
   * price_battery_lp : exact LP (HiGHS) -- the reference.
   * price_battery_dp : SoC-discretized dynamic program -- demonstrates the DP route
-    and is validated to match the LP.
+    and matches the LP only when the continuous optimum is representable on its grid.
 Net grid energy e_t = charge_t - discharge_t (>0 draw, <0 inject).
 """
 from __future__ import annotations
@@ -19,10 +23,21 @@ import numpy as np
 from scipy.optimize import linprog
 from instance import Instance
 from master import Column
+from pricing_contract import validate_storage, validate_duals, check_reconstructed_cost
 
 
 def price_battery_lp(inst: Instance, mu: np.ndarray):
-    """Exact LP. Returns (Column, reduced_cost)."""
+    """Legacy continuous LP, full start/free end. Returns (Column, reduced_cost).
+    Raise if simultaneous charge/discharge cannot be represented by a net-energy
+    Column; this can occur for price inputs outside the original nonnegative case.
+    """
+    _, mu, _ = validate_duals(inst, np.zeros(inst.n_trips), mu, None)
+    if not (np.isfinite(inst.G) and inst.G >= 0 and np.isfinite(inst.rho) and inst.rho >= 0
+            and np.isfinite(inst.eta) and 0 <= inst.eta < 1):
+        raise ValueError("battery capacity/rate must be nonnegative and eta in [0,1)")
+    if not np.isfinite(inst.c_b):
+        raise ValueError("battery fixed cost must be finite")
+    deg = getattr(inst, "deg_cost", 0.0)
     T = inst.T
     eta, rho, G, eps = inst.eta, inst.rho, inst.G, inst.eps_pen
     # vars: charge_0..charge_{T-1}, discharge_0..., s_0..s_T  (T+1 SoC nodes; s_t = SoC entering block t)
@@ -31,7 +46,7 @@ def price_battery_lp(inst: Instance, mu: np.ndarray):
 
     c = np.zeros(nvar)
     c[C] = eps + mu                      # charge: pay price mu_t + penalty
-    c[Dd] = eps - mu                     # discharge: earn -mu_t (reward) + penalty
+    c[Dd] = eps + deg - mu                     # discharge: earn -mu_t (reward) + penalty
     # SoC dynamics as equalities for EVERY block t=0..T-1: s_{t+1} - s_t - (1-eta) charge_t + discharge_t = 0
     rows, b_eq = [], []
     for t in range(T):
@@ -50,9 +65,13 @@ def price_battery_lp(inst: Instance, mu: np.ndarray):
     if not res.success:
         return None, np.inf
     charge = res.x[C]; discharge = res.x[Dd]
+    if np.any(np.minimum(charge, discharge) > 1e-8):
+        raise RuntimeError("legacy battery LP uses simultaneous charge/discharge; net Column cannot represent this solution")
     e = charge - discharge
-    col = Column("battery", np.zeros(inst.n_trips), e, inst.c_b, "batt-LP")
+    col = Column("battery", np.zeros(inst.n_trips), e, inst.c_b + deg * float(discharge.sum()), "batt-LP")
     rc = inst.c_b + res.fun
+    terms = (col.cost(inst.eps_pen), float(e @ mu))
+    check_reconstructed_cost(rc, sum(terms), terms, T)
     return col, rc
 
 
@@ -60,14 +79,15 @@ def price_battery_dp(inst: Instance, mu: np.ndarray, step: float = 5.0):
     """SoC-discretized DP (dense, vectorized). Returns (Column, reduced_cost).
     Battery starts full; pure arbitrage at origin -- same structure as the truck DP
     restricted to charge/discharge only."""
-    T = inst.T
+    T, step, nL, up, dn = validate_storage(inst, step)
+    _, mu, _ = validate_duals(inst, np.zeros(inst.n_trips), mu, None)
     eta, rho, G, eps = inst.eta, inst.rho, inst.G, inst.eps_pen
-    nL = int(round(G / step)) + 1
+    if not np.isfinite(inst.c_b):
+        raise ValueError("battery fixed cost must be finite")
+    deg = getattr(inst, "deg_cost", 0.0)
     Gidx = nL - 1
-    up = int(np.floor((1 - eta) * rho / step))
-    dn = int(np.floor(rho / step))
     slope_c = (mu + eps) * step / (1 - eta)
-    slope_d = (eps - mu) * step
+    slope_d = (eps + deg - mu) * step
     INF = np.inf
 
     dp = np.full((T + 1, nL), INF)
@@ -88,21 +108,29 @@ def price_battery_dp(inst: Instance, mu: np.ndarray, step: float = 5.0):
     si = end
     for t in range(T, 0, -1):
         v = dp[t, si]
-        if abs(dp[t - 1, si] - v) < 1e-5:                    # wait
+        if dp[t - 1, si] == v:                    # wait
             continue
         done = False
         for d in range(1, up + 1):                            # charged d levels
             pi = si - d
-            if pi >= 0 and abs(dp[t - 1, pi] + slope_c[t - 1] * d - v) < 1e-5:
+            if pi >= 0 and dp[t - 1, pi] + slope_c[t - 1] * d == v:
                 e[t - 1] = (d * step) / (1 - eta); si = pi; done = True; break
         if done:
             continue
         for d in range(1, dn + 1):                            # discharged d levels
             pi = si + d
-            if pi < nL and abs(dp[t - 1, pi] + slope_d[t - 1] * d - v) < 1e-5:
+            if pi < nL and dp[t - 1, pi] + slope_d[t - 1] * d == v:
                 e[t - 1] = -(d * step); si = pi; done = True; break
-    col = Column("battery", np.zeros(inst.n_trips), e, inst.c_b, "batt-DP")
-    return col, inst.c_b + best
+        if not done:
+            raise RuntimeError(f"battery reconstruction has no exact predecessor at {(t, si)}")
+    if si != Gidx:
+        raise RuntimeError("battery reconstruction did not reach its full initial source")
+    col = Column("battery", np.zeros(inst.n_trips), e,
+                 inst.c_b + deg * float(np.maximum(-e, 0).sum()), "batt-DP")
+    rc = inst.c_b + best
+    terms = (col.cost(eps), float(e @ mu))
+    check_reconstructed_cost(rc, sum(terms), terms, T)
+    return col, float(rc)
 
 
 if __name__ == "__main__":
@@ -119,7 +147,7 @@ if __name__ == "__main__":
     print("RMP obj", round(sol.obj, 1), " mu range", round(sol.mu.min(), 3), round(sol.mu.max(), 3))
 
     col_lp, rc_lp = price_battery_lp(inst, sol.mu)
-    col_dp, rc_dp = price_battery_dp(inst, sol.mu, n_levels=141)
+    col_dp, rc_dp = price_battery_dp(inst, sol.mu, step=inst.G / 140)
     print(f"battery pricing  LP rc = {rc_lp:.3f}   DP rc = {rc_dp:.3f}   |diff| = {abs(rc_lp-rc_dp):.3f}")
     # independent check: reduced cost recomputed via master formula on the LP column
     print("LP column rc via master formula:", round(reduced_cost(col_lp, sol, inst), 3))

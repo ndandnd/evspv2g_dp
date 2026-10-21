@@ -12,10 +12,11 @@ import numpy as np
 from instance import Instance, make_instance
 from master import Column, solve_lp, solve_milp, reduced_cost
 from pricing_truck import price_truck_dp
+from column_validation import column_key, replay_column
 
 
 def _col_key(c: Column):
-    return (tuple(np.flatnonzero(c.a > 0.5).tolist()), tuple(np.round(c.e, 2).tolist()))
+    return column_key(c)
 
 
 SCENARIOS = {                          # (ice, allow_charge, allow_discharge, battery)
@@ -41,56 +42,43 @@ def _flatten_col(col: Column, inst: Instance) -> Column:
     draw = float(np.maximum(col.e, 0.0).sum())
     if draw <= 1e-12:
         return col
-    return Column(col.kind, col.a, np.zeros(inst.T), col.fixed_cost + inst.c_g * draw,
+    return Column(col.kind, col.a, np.zeros(inst.T), col.fixed_cost + inst.c_g * draw + inst.eps_pen * col.throughput(),
                   col.label + "|flat")
 
 
 def single_trip_column(inst: Instance, tr, ice: bool = False, free_start: bool = False) -> Column:
-    """Exactly-feasible single-trip truck column. Cyclic: recharge the traction
-    energy from the grid during idle at-origin blocks (SoC returns to full, no free
-    energy). Free-start (original arXiv setting): the initial full charge is free,
-    so no recharge is needed (e = 0). ICE (VSP): traction is fuel, e = 0."""
-    a = np.zeros(inst.n_trips); a[tr.idx] = 1.0
-    e = np.zeros(inst.T)
-    o0 = inst.depot
-    if tr.start - inst.deadhead_time(o0, tr.sloc) < 0 or \
-       tr.end + inst.deadhead_time(tr.eloc, o0) > inst.T:
-        return None                                   # cannot pull out and return in-horizon
-    if not ice and not free_start:
-        o = inst.depot
-        trac = tr.energy + inst.deadhead_energy(o, tr.sloc) + inst.deadhead_energy(tr.eloc, o)
-        need = trac / (1 - inst.eta)
-        dep = tr.start - inst.deadhead_time(o, tr.sloc)
-        ret = tr.end + inst.deadhead_time(tr.eloc, o)
-        # AFTER-return blocks only: the vehicle starts FULL, so charging before
-        # departure would overfill the battery. A seed is returned ONLY if the
-        # trip departs after t=0, returns to the depot within the horizon, and the
-        # post-return window can restore the full charge; otherwise the task has
-        # no feasible single-trip column and the caller must fall back to a
-        # Phase-I artificial column (an infeasible seed must never enter the pool).
-        if dep < 0 or ret > inst.T:
-            return None
-        idle = list(range(min(inst.T, ret), inst.T))
-        cap = len(idle) * inst.rho
-        if cap < need - 1e-9:
-            return None
-        if idle:
-            if np.isfinite(inst.charge_cap):       # spread uniformly so the initial pool
-                per = min(inst.rho, need / len(idle))   # respects the charging cap
-                for t in idle:
-                    e[t] = per
-            else:                                  # no cap: charge at full rate, fewest blocks
-                left = need
-                for t in idle:
-                    if left <= 1e-9:
-                        break
-                    e[t] = min(inst.rho, left)
-                    left -= e[t]
-    return Column("truck", a, e, inst.c_v, f"single[{tr.idx}]")
+    """Full-start single-trip seed, physically feasible on the declared lattice."""
+    from pricing_contract import grid_index, validate_storage
+    try:
+        T,step,nlevels,_,_=validate_storage(inst,None)
+        outbound=grid_index(inst.dist[inst.depot,tr.sloc],1.,'outbound time')
+        inbound=grid_index(inst.dist[tr.eloc,inst.depot],1.,'inbound time')
+        if tr.start!=int(tr.start) or tr.end!=int(tr.end) or not 0<=tr.start<tr.end<=T:return None
+        dep=tr.start-outbound;ret=tr.end+inbound
+        if dep<0 or ret>T:return None
+        a=np.zeros(inst.n_trips);a[tr.idx]=1.;e=np.zeros(T)
+        if not ice:
+            levels=sum(grid_index(value,step,'single-trip traction') for value in
+                       (tr.energy,inst.deadhead_energy(inst.depot,tr.sloc),
+                        inst.deadhead_energy(tr.eloc,inst.depot)))
+            if levels>nlevels-1:return None
+            if not free_start:
+                rate=min(inst.rho,float(inst.charge_cap))
+                if rate<0:return None
+                # Match pricing's conservative floor; do not admit one extra
+                # level using an absolute epsilon around a rate boundary.
+                per=int(np.floor(min(nlevels-1,(1-inst.eta)*rate/step)))
+                left=levels
+                if left>(T-ret)*per:return None
+                for t in range(ret,T):
+                    q=min(per,left);e[t]=q*step/(1-inst.eta);left-=q
+                    if not left:break
+    except (ValueError,TypeError,OverflowError):return None
+    return Column('truck',a,e,inst.c_v,f'single[{tr.idx}]')
 
 
 def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None,
-                      soc_mode: str = "cyclic") -> list[Column]:
+                      soc_mode: str = "cyclic", *, pricing_cache: bool = True) -> list[Column]:
     """Multi-trip covering columns via repeated DP: reward uncovered trips, forbid
     re-covering already-covered ones, peel off a route each round. With an rng, the
     per-trip reward is randomized so repeated calls yield distinct full covers."""
@@ -105,7 +93,7 @@ def dp_greedy_columns(inst: Instance, caps: dict, rounds: int = 40, rng=None,
             alpha[i] = (rng.uniform(2.0, 4.0) if rng is not None else 3.0) * inst.c_v
         out = price_truck_dp(inst, alpha, mu, allow_charge=caps["allow_charge"],
                              allow_discharge=caps["allow_discharge"], ice=caps["ice"],
-                             soc_mode=soc_mode)
+                             soc_mode=soc_mode,use_cache=pricing_cache)
         if not out:
             break
         col = out[0][0]
@@ -137,7 +125,7 @@ def artificial_column(inst: Instance, tr) -> Column:
 
 
 def initial_columns(inst: Instance, start: str, caps: dict,
-                    soc_mode: str = "cyclic") -> list[Column]:
+                    soc_mode: str = "cyclic", *, pricing_cache: bool = True) -> list[Column]:
     base = []
     for tr in inst.trips:
         # the single-trip constructor assumes a full-charge start and a
@@ -154,7 +142,7 @@ def initial_columns(inst: Instance, start: str, caps: dict,
                                                    # pricing has run
     if start == "cold":
         return base
-    extra = dp_greedy_columns(inst, caps, soc_mode=soc_mode)
+    extra = dp_greedy_columns(inst, caps, soc_mode=soc_mode,pricing_cache=pricing_cache)
     seen = set(_col_key(c) for c in base)
     return base + [c for c in extra if _col_key(c) not in seen]
 
@@ -163,92 +151,174 @@ def column_generation(inst: Instance, scenario: str = "v2g", start: str = "warm"
                       tol: float = 1e-6, rc_stop: float = 0.0, beta: float = 0.5,
                       max_iter: int = 1000, do_milp: bool = True, verbose: bool = False,
                       enrich: int = 25, lp_solver: str = "highs", milp_solver: str = "cbc",
-                      soc_mode: str = "cyclic", extra_cols: list | None = None):
-    caps = SCENARIOS[scenario]
-    batt = caps["battery"]
-    flat = caps.get("flat_price", False)
-    cols = initial_columns(inst, start, caps, soc_mode=soc_mode)
-    if extra_cols:                        # warm pool injection (e.g. Phase-I discoveries);
-        seen0 = set(_col_key(c) for c in cols)   # injected raw, so the flat transform below
-        for c in extra_cols:                     # applies uniformly (idempotent on e = 0)
-            k0 = _col_key(c)
-            if k0 not in seen0:
-                cols.append(c); seen0.add(k0)
-    if flat:
-        cols = [_flatten_col(c, inst) for c in cols]
-        mu_flat = np.full(inst.T, inst.c_g)   # every charged unit pays c_g, always
-    keys = set(_col_key(c) for c in cols)
-    t0 = time.time()
-    pricing_t = 0.0                       # cumulative DP-pricing wall-clock (for pricing-share stats)
-    prev = None
-    lp = solve_lp(inst, cols, battery_allowed=batt, solver=lp_solver, soc_mode=soc_mode)
-    iters = 0
-    stop = max(tol, rc_stop)
+                      soc_mode: str = "cyclic", extra_cols: list | None = None,
+                      *, pricing_cache: bool = True, warm_max_columns: int = 512,
+                      warm_max_candidates: int = 4096, warm_max_seconds: float = 60.):
+    """CG with explicit exact-pricing termination and bounded validated imports.
 
-    def price(a, m, nv):
-        if flat:                               # solar-blind: constant energy price, no nu
-            m, nv = mu_flat, np.zeros(inst.T)
-        out = price_truck_dp(inst, a, m, allow_charge=caps["allow_charge"],
-                             allow_discharge=caps["allow_discharge"], ice=caps["ice"], nu=nv,
-                             soc_mode=soc_mode)
-        return [(_flatten_col(tc, inst), rc) for tc, rc in out] if flat else out
-
-    for it in range(max_iter):
-        iters = it + 1
-        lp = solve_lp(inst, cols, battery_allowed=batt, solver=lp_solver, soc_mode=soc_mode)
-        if lp.status != "optimal":
-            break
-        nu_cur = lp.nu if lp.nu is not None else np.zeros(inst.T)
-        if prev is None:
-            al, mu, nu = lp.alpha, lp.mu, nu_cur
+    A finite-pool incumbent is separate from a priced LP lower bound. The lower
+    bound correction applies to the admitted lattice/profile family with exact
+    trip partitioning and zero artificial mass; it is omitted for covering mode.
+    """
+    from pricing_truck import prepare_pricing
+    import master as master_module
+    if max_iter<0 or tol<=0 or rc_stop<0 or not 0<=beta<=1:
+        raise ValueError('Invalid iteration, tolerance or smoothing setting')
+    if min(warm_max_columns,warm_max_candidates,warm_max_seconds)<0:
+        raise ValueError('Warm import budgets must be nonnegative')
+    caps=SCENARIOS[scenario];batt=caps['battery'];flat=caps.get('flat_price',False)
+    wall_start=time.perf_counter();cpu_start=time.process_time()
+    prepare_pricing(inst,ice=caps['ice'],use_cache=pricing_cache)
+    timers=dict(initialization_seconds=0.,warm_import_seconds=0.,lp_seconds=0.,
+                lp_build_seconds=0.,lp_solve_seconds=0.,pricing_seconds=0.,
+                replay_seconds=0.,enrichment_seconds=0.,mip_seconds=0.)
+    validated=set()
+    def validate(col):
+        key=_col_key(col)
+        if key in validated:return
+        t=time.perf_counter()
+        ok=replay_column(inst,col,allow_charge=caps['allow_charge'],allow_discharge=caps['allow_discharge'],ice=caps['ice'],soc_mode=soc_mode)
+        timers['replay_seconds']+=time.perf_counter()-t
+        if not ok:raise ValueError('Column fails independent physical replay: '+col.label)
+        if col.kind=='truck':
+            expected=inst.c_v+inst.deg_cost*float(np.maximum(-col.e,0).sum())
+            if abs(col.fixed_cost-expected)>1e-8*max(1.,abs(expected)):
+                raise ValueError('Column fixed cost does not match current physics')
+        validated.add(key)
+    t=time.perf_counter();cols=initial_columns(inst,start,caps,soc_mode=soc_mode,pricing_cache=pricing_cache)
+    for col in cols:validate(col)
+    timers['initialization_seconds']=time.perf_counter()-t
+    keys={_col_key(c) for c in cols}
+    warm=dict(scanned=0,accepted=0,rejected=0,duplicates=0,stop='exhausted',
+              max_columns=warm_max_columns,max_candidates=warm_max_candidates,max_seconds=warm_max_seconds)
+    t=time.perf_counter()
+    if extra_cols is not None:
+        for col in extra_cols:
+            if warm['accepted']>=warm_max_columns:warm['stop']='column_limit';break
+            if warm['scanned']>=warm_max_candidates:warm['stop']='scan_limit';break
+            if time.perf_counter()-t>=warm_max_seconds:warm['stop']='time_limit';break
+            warm['scanned']+=1
+            try:
+                key=_col_key(col)
+                if key in keys:warm['duplicates']+=1;continue
+                if col.kind!='truck':raise ValueError('Warm imports must be real trucks')
+                validate(col)
+            except (ValueError,TypeError,IndexError):warm['rejected']+=1;continue
+            cols.append(col);keys.add(key);warm['accepted']+=1
+    timers['warm_import_seconds']=time.perf_counter()-t
+    phase_result=None
+    if max_iter>0 and not flat and not master_module.COVERING:
+        from phase1 import find_feasible_pool
+        phase_result=find_feasible_pool(inst,cols,caps,soc_mode=soc_mode,tol=tol,max_iter=max_iter,pricing_cache=pricing_cache)
+        timers['phase1_seconds']=phase_result['telemetry']['total_wall_seconds']
+        if phase_result['status']=='feasible':
+            cols=phase_result['cols']
+            for c in cols:validate(c)
         else:
-            al = beta * prev[0] + (1 - beta) * lp.alpha
-            mu = beta * prev[1] + (1 - beta) * lp.mu
-            nu = beta * prev[2] + (1 - beta) * nu_cur
-        prev = (lp.alpha.copy(), lp.mu.copy(), nu_cur.copy())
-
-        added, best_true = 0, 0.0
-        tp = time.time(); cand = price(al, mu, nu); pricing_t += time.time() - tp
-        for tc, _ in cand:
-            rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
-            if rc < -stop and _col_key(tc) not in keys:
-                cols.append(tc); keys.add(_col_key(tc)); added += 1
-        if added == 0:
-            tp = time.time(); cand = price(lp.alpha, lp.mu, nu_cur); pricing_t += time.time() - tp
-            for tc, _ in cand:
-                rc = reduced_cost(tc, lp, inst); best_true = min(best_true, rc)
-                if rc < -stop and _col_key(tc) not in keys:
-                    cols.append(tc); keys.add(_col_key(tc)); added += 1
-        if verbose and (iters % 10 == 0 or added == 0):
-            print(f"  it {iters:3d} LP={lp.obj:9.1f} cols={len(cols):4d} best_rc={best_true:8.1f} added={added}")
-        if added == 0:
-            converged, term_reason = True, "priced_out"
-            break
-    else:
-        converged, term_reason = False, "max_iter"
-    if lp.status != "optimal":
-        converged, term_reason = False, "lp_" + lp.status
-    # pool enrichment: price at perturbed duals to add diverse covering columns,
-    # which shrinks the restricted-master integrality gap (the LP bound is unchanged).
-    if enrich > 0 and lp.status == "optimal":
-        nu0 = lp.nu if lp.nu is not None else np.zeros(inst.T)
-        rng = np.random.default_rng(0)
-        for _ in range(enrich):
-            af = lp.alpha * rng.uniform(0.7, 1.3, size=lp.alpha.shape)
-            mf = lp.mu * rng.uniform(0.7, 1.3, size=lp.mu.shape)
-            nf = nu0 * rng.uniform(0.7, 1.3, size=nu0.shape)
-            tp = time.time(); cand = price(af, mf, nf); pricing_t += time.time() - tp
-            for tc, _ in cand:
-                if _col_key(tc) not in keys:
-                    cols.append(tc); keys.add(_col_key(tc))
-    lp_time = time.time() - t0
-    mip = solve_milp(inst, cols, time_limit=120.0, battery_allowed=batt,
-                     solver=milp_solver, soc_mode=soc_mode) if do_milp else None
-    return {"scenario": scenario, "lp_obj": lp.obj, "mip_obj": (mip.obj if mip else None),
-            "iters": iters, "n_cols": len(cols), "time": lp_time, "pricing_time": pricing_t,
-            "lp": lp, "mip": mip, "cols": cols,
-            "converged": converged, "term_reason": term_reason,
-            "artificial_selected": None}
+            # Keep the diagnosed augmented pool for reporting, but do not run
+            # economic pricing or interpret a restricted LP exit as proof.
+            max_iter=0;enrich=0
+    if flat:cols=[_flatten_col(c,inst) for c in cols]
+    keys={_col_key(c) for c in cols}
+    session=None
+    if lp_solver=='gurobi_persistent':
+        from persistent_master import PersistentGurobiMaster
+        session=PersistentGurobiMaster(inst,battery_allowed=batt,soc_mode=soc_mode)
+    def solve():
+        t=time.perf_counter()
+        sol=session.solve(cols,inst=inst) if session else solve_lp(inst,cols,battery_allowed=batt,solver=lp_solver,soc_mode=soc_mode)
+        timers['lp_seconds']+=time.perf_counter()-t
+        st=getattr(sol,'timings',{}) or {}
+        timers['lp_build_seconds']+=st.get('build_seconds',0.)+st.get('append_seconds',0.)
+        timers['lp_solve_seconds']+=st.get('solve_seconds',0.)
+        return sol
+    def price(alpha,mu,nu):
+        if flat:mu=np.full(inst.T,inst.c_g);nu=np.zeros(inst.T)
+        t=time.perf_counter()
+        cand=price_truck_dp(inst,alpha,mu,nu=nu,allow_charge=caps['allow_charge'],
+                            allow_discharge=caps['allow_discharge'],ice=caps['ice'],
+                            soc_mode=soc_mode,tol=max(tol,rc_stop),use_cache=pricing_cache)
+        timers['pricing_seconds']+=time.perf_counter()-t
+        result=[]
+        for col,reported in cand:
+            direct=col.cost(inst.eps_pen)-col.a@alpha+col.e@mu+np.maximum(col.e,0)@nu
+            error=abs(direct-reported)
+            if error>max(1e-10,1e-10*abs(direct)):
+                raise RuntimeError('Pricing minimum and reconstructed column disagree')
+            validate(col)
+            result.append((_flatten_col(col,inst) if flat else col,reported))
+        return result
+    prev=None;lp=None;lp_count=-1;iters=0;stop=max(tol,rc_stop)
+    events=[];converged=False;term_reason='max_iter';last_exact_minimum=None
+    try:
+        for it in range(max_iter):
+            lp=solve();lp_count=len(cols);iters=it+1
+            if lp.status!='optimal':term_reason='lp_'+lp.status;break
+            nv=lp.nu if lp.nu is not None else np.zeros(inst.T)
+            if prev is None:duals=(lp.alpha,lp.mu,nv)
+            else:duals=tuple(beta*a+(1-beta)*b for a,b in zip(prev,(lp.alpha,lp.mu,nv)))
+            prev=tuple(x.copy() for x in (lp.alpha,lp.mu,nv))
+            added=0;duplicates=0;best=0.;fallback=False
+            for exact in [False,True]:
+                if exact and added:break
+                d=(lp.alpha,lp.mu,nv) if exact else duals
+                candidates=price(*d);fallback=exact
+                if exact:
+                    last_exact_minimum=min((rc-getattr(lp,'fleet_dual',0.) for col,rc in candidates),default=-stop)
+                for col,reported in candidates:
+                    rc=reduced_cost(col,lp,inst);best=min(best,rc)
+                    if rc < -stop:
+                        if _col_key(col) in keys:
+                            duplicates+=1
+                            if exact:raise RuntimeError('Exact pricing returned an improving duplicate; no certificate')
+                            continue
+                        cols.append(col);keys.add(_col_key(col));added+=1
+                if exact:break
+            event=dict(iteration=it,objective=float(lp.obj),columns=lp_count,added=added,
+                       best_true_reduced_cost=float(best),exact_fallback=fallback,improving_duplicates=duplicates)
+            events.append(event)
+            if verbose and ((it+1)%10==0 or not added):print(event,flush=True)
+            if not added:
+                if not fallback:raise RuntimeError('Termination requires exact current-dual pricing')
+                converged=True;term_reason='priced_out';break
+        if lp is None or lp_count!=len(cols):lp=solve();lp_count=len(cols)
+        if lp.status!='optimal':converged=False;term_reason='lp_'+lp.status
+        artificial_mass=float(sum(lp.x[k] for k,c in enumerate(cols) if c.kind=='artificial')) if lp.status=='optimal' else None
+        if converged and artificial_mass>1e-7:
+            converged=False;term_reason='priced_out_with_artificials_unresolved'
+        lower=float(lp.obj-inst.n_trips*stop) if converged and not master_module.COVERING else None
+        # Enrichment follows certification and never changes the bound's scope.
+        t=time.perf_counter()
+        if enrich>0 and lp.status=='optimal':
+            rng=np.random.default_rng(0);nu=lp.nu if lp.nu is not None else np.zeros(inst.T)
+            for _ in range(enrich):
+                duals=[x*rng.uniform(.7,1.3,size=x.shape) for x in (lp.alpha,lp.mu,nu)]
+                for col,_ in price(*duals):
+                    if _col_key(col) not in keys:cols.append(col);keys.add(_col_key(col))
+        timers['enrichment_seconds']=time.perf_counter()-t
+        if lp_count!=len(cols):lp=solve()
+    finally:
+        if session:session.close()
+    if phase_result is not None and phase_result['status']!='feasible':
+        converged=False;term_reason='phase1_'+phase_result['status'];lower=None
+    t=time.perf_counter()
+    mip=None
+    if do_milp:
+        real_indices=[k for k,c in enumerate(cols) if c.kind=='truck']
+        mip=solve_milp(inst,[cols[k] for k in real_indices],time_limit=120.,battery_allowed=batt,solver=milp_solver,soc_mode=soc_mode)
+        real_x=mip.x.copy();mip.x=np.zeros(len(cols));mip.x[real_indices]=real_x
+        mip.source_column_indices=real_indices
+        mip.scope='finite real-column pool; artificials excluded; native vector uses source_column_indices'
+    timers['mip_seconds']=time.perf_counter()-t
+    timers['total_wall_seconds']=time.perf_counter()-wall_start
+    timers['process_cpu_seconds']=time.process_time()-cpu_start
+    return dict(scenario=scenario,lp_obj=lp.obj,mip_obj=mip.obj if mip else None,
+                iters=iters,n_cols=len(cols),time=timers['total_wall_seconds']-timers['mip_seconds'],
+                pricing_time=timers['pricing_seconds'],lp=lp,mip=mip,cols=cols,
+                converged=converged,term_reason=term_reason,artificial_selected=artificial_mass,
+                full_lp_lower_bound=lower,certificate_tolerance=stop,
+                certificate_scope='exact trip-partitioning lattice-profile LP; zero artificial mass' if lower is not None else None,
+                telemetry=timers,iterations=events,warm_import=warm,phase1=phase_result)
 
 
 def summarize(inst: Instance, res: dict) -> dict:
